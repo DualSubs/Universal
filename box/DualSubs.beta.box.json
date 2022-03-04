@@ -1,588 +1,534 @@
 {
-    "id": "DualSubs.beta.app.sub",
-    "name": "DualSubs β",
-    "author": "@DualSubs",
-    "description": "Powered by DualSubs",
-    "icon": "https://avatars.githubusercontent.com/u/100578089?&v=4",
-    "repo": "https://github.com/DualSubs",
-    "apps": [
-        {
-            "id": "@DualSubs.Disney_Plus.beta",
-            "name": "DualSub.Disney+ β",
-            "descs_html": [
-                "请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
-                "填写完成后别忘点击此页面底端右下角的\"保存\"。"
-            ],
-            "keys": [
-                "@DualSubs.Disney_Plus.Settings"
-            ],
-            "settings": [
-                {
-                    "id": "@DualSubs.Disney_Plus.Settings.type",
-                    "name": "双语字幕类型：",
-                    "val": "Official",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "Official",
-                            "label": "官方"
-                        },
-                        {
-                            "key": "Google",
-                            "label": "Google"
-                        },
-                        {
-                            "key": "DeepL",
-                            "label": "DeepL"
-                        },
-                        {
-                            "key": "Disable",
-                            "label": "禁用"
-                        }
-                    ],
-                    "desc": "请选择双语字幕类型"
-                },
-                {
-                    "id": "@DualSubs.Disney_Plus.Settings.lang",
-                    "name": "官方字幕语言：",
-                    "val": "EN-US",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "ZH-CN",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "ZH-HK",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "ZH-TW",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "EN-US",
-                            "label": "英语（美国）"
-                        },
-                        {
-                            "key": "EN-US SDH",
-                            "label": "英语（美国）[CC]"
-                        },
-                        {
-                            "key": "JA",
-                            "label": "日文"
-                        },
-                        {
-                            "key": "KO",
-                            "label": "韩文"
-                        }
-                    ],
-                    "desc": ""
-                },
-                {
-                    "id": "@DualSubs.Disney_Plus.Settings.sl",
-                    "name": "源语言：",
-                    "val": "AUTO",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "AUTO",
-                            "label": "自动识别"
-                        },
-                        {
-                            "key": "Chinese (Simplified)",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "Chinese (Hong Kong)",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "Chinese (Traditional)",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "English [CC]",
-                            "label": "English [CC]"
-                        }
-                    ],
-                    "desc": "请选择第二字幕源语言"
-                },
-                {
-                    "id": "@DualSubs.Disney_Plus.Settings.tl",
-                    "name": "目标语言：",
-                    "val": "English [CC]",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "Chinese (Simplified)",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "Chinese (Hong Kong)",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "Chinese (Traditional)",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "English [CC]",
-                            "label": "English [CC]"
-                        }
-                    ],
-                    "desc": "请选择官方或机翻字幕目标语言"
-                },
-                {
-                    "id": "@DualSubs.Disney_Plus.Settings.line",
-                    "name": "第二字幕位置",
-                    "val": "s",
-                    "type": "radios",
-                    "items": [
-                        {
-                            "key": "s",
-                            "label": "第二行"
-                        },
-                        {
-                            "key": "f",
-                            "label": "第一行"
-                        }
-                    ],
-                    "desc": ""
-                },
-                {
-                    "id": "@DualSubs.Disney_Plus.Settings.dkey",
-                    "name": "DeepL API key",
-                    "val": "",
-                    "type": "text",
-                    "placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
-                    "desc": "DeepL API key"
-                }
-            ],
-            "author": "@DualSubs",
-            "repo": "https://github.com/DualSubs/DualSubs/blob/beta/js/DualSubs.beta.js",
-            "icons": [
-                "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Disney+.png",
-                "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Disney+.png"
-            ]
-        },
-        {
-            "id": "@DualSubs.HBO_Max.beta",
-            "name": "DualSub.HBO_Max β",
-            "descs_html": [
-                "请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
-                "填写完成后别忘点击此页面底端右下角的\"保存\"。"
-            ],
-            "keys": [
-                "@DualSubs.HBO_Max.Settings"
-            ],
-            "settings": [
-                {
-                    "id": "@DualSubs.HBO_Max.Settings.type",
-                    "name": "双语字幕类型：",
-                    "val": "Official",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "Official",
-                            "label": "官方"
-                        },
-                        {
-                            "key": "Google",
-                            "label": "Google"
-                        },
-                        {
-                            "key": "DeepL",
-                            "label": "DeepL"
-                        },
-                        {
-                            "key": "Disable",
-                            "label": "禁用"
-                        }
-                    ],
-                    "desc": "请选择双语字幕类型"
-                },
-                {
-                    "id": "@DualSubs.HBO_Max.Settings.lang",
-                    "name": "官方字幕语言：",
-                    "val": "EN-US",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "ZH-CN",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "ZH-HK",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "ZH-TW",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "EN-US",
-                            "label": "英语（美国）"
-                        },
-                        {
-                            "key": "EN-US SDH",
-                            "label": "英语（美国）[CC]"
-                        },
-                        {
-                            "key": "JA",
-                            "label": "日文"
-                        },
-                        {
-                            "key": "KO",
-                            "label": "韩文"
-                        }
-                    ],
-                    "desc": "请选择官方字幕语言"
-                },
-                {
-                    "id": "@DualSubs.HBO_Max.Settings.sl",
-                    "name": "源语言：",
-                    "val": "AUTO",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "AUTO",
-                            "label": "自动识别"
-                        },
-                        {
-                            "key": "Chinese (Simplified)",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "Chinese (Hong Kong)",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "Chinese (Traditional)",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "English [CC]",
-                            "label": "English [CC]"
-                        }
-                    ],
-                    "desc": "请选择第二字幕源语言"
-                },
-                {
-                    "id": "@DualSubs.HBO_Max.Settings.tl",
-                    "name": "目标语言：",
-                    "val": "English [CC]",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "Chinese (Simplified)",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "Chinese (Hong Kong)",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "Chinese (Traditional)",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "English [CC]",
-                            "label": "English [CC]"
-                        }
-                    ],
-                    "desc": "请选择官方或机翻字幕目标语言"
-                },
-                {
-                    "id": "@DualSubs.HBO_Max.Settings.line",
-                    "name": "第二字幕位置",
-                    "val": "s",
-                    "type": "radios",
-                    "items": [
-                        {
-                            "key": "s",
-                            "label": "第二行"
-                        },
-                        {
-                            "key": "f",
-                            "label": "第一行"
-                        }
-                    ],
-                    "desc": "请选择第二字幕位置"
-                },
-                {
-                    "id": "@DualSubs.HBO_Max.Settings.dkey",
-                    "name": "DeepL API key",
-                    "val": "",
-                    "type": "text",
-                    "placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
-                    "desc": "DeepL API key"
-                }
-            ],
-            "author": "@DualSubs",
-            "repo": "https://github.com/DualSubs/DualSubs/blob/beta/js/DualSubs.beta.js",
-            "icons": [
-                "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/HBO_Max.png",
-                "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HBO_Max.png"
-            ]
-        },
-        {
-            "id": "@DualSubs.Netflix.beta",
-            "name": "DualSub.Netflix β",
-            "descs_html": [
-                "请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
-                "填写完成后别忘点击此页面底端右下角的\"保存\"。"
-            ],
-            "keys": [
-                "@DualSubs.Netflix.Settings"
-            ],
-            "settings": [
-                {
-                    "id": "@DualSubs.Netflix.Settings.type",
-                    "name": "双语字幕类型：",
-                    "val": "Google",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "Google",
-                            "label": "Google"
-                        },
-                        {
-                            "key": "DeepL",
-                            "label": "DeepL"
-                        },
-                        {
-                            "key": "Disable",
-                            "label": "禁用"
-                        }
-                    ],
-                    "desc": "请选择双语字幕类型"
-                },
-                {
-                    "id": "@DualSubs.Netflix.Settings.lang",
-                    "name": "官方字幕语言：",
-                    "val": "EN-US",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "ZH-CN",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "ZH-HK",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "ZH-TW",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "EN-US",
-                            "label": "英语（美国）"
-                        },
-                        {
-                            "key": "EN-US SDH",
-                            "label": "英语（美国）[CC]"
-                        },
-                        {
-                            "key": "JA",
-                            "label": "日文"
-                        },
-                        {
-                            "key": "KO",
-                            "label": "韩文"
-                        }
-                    ],
-                    "desc": ""
-                },
-                {
-                    "id": "@DualSubs.Netflix.Settings.sl",
-                    "name": "源语言：",
-                    "val": "AUTO",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "AUTO",
-                            "label": "自动识别"
-                        },
-                        {
-                            "key": "Chinese (Simplified)",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "Chinese (Hong Kong)",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "Chinese (Traditional)",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "English [CC]",
-                            "label": "English [CC]"
-                        }
-                    ],
-                    "desc": "请选择第二字幕源语言"
-                },
-                {
-                    "id": "@DualSubs.Netflix.Settings.tl",
-                    "name": "目标语言：",
-                    "val": "English [CC]",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "Chinese (Simplified)",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "Chinese (Hong Kong)",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "Chinese (Traditional)",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "English [CC]",
-                            "label": "English [CC]"
-                        }
-                    ],
-                    "desc": "请选择官方或机翻字幕目标语言"
-                },
-                {
-                    "id": "@DualSubs.Netflix.Settings.line",
-                    "name": "第二字幕位置",
-                    "val": "s",
-                    "type": "radios",
-                    "items": [
-                        {
-                            "key": "s",
-                            "label": "第二行"
-                        },
-                        {
-                            "key": "f",
-                            "label": "第一行"
-                        }
-                    ],
-                    "desc": ""
-                },
-                {
-                    "id": "@DualSubs.Netflix.Settings.dkey",
-                    "name": "DeepL API key",
-                    "val": "",
-                    "type": "text",
-                    "placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
-                    "desc": "DeepL API key"
-                }
-            ],
-            "author": "@DualSubs",
-            "repo": "https://github.com/DualSubs/DualSubs/blob/beta/js/DualSubs.beta.js",
-            "icons": [
-                "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Netflix.png",
-                "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png"
-            ]
-        },
-        {
-            "id": "@DualSubs.YouTube.beta",
-            "name": "DualSub.YouTube β",
-            "descs_html": [
-                "请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
-                "填写完成后别忘点击此页面底端右下角的\"保存\"。"
-            ],
-            "keys": [
-                "@DualSubs.YouTube.Settings"
-            ],
-            "settings": [
-                {
-                    "id": "@DualSubs.YouTube.Settings.type",
-                    "name": "双语字幕类型：",
-                    "val": "Enable",
-                    "type": "radios",
-                    "items": [
-                        {
-                            "key": "Enable",
-                            "label": "启用"
-                        },
-                        {
-                            "key": "Disable",
-                            "label": "禁用"
-                        }
-                    ],
-                    "desc": "请选择双语字幕类型"
-                },
-                {
-                    "id": "@DualSubs.YouTube.Settings.lang",
-                    "name": "官方字幕语言：",
-                    "val": "EN-US",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "ZH-CN",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "ZH-HK",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "ZH-TW",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "EN-US",
-                            "label": "英语（美国）"
-                        },
-                        {
-                            "key": "EN-US SDH",
-                            "label": "英语（美国）[CC]"
-                        },
-                        {
-                            "key": "JA",
-                            "label": "日文"
-                        },
-                        {
-                            "key": "KO",
-                            "label": "韩文"
-                        }
-                    ],
-                    "desc": ""
-                },
-                {
-                    "id": "@DualSubs.YouTube.Settings.sl",
-                    "name": "源语言：",
-                    "val": "AUTO",
-                    "type": "selects",
-                    "items": [
-                        {
-                            "key": "AUTO",
-                            "label": "自动识别"
-                        },
-                        {
-                            "key": "Chinese (Simplified)",
-                            "label": "中文（简体）"
-                        },
-                        {
-                            "key": "Chinese (Hong Kong)",
-                            "label": "中文（香港）"
-                        },
-                        {
-                            "key": "Chinese (Traditional)",
-                            "label": "中文（繁体）"
-                        },
-                        {
-                            "key": "English [CC]",
-                            "label": "English [CC]"
-                        }
-                    ],
-                    "desc": "请选择第二字幕源语言"
-                }
-            ],
-            "author": "@DualSubs",
-            "repo": "https://github.com/DualSubs/DualSubs/blob/beta/js/DualSubs.beta.js",
-            "icons": [
-                "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/YouTube.png",
-                "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png"
-            ]
-        }
-    ]
+	"id": "DualSubs.beta.app.sub",
+	"name": "DualSubs β",
+	"author": "@DualSubs",
+	"description": "Powered by DualSubs",
+	"icon": "https://avatars.githubusercontent.com/u/100578089?&v=4",
+	"repo": "https://github.com/DualSubs",
+	"apps": [
+		{
+			"id": "@DualSubs.Disney_Plus.beta",
+			"name": "DualSub.Disney+ β",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Disney_Plus.Settings"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.type",
+					"name": "双语字幕类型：",
+					"val": "Official",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL"
+						},
+						{
+							"key": "Disable",
+							"label": "禁用"
+						}
+					],
+					"desc": "请选择双语字幕类型"
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.language",
+					"name": "双语字幕语言：",
+					"val": "EN-US",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH-CN",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-TW",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.dkey",
+					"name": "DeepL API key",
+					"val": "",
+					"type": "text",
+					"placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
+					"desc": "DeepL API key"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/blob/beta/js/DualSubs.beta.js",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Disney+.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Disney+.png"
+			]
+		},
+		{
+			"id": "@DualSubs.HBO_Max.beta",
+			"name": "DualSub.HBO_Max β",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.HBO_Max.Settings"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.HBO_Max.Settings.type",
+					"name": "双语字幕类型：",
+					"val": "Official",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL"
+						},
+						{
+							"key": "Disable",
+							"label": "禁用"
+						}
+					],
+					"desc": "请选择双语字幕类型"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.lang",
+					"name": "官方字幕语言：",
+					"val": "EN-US",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH-CN",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-TW",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "请选择官方字幕语言"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.sl",
+					"name": "源语言：",
+					"val": "AUTO",
+					"type": "selects",
+					"items": [
+						{
+							"key": "AUTO",
+							"label": "自动识别"
+						},
+						{
+							"key": "Chinese (Simplified)",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "Chinese (Hong Kong)",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "Chinese (Traditional)",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "English [CC]",
+							"label": "English [CC]"
+						}
+					],
+					"desc": "请选择第二字幕源语言"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.tl",
+					"name": "目标语言：",
+					"val": "English [CC]",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Chinese (Simplified)",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "Chinese (Hong Kong)",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "Chinese (Traditional)",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "English [CC]",
+							"label": "English [CC]"
+						}
+					],
+					"desc": "请选择官方或机翻字幕目标语言"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.line",
+					"name": "第二字幕位置",
+					"val": "s",
+					"type": "radios",
+					"items": [
+						{
+							"key": "s",
+							"label": "第二行"
+						},
+						{
+							"key": "f",
+							"label": "第一行"
+						}
+					],
+					"desc": "请选择第二字幕位置"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.dkey",
+					"name": "DeepL API key",
+					"val": "",
+					"type": "text",
+					"placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
+					"desc": "DeepL API key"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/blob/beta/js/DualSubs.beta.js",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/HBO_Max.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HBO_Max.png"
+			]
+		},
+		{
+			"id": "@DualSubs.Netflix.beta",
+			"name": "DualSub.Netflix β",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Netflix.Settings"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Netflix.Settings.type",
+					"name": "双语字幕类型：",
+					"val": "Google",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Google",
+							"label": "Google"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL"
+						},
+						{
+							"key": "Disable",
+							"label": "禁用"
+						}
+					],
+					"desc": "请选择双语字幕类型"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.lang",
+					"name": "官方字幕语言：",
+					"val": "EN-US",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH-CN",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-TW",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.sl",
+					"name": "源语言：",
+					"val": "AUTO",
+					"type": "selects",
+					"items": [
+						{
+							"key": "AUTO",
+							"label": "自动识别"
+						},
+						{
+							"key": "Chinese (Simplified)",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "Chinese (Hong Kong)",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "Chinese (Traditional)",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "English [CC]",
+							"label": "English [CC]"
+						}
+					],
+					"desc": "请选择第二字幕源语言"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.tl",
+					"name": "目标语言：",
+					"val": "English [CC]",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Chinese (Simplified)",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "Chinese (Hong Kong)",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "Chinese (Traditional)",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "English [CC]",
+							"label": "English [CC]"
+						}
+					],
+					"desc": "请选择官方或机翻字幕目标语言"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.line",
+					"name": "第二字幕位置",
+					"val": "s",
+					"type": "radios",
+					"items": [
+						{
+							"key": "s",
+							"label": "第二行"
+						},
+						{
+							"key": "f",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.dkey",
+					"name": "DeepL API key",
+					"val": "",
+					"type": "text",
+					"placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
+					"desc": "DeepL API key"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/blob/beta/js/DualSubs.beta.js",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Netflix.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png"
+			]
+		},
+		{
+			"id": "@DualSubs.YouTube.beta",
+			"name": "DualSub.YouTube β",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.YouTube.Settings"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.YouTube.Settings.type",
+					"name": "双语字幕类型：",
+					"val": "Enable",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Enable",
+							"label": "启用"
+						},
+						{
+							"key": "Disable",
+							"label": "禁用"
+						}
+					],
+					"desc": "请选择双语字幕类型"
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.lang",
+					"name": "官方字幕语言：",
+					"val": "EN-US",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH-CN",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-TW",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.sl",
+					"name": "源语言：",
+					"val": "AUTO",
+					"type": "selects",
+					"items": [
+						{
+							"key": "AUTO",
+							"label": "自动识别"
+						},
+						{
+							"key": "Chinese (Simplified)",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "Chinese (Hong Kong)",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "Chinese (Traditional)",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "English [CC]",
+							"label": "English [CC]"
+						}
+					],
+					"desc": "请选择第二字幕源语言"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/blob/beta/js/DualSubs.beta.js",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/YouTube.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png"
+			]
+		}
+	]
 }

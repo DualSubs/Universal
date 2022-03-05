@@ -331,7 +331,7 @@ const Platform = url.match(/(dssott|starott)\.com/i) ? "Disney_Plus"
 						: undefined
 $.log(`🚧 ${$.name}, Enviroment调试信息`, `Platform内容: ${Platform}`, "");
 $.BoxJs = $.getjson("DualSubs", $.DualSubs) // BoxJs
-$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
+//$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
 $.DualSubs[Platform] = Object.assign($.DualSubs[Platform], $.BoxJs[Platform]); // BoxJs
 $.Settings = $.DualSubs[Platform].Settings
 $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Settings内容: ${JSON.stringify($.Settings)}`, "");
@@ -369,7 +369,7 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	} else if (url.match(/\.vtt/) || Platform == "Netflix") {
 		//let metadata = await getMetaData(Platform)
-		$.log(`🚧 ${$.name}, 调试信息`, `*.vtt`, `Platform: ${Platform}`, `Type: ${$.Settings.type}`, `UUID: ${MetaData.UUID}`, "");
+		$.log(`🚧 ${$.name}, 调试信息`, `*.vtt`, `Platform: ${Platform}`, `Type: ${$.Settings.type}`, "");
 		/***************** Generate VTT Subtitle *****************/
 		$.log(`🚧 ${$.name}, Generate VTT Subtitle`, "");
 		let body = $response.body
@@ -424,7 +424,7 @@ async function getMetaData(Platform) {
 	let env = (Platform == "Disney_Plus") ? url.match(Disney_Plus_Regex)?.groups ?? null
 		: (Platform == "Prime_Video") ? url.match(Prime_Video_Regex)?.groups ?? null
 			: {};
-	$.log(`🚧 ${$.name}, Get Metadata`, `HOST内容: ${metadata.HOST}`, "");
+	$.log(`🚧 ${$.name}, 调试信息`, `Get Metadata`, `HOST内容: ${metadata.HOST}`, `DOMAIN: ${metadata.DOMAIN}`, `UUID: ${metadata.UUID}`, "");
 	return metadata
 }
 

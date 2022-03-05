@@ -341,7 +341,7 @@ $.Cache = ($.Cache != "") ? $.DualSubs[Platform]?.Cache ?? {} : {};
 //$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache}`, `$.Cache内容: ${$.Cache}`, "");
 if (typeof $.Cache == "string") $.Cache = JSON.parse($.Cache)
 $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
-//if (MetaData) $.Cache = (Platform == "Disney_Plus") ? $.Cache[MetaData.UUID] : $.Cache;
+//if (ENV) $.Cache = (Platform == "Disney_Plus") ? $.Cache[ENV.UUID] : $.Cache;
 
 /***************** Processing *****************/
 !(async () => {
@@ -361,14 +361,14 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 			$.Cache[ENV.UUID].subtitles_VTT_URLs = await getVTTURLs(Platform, ENV);
 			$.log(`🚧 ${$.name}`, `$.Cache${ENV.UUID}内容: ${JSON.stringify($.Cache[ENV.UUID])}`, "");
 		} else {
-			$.Cache.metadata = MetaData;
-			$.Cache.subtitles_M3U8_URL = await getPlaylist(Platform, MetaData)
-			$.Cache.subtitles_VTT_URLs = await getVTTURLs(Platform, MetaData)
+			$.Cache.ENV = ENV;
+			$.Cache.subtitles_M3U8_URL = await getPlaylist(Platform, ENV)
+			$.Cache.subtitles_VTT_URLs = await getVTTURLs(Platform, ENV)
 		}
 		$.log(`🚧 ${$.name}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	} else if (url.match(/\.vtt/) || Platform == "Netflix") {
-		//let metadata = await getMetaData(Platform)
+		//let env = await getENV(Platform)
 		$.log(`🚧 ${$.name}, 调试信息`, `*.vtt`, `Platform: ${Platform}`, `Type: ${$.Settings.type}`, "");
 		/***************** Generate VTT Subtitle *****************/
 		$.log(`🚧 ${$.name}, Generate VTT Subtitle`, "");
@@ -412,9 +412,9 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 
 /***************** Fuctions *****************/
 // Function 1
-// Get MetaData
-async function getMetaData(Platform) {
-	$.log(`🚧 ${$.name}, Get Metadata`, "");
+// Get Environment Variables
+async function getENV(Platform) {
+	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
 	// https://vod-llc-ap-west-2.media.dssott.com/ps01/disney/fb1fc2f7-9606-4599-bc6d-930c040fd9fe/cbcs-all-b7129de7-2046-430a-afbf-7a2aa98a97ed-dd284b2b-9ba9-48d2-a969-0856b7d6c071.m3u8?r=1080&a=3&sxl=zh-Hans&hash=067b95e47d9627533c99e7f487b79ef6d464374c
 	//const Disney_Plus_Regex = /.*media\.(dssott|starott)\.com\/ps01\/disney\/[^\/]+\//
 	const Disney_Plus_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)/i
@@ -424,13 +424,13 @@ async function getMetaData(Platform) {
 	let env = (Platform == "Disney_Plus") ? url.match(Disney_Plus_Regex)?.groups ?? null
 		: (Platform == "Prime_Video") ? url.match(Prime_Video_Regex)?.groups ?? null
 			: {};
-	$.log(`🚧 ${$.name}, 调试信息`, `Get Metadata`, `HOST内容: ${metadata.HOST}`, `DOMAIN: ${metadata.DOMAIN}`, `UUID: ${metadata.UUID}`, "");
-	return metadata
+	$.log(`🚧 ${$.name}, 调试信息`, `Get Environment Variables`, `HOST内容: ${env.HOST}`, `CDN: ${env.CDN}`, `DOMAIN: ${env.DOMAIN}`, `UUID: ${env.UUID}`, "");
+	return env
 }
 
 // Function 2
 // Get Subtitle playlist.m3u8 URL
-async function getPlaylist(Platform, MetaData) {
+async function getPlaylist(Platform, env) {
 	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", "");
 	//let patt = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${$.Settings.language}".+URI="([^"]+)`)
 	//const Language_Regex = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${$.Settings.language}".+URI="([^"]+)`)
@@ -438,9 +438,9 @@ async function getPlaylist(Platform, MetaData) {
 	/***************** Get Subtitle playlist.m3u8 URL *****************/
 	let body = $response.body
 	if (!body) $.done();
-	let subtitles_M3U8_URL = (Platform == "Disney_Plus") ? MetaData.HOST + body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null
+	let subtitles_M3U8_URL = (Platform == "Disney_Plus") ? env.PATH + body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null
 		: body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null;
-	//let subtitles_M3U8_URL = MetaData.HOST + body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null
+	//let subtitles_M3U8_URL = env.PATH + body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null
 	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `subtitles_M3U8_URL内容: ${subtitles_M3U8_URL}`, "");
 	//$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	return subtitles_M3U8_URL

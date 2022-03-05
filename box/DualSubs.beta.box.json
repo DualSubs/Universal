@@ -14,7 +14,8 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Disney_Plus.Settings"
+				"@DualSubs.Disney_Plus.Settings",
+				"@DualSubs.Disney_Plus.Cache"
 			],
 			"settings": [
 				{
@@ -120,7 +121,8 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.HBO_Max.Settings"
+				"@DualSubs.HBO_Max.Settings",
+				"@DualSubs.HBO_Max.Cache"
 			],
 			"settings": [
 				{
@@ -280,7 +282,8 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Netflix.Settings"
+				"@DualSubs.Netflix.Settings",
+				"@DualSubs.Netflix.Cache"
 			],
 			"settings": [
 				{
@@ -436,7 +439,8 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.YouTube.Settings"
+				"@DualSubs.YouTube.Settings",
+				"@DualSubs.YouTube.Cache"
 			],
 			"settings": [
 				{

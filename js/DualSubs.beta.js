@@ -337,10 +337,10 @@ $.Settings = $.DualSubs[Platform].Settings
 $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Settings内容: ${JSON.stringify($.Settings)}`, "");
 $.Settings.language = $.DualSubs[$.Settings.type]?.Languages?.[$.Settings.language] ?? $.DualSubs[Platform]?.Languages?.[$.Settings.language] ?? $.Settings.language;
 $.log(`🚧 ${$.name}, Language调试信息`, `$.Settings.language内容: ${$.Settings.language}`, "");
-$.Cache = ($.Cache == "") ? {}
-	: $.DualSubs[Platform]?.Cache ?? {};
+// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
+$.Cache = $.DualSubs[Platform]?.Cache || {};
 //$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache}`, `$.Cache内容: ${$.Cache}`, "");
-if (typeof $.Cache == "string") $.Cache = JSON.parse($.Cache)
+if (typeof $.Cache == "string" && $.Cache != "") $.Cache = JSON.parse($.Cache)
 $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
 //if (ENV) $.Cache = (Platform == "Disney_Plus") ? $.Cache[ENV.UUID] : $.Cache;
 

@@ -337,7 +337,8 @@ $.Settings = $.DualSubs[Platform].Settings
 $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Settings内容: ${JSON.stringify($.Settings)}`, "");
 $.Settings.language = $.DualSubs[$.Settings.type]?.Languages?.[$.Settings.language] ?? $.DualSubs[Platform]?.Languages?.[$.Settings.language] ?? $.Settings.language;
 $.log(`🚧 ${$.name}, Language调试信息`, `$.Settings.language内容: ${$.Settings.language}`, "");
-$.Cache = ($.Cache != "") ? $.DualSubs[Platform]?.Cache ?? {} : {};
+$.Cache = ($.Cache == "") ? {}
+	: $.DualSubs[Platform]?.Cache ?? {};
 //$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache}`, `$.Cache内容: ${$.Cache}`, "");
 if (typeof $.Cache == "string") $.Cache = JSON.parse($.Cache)
 $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
@@ -345,7 +346,7 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 
 /***************** Processing *****************/
 !(async () => {
-	$.log(`🚧 ${$.name}, V0.2.0`, "");
+	$.log(`🚧 ${$.name}, V0.2.1`, "");
 	const ENV = await getENV(Platform);
 	if ($.Settings.type == "Disable") $.done()
 	else if ($.Settings.type != "Official" && url.match(/\.m3u8/)) $.done();
@@ -353,8 +354,8 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 		if (url.match(`lang=${$.Settings.language}`) || url.match(/&tlang=/)) $.done();
 		else $.done({ url: `${url}&tlang=${$.Settings.language}` });
 	} else if ($.Settings.type == "Official" && url.match(/\.m3u8/)) {
+		$.log(`🚧 ${$.name}, 调试信息`, `*.m3u8`, "");
 		if (Platform == "Disney_Plus") {
-			$.log(`🚧 ${$.name}, 调试信息`, `*.m3u8`, "");
 			$.Cache[ENV.UUID] = {};
 			$.Cache[ENV.UUID].ENV = ENV;
 			$.Cache[ENV.UUID].subtitles_M3U8_URL = await getPlaylist(Platform, ENV);
@@ -374,37 +375,33 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 		$.log(`🚧 ${$.name}, Generate VTT Subtitle`, "");
 		let body = $response.body
 		if (!body) $.done()
-		/***************** Settings Type *****************/
-		/*
-		if (Platform != "Netflix" && url == $.Cache.s_subtitles_url && $.Cache.subtitles != "null" && $.Cache.subtitles_type == $.Settings.type && $.Cache.subtitles_sl == $.Settings.sl && $.Cache.subtitles_tl == $.Settings.language && $.Cache.subtitles_line == $.Settings.line) {
-			$.log(`🚧 ${$.name}, Generate VTT Subtitle调试信息`, `$.Cache.subtitles内容: ${JSON.stringify($.Cache.subtitles)}`, "");
-			$.done({ body: $.Cache.subtitles })
-		} else 
-		*/
-		if ($.Settings.type == "Official") {
-			if (Platform == "Disney_Plus") {
-				if ($.Cache[ENV.UUID]?.subtitles_VTT_URLs) {
-					body = await official_subtitles(url, body, $.Cache[ENV.UUID].subtitles_VTT_URLs);
-					$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-					$.done({ body });
-				} else $.done();
-			} else if ($.Cache.subtitles_VTT_URLs) {
-				body = await official_subtitles(url, body, $.Cache.subtitles_VTT_URLs);
-				$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-				$.done({ body });
-			} else $.done();
-			/*
-			} else if ($.Settings.type == "Google") {
-				body = await machine_subtitles($.Settings.type)
-				$.done({ body });
-			} else if ($.Settings.type == "DeepL") {
-				body = await machine_subtitles($.Settings.type)
-				$.done({ body });
-			} else if ($.Settings.type == "External"){
-				body = await external_subtitles($.Cache.external_subtitles)
-				$.done({ body });
-			*/
-		}
+		let subtitles_VTT_URLs = ($.Cache[ENV.UUID]?.subtitles_VTT_URLs) ? $.Cache[ENV.UUID].subtitles_VTT_URLs
+			: ($.Cache.subtitles_VTT_URLs) ? $.Cache.subtitles_VTT_URLs
+				: null
+		$.log(`🚧 ${$.name}, Generate VTT Subtitle`, `subtitles_VTT_URLs: ${subtitles_VTT_URLs}`, "");
+
+		if (subtitles_VTT_URLs != null) {
+			let result = ($.Settings.type == "Official") ? await getOfficialSubtitles(subtitles_VTT_URLs)
+				: await getTranslateSubtitles(body)
+			/***************** merge Dual Subtitles *****************/
+			let FirstSub = VTT.parse(body, ["timeStamp", "ms"])
+			$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
+			$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
+			$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
+			$.log("FirstSub.body[25].groups", JSON.stringify(FirstSub.body[25].groups))
+			let SecondSub = VTT.parse(result, ["timeStamp", "ms"])
+			$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
+			$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
+			$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
+			$.log("SecondSub.body[25].groups", JSON.stringify(SecondSub.body[25].groups))
+			//$.log("VTT.stringify(FirstSub)", VTT.stringify(FirstSub));
+			let DualSub = await mergeDualSubs(FirstSub, SecondSub);
+			//$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
+			DualSub = VTT.stringify(DualSub)
+			$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
+			$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+			$.done({ "body": DualSub });
+		} else $.done();
 	}
 })()
 	.catch((e) => $.logErr(e))
@@ -416,7 +413,6 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 async function getENV(Platform) {
 	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
 	// https://vod-llc-ap-west-2.media.dssott.com/ps01/disney/fb1fc2f7-9606-4599-bc6d-930c040fd9fe/cbcs-all-b7129de7-2046-430a-afbf-7a2aa98a97ed-dd284b2b-9ba9-48d2-a969-0856b7d6c071.m3u8?r=1080&a=3&sxl=zh-Hans&hash=067b95e47d9627533c99e7f487b79ef6d464374c
-	//const Disney_Plus_Regex = /.*media\.(dssott|starott)\.com\/ps01\/disney\/[^\/]+\//
 	const Disney_Plus_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)/i
 	//$.log(`🚧 ${$.name}, Get Environment Variables调试信息`, `Disney_Plus_Regex内容: ${Disney_Plus_Regex}`, "");
 	const Prime_Video_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(?:m3u8|vtt)$/i
@@ -426,7 +422,7 @@ async function getENV(Platform) {
 			: {};
 	$.log(`🚧 ${$.name}, 调试信息`, `Get Environment Variables`, `HOST内容: ${env.HOST}`, `CDN: ${env.CDN}`, `DOMAIN: ${env.DOMAIN}`, `UUID: ${env.UUID}`, "");
 	return env
-}
+};
 
 // Function 2
 // Get Subtitle playlist.m3u8 URL
@@ -442,16 +438,13 @@ async function getPlaylist(Platform, env) {
 		: body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null;
 	//let subtitles_M3U8_URL = env.PATH + body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null
 	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `subtitles_M3U8_URL内容: ${subtitles_M3U8_URL}`, "");
-	//$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	return subtitles_M3U8_URL
-}
+};
 
 // Function 3
 // Get Subtitle *.vtt URLs
 async function getVTTURLs(Platform, env) {
 	let url = (Platform == "Disney_Plus") ? $.Cache[env.UUID].subtitles_M3U8_URL : $.Cache.subtitles_M3U8_URL;
-	//const Prime_Video_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(?:m3u8|vtt)$/i
-	//headers["Host"] = (Platform == "Prime_Video") ? url.match(Prime_Video_Regex)?.groups.HOST ?? env.HOST : headers["Host"];
 	delete headers["Host"]
 	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `url内容: ${url}`, "");
 	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `headers内容: ${JSON.stringify(headers)}`, "");
@@ -463,36 +456,52 @@ async function getVTTURLs(Platform, env) {
 		if (/^https?:\/\/(?:.+)\.vtt$/gim.test(subtitles_VTT_URLs) == false) {
 			env.PATH = url.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? env.PATH
 			subtitles_VTT_URLs = subtitles_VTT_URLs.map(item => item = env.PATH + item)
-			/*
-			subtitles_VTT_URLs = (Platform == "Disney_Plus") ? subtitles_VTT_URLs.map(item => item = env.PATH + "r/" + item)
-				: (Platform == "Prime_Video" && env.DOMAIN == "cloudfront") ? subtitles_VTT_URLs.map(item => item = env.PATH + item)
-					: subtitles_VTT_URLs;
-					*/
 		};
-		if (Platform == "Disney_Plus") subtitles_VTT_URLs = subtitles_VTT_URLs.filter(item => /.+-MAIN.+/i.test(item)) // Disney + 筛选字幕
-		/*
-		const webVTT_URL_Regex = (Platform == "Disney_Plus") ? /.+-MAIN.+\.vtt/g
-			: (Platform == "Prime_Video") ? /.+\.vtt/g
-				: /http.+\.vtt/g
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `webVTT_URL_Regex内容: ${webVTT_URL_Regex}`, "");
-		let subtitles_VTT_URLs = response.body.match(webVTT_URL_Regex)
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(webVTT_URL_Regex)内容: ${subtitles_VTT_URLs}`, "");
-		
-		if (Platform == "Disney_Plus" && $.Cache[metadata.uuid].subtitles_m3u8_url.match(/.+-MAIN.+/) && data.match(/,\nseg.+\.vtt/g)) {
-			$.Cache[metadata.uuid].subtitles_vtt_urls = data.match(/,\nseg.+\.vtt/g)
-			let url_path = subtitles_data_link.match(/\/r\/(.+)/)[1].replace(/\w+\.m3u8/, "")
-			$.log(`🚧 ${$.name}, Get Subtitle Data调试信息`, `url_path内容: ${url_path}`, "");
-			$.Cache[metadata.uuid].subtitles_vtt_urls = $.Cache[metadata.uuid].subtitles_vtt_urls.forEach(element => element = url_path + element);
-			$.log(`🚧 ${$.name}, Get Subtitle Data调试信息`, `$.Cache[metadata.uuid].subtitles_vtt_urls内容: ${JSON.stringify($.Cache[metadata.uuid].subtitles_vtt_urls)}`, "");
-		}
-		*/
+		// Disney + 筛选字幕
+		if (Platform == "Disney_Plus") subtitles_VTT_URLs = subtitles_VTT_URLs.filter(item => /.+-MAIN.+/i.test(item))
+
 		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `subtitles_VTT_URLs.map内容: ${subtitles_VTT_URLs}`, "");
 		return subtitles_VTT_URLs
-		//$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	})
-}
+};
 
-// Function 2
+// Function 4
+// Get Official Subtitles
+async function getOfficialSubtitles(subtitles_VTT_URLs = new Array) {
+	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `subtitles_VTT_URLs内容: ${subtitles_VTT_URLs}`, "");
+
+	/***************** Slice subtitles URLs Array *****************/
+	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
+	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
+	//subtitles_VTT_URLs = subtitles_VTT_URLs.slice(start, SubtitlesIndex + 4)
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `subtitles_VTT_URLs内容: ${subtitles_VTT_URLs}`, "");
+
+	/***************** Get subtitles URL *****************/
+	let subtitles_VTT_URL = subtitles_VTT_URLs
+	if (Platform == "Disney_Plus") { // Disney+ 片段分型相同
+		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
+		subtitles_VTT_URL = subtitles_VTT_URLs.find(item => item.includes(SubtitleName))
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${subtitles_VTT_URL}`, "")
+	} else if (Platform == "Prime_Video") { // Amazon Prime Video 不拆分字幕片段
+		subtitles_VTT_URL = subtitles_VTT_URLs[0]
+	}
+	/***************** Get subtitles *****************/
+	//let result = {}
+	// 获取webVTT
+	//for (var k in subtitles_VTT_URLs) { await $.http.get({ url: subtitles_VTT_URLs[k], headers: headers }).then((response) => { result.push(response.body) }) }
+	return await $.http.get({ url: subtitles_VTT_URL, headers: headers }).then((response) => { return response.body })
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles", `result内容: ${result}`, "");
+};
+
+// Function 5
+// Get Translate Subtitles
+async function getTranslateSubtitles(body) {
+	$.log(`🚧 ${$.name},  Get Translate Subtitles`, "getTranslateSubtitles", "");
+};
+
+// Function 6
 // Combine Dual Subtitles
 async function mergeDualSubs(Sub1 = { headers: {}, body: [] }, Sub2 = { headers: {}, body: [] }, options = ["Forward"]) { // options = ["Forward", "Reverse"]
 	$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", "");
@@ -525,66 +534,8 @@ async function mergeDualSubs(Sub1 = { headers: {}, body: [] }, Sub2 = { headers:
 	return DualSub;
 };
 
-// Function 3
-// Official Subtitles
-async function official_subtitles(url, body, subtitles_VTT_URLs = new Array) {
-	$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", "");
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesURLs内容: ${SubtitlesURLs}`, "");
-
-	/***************** Slice subtitles URLs Array *****************/
-	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
-	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
-	//subtitles_VTT_URLs = subtitles_VTT_URLs.slice(start, SubtitlesIndex + 4)
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `subtitles_VTT_URLs内容: ${subtitles_VTT_URLs}`, "");
-
-	/***************** Get subtitles URL *****************/
-	let subtitles_VTT_URL = subtitles_VTT_URLs
-	if (Platform == "Disney_Plus") { // Disney+ 片段分型相同
-		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-		subtitles_VTT_URL = subtitles_VTT_URLs.find(item => item.includes(SubtitleName))
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${subtitles_VTT_URL}`, "")
-	} else if (Platform == "Prime_Video") { // Amazon Prime Video 不拆分字幕片段
-		 subtitles_VTT_URL = subtitles_VTT_URLs[0]
-	}
-	/***************** Get subtitles *****************/
-	//let result = {}
-	// 获取webVTT
-	//for (var k in subtitles_VTT_URLs) { await $.http.get({ url: subtitles_VTT_URLs[k], headers: headers }).then((response) => { result.push(response.body) }) }
-	let result = await $.http.get({ url: subtitles_VTT_URL, headers: headers }).then((response) => { return response.body })
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles", `result内容: ${result}`, "");
-
-	/***************** merge Dual Subtitles *****************/
-	let FirstSub = VTT.parse(body, ["timeStamp", "ms"])
-	$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
-	$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
-	$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
-	$.log("FirstSub.body[25].groups", JSON.stringify(FirstSub.body[25]))
-	let SecondSub = VTT.parse(result, ["timeStamp", "ms"])
-	$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
-	$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
-	$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
-	$.log("SecondSub.body[25].groups", JSON.stringify(SecondSub.body[25]))
-
-	//$.log("VTT.stringify(FirstSub)", VTT.stringify(FirstSub));
-
-	let DualSub = await mergeDualSubs(FirstSub, SecondSub);
-	$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
-
-	DualSub = VTT.stringify(DualSub)
-	$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
-
-	//$.Cache.s_subtitles_url = url
-	//$.Cache.subtitles = DualSub
-	//$.Cache.subtitles_type = $.Settings.type
-	//$.Cache.subtitles_sl = $.Settings.sl
-	//$.Cache.subtitles_tl = $.Settings.language
-	//$.Cache.subtitles_line = $.Settings.line
-	return DualSub
-};
 /*
-// Function 4
+// Function
 // Machine Subtitles
 async function machine_subtitles(type, body) {
 	$.log(`🚧 ${$.name}, Machine Subtitles`, "machine_subtitles", "");
@@ -679,7 +630,7 @@ async function machine_subtitles(type, body) {
 	return body
 };
 
-// Function 5
+// Function
 // External Subtitles
 async function external_subtitles(external_subtitles, body) {
 	let patt = new RegExp(`(\\d+\\n)*\\d+:\\d\\d:\\d\\d.\\d\\d\\d --> \\d+:\\d\\d:\\d\\d.\\d.+(\\n|.)+`)
@@ -690,7 +641,7 @@ async function external_subtitles(external_subtitles, body) {
 	return body
 };
 
-// Function 6
+// Function
 // groupAgain
 async function groupAgain(data, num) {
 	var result = []

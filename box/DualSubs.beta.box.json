@@ -258,8 +258,8 @@
 					"desc": "请选择双语字幕类型"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.lang",
-					"name": "官方字幕语言：",
+					"id": "@DualSubs.HBO_Max.Settings.language",
+					"name": "双语字幕语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -349,17 +349,17 @@
 					"desc": "请选择官方或机翻字幕目标语言"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.line",
+					"id": "@DualSubs.HBO_Max.Settings.position",
 					"name": "第二字幕位置",
-					"val": "s",
+					"val": "Forward",
 					"type": "radios",
 					"items": [
 						{
-							"key": "s",
+							"key": "Forward",
 							"label": "第二行"
 						},
 						{
-							"key": "f",
+							"key": "Reverse",
 							"label": "第一行"
 						}
 					],
@@ -415,8 +415,8 @@
 					"desc": "请选择双语字幕类型"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.lang",
-					"name": "官方字幕语言：",
+					"id": "@DualSubs.Netflix.Settings.language",
+					"name": "双语字幕语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -506,17 +506,17 @@
 					"desc": "请选择官方或机翻字幕目标语言"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.line",
+					"id": "@DualSubs.Netflix.Settings.position",
 					"name": "第二字幕位置",
-					"val": "s",
+					"val": "Forward",
 					"type": "radios",
 					"items": [
 						{
-							"key": "s",
+							"key": "Forward",
 							"label": "第二行"
 						},
 						{
-							"key": "f",
+							"key": "Reverse",
 							"label": "第一行"
 						}
 					],
@@ -552,7 +552,7 @@
 			"settings": [
 				{
 					"id": "@DualSubs.YouTube.Settings.type",
-					"name": "双语字幕类型：",
+					"name": "字幕类型：",
 					"val": "Enable",
 					"type": "radios",
 					"items": [
@@ -565,11 +565,11 @@
 							"label": "禁用"
 						}
 					],
-					"desc": "请选择双语字幕类型"
+					"desc": "请选择字幕类型"
 				},
 				{
-					"id": "@DualSubs.YouTube.Settings.lang",
-					"name": "官方字幕语言：",
+					"id": "@DualSubs.YouTube.Settings.language",
+					"name": "字幕语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -603,35 +603,6 @@
 						}
 					],
 					"desc": ""
-				},
-				{
-					"id": "@DualSubs.YouTube.Settings.sl",
-					"name": "源语言：",
-					"val": "AUTO",
-					"type": "selects",
-					"items": [
-						{
-							"key": "AUTO",
-							"label": "自动识别"
-						},
-						{
-							"key": "Chinese (Simplified)",
-							"label": "中文（简体）"
-						},
-						{
-							"key": "Chinese (Hong Kong)",
-							"label": "中文（香港）"
-						},
-						{
-							"key": "Chinese (Traditional)",
-							"label": "中文（繁体）"
-						},
-						{
-							"key": "English [CC]",
-							"label": "English [CC]"
-						}
-					],
-					"desc": "请选择第二字幕源语言"
 				}
 			],
 			"author": "@DualSubs",

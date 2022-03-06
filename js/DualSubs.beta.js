@@ -469,6 +469,7 @@ async function getVTTURLs(Platform, env) {
 					: subtitles_VTT_URLs;
 					*/
 		};
+		if (Platform == "Disney_Plus") subtitles_VTT_URLs = subtitles_VTT_URLs.filter(item => /.+-MAIN.+/i.test(item)) // Disney + 筛选字幕
 		/*
 		const webVTT_URL_Regex = (Platform == "Disney_Plus") ? /.+-MAIN.+\.vtt/g
 			: (Platform == "Prime_Video") ? /.+\.vtt/g

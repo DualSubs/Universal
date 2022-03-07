@@ -4,317 +4,29 @@ README:https://github.com/DualSubs/DualSubs/
 
 // Original: https://raw.githubusercontent.com/DualSubs-R/Surge/master/DualSub.js
 
-const $ = new Env("DualSubs");
+const $ = new Env("DualSubs v0.3.0");
+const DBurl = "https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json"
 
 let url = $request.url
 let headers = $request.headers
 
-// Default Settings
-$.DualSubs = {
-	"Disney_Plus": {
-		"Settings": {
-			"type": "Official", // Official, Google, DeepL, Disable
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
-		},
-		"Languages": {
-			//"BG": "bg", // 保加利亚语
-			//"CS": "cs", // 捷克语
-			"DA": "da", // 丹麦语
-			"DE": "de", // 德文
-			//"EL": "el", // 希腊语
-			"EN-GB": "en", // 英语（英国）
-			"EN-US": "en", // 英语（美国）
-			"EN-US SDH": "en", // 英语（美国）CC
-			"ES": "es-ES", // 西班牙语
-			"ES-419": "es-419", // 西班牙语（拉丁美洲）
-			"ES-ES": "es-ES", // 西班牙语
-			//"ET": "et", // 爱沙尼亚语
-			"FI": "fi", // 芬兰语
-			"FR": "fr-FR", // 法语
-			//"HU": "hu", // 匈牙利语
-			"IT": "it", // 意大利语
-			"JA": "ja", // 日语
-			//"KO": "ko", // 韩语
-			//"LT": "lt", // 立陶宛语
-			//"LV": "lv", // 拉脱维亚语
-			"NL": "nl", // 荷兰语
-			"NO": "no", // 挪威语
-			//"PL": "pl", // 波兰语
-			"PT-PT": "pt-PT", // 葡萄牙语
-			"PT-BR": "pt-BR", // 葡萄牙语(巴西)
-			//"RO": "ro", // 罗马尼亚语
-			//"RU": "ru", // 俄罗斯
-			//"SK": "sk", // 斯洛伐克语
-			//"SL": "sl", // 斯洛文尼亚语
-			"SV": "sv", // 瑞典语
-			"IS": "is", // 冰岛语
-			"ZH-CN": "zh-Hans", // 中文（简体）
-			"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-Hant" // 中文（繁体）
-		}
-	},
-	"Prime_Video": {
-		"Settings": {
-			"type": "Official", // Official, Google, DeepL, Disable
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
-		},
-		"Languages": {
-			"AR": "ar-001", // 阿拉伯语
-			//"BG": "bg", // 保加利亚语
-			"CS": "cs-cz", // 捷克语
-			"DA": "da-dk", // 丹麦语
-			"DE": "de-de", // 德文
-			"EL": "el-gr", // 希腊语
-			"EN-GB": "en-gb", // 英语（英国）
-			"EN-US": "en-us", // 英语（美国）
-			"EN-US SDH": "en-us", // 英语（美国）CC
-			"ES": "es-ES", // 西班牙语
-			"ES-419": "es-419", // 西班牙语（拉丁美洲）
-			"ES-ES": "es-es", // 西班牙语
-			//"ET": "et", // 爱沙尼亚语
-			"FI": "fi-fi", // 芬兰语
-			"FR": "fr-fr", // 法语
-			"HU": "hu-hu", // 匈牙利语
-			"ID": "id-id", // 印尼语
-			"IT": "it-it", // 意大利语
-			"JA": "ja-jp", // 日语
-			"KO": "ko-kr", // 韩语
-			//"LT": "lt", // 立陶宛语
-			//"LV": "lv", // 拉脱维亚语
-			"NL": "nl-nl", // 荷兰语
-			"NO": "nb-no", // 挪威语
-			"PL": "pl-pl", // 波兰语
-			"PT-PT": "pt-pt", // 葡萄牙语
-			"PT-BR": "pt-br", // 葡萄牙语(巴西)
-			"RO": "ro-ro", // 罗马尼亚语
-			"RU": "ru-ru", // 俄罗斯语
-			//"SK": "sk", // 斯洛伐克语
-			//"SL": "sl", // 斯洛文尼亚语
-			"SV": "sv-se", // 瑞典语
-			//"IS": "is", // 冰岛语
-			"ZH-CN": "zh-Hans", // 中文（简体）
-			//"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-Hant" // 中文（繁体）
-		}
-	},
-	"HBO_Max": {
-		"Settings": {
-			"type": "Official", // Official, Google, DeepL, Disable
-			"lang": "English CC",
-			"sl": "AUTO",
-			"tl": "en-US SDH",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
-		},
-		"Languages": {
-			"BG": "bg-BG", // 保加利亚语
-			//"CS": "cs", // 捷克语
-			"DA": "da-DK", // 丹麦语
-			//"DE": "de", // 德文
-			//"EL": "el", // 希腊语
-			"EN-GB": "en", // 英语（英国）
-			"EN-US": "en-US", // 英语（美国）
-			"EN-US SDH": "en-US SDH", // 英语（美国）CC
-			"ES": "es-419", // 西班牙语
-			"ES-419": "es-419", // 西班牙语（拉丁美洲）
-			"ES-ES": "es-ES", // 西班牙语
-			"ET": "et-EE", // 爱沙尼亚语
-			//"FI": "fi", // 芬兰语
-			//"FR": "fr", // 法语
-			"HU": "hu-HU", // 匈牙利语
-			"IT": "it", // 意大利语
-			//"JA": "ja", // 日语
-			//"KO": "ko", // 韩语
-			"LT": "lt-LT", // 立陶宛语
-			"LV": "lv-LV", // 拉脱维亚语
-			"NL": "nl-NL", // 荷兰语
-			"PL": "pl-PL", // 波兰语
-			"PT-PT": "pt-PT", // 葡萄牙语
-			"PT-BR": "pt-BR", // 葡萄牙语(巴西)
-			"RO": "ro-RO", // 罗马尼亚语
-			"RU": "ru-RU", // 俄罗斯
-			"SK": "sk-SK", // 斯洛伐克语
-			"SL": "sl-SI", // 斯洛文尼亚语
-			"SV": "sv-SE", // 瑞典语
-			"ZH-CN": "zh-CN", // 中文（中国）
-			"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-TW" // 中文（台湾）
-		}
-	},
-	"Paramount_Plus": {
-		"Settings": {
-			"type": "Google", // Google, DeepL, Disable
-			"lang": "English",
-			"sl": "auto",
-			"tl": "en",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
-		}
-	},
-	"Netflix": {
-		"Settings": {
-			"type": "Google", // Google, DeepL, Disable
-			"lang": "English",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
-		}
-	},
-	"YouTube": {
-		"Settings": {
-			"type": "Enable", // Enable, Disable
-			"lang": "English",
-			"sl": "AUTO",
-			"tl": "en"
-		},
-		"Languages": {
-			"BG": "bg-BG", // 保加利亚语
-			//"CS": "cs", // 捷克语
-			"DA": "da-DK", // 丹麦语
-			//"DE": "de", // 德文
-			//"EL": "el", // 希腊语
-			"EN-GB": "en", // 英语（英国）
-			"EN-US": "en-US", // 英语（美国）
-			"EN-US SDH": "en-US SDH", // 英语（美国）CC
-			"ES": "es-419", // 西班牙语
-			"ES-419": "es-419", // 西班牙语（拉丁美洲）
-			"ES-ES": "es-ES", // 西班牙语
-			"ET": "et-EE", // 爱沙尼亚语
-			//"FI": "fi", // 芬兰语
-			//"FR": "fr", // 法语
-			"HU": "hu-HU", // 匈牙利语
-			"IT": "it", // 意大利语
-			//"JA": "ja", // 日语
-			//"KO": "ko", // 韩语
-			"LT": "lt-LT", // 立陶宛语
-			"LV": "lv-LV", // 拉脱维亚语
-			"NL": "nl-NL", // 荷兰语
-			"PL": "pl-PL", // 波兰语
-			"PT-PT": "pt-PT", // 葡萄牙语
-			"PT-BR": "pt-BR", // 葡萄牙语(巴西)
-			"RO": "ro-RO", // 罗马尼亚语
-			"RU": "ru-RU", // 俄罗斯
-			"SK": "sk-SK", // 斯洛伐克语
-			"SL": "sl-SI", // 斯洛文尼亚语
-			"SV": "sv-SE", // 瑞典语
-			"ZH-CN": "zh-Hans", // 中文（简体）
-			"ZH-HK": "zh-Hant-HK", // 中文（香港）
-			"ZH-TW": "zh-Hant" // 中文（繁体）
-		}
-	},
-	"Google": {
-		"Languages": {
-			"BG": "bg", // 保加利亚语
-			"CS": "cs", // 捷克语
-			"DA": "da", // 丹麦语
-			"DE": "de", // 德文
-			"EL": "el", // 希腊语
-			"EN-GB": "en", // 英语（英国）
-			"EN-US": "en", // 英语（美国）
-			"EN-US SDH": "en", // 英语（美国）CC
-			"ES": "es", // 西班牙文
-			"ES-419": "es", // 西班牙语（拉丁美洲）
-			"ES-ES": "es", // 西班牙文
-			"ET": "et", // 爱沙尼亚语
-			"FI": "fi", // 芬兰语
-			"FR": "fr", // 法语
-			"HU": "hu", // 匈牙利语
-			"IT": "it", // 意大利语
-			"JA": "ja", // 日语
-			"KO": "ko", // 韩语
-			"LT": "lt", // 立陶宛语
-			"LV": "lv", // 拉脱维亚语
-			"NL": "nl", // 荷兰语
-			"PL": "pl", // 波兰语
-			"PT-PT": "pt", // 葡萄牙语
-			"PT-BR": "pt", // 葡萄牙语(巴西)
-			"RO": "ro", // 罗马尼亚语
-			"RU": "ru", // 俄罗斯
-			"SK": "sk", // 斯洛伐克语
-			"SL": "sl", // 斯洛文尼亚语
-			"SV": "sv", // 瑞典语
-			"ZH-CN": "zh-CN", // 中文（中国）
-			"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-TW" // 中文（台湾）
-		}
-	},
-	"DeepL": {
-		"Languages": {
-			"AUTO": "", // 自动识别
-			"BG": "BG", // 保加利亚语
-			"CS": "CS", // 捷克语
-			"DA": "DA", // 丹麦语
-			"DE": "de", // 德文
-			"EL": "el", // 希腊语
-			"EN": "EN", // 英语（英国）
-			"EN-GB": "EN-GB", // 英语（英国）
-			"EN-US": "EN-US", // 英语（美国）
-			"EN-US SDH": "EN-US", // 英语（美国）CC
-			"ES": "ES", // 西班牙文
-			"ES-419": "ES", // 西班牙语（拉丁美洲）
-			"ES-ES": "ES", // 西班牙文
-			"ET": "ET", // 爱沙尼亚语
-			"FI": "FI", // 芬兰语
-			"FR": "FR", // 法语
-			"HU": "HU", // 匈牙利语
-			"IT": "IT", // 意大利语
-			"JA": "JA", // 日语
-			//"KO": "ko", // 韩语
-			"LT": "LT", // 立陶宛语
-			"LV": "LV", // 拉脱维亚语
-			"NL": "NL", // 荷兰语
-			"PL": "PL", // 波兰语
-			"PT": "PT", // 葡萄牙语
-			"PT-PT": "PT-PT", // 葡萄牙语
-			"PT-BR": "PT-BR", // 葡萄牙语(巴西)
-			"RO": "RO", // 罗马尼亚语
-			"RU": "RU", // 俄罗斯
-			"SK": "SK", // 斯洛伐克语
-			"SL": "SL", // 斯洛文尼亚语
-			"SV": "SV", // 瑞典语
-			"ZH": "ZH" // 中文（简体）
-		}
-	}
-};
-
-/***************** Enviroment *****************/
-const Platform = url.match(/(dssott|starott)\.com/i) ? "Disney_Plus"
-	: url.match(/(\.hls\.row\.aiv-cdn|-a\.akamaihd|cloudfront)\.net/i) ? "Prime_Video"
+/***************** Platform *****************/
+const Platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
+	: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
 		: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
 			: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-				: url.match(/\.(uplynk)\.com/i) ? "Discovery_Plus"
-					: (url.match(/(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_plus"
+				: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+					: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_plus"
 						: url.match(/www\.youtube\.com/i) ? "YouTube"
 							: url.match(/\.nflxvideo\.net/i) ? "Netflix"
 								: undefined
-$.log(`🚧 ${$.name}, Enviroment调试信息`, `Platform内容: ${Platform}`, "");
-$.BoxJs = $.getjson("DualSubs", $.DualSubs) // BoxJs
-//$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
-$.DualSubs[Platform] = Object.assign($.DualSubs[Platform], $.BoxJs[Platform]); // BoxJs
-$.Settings = $.DualSubs[Platform].Settings
-$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Settings内容: ${JSON.stringify($.Settings)}`, "");
-$.Settings.language = $.DualSubs[$.Settings.type]?.Languages?.[$.Settings.language] ?? $.DualSubs[Platform]?.Languages?.[$.Settings.language] ?? $.Settings.language;
-$.log(`🚧 ${$.name}, Language调试信息`, `$.Settings.language内容: ${$.Settings.language}`, "");
-// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-$.Cache = $.DualSubs[Platform]?.Cache || {};
-//$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache}`, `$.Cache内容: ${$.Cache}`, "");
-if (typeof $.Cache == "string" && $.Cache != "") $.Cache = JSON.parse($.Cache)
-$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
-//if (ENV) $.Cache = (Platform == "Disney_Plus") ? $.Cache[ENV.UUID] : $.Cache;
+$.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
 
 /***************** Processing *****************/
 !(async () => {
-	$.log(`🚧 ${$.name}, V0.2.1`, "");
-	const ENV = await getENV(Platform);
+	$.DualSubs = await getDataBase(DBurl);
+	[$.Settings, $.Cache] = await setENV(Platform, $.DualSubs);
+	const Parameters = await getURLparameters(Platform);
 	if ($.Settings.type == "Disable") $.done()
 	else if (Platform == "YouTube") {
 		if (url.match(`lang=${$.Settings.language}`) || url.match(/&tlang=/)) $.done();
@@ -322,15 +34,15 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 	} else if ($.Settings.type == "Official") {
 		$.log(`🚧 ${$.name}, 调试信息`, `*.m3u8`, "");
 		if (Platform == "Disney_Plus") {
-			$.Cache[ENV.UUID] = {};
-			$.Cache[ENV.UUID].ENV = ENV;
-			$.Cache[ENV.UUID].subtitles_M3U8_URL = await getPlaylist(Platform, ENV);
-			$.Cache[ENV.UUID].subtitles_VTT_URLs = await getVTTURLs(Platform, ENV);
-			$.log(`🚧 ${$.name}`, `$.Cache${ENV.UUID}内容: ${JSON.stringify($.Cache[ENV.UUID])}`, "");
+			$.Cache[Parameters.UUID] = {};
+			$.Cache[Parameters.UUID].Parameters = Parameters;
+			$.Cache[Parameters.UUID].subtitles_M3U8_URL = await getPlaylist(Platform, Parameters);
+			$.Cache[Parameters.UUID].subtitles_VTT_URLs = await getVTTURLs(Platform, Parameters);
+			$.log(`🚧 ${$.name}`, `$.Cache${Parameters.UUID}内容: ${JSON.stringify($.Cache[Parameters.UUID])}`, "");
 		} else {
-			$.Cache.ENV = ENV;
-			$.Cache.subtitles_M3U8_URL = await getPlaylist(Platform, ENV)
-			$.Cache.subtitles_VTT_URLs = await getVTTURLs(Platform, ENV)
+			$.Cache.Parameters = Parameters;
+			$.Cache.subtitles_M3U8_URL = await getPlaylist(Platform, Parameters)
+			$.Cache.subtitles_VTT_URLs = await getVTTURLs(Platform, Parameters)
 		}
 		$.log(`🚧 ${$.name}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
@@ -341,22 +53,52 @@ $.log(`🚧 ${$.name}, Enviroment调试信息`, `$.Cache类型: ${typeof $.Cache
 
 /***************** Fuctions *****************/
 // Function 1
-// Get Environment Variables
-async function getENV(Platform) {
-	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
-	// https://vod-llc-ap-west-2.media.dssott.com/ps01/disney/fb1fc2f7-9606-4599-bc6d-930c040fd9fe/cbcs-all-b7129de7-2046-430a-afbf-7a2aa98a97ed-dd284b2b-9ba9-48d2-a969-0856b7d6c071.m3u8?r=1080&a=3&sxl=zh-Hans&hash=067b95e47d9627533c99e7f487b79ef6d464374c
-	const Disney_Plus_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)/i
-	//$.log(`🚧 ${$.name}, Get Environment Variables调试信息`, `Disney_Plus_Regex内容: ${Disney_Plus_Regex}`, "");
-	const Prime_Video_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(?:m3u8|vtt)$/i
-	$.log(`🚧 ${$.name}, Get Environment Variables调试信息`, `Prime_Video_Regex内容: ${Prime_Video_Regex}`, "");
-	let env = (Platform == "Disney_Plus") ? url.match(Disney_Plus_Regex)?.groups ?? null
-		: (Platform == "Prime_Video") ? url.match(Prime_Video_Regex)?.groups ?? null
-			: {};
-	$.log(`🚧 ${$.name}, 调试信息`, `Get Environment Variables`, `HOST内容: ${env.HOST}`, `CDN: ${env.CDN}`, `DOMAIN: ${env.DOMAIN}`, `UUID: ${env.UUID}`, "");
-	return env
+// Get DataBase
+async function getDataBase(URL) {
+	// 本地数据库
+	let database = {"Disney_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"Prime_Video":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES":"es-es","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"HBO_Max":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Hulu":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ara","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES":"spa","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-CN":"zho","ZH-HK":"zho","ZH-TW":"zho"}},"Discovery_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Paramount_Plus":{"Settings":{"type":"Google","language":"EN-US","sl":"auto","tl":"en","position":"Forward","dkey":"null"}},"Netflix":{"Settings":{"type":"Google","lang":"English","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"}},"YouTube":{"Settings":{"type":"Enable","language":"EN-US","sl":"AUTO","tl":"en"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-TW":"zh-Hant"}},"Google":{"Languages":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"DeepL":{"Languages":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH"}}}
+	// 远程数据库
+	//let database = await $.http.get(URL).then((response) => { return JSON.parse(response.body) });
+	//$.log(`🚧 ${$.name}, 调试信息`, "Get DataBase", `database类型: ${typeof database}`, `database内容: ${JSON.stringify(database)}`, "");
+	return database;
 };
 
 // Function 2
+// Set Environment Variables
+async function setENV(Platform, DataBase) {
+	// 包装为局部变量，用完释放内存
+	let BoxJs = $.getjson("DualSubs", DataBase) // BoxJs
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
+	DataBase[Platform] = Object.assign(DataBase[Platform], BoxJs[Platform]); // BoxJs
+	let Settings = DataBase[Platform].Settings
+	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
+	Settings.language = DataBase[Settings.type]?.Languages?.[Settings.language] ?? DataBase[Platform]?.Languages?.[Settings.language] ?? Settings.language;
+	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
+	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
+	let Cache = DataBase[Platform]?.Cache || {};
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
+	if (typeof Cache == "string") Cache = JSON.parse(Cache)
+	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
+	//if (ENV) $.Cache = (Platform == "Disney_Plus") ? $.Cache[ENV.UUID] : $.Cache;
+	return [Settings, Cache];
+};
+
+// Function 3
+// Get URL Parameters
+async function getURLparameters(Platform) {
+	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
+	// https://vod-llc-ap-west-2.media.dssott.com/ps01/disney/fb1fc2f7-9606-4599-bc6d-930c040fd9fe/cbcs-all-b7129de7-2046-430a-afbf-7a2aa98a97ed-dd284b2b-9ba9-48d2-a969-0856b7d6c071.m3u8?r=1080&a=3&sxl=zh-Hans&hash=067b95e47d9627533c99e7f487b79ef6d464374c
+	const Disney_Plus_HLS_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)cbcs-all-(.+)\.m3u8(\?.*)/i
+	const Prime_Video_HLS_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/i
+	
+	let parameters = (Platform == "Disney_Plus") ? url.match(Disney_Plus_HLS_Regex)?.groups ?? null
+		: (Platform == "Prime_Video") ? url.match(Prime_Video_HLS_Regex)?.groups ?? null
+			: {};
+	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `UUID: ${parameters.UUID}`, "");
+	return parameters
+};
+
+// Function 4
 // Get Subtitle playlist.m3u8 URL
 async function getPlaylist(Platform, env) {
 	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", "");
@@ -373,7 +115,7 @@ async function getPlaylist(Platform, env) {
 	return subtitles_M3U8_URL
 };
 
-// Function 3
+// Function 5
 // Get Subtitle *.vtt URLs
 async function getVTTURLs(Platform, env) {
 	let url = (Platform == "Disney_Plus") ? $.Cache[env.UUID].subtitles_M3U8_URL : $.Cache.subtitles_M3U8_URL;

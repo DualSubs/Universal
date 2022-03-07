@@ -325,10 +325,11 @@ else if (typeof $argument != "undefined") {
 const Platform = url.match(/(dssott|starott)\.com/i) ? "Disney_Plus"
 	: url.match(/(\.hls\.row\.aiv-cdn|-a\.akamaihd|cloudfront)\.net/i) ? "Prime_Video"
 		: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-			: (url.match(/cbs(aa|i)video\.com/i)) ? "Paramount_plus"
-				: url.match(/www\.youtube\.com/i) ? "YouTube"
-					: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-						: undefined
+			: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
+				: (url.match(/cbs(aa|i)video\.com/i)) ? "Paramount_plus"
+					: url.match(/www\.youtube\.com/i) ? "YouTube"
+						: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+							: undefined
 $.log(`🚧 ${$.name}, Enviroment调试信息`, `Platform内容: ${Platform}`, "");
 $.BoxJs = $.getjson("DualSubs", $.DualSubs) // BoxJs
 //$.log(`🚧 ${$.name}, Enviroment调试信息`, `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");

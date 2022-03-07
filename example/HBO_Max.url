@@ -1,0 +1,3 @@
+https://manifests.v2.api.hbo.com/hls.m3u8?f.audioTrack=en-US%7Cdescriptive%2Cprogram&f.audioTrack=es-419%7Cprogram&f.textTrack=en-US&f.textTrack=es-419&r.duration=3675.171387&r.host=https%3A%2F%2Fcmaf.akm.us.hbomaxcdn.com&r.keymod=1&r.main=0&r.manifest=videos%2FGYZfpNgockoCvpgEAAACk%2F1%2F53064f%2F1_IHoDwQ_ad_1080hi_234_10.m3u8&r.origin=cmaf
+https://manifests.v2.api.hbo.com/hlsMedia.m3u8?r.host=https%3A%2F%2Fcmaf.akm.us.hbomaxcdn.com&r.manifest=videos%2FGYZfpNgockoCvpgEAAACk%2F1%2F53064f%2Ft0.m3u8&r.origin=cmaf
+https://cmaf.akm.us.hbomaxcdn.com/videos/GYZfpNgockoCvpgEAAACk/1/53064f/t/t0/1.vtt

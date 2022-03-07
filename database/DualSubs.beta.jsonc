@@ -96,7 +96,7 @@
 	"HBO_Max": {
 		"Settings": {
 			"type": "Official", // Official, Google, DeepL, Disable
-			"lang": "English CC",
+			"language": "EN-US",
 			"sl": "AUTO",
 			"tl": "en-US SDH",
 			"position": "Forward", // Forward, Reverse
@@ -228,7 +228,7 @@
 	"Paramount_Plus": {
 		"Settings": {
 			"type": "Google", // Google, DeepL, Disable
-			"lang": "English",
+			"language": "EN-US",
 			"sl": "auto",
 			"tl": "en",
 			"position": "Forward", // Forward, Reverse
@@ -248,7 +248,7 @@
 	"YouTube": {
 		"Settings": {
 			"type": "Enable", // Enable, Disable
-			"lang": "English",
+			"language": "EN-US",
 			"sl": "AUTO",
 			"tl": "en"
 		},

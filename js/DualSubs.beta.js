@@ -327,7 +327,7 @@ const Platform = url.match(/(dssott|starott)\.com/i) ? "Disney_Plus"
 		: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
 			: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
 				: url.match(/\.(uplynk)\.com/i) ? "Discovery_Plus"
-					: (url.match(/cbs(aa|i)video\.com/i)) ? "Paramount_plus"
+					: (url.match(/(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_plus"
 						: url.match(/www\.youtube\.com/i) ? "YouTube"
 							: url.match(/\.nflxvideo\.net/i) ? "Netflix"
 								: undefined

@@ -110,10 +110,12 @@ async function getURLparameters(Platform) {
 	// https://vod-llc-ap-west-2.media.dssott.com/ps01/disney/fb1fc2f7-9606-4599-bc6d-930c040fd9fe/cbcs-all-b7129de7-2046-430a-afbf-7a2aa98a97ed-dd284b2b-9ba9-48d2-a969-0856b7d6c071.m3u8?r=1080&a=3&sxl=zh-Hans&hash=067b95e47d9627533c99e7f487b79ef6d464374c
 	const Disney_Plus_VTT_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
 	const Prime_Video_VTT_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
+	const Hulu_VTT_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com))\/captions_webvtt\/(\d+)\/(?<asset_id>\d+)\/)(.*)\.vtt$/i
 
 	let parameters = (Platform == "Disney_Plus") ? url.match(Disney_Plus_VTT_Regex)?.groups ?? null
 		: (Platform == "Prime_Video") ? url.match(Prime_Video_VTT_Regex)?.groups ?? null
-			: {};
+			: (Platform == "Hulu") ? url.match(Hulu_VTT_Regex)?.groups ?? null
+				: {};
 	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, "");
 	$.log(`UUID: ${parameters.UUID}`);
 	$.log(`asset_id: ${parameters.asset_id}`, "");

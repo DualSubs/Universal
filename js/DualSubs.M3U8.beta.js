@@ -90,10 +90,12 @@ async function getURLparameters(Platform) {
 	// https://vod-llc-ap-west-2.media.dssott.com/ps01/disney/fb1fc2f7-9606-4599-bc6d-930c040fd9fe/cbcs-all-b7129de7-2046-430a-afbf-7a2aa98a97ed-dd284b2b-9ba9-48d2-a969-0856b7d6c071.m3u8?r=1080&a=3&sxl=zh-Hans&hash=067b95e47d9627533c99e7f487b79ef6d464374c
 	const Disney_Plus_HLS_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)cbcs-all-(.+)\.m3u8(\?.*)/i
 	const Prime_Video_HLS_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/i
+	const Hulu_HLS_Regex = /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifest-dp)\.(?<DOMAIN>hulustream)\.com))\/hls\/(?<asset_id>\d+)\.m3u8\?(.*)/i
 	
 	let parameters = (Platform == "Disney_Plus") ? url.match(Disney_Plus_HLS_Regex)?.groups ?? null
 		: (Platform == "Prime_Video") ? url.match(Prime_Video_HLS_Regex)?.groups ?? null
-			: {};
+			: (Platform == "Hulu") ? url.match(Hulu_HLS_Regex)?.groups ?? null
+				: {};
 	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `UUID: ${parameters.UUID}`, "");
 	return parameters
 };

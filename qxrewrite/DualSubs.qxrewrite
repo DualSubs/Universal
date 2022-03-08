@@ -1,28 +1,42 @@
 #!name= DualSubs
-#!desc= (0.2.0) Dual Subtitiles for Streaming Media Platform
+#!desc= (0.3.0) Dual Subtitiles for Streaming Media Platform
 
 #[Script]
 # DualSubs.YouTube
 ^https?:\/\/www\.youtube\.com\/api\/timedtext(.*) url script-request-header https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
-# DualSubs.Disney_Plus.m3u8
-^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)-all-(.*)\.m3u8(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
+# DualSubs.Disney_Plus.HLS.m3u8
+^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/cbcs-all-(.*)\.m3u8(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.Disney_Plus.WebVTT.m3u8
+# ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.Disney_Plus.vtt
-^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
-# DualSubs.Prime_video.m3u8
-^https?:\/\/(.*)\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
+^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# DualSubs.Prime_Video.HLS.m3u8
+^https?:\/\/(.*)\.(hls\.row\.aiv-cdn|akamaihd)\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.Prime_Video.WebVTT.m3u8
+# ^https?:\/\/(.*)\.cloudfront\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.Prime_video.vtt
-^https?:\/\/(.*)\.cloudfront\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
-# DualSubs.HBO_Max.m3u8
-^https?:\/\/((.*)\.hbomaxcdn|manifests\.v2\.api\.hbo)\.com\/hls\.m3u8(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
+^https?:\/\/(.*)\.cloudfront\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# DualSubs.HBO_Max.HLS.m3u8
+# ^https?:\/\/((.*)\.hbomaxcdn|manifests\.v2\.api\.hbo)\.com\/hls\.m3u8(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.HBO_Max.WebVTT.m3u8
+# ^https?:\/\/manifests\.v2\.api\.hbo\.com\/hlsMedia\.m3u8\?(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.HBO_Max.vtt
-^https?:\/\/((.*)\.hbomaxcdn|manifests\.v2\.api\.hbo)\.com\/video(.*)\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
+# ^https?:\/\/((.*)\.hbomaxcdn\.com\/videos\/(.*)\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# DualSubs.Hulu.HLS.m3u8
+# ^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8\?(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.Hulu.WebVTT.m3u8
+# ^https?:\/\/manifest-dp\.hulustream\.com\/webvtt\?(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.Hulu.vtt
+# ^https?:\/\/assets\.huluim\.com\/captions_webvtt\/(.+[^blank])\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# DualSubs.Discovery_Plus.HLS.m3u8
+#^https?:\/\/content-discovery\.uplynk\.com\/(.+)\.m3u8\?(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.Paramount_Plus.vtt
-^https?:\/\/(.*)\.cbs(aa|i)video\.com\/(.*)\.vtt(\?m=\d+)? url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
-# DualSubs.Netflix
-^https?:\/\/(.*)\.nflxvideo\.net\/\?o=(\d+)&v=(\d+)&e=(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
+^https?:\/\/(.*)\.cbs(aa|i)video\.com\/(.*)\.vtt(\?m=\d+)? url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# DualSubs.Netflix.vtt
+^https?:\/\/(.*)\.nflxvideo\.net\/\?o=(\d+)&v=(\d+)&e=(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 #[Map Local]
-#^https?:\/\/raw\.githubusercontent\.com\/DualSubs\/DualSubs\/main\/database\/DualSubs\.jsonc data="https://raw.githubusercontent.com/DualSubs/DualSubs/main/database/DualSubs.jsonc"
+#^https?:\/\/raw\.githubusercontent\.com\/DualSubs\/DualSubs\/main\/database\/DualSubs\.min\.json data="https://raw.githubusercontent.com/DualSubs/DualSubs/main/database/DualSubs.min.json"
 
 #[MITM]
-hostname = www.youtube.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *-a.akamaihd.net, *.cloudfront.net, *.api.hbo.com, *.hbomaxcdn.com, *.cbsaavideo.com, *.cbsivideo.com, *.nflxvideo.net
+hostname = www.youtube.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *-a.akamaihd.net, *.cloudfront.net, *.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, assets.huluim.com, content-discovery.uplynk.com, *-discovery1.uplynk.com, *.cbsaavideo.com, *.cbsivideo.com, *.nflxvideo.net

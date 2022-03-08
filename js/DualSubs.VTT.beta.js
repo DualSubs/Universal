@@ -120,7 +120,8 @@ async function getURLparameters(Platform) {
 					: {};
 	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, "");
 	$.log(`UUID: ${parameters.UUID}`);
-	$.log(`asset_id: ${parameters.asset_id}`, "");
+	$.log(`ID: ${parameters.ID}`);
+	$.log(`asset_id: ${parameters.asset_id}`);
 	$.log("");
 	return parameters
 };
@@ -139,12 +140,17 @@ async function getOfficialSubtitles(subtitles_VTT_URLs = new Array) {
 
 	/***************** Get subtitles URL *****************/
 	let subtitles_VTT_URL = subtitles_VTT_URLs
-	if (Platform == "Disney_Plus") { // Disney+ 片段分型相同
+	if (Platform == "Disney_Plus") { // Disney+ 片段名称相同
 		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
 		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
 		subtitles_VTT_URL = subtitles_VTT_URLs.find(item => item.includes(SubtitleName))
 		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${subtitles_VTT_URL}`, "")
-	} else if (Platform == "Prime_Video") { // Amazon Prime Video 不拆分字幕片段
+	} else if (Platform == "Hulu") { // Hulu 片段分型序号相同
+			let SubtitleName = url.match(/(.+_SEGMENT\d+_.+\.vtt$)/)[1]
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
+			subtitles_VTT_URL = subtitles_VTT_URLs.find(item => item.includes(SubtitleName))
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${subtitles_VTT_URL}`, "")
+	} else if (Platform == "Prime_Video" || Platform == "HBO_Max") { // Amazon Prime Video HBO_Max不拆分字幕片段
 		subtitles_VTT_URL = subtitles_VTT_URLs[0]
 	}
 	/***************** Get subtitles *****************/

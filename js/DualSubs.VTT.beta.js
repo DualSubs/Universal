@@ -46,12 +46,12 @@ $.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
 			let result = ($.Settings.type == "Official") ? await getOfficialSubtitles(subtitles_VTT_URLs)
 				: await getTranslateSubtitles(body)
 			/***************** merge Dual Subtitles *****************/
-			let FirstSub = VTT.parse(body, ["timeStamp", "ms", "multiText"])
+			let FirstSub = VTT.parse(body, ["timeStamp", "ms"]) // "multiText"
 			$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
 			$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
 			$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
 			$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
-			let SecondSub = VTT.parse(result, ["timeStamp", "ms", "multiText"])
+			let SecondSub = VTT.parse(result, ["timeStamp", "ms"]) // "multiText"
 			$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
 			$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
 			$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
@@ -192,6 +192,8 @@ async function mergeDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = {
 		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
 		if (Math.abs(timeStamp1 - timeStamp2) <= 1000) {
 			index0 = options.includes("Reverse") ? index2 : index1;
+			// 多行字幕交替插入
+			/*
 			if (Array.isArray(text1) && Array.isArray(text2)) {
 				let a = options.includes("Reverse") ? text2 : text1;
 				let b = options.includes("Reverse") ? text1 : text2;
@@ -202,7 +204,9 @@ async function mergeDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = {
 					if (b[j]) c.push(b[j]);
 				}
 				DualSub.body[index0].text = c;
-			} else DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
+			} else 
+			*/
+			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
 			//DualSub.body[index0].timeStamp = options.includes("Reverse") ? timeStamp2 : timeStamp1;
 			//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
 			index1++;

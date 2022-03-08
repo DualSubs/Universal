@@ -21,7 +21,7 @@
 # DualSubs.HBO_Max.WebVTT.m3u8
 # ^https?:\/\/manifests\.v2\.api\.hbo\.com\/hlsMedia\.m3u8\?(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.HBO_Max.vtt
-# ^https?:\/\/((.*)\.hbomaxcdn\.com\/videos\/(.*)\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# ^https?:\/\/(.*)\.hbomaxcdn\.com\/videos\/(.*)\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 # DualSubs.Hulu.HLS.m3u8
 # ^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8\?(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.Hulu.WebVTT.m3u8

@@ -19,11 +19,12 @@ const Platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
 	: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
 		: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
 			: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-				: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-					: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_plus"
-						: url.match(/www\.youtube\.com/i) ? "YouTube"
-							: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-								: undefined
+				: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
+					: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+						: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+							: url.match(/www\.youtube\.com/i) ? "YouTube"
+								: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+									: undefined
 $.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
 
 /***************** Processing *****************/

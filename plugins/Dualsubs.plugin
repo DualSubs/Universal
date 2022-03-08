@@ -14,7 +14,7 @@ http-response ^https?:\/\/(.*)\.cloudfront\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}
 
 # http-response ^https?:\/\/manifests\.v2\.api\.hbo\.com\/hls\.m3u8\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js, tag=DualSubs.HBO_Max.HLS.m3u8
 # http-response ^https?:\/\/manifests\.v2\.api\.hbo\.com\/hlsMedia\.m3u8\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js, tag=DualSubs.HBO_Max.WebVTT.m3u8
-# http-response ^https?:\/\/((.*)\.hbomaxcdn\.com\/videos\/(.*)\.vtt$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js, tag=DualSubs.HBO_Max.vtt
+# http-response ^https?:\/\/(.*)\.hbomaxcdn\.com\/videos\/(.*)\.vtt$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js, tag=DualSubs.HBO_Max.vtt
 
 # http-response ^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js, tag=DualSubs.Hulu.HLS.m3u8
 # http-response ^https?:\/\/manifest-dp\.hulustream\.com\/webvtt\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js, tag=DualSubs.Hulu.WebVTT.m3u8

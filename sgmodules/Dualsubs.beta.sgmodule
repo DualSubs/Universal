@@ -14,7 +14,7 @@ DualSubs.Prime_Video.vtt = type=http-response, pattern=^https?:\/\/(.*)\.cloudfr
 
 DualSubs.HBO_Max.HLS.m3u8 = type=http-response, pattern=^https?:\/\/manifests\.v2\.api\.hbo\.com\/hls\.m3u8\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.M3U8.beta.js
 # DualSubs.HBO_Max.WebVTT.m3u8 = type=http-response, pattern=^https?:\/\/manifests\.v2\.api\.hbo\.com\/hlsMedia\.m3u8\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.M3U8.beta.js
-DualSubs.HBO_Max.vtt = type=http-response, pattern=^https?:\/\/((.*)\.hbomaxcdn\.com\/videos\/(.*)\.vtt$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.VTT.beta.js
+DualSubs.HBO_Max.vtt = type=http-response, pattern=^https?:\/\/(.*)\.hbomaxcdn\.com\/videos\/(.*)\.vtt$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.VTT.beta.js
 
 DualSubs.Hulu.HLS.m3u8 = type=http-response, pattern=^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.M3U8.beta.js
 # DualSubs.Hulu.WebVTT.m3u8 = type=http-response, pattern=^https?:\/\/manifest-dp\.hulustream\.com\/webvtt\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.M3U8.beta.js

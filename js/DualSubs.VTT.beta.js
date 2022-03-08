@@ -33,40 +33,31 @@ $.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
 	const Parameters = await getURLparameters(Platform);
 	if ($.Settings.type == "Disable") $.done()
 	else if ($.Settings.type == "Official") {
-		//let env = await getENV(Platform)
-		$.log(`🚧 ${$.name}, 调试信息`, `*.vtt`, `Platform: ${Platform}`, `Type: ${$.Settings.type}`, "");
-		/***************** Generate VTT Subtitle *****************/
-		$.log(`🚧 ${$.name}, Generate VTT Subtitle`, "");
-		let subtitles_VTT_URLs = ($.Cache[Parameters.UUID]?.subtitles_VTT_URLs) ? $.Cache[Parameters.UUID].subtitles_VTT_URLs
-			: ($.Cache.subtitles_VTT_URLs) ? $.Cache.subtitles_VTT_URLs
-				: null
-		$.log(`🚧 ${$.name}, Generate VTT Subtitle`, `subtitles_VTT_URLs: ${subtitles_VTT_URLs}`, "");
-
-		if (subtitles_VTT_URLs != null) {
-			let result = ($.Settings.type == "Official") ? await getOfficialSubtitles(subtitles_VTT_URLs)
-				: await getTranslateSubtitles(body)
-			/***************** merge Dual Subtitles *****************/
-			let FirstSub = VTT.parse(body, ["timeStamp", "ms"]) // "multiText"
-			$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
-			$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
-			$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
-			$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
-			let SecondSub = VTT.parse(result, ["timeStamp", "ms"]) // "multiText"
-			$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
-			$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
-			$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
-			$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
-			
-			//$.log("VTT.stringify(FirstSub)", VTT.stringify(FirstSub));
-
-			let DualSub = await mergeDualSubs(FirstSub, SecondSub);
-			//$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
-			DualSub = VTT.stringify(DualSub)
-			$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
-			$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-			$.done({ "body": DualSub });
-		} else $.done();
-	}
+		let subtitles_VTT_URLs = $.Cache?.[Parameters.UUID]?.subtitles_VTT_URLs ?? $.Cache?.subtitles_VTT_URLs ?? null;
+		if (subtitles_VTT_URLs) $.result = await getOfficialSubtitles(subtitles_VTT_URLs)
+		else $.done();
+	} else if ($.Settings.type == "Translate") {
+		$.result = await getTranslateSubtitles(body);
+	} else if ($.Settings.type == "External") {
+		$.result = await getExternalSubtitles(url);
+	} else $.done();
+	/***************** merge Dual Subtitles *****************/
+	let FirstSub = VTT.parse(body, ["timeStamp", "ms"]) // "multiText"
+	$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
+	$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
+	$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
+	$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
+	let SecondSub = VTT.parse($.result, ["timeStamp", "ms"]) // "multiText"
+	$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
+	$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
+	$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
+	$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
+	let DualSub = await mergeDualSubs(FirstSub, SecondSub);
+	//$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	DualSub = VTT.stringify(DualSub)
+	$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
+	$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+	$.done({ "body": DualSub });
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done())

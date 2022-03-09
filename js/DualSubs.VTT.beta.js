@@ -1,10 +1,8 @@
 /*
 README:https://github.com/DualSubs/DualSubs/
 */
-
 // Original: https://raw.githubusercontent.com/DualSubs-R/Surge/master/DualSub.js
-
-const $ = new Env("DualSubs v0.3.5");
+const $ = new Env("DualSubs v0.3.6");
 const VTT = new WebVTT("WebVTT v1.3.0");
 const DBurl = "https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json"
 
@@ -12,30 +10,17 @@ let url = $request.url
 let headers = $request.headers
 let body = $response.body
 
-/***************** Platform *****************/
-const Platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
-	: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
-		: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-			: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-				: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
-					: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
-						: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-							: url.match(/www\.youtube\.com/i) ? "YouTube"
-								: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-									: undefined
-$.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
-
 /***************** Processing *****************/
 !(async () => {
-	$.DualSubs = await getDataBase(DBurl);
-	[$.Settings, $.Cache] = await setENV(Platform, $.DualSubs);
-	const Parameters = await getURLparameters(Platform);
+	const Platform = await getPlatform(url);
+	const Parameters = await getURLparameters(Platform, url);
+	const DataBase = await getDataBase(DBurl);
+	[$.Settings, $.Cache] = await setENV(Platform, DataBase);
 	if ($.Settings.type == "Disable") $.done()
 	else if ($.Settings.type == "Official") {
-		//let WebVTT_VTTs = $.Cache?.[Parameters.UUID]?.WebVTT_VTTs ?? $.Cache?.WebVTT_VTTs ?? null;
 		let index = $.Cache.findIndex(item => item.ID == Parameters.ID)
 		let WebVTT_VTTs = $.Cache[index]?.WebVTT_VTTs ?? null;
-		if (WebVTT_VTTs) $.result = await getOfficialSubtitles(WebVTT_VTTs)
+		if (WebVTT_VTTs) $.result = await getOfficialSubtitles(Platform, WebVTT_VTTs)
 		else $.done();
 	} else if ($.Settings.type == "Translate") {
 		$.result = await getTranslateSubtitles(body);
@@ -64,56 +49,75 @@ $.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
 	.finally(() => $.done())
 
 /***************** Fuctions *****************/
+// Function 0
+// Get Platform
+async function getPlatform(url) {
+	$.log(`⚠ ${$.name}, Get Platform`, "");
+	let platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
+		: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
+			: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
+				: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
+					: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
+						: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+							: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+								: url.match(/www\.youtube\.com/i) ? "YouTube"
+									: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+										: undefined
+	$.log(`🎉 ${$.name}, Get Platform`, `platform: ${platform}`, "");
+	return platform
+};
+
 // Function 1
-// Get DataBase
-async function getDataBase(URL) {
-	// 本地数据库
-	let database = {"Disney_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"Prime_Video":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES":"es-es","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"HBO_Max":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Hulu":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ara","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES":"spa","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-CN":"zho","ZH-HK":"zho","ZH-TW":"zho"}},"Discovery_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Paramount_Plus":{"Settings":{"type":"Google","language":"EN-US","sl":"auto","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"Netflix":{"Settings":{"type":"Google","lang":"English","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"}},"YouTube":{"Settings":{"type":"Enable","language":"EN-US","sl":"AUTO","tl":"en"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-TW":"zh-Hant"}},"Google":{"Languages":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"DeepL":{"Languages":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH"}}}
-	// 远程数据库
-	//let database = await $.http.get(URL).then((response) => { return JSON.parse(response.body) });
-	//$.log(`🚧 ${$.name}, 调试信息`, "Get DataBase", `database类型: ${typeof database}`, `database内容: ${JSON.stringify(database)}`, "");
-	return database;
+// Get URL Parameters
+async function getURLparameters(platform, url) {
+	$.log(`⚠ ${$.name}, Get URL Parameters`, "");
+	const VTT_Regex = (platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
+		: (platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
+			: (platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hbomaxcdn)\.com)\/videos\/(?<ID>[^\/]+)\/)(.*)\.vtt$/i
+				: (platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com)\/captions_webvtt\/(\d+)\/(?<ID>\d+)\/)(.*)\.vtt$/i
+					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.vtt$/i
+	let parameters = url.match(VTT_Regex)?.groups ?? null
+	$.log(`🎉 ${$.name}, Get URL Parameters`, `HOST: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
+	return parameters
 };
 
 // Function 2
-// Set Environment Variables
-async function setENV(Platform, DataBase) {
-	// 包装为局部变量，用完释放内存
-	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	/***************** Settings *****************/
-	let BoxJs = $.getjson("DualSubs", DataBase) // BoxJs
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
-	//DataBase[Platform] = Object.assign(DataBase[Platform], BoxJs[Platform]); // BoxJs
-	let Settings = BoxJs[Platform]?.Settings || DataBase[Platform].Settings;
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
-	Settings.language = DataBase[Settings.type]?.Languages?.[Settings.language] ?? DataBase[Platform]?.Languages?.[Settings.language] ?? Settings.language;
-	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
-	/***************** Cache *****************/
-	let Cache = BoxJs[Platform]?.Cache || [];
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
-	if (typeof Cache == "string") Cache = JSON.parse(Cache)
-	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	return [Settings, Cache];
+// Get DataBase
+async function getDataBase(url) {
+	$.log(`⚠ ${$.name}, Get DataBase`, "");
+	// 本地数据库
+	let database = {"Disney_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"Prime_Video":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES":"es-es","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"HBO_Max":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Hulu":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ara","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES":"spa","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-CN":"zho","ZH-HK":"zho","ZH-TW":"zho"}},"Discovery_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Paramount_Plus":{"Settings":{"type":"Google","language":"EN-US","sl":"auto","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"Netflix":{"Settings":{"type":"Google","lang":"English","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"}},"YouTube":{"Settings":{"type":"Enable","language":"EN-US","sl":"AUTO","tl":"en"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-TW":"zh-Hant"}},"Google":{"Languages":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"DeepL":{"Languages":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH"}}}
+	// 远程数据库
+	//let database = await $.http.get(url).then((response) => { return JSON.parse(response.body) });
+	//$.log(`🚧 ${$.name}, Get DataBase`, `database类型: ${typeof database}`, `database内容: ${JSON.stringify(database)}`, "");
+	$.log(`🎉 ${$.name}, Get DataBase`, `database类型: ${typeof database}`, "");
+	return database;
 };
 
 // Function 3
-// Get URL Parameters
-async function getURLparameters(Platform) {
-	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
-	/***************** Regex *****************/
-	const VTT_Regex = (Platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
-		: (Platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
-			: (Platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hbomaxcdn)\.com)\/videos\/(?<ID>[^\/]+)\/)(.*)\.vtt$/i
-				: (Platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com)\/captions_webvtt\/(\d+)\/(?<ID>\d+)\/)(.*)\.vtt$/i
-					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.vtt$/i
-	let parameters = url.match(VTT_Regex)?.groups ?? null
-	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
-	return parameters
+// Set Environment Variables
+async function setENV(platform, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	// 包装为局部变量，用完释放内存
+	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
+	/***************** Settings *****************/
+	let BoxJs = $.getjson("DualSubs", database) // BoxJs
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
+	let Settings = BoxJs[platform]?.Settings || database[platform].Settings;
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
+	Settings.language = database[Settings.type]?.Languages?.[Settings.language] ?? database[platform]?.Languages?.[Settings.language] ?? Settings.language;
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
+	/***************** Cache *****************/
+	let Cache = BoxJs[platform]?.Cache || [];
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
+	if (typeof Cache == "string") Cache = JSON.parse(Cache)
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
+	return [Settings, Cache];
 };
 
 // Function 4
 // Get Official Subtitles
-async function getOfficialSubtitles(WebVTT_VTTs = new Array) {
+async function getOfficialSubtitles(platform, WebVTT_VTTs = new Array) {
 	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
 
 	/***************** Slice subtitles URLs Array *****************/
@@ -125,12 +129,12 @@ async function getOfficialSubtitles(WebVTT_VTTs = new Array) {
 
 	/***************** Get subtitles URL *****************/
 	let WebVTT_VTT = WebVTT_VTTs
-	if (Platform == "Disney_Plus") { // Disney+ 片段名称相同
+	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
 		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
 		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
 		WebVTT_VTT = WebVTT_VTTs.find(item => item.includes(SubtitleName))
 		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${WebVTT_VTT}`, "")
-	} else if (Platform == "Hulu") { // Hulu 片段分型序号相同
+	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
 			let SubtitleName = url.match(/(.+_SEGMENT\d+_.+\.vtt$)/)[1]
 			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
 			WebVTT_VTT = WebVTT_VTTs.find(item => item.includes(SubtitleName))
@@ -282,14 +286,14 @@ async function machine_subtitles(type, body) {
 
 		}
 
-		if (Platform != "Netflix") {
+		if (platform != "Netflix") {
 			//Cache.s_subtitles_url = url
 			//Cache.subtitles = body
 			//Cache.subtitles_type = settings.type
 			//Cache.subtitles_sl = settings.sl
 			//Cache.subtitles_tl = settings.language
 			//Cache.subtitles_line = settings.line
-			//$.setjson(Cache, `@DualSubs.${Platform}.Cache`)
+			//$.setjson(Cache, `@DualSubs.${platform}.Cache`)
 		}
 	}
 	$.log(`🚧 ${$.name}, Machine Subtitles`, "machine_subtitles", `body内容: ${body}`, "");

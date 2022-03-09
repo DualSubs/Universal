@@ -39,6 +39,7 @@ $.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
 		Profile.WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters);
 		Profile.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Profile.WebVTT_M3U8);
 		//$.log(`🚧 ${$.name}`, `Profile内容: ${JSON.stringify(Profile)}`, "");
+		if (Platform == "Prime_Video") Profile.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID // Amazon Prime Video 变更ID
 		// 刷新播放记录，所以始终置顶
 		let index = $.Cache.findIndex(item => item.ID == Parameters.ID)
 		if (index !== -1) delete $.Cache[index]

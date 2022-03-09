@@ -4,15 +4,13 @@ README:https://github.com/DualSubs/DualSubs/
 
 // Original: https://raw.githubusercontent.com/DualSubs-R/Surge/master/DualSub.js
 
-const $ = new Env("DualSubs v0.3.4");
+const $ = new Env("DualSubs v0.3.5");
 const VTT = new WebVTT("WebVTT v1.3.0");
 const DBurl = "https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json"
 
 let url = $request.url
 let headers = $request.headers
 let body = $response.body
-
-
 
 /***************** Platform *****************/
 const Platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
@@ -34,8 +32,10 @@ $.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
 	const Parameters = await getURLparameters(Platform);
 	if ($.Settings.type == "Disable") $.done()
 	else if ($.Settings.type == "Official") {
-		let subtitles_VTT_URLs = $.Cache?.[Parameters.UUID]?.subtitles_VTT_URLs ?? $.Cache?.subtitles_VTT_URLs ?? null;
-		if (subtitles_VTT_URLs) $.result = await getOfficialSubtitles(subtitles_VTT_URLs)
+		//let WebVTT_VTTs = $.Cache?.[Parameters.UUID]?.WebVTT_VTTs ?? $.Cache?.WebVTT_VTTs ?? null;
+		let index = $.Cache.findIndex(item => item.ID == Parameters.ID)
+		let WebVTT_VTTs = $.Cache[index]?.WebVTT_VTTs ?? null;
+		if (WebVTT_VTTs) $.result = await getOfficialSubtitles(WebVTT_VTTs)
 		else $.done();
 	} else if ($.Settings.type == "Translate") {
 		$.result = await getTranslateSubtitles(body);
@@ -89,7 +89,7 @@ async function setENV(Platform, DataBase) {
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
 	/***************** Cache *****************/
 	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	let Cache = DataBase[Platform]?.Cache || {};
+	let Cache = DataBase[Platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
@@ -102,52 +102,48 @@ async function setENV(Platform, DataBase) {
 async function getURLparameters(Platform) {
 	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
 	/***************** Regex *****************/
-	const VTT_Regex = (Platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
-		: (Platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
+	const VTT_Regex = (Platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
+		: (Platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
 			: (Platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hbomaxcdn)\.com)\/videos\/(?<ID>[^\/]+)\/)(.*)\.vtt$/i
-				: (Platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com)\/captions_webvtt\/(\d+)\/(?<asset_id>\d+)\/)(.*)\.vtt$/i
+				: (Platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com)\/captions_webvtt\/(\d+)\/(?<ID>\d+)\/)(.*)\.vtt$/i
 					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.vtt$/i
 	let parameters = url.match(VTT_Regex)?.groups ?? null
-	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, "");
-	$.log(`UUID: ${parameters.UUID}`);
-	$.log(`ID: ${parameters.ID}`);
-	$.log(`asset_id: ${parameters.asset_id}`);
-	$.log("");
+	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
 	return parameters
 };
 
 // Function 4
 // Get Official Subtitles
-async function getOfficialSubtitles(subtitles_VTT_URLs = new Array) {
-	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `subtitles_VTT_URLs内容: ${subtitles_VTT_URLs}`, "");
+async function getOfficialSubtitles(WebVTT_VTTs = new Array) {
+	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
 
 	/***************** Slice subtitles URLs Array *****************/
 	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
 	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
 	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
-	//subtitles_VTT_URLs = subtitles_VTT_URLs.slice(start, SubtitlesIndex + 4)
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `subtitles_VTT_URLs内容: ${subtitles_VTT_URLs}`, "");
+	//WebVTT_VTTs = WebVTT_VTTs.slice(start, SubtitlesIndex + 4)
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
 
 	/***************** Get subtitles URL *****************/
-	let subtitles_VTT_URL = subtitles_VTT_URLs
+	let WebVTT_VTT = WebVTT_VTTs
 	if (Platform == "Disney_Plus") { // Disney+ 片段名称相同
 		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
 		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-		subtitles_VTT_URL = subtitles_VTT_URLs.find(item => item.includes(SubtitleName))
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${subtitles_VTT_URL}`, "")
+		WebVTT_VTT = WebVTT_VTTs.find(item => item.includes(SubtitleName))
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${WebVTT_VTT}`, "")
 	} else if (Platform == "Hulu") { // Hulu 片段分型序号相同
 			let SubtitleName = url.match(/(.+_SEGMENT\d+_.+\.vtt$)/)[1]
 			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-			subtitles_VTT_URL = subtitles_VTT_URLs.find(item => item.includes(SubtitleName))
-			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${subtitles_VTT_URL}`, "")
-	} else if (Platform == "Prime_Video" || Platform == "HBO_Max") { // Amazon Prime Video HBO_Max不拆分字幕片段
-		subtitles_VTT_URL = subtitles_VTT_URLs[0]
+			WebVTT_VTT = WebVTT_VTTs.find(item => item.includes(SubtitleName))
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${WebVTT_VTT}`, "")
+	} else { // Amazon Prime Video HBO_Max不拆分字幕片段
+		WebVTT_VTT = WebVTT_VTTs[0]
 	}
 	/***************** Get subtitles *****************/
 	//let result = {}
 	// 获取webVTT
-	//for (var k in subtitles_VTT_URLs) { await $.http.get({ url: subtitles_VTT_URLs[k], headers: headers }).then((response) => { result.push(response.body) }) }
-	return await $.http.get({ url: subtitles_VTT_URL, headers: headers }).then((response) => { return response.body })
+	//for (var k in WebVTT_VTTs) { await $.http.get({ url: WebVTT_VTTs[k], headers: headers }).then((response) => { result.push(response.body) }) }
+	return await $.http.get({ url: WebVTT_VTT, headers: headers }).then((response) => { return response.body })
 	//$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles", `result内容: ${result}`, "");
 };
 
@@ -163,15 +159,7 @@ async function mergeDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = {
 	$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `Sub2内容: ${JSON.stringify(Sub2)}`, "");
-
 	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
-	/*
-	let DualSub = {
-		headers: options.includes("Reverse") ? Sub2.headers : Sub1.headers,
-		CSS: options.includes("Reverse") ? Sub2.CSS : Sub1.CSS,
-		body: options.includes("Reverse") ? Sub2.body : Sub1.body
-	};
-	*/
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `let DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	// 有序数列 用不着排序
 	//FirstSub.body.sort((x, y) => x - y);

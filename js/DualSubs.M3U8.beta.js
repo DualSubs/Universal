@@ -4,11 +4,12 @@ README:https://github.com/DualSubs/DualSubs/
 
 // Original: https://raw.githubusercontent.com/DualSubs-R/Surge/master/DualSub.js
 
-const $ = new Env("DualSubs v0.3.4");
+const $ = new Env("DualSubs v0.3.5");
 const DBurl = "https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json"
 
 let url = $request.url
 let headers = $request.headers
+let body = $response.body
 
 /***************** Platform *****************/
 const Platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
@@ -33,19 +34,17 @@ $.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
 		if (url.match(`lang=${$.Settings.language}`) || url.match(/&tlang=/)) $.done();
 		else $.done({ url: `${url}&tlang=${$.Settings.language}` });
 	} else if ($.Settings.type == "Official") {
-		$.log(`🚧 ${$.name}, 调试信息`, `*.m3u8`, "");
-		if (Platform == "Disney_Plus") {
-			$.Cache[Parameters.UUID] = {};
-			$.Cache[Parameters.UUID].Parameters = Parameters;
-			$.Cache[Parameters.UUID].subtitles_M3U8_URL = await getPlaylist(Platform, Parameters);
-			$.Cache[Parameters.UUID].subtitles_VTT_URLs = await getVTTURLs(Platform, Parameters);
-			$.log(`🚧 ${$.name}`, `$.Cache${Parameters.UUID}内容: ${JSON.stringify($.Cache[Parameters.UUID])}`, "");
-		} else {
-			$.Cache.Parameters = Parameters;
-			$.Cache.subtitles_M3U8_URL = await getPlaylist(Platform, Parameters)
-			$.Cache.subtitles_VTT_URLs = await getVTTURLs(Platform, Parameters)
-		}
-		$.log(`🚧 ${$.name}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
+		//$.log(`🚧 ${$.name}, 调试信息`, `*.m3u8`, "");
+		let Profile = Parameters;
+		Profile.WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters);
+		Profile.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Profile.WebVTT_M3U8);
+		//$.log(`🚧 ${$.name}`, `Profile内容: ${JSON.stringify(Profile)}`, "");
+		// 刷新播放记录，所以始终置顶
+		let index = $.Cache.findIndex(item => item.ID == Parameters.ID)
+		if (index !== -1) delete $.Cache[index]
+		$.Cache.unshift(Profile)
+		$.Cache = $.Cache.slice(0, 10)
+		//$.log(`🚧 ${$.name}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	}
 })()
@@ -68,6 +67,7 @@ async function getDataBase(URL) {
 // Set Environment Variables
 async function setENV(Platform, DataBase) {
 	// 包装为局部变量，用完释放内存
+	/***************** Settings *****************/
 	let BoxJs = $.getjson("DualSubs", DataBase) // BoxJs
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
 	DataBase[Platform] = Object.assign(DataBase[Platform], BoxJs[Platform]); // BoxJs
@@ -75,12 +75,12 @@ async function setENV(Platform, DataBase) {
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
 	Settings.language = DataBase[Settings.type]?.Languages?.[Settings.language] ?? DataBase[Platform]?.Languages?.[Settings.language] ?? Settings.language;
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
+	/***************** Cache *****************/
 	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	let Cache = DataBase[Platform]?.Cache || {};
+	let Cache = DataBase[Platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	//if (ENV) $.Cache = (Platform == "Disney_Plus") ? $.Cache[ENV.UUID] : $.Cache;
 	return [Settings, Cache];
 };
 
@@ -89,58 +89,55 @@ async function setENV(Platform, DataBase) {
 async function getURLparameters(Platform) {
 	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
 	/***************** Regex *****************/
-	const HLS_Regex = (Platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)cbcs-all-(.+)\.m3u8(\?.*)/i
-	: (Platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/i
+	const HLS_Regex = (Platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)cbcs-all-(.+)\.m3u8(\?.*)/i
+	: (Platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/i
 		: (Platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifests\.v2)\.(?<DOMAIN>api\.hbo)\.com))\/hls\.m3u8\?(.*)r.manifest=videos%2F(?<ID>[^%2F]+)(.*)/i
-			: (Platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifest-dp)\.(?<DOMAIN>hulustream)\.com))\/hls\/(?<asset_id>\d+)\.m3u8\?(.*)/i
+			: (Platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifest-dp)\.(?<DOMAIN>hulustream)\.com))\/hls\/(?<ID>\d+)\.m3u8\?(.*)/i
 					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.m3u8(\?.*)?/i
 	let parameters = url.match(HLS_Regex)?.groups ?? null
-	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, "");
-	$.log(`UUID: ${parameters.UUID}`);
-	$.log(`ID: ${parameters.ID}`);
-	$.log(`asset_id: ${parameters.asset_id}`);
-	$.log("");
+	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
 	return parameters
 };
 
 // Function 4
-// Get Subtitle playlist.m3u8 URL
-async function getPlaylist(Platform, env) {
+// Get Subtitle *.m3u8 URL
+async function getWebVTT_M3U8(Platform, Parameters) {
 	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", "");
-	//let patt = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${$.Settings.language}".+URI="([^"]+)`)
-	//const Language_Regex = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${$.Settings.language}".+URI="([^"]+)`)
-	const Language_Regex = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${$.Settings.language}".+URI="(?<subtitles_M3U8_URL>[^"]+)`)
+	const Language_Regex = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${$.Settings.language}".+URI="(?<WebVTT_M3U8>[^"]+)`)
 	/***************** Get Subtitle playlist.m3u8 URL *****************/
-	let body = $response.body
-	if (!body) $.done();
-	let subtitles_M3U8_URL = (Platform == "Disney_Plus") ? env.PATH + body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null
-		: body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null;
-	//let subtitles_M3U8_URL = env.PATH + body.match(Language_Regex)?.groups?.subtitles_M3U8_URL ?? null
-	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `subtitles_M3U8_URL内容: ${subtitles_M3U8_URL}`, "");
-	return subtitles_M3U8_URL
+	let WebVTT_M3U8 = body.match(Language_Regex)?.groups?.WebVTT_M3U8 ?? null
+	//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `body.match(Language_Regex)?.groups?.WebVTT_M3U8: ${WebVTT_M3U8}`, "");
+	// if 相对路径
+	if (/^https?:\/\/(?:.+)\.m3u8$/i.test(WebVTT_M3U8) == false) {
+		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? Parameters.PATH
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `url.match: ${PATH}`, "");
+		WebVTT_M3U8 = PATH + WebVTT_M3U8
+	};
+	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `WebVTT_M3U8: ${WebVTT_M3U8}`, "");
+	return WebVTT_M3U8
 };
 
 // Function 5
 // Get Subtitle *.vtt URLs
-async function getVTTURLs(Platform, env) {
-	let url = (Platform == "Disney_Plus") ? $.Cache[env.UUID].subtitles_M3U8_URL : $.Cache.subtitles_M3U8_URL;
+async function getWebVTT_VTTs(Platform, WebVTT_M3U8) {
 	delete headers["Host"]
-	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `url内容: ${url}`, "");
-	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `headers内容: ${JSON.stringify(headers)}`, "");
-	return await $.http.get({ url: url, headers: headers }).then((response) => {
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body内容: ${response.body}`, "");
-		let subtitles_VTT_URLs = response.body.match(/^.+\.vtt$/gim);
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim)内容: ${subtitles_VTT_URLs}`, "");
+	return await $.http.get({ url: WebVTT_M3U8, headers: headers }).then((response) => {
+		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
+		let WebVTT_VTTs = response.body.match(/^.+\.vtt$/gim);
+		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${WebVTT_VTTs}`, "");
 		// if 相对路径
-		if (/^https?:\/\/(?:.+)\.vtt$/gim.test(subtitles_VTT_URLs) == false) {
-			env.PATH = url.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? env.PATH
-			subtitles_VTT_URLs = subtitles_VTT_URLs.map(item => item = env.PATH + item)
+		if (/^https?:\/\/(?:.+)\.vtt$/gim.test(WebVTT_VTTs) == false) {
+			let PATH = WebVTT_M3U8.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? null
+			$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `PATH: ${PATH}`, "");
+			WebVTT_VTTs = WebVTT_VTTs.map(item => item = PATH + item)
+			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `WebVTT_VTTs.map内容: ${WebVTT_VTTs}`, "");
 		};
 		// Disney + 筛选字幕
-		if (Platform == "Disney_Plus") subtitles_VTT_URLs = subtitles_VTT_URLs.filter(item => /.+-MAIN.+/i.test(item))
+		if (Platform == "Disney_Plus") WebVTT_VTTs = WebVTT_VTTs.filter(item => !/\/subtitles_empty\//i.test(item))
+		// if (Platform == "Disney_Plus") WebVTT_VTTs = WebVTT_VTTs.filter(item => /.+-MAIN.+/i.test(item))
 
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `subtitles_VTT_URLs.map内容: ${subtitles_VTT_URLs}`, "");
-		return subtitles_VTT_URLs
+		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
+		return WebVTT_VTTs
 	})
 };
 

@@ -89,10 +89,10 @@ async function setENV(Platform, DataBase) {
 async function getURLparameters(Platform) {
 	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
 	/***************** Regex *****************/
-	const HLS_Regex = (Platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)cbcs-all-(.+)\.m3u8(\?.*)/i
-	: (Platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/i
-		: (Platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifests\.v2)\.(?<DOMAIN>api\.hbo)\.com))\/hls\.m3u8\?(.*)r.manifest=videos%2F(?<ID>[^(%2F)]+)(.*)/i
-			: (Platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifest-dp)\.(?<DOMAIN>hulustream)\.com))\/hls\/(?<ID>\d+)\.m3u8\?(.*)/i
+	const HLS_Regex = (Platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)cbcs-all-(.+)\.m3u8(\?.*)?/i
+	: (Platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(\?.*)?/i
+		: (Platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifests\.v2)\.(?<DOMAIN>api\.hbo)\.com))\/hls\.m3u8(\?.*r.manifest=videos%2F(?<ID>[^(%2F)]+).*)?/i
+			: (Platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifest-dp)\.(?<DOMAIN>hulustream)\.com))\/hls\/(?<ID>\d+)\.m3u8(\?.*)?/i
 					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.m3u8(\?.*)?/i
 	let parameters = url.match(HLS_Regex)?.groups ?? null
 	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
@@ -108,9 +108,9 @@ async function getWebVTT_M3U8(Platform, Parameters) {
 	let WebVTT_M3U8 = body.match(Language_Regex)?.groups?.WebVTT_M3U8 ?? null
 	//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `body.match(Language_Regex)?.groups?.WebVTT_M3U8: ${WebVTT_M3U8}`, "");
 	// if 相对路径
-	if (/^https?:\/\//i.test(WebVTT_M3U8) == false) {
+	if (!/^https?:\/\//i.test(WebVTT_M3U8)) {
 		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? Parameters.PATH
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `url.match: ${PATH}`, "");
+		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `url.match: ${PATH}`, "");
 		WebVTT_M3U8 = PATH + WebVTT_M3U8
 	};
 	$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `WebVTT_M3U8: ${WebVTT_M3U8}`, "");
@@ -126,9 +126,9 @@ async function getWebVTT_VTTs(Platform, WebVTT_M3U8) {
 		let WebVTT_VTTs = response.body.match(/^.+\.vtt$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${WebVTT_VTTs}`, "");
 		// if 相对路径
-		if (/^https?:\/\//gim.test(WebVTT_VTTs) == false) {
+		if (!/^https?:\/\//gim.test(WebVTT_VTTs)) {
 			let PATH = WebVTT_M3U8.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? null
-			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `PATH: ${PATH}`, "");
+			$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `PATH: ${PATH}`, "");
 			WebVTT_VTTs = WebVTT_VTTs.map(item => item = PATH + item)
 			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `WebVTT_VTTs.map内容: ${WebVTT_VTTs}`, "");
 		};

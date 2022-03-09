@@ -85,7 +85,7 @@ async function setENV(Platform, DataBase) {
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
 	//DataBase[Platform] = Object.assign(DataBase[Platform], BoxJs[Platform]); // BoxJs
 	let Settings = BoxJs[Platform]?.Settings || DataBase[Platform].Settings;
-	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
 	Settings.language = DataBase[Settings.type]?.Languages?.[Settings.language] ?? DataBase[Platform]?.Languages?.[Settings.language] ?? Settings.language;
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
 	/***************** Cache *****************/

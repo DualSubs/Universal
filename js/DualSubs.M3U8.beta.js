@@ -73,7 +73,7 @@ async function setENV(Platform, DataBase) {
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
 	//DataBase[Platform] = Object.assign(DataBase[Platform], BoxJs[Platform]); // BoxJs
 	let Settings = BoxJs[Platform]?.Settings || DataBase[Platform].Settings;
-	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
 	Settings.language = DataBase[Settings.type]?.Languages?.[Settings.language] ?? DataBase[Platform]?.Languages?.[Settings.language] ?? Settings.language;
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
 	/***************** Cache *****************/
@@ -124,11 +124,11 @@ async function getWebVTT_VTTs(Platform, WebVTT_M3U8) {
 	return await $.http.get({ url: WebVTT_M3U8, headers: headers }).then((response) => {
 		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let WebVTT_VTTs = response.body.match(/^.+\.vtt$/gim);
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${WebVTT_VTTs}`, "");
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${WebVTT_VTTs}`, "");
 		// if 相对路径
 		if (/^https?:\/\//gim.test(WebVTT_VTTs) == false) {
 			let PATH = WebVTT_M3U8.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? null
-			$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `PATH: ${PATH}`, "");
+			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `PATH: ${PATH}`, "");
 			WebVTT_VTTs = WebVTT_VTTs.map(item => item = PATH + item)
 			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `WebVTT_VTTs.map内容: ${WebVTT_VTTs}`, "");
 		};

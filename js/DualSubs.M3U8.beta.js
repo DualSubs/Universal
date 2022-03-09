@@ -67,17 +67,17 @@ async function getDataBase(URL) {
 // Set Environment Variables
 async function setENV(Platform, DataBase) {
 	// 包装为局部变量，用完释放内存
+	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
 	/***************** Settings *****************/
 	let BoxJs = $.getjson("DualSubs", DataBase) // BoxJs
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
-	DataBase[Platform] = Object.assign(DataBase[Platform], BoxJs[Platform]); // BoxJs
-	let Settings = DataBase[Platform].Settings
+	//DataBase[Platform] = Object.assign(DataBase[Platform], BoxJs[Platform]); // BoxJs
+	let Settings = BoxJs[Platform]?.Settings || DataBase[Platform].Settings;
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
 	Settings.language = DataBase[Settings.type]?.Languages?.[Settings.language] ?? DataBase[Platform]?.Languages?.[Settings.language] ?? Settings.language;
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
 	/***************** Cache *****************/
-	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	let Cache = DataBase[Platform]?.Cache || [];
+	let Cache = BoxJs[Platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
 	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");

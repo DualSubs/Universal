@@ -14,11 +14,11 @@ let body = $response.body
 /***************** Processing *****************/
 !(async () => {
 	const Platform = await getPlatform(url);
-	const Parameters = await getURLparameters(Platform, url);
 	[$.Settings, $.Cache] = await setENV(Platform, DataBase);
 	if ($.Settings.type == "Disable") $.done()
 	else if ($.Settings.type == "Official") {
-		let index = $.Cache.findIndex(item => item.ID == Parameters.ID)
+		const Parameters = await getParameters(Platform, url);
+		let index = $.Cache.findIndex(item => item?.ID == Parameters?.ID)
 		let WebVTT_VTTs = $.Cache[index]?.WebVTT_VTTs ?? null;
 		if (WebVTT_VTTs) $.result = await getOfficialSubtitles(Platform, WebVTT_VTTs)
 		else $.done();
@@ -68,20 +68,6 @@ async function getPlatform(url) {
 };
 
 // Function 2
-// Get URL Parameters
-async function getURLparameters(platform, url) {
-	$.log(`⚠ ${$.name}, Get URL Parameters`, "");
-	const VTT_Regex = (platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
-		: (platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
-			: (platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hbomaxcdn)\.com)\/videos\/(?<ID>[^\/]+)\/)(.*)\.vtt$/i
-				: (platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com)\/captions_webvtt\/(\d+)\/(?<ID>\d+)\/)(.*)\.vtt$/i
-					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.vtt$/i
-	let parameters = url.match(VTT_Regex)?.groups ?? null
-	$.log(`🎉 ${$.name}, Get URL Parameters`, `HOST: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
-	return parameters
-};
-
-// Function 3
 // Set Environment Variables
 async function setENV(platform, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
@@ -100,6 +86,20 @@ async function setENV(platform, database) {
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
 	return [Settings, Cache];
+};
+
+// Function 3
+// Get URL Parameters
+async function getParameters(platform, url) {
+	$.log(`⚠ ${$.name}, Get URL Parameters`, "");
+	const VTT_Regex = (platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
+		: (platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
+			: (platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hbomaxcdn)\.com)\/videos\/(?<ID>[^\/]+)\/)(.*)\.vtt$/i
+				: (platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com)\/captions_webvtt\/(\d+)\/(?<ID>\d+)\/)(.*)\.vtt$/i
+					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.vtt$/i
+	let parameters = url.match(VTT_Regex)?.groups ?? null
+	$.log(`🎉 ${$.name}, Get URL Parameters`, `HOST: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
+	return parameters
 };
 
 // Function 4

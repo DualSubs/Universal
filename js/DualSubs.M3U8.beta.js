@@ -14,21 +14,19 @@ let body = $response.body
 /***************** Processing *****************/
 !(async () => {
 	const Platform = await getPlatform(url);
-	const Parameters = await getURLparameters(Platform, url);
 	[$.Settings, $.Cache] = await setENV(Platform, DataBase);
 	if ($.Settings.type == "Disable") $.done()
 	else if (Platform == "YouTube") {
 		if (url.match(`lang=${$.Settings.language}`) || url.match(/&tlang=/)) $.done();
 		else $.done({ url: `${url}&tlang=${$.Settings.language}` });
-	} else if ($.Settings.type == "Official") {
-		//$.log(`🚧 ${$.name}, 调试信息`, `*.m3u8`, "");
-		let Profile = Parameters;
-		Profile.WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, body);
-		Profile.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Profile.WebVTT_M3U8);
-		//$.log(`🚧 ${$.name}`, `Profile内容: ${JSON.stringify(Profile)}`, "");
-		if (Platform == "Prime_Video") Profile.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID // Amazon Prime Video 变更ID
+	} else {
+		let Parameters = await getParameters(Platform, url);
+		Parameters.WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, body);
+		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Parameters.WebVTT_M3U8);
+		//$.log(`🚧 ${$.name}`, `Parameters: ${JSON.stringify(Parameters)}`, "");
+		if (Platform == "Prime_Video") Parameters.ID = Parameters?.WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID // Amazon Prime Video 变更ID
 		// 刷新播放记录，所以始终置顶
-		let index = $.Cache.findIndex(item => item.ID == Parameters.ID)
+		let index = $.Cache.findIndex(item => item?.ID == Parameters?.ID)
 		if (index !== -1) delete $.Cache[index]
 		$.Cache.unshift(Parameters)
 		$.Cache = $.Cache.filter(Boolean).slice(0, 10) //去空, 留10
@@ -59,20 +57,6 @@ async function getPlatform(url) {
 };
 
 // Function 2
-// Get URL Parameters
-async function getURLparameters(platform, url) {
-	$.log(`⚠ ${$.name}, Get URL Parameters`, "");
-	const HLS_Regex = (platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)cbcs-all-(.+)\.m3u8(\?.*)?/i
-	: (platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(\?.*)?/i
-		: (platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifests\.v2)\.(?<DOMAIN>api\.hbo)\.com))\/hls\.m3u8(\?.*r.manifest=videos%2F(?<ID>[^(%2F)]+).*)?/i
-			: (platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifest-dp)\.(?<DOMAIN>hulustream)\.com))\/hls\/(?<ID>\d+)\.m3u8(\?.*)?/i
-					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.m3u8(\?.*)?/i
-	let parameters = url.match(HLS_Regex)?.groups ?? null
-	$.log(`🎉 ${$.name}, Get URL Parameters`, `HOST: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
-	return parameters
-};
-
-// Function 3
 // Set Environment Variables
 async function setENV(platform, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
@@ -91,6 +75,20 @@ async function setENV(platform, database) {
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
 	return [Settings, Cache];
+};
+
+// Function 3
+// Get URL Parameters
+async function getParameters(platform, url) {
+	$.log(`⚠ ${$.name}, Get URL Parameters`, "");
+	const HLS_Regex = (platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)cbcs-all-(.+)\.m3u8(\?.*)?/i
+	: (platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hls\.row\.aiv-cdn|akamaihd)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(\?.*)?/i
+		: (platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifests\.v2)\.(?<DOMAIN>api\.hbo)\.com))\/hls\.m3u8(\?.*r.manifest=videos%2F(?<ID>[^(%2F)]+).*)?/i
+			: (platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>manifest-dp)\.(?<DOMAIN>hulustream)\.com))\/hls\/(?<ID>\d+)\.m3u8(\?.*)?/i
+					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.m3u8(\?.*)?/i
+	let parameters = url.match(HLS_Regex)?.groups ?? null
+	$.log(`🎉 ${$.name}, Get URL Parameters`, `HOST: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
+	return parameters
 };
 
 // Function 4

@@ -108,7 +108,7 @@ async function getWebVTT_M3U8(Platform, Parameters) {
 	let WebVTT_M3U8 = body.match(Language_Regex)?.groups?.WebVTT_M3U8 ?? null
 	//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `body.match(Language_Regex)?.groups?.WebVTT_M3U8: ${WebVTT_M3U8}`, "");
 	// if 相对路径
-	if (/^https?:\/\/(?:.+)\.m3u8$/i.test(WebVTT_M3U8) == false) {
+	if (/^https?:\/\//i.test(WebVTT_M3U8) == false) {
 		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? Parameters.PATH
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle playlist.m3u8 URL", `url.match: ${PATH}`, "");
 		WebVTT_M3U8 = PATH + WebVTT_M3U8
@@ -126,7 +126,7 @@ async function getWebVTT_VTTs(Platform, WebVTT_M3U8) {
 		let WebVTT_VTTs = response.body.match(/^.+\.vtt$/gim);
 		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${WebVTT_VTTs}`, "");
 		// if 相对路径
-		if (/^https?:\/\/(?:.+)\.vtt$/gim.test(WebVTT_VTTs) == false) {
+		if (/^https?:\/\//gim.test(WebVTT_VTTs) == false) {
 			let PATH = WebVTT_M3U8.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? null
 			$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `PATH: ${PATH}`, "");
 			WebVTT_VTTs = WebVTT_VTTs.map(item => item = PATH + item)

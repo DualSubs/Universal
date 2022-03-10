@@ -1,5 +1,5 @@
 #!name= DualSubs
-#!desc= (0.3.6) Dual Subtitiles for Streaming Media Platform
+#!desc= (0.3.7) Dual Subtitiles for Streaming Media Platform
 
 [Script]
 DualSubs.YouTube = type=http-request, pattern=^https?:\/\/www\.youtube\.com\/api\/timedtext(.*), requires-body=0, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
@@ -36,4 +36,4 @@ DualSubs.Hulu.vtt = type=http-response, pattern=^https?:\/\/assets\.huluim\.com\
 ^https?:\/\/raw\.githubusercontent\.com\/DualSubs\/DualSubs\/main\/database\/DualSubs\.min\.json data="https://raw.githubusercontent.com/DualSubs/DualSubs/main/database/DualSubs.min.json"
 
 [MITM]
-hostname = %APPEND% www.youtube.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *-a.akamaihd.net, *.cloudfront.net, *.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, livemanifest-f.hulustream.com, live-sc.hulustream.com, assets.huluim.com, link.theplatform.com, *.cbsaavideo.com, *.cbsivideo.com, *.stream.peacocktv.com, *.cdn.peacocktv.com, content-discovery.uplynk.com, x-default-stgec.uplynk.com, *-discovery1.uplynk.com, *.nflxvideo.net
+hostname = %APPEND% www.youtube.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, avodmp4s3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, *.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, livemanifest-f.hulustream.com, live-sc.hulustream.com, assets.huluim.com, link.theplatform.com, *.cbsaavideo.com, *.cbsivideo.com, *.stream.peacocktv.com, *.cdn.peacocktv.com, content-discovery.uplynk.com, x-default-stgec.uplynk.com, *-discovery1.uplynk.com, *.nflxvideo.net

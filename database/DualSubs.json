@@ -1,12 +1,13 @@
 {
 	"Disney_Plus": {
 		"Settings": {
-			"type": "Official",
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward",
-			"dkey": "null"
+			"Switch": "true",
+			"Type": "Official,Google,DeepL,External",
+			"PlaylistNumber": "10",
+			"PreferredLanguage": "ZH-HANT",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward",
+			"DeepLKey": "null"
 		},
 		"Languages": {
 			"AR": "ar",
@@ -41,19 +42,20 @@
 			"SL": "sl",
 			"SV": "sv",
 			"IS": "is",
-			"ZH-CN": "zh-Hans",
+			"ZH-HANS": "zh-Hans",
 			"ZH-HK": "zh-HK",
-			"ZH-TW": "zh-Hant"
+			"ZH-HANT": "zh-Hant"
 		}
 	},
 	"Prime_Video": {
 		"Settings": {
-			"type": "Official",
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward",
-			"dkey": "null"
+			"Switch": "true",
+			"Type": "Official,Google,DeepL,External",
+			"PlaylistNumber": "10",
+			"PreferredLanguage": "ZH-HANS",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward",
+			"DeepLKey": "null"
 		},
 		"Languages": {
 			"AR": "ar-001",
@@ -89,19 +91,20 @@
 			"SL": "sl-si",
 			"SV": "sv-se",
 			"IS": "is-is",
-			"ZH-CN": "zh-Hans",
+			"ZH-HANS": "zh-hans",
 			"ZH-HK": "zh-HK",
-			"ZH-TW": "zh-Hant"
+			"ZH-HANT": "zh-hant"
 		}
 	},
 	"HBO_Max": {
 		"Settings": {
-			"type": "Official",
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en-US SDH",
-			"position": "Forward",
-			"dkey": "null"
+			"Switch": "true",
+			"Type": "Official,Google,DeepL,External",
+			"PlaylistNumber": "5",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward",
+			"DeepLKey": "null"
 		},
 		"Languages": {
 			"AR": "ar-001",
@@ -136,19 +139,20 @@
 			"SL": "sl-SI",
 			"SV": "sv-SE",
 			"IS": "is-IS",
-			"ZH-CN": "zh-CN",
+			"ZH-HANS": "zh-CN",
 			"ZH-HK": "zh-HK",
-			"ZH-TW": "zh-TW"
+			"ZH-HANT": "zh-TW"
 		}
 	},
 	"Hulu": {
 		"Settings": {
-			"type": "Official",
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en-US SDH",
-			"position": "Forward",
-			"dkey": "null"
+			"Switch": "true",
+			"Type": "Official,Google,DeepL,External",
+			"PlaylistNumber": "10",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward",
+			"DeepLKey": "null"
 		},
 		"Languages": {
 			"AR": "ara",
@@ -183,19 +187,68 @@
 			"SL": "slv",
 			"SV": "swe",
 			"IS": "isl",
-			"ZH-CN": "zho",
+			"ZH-HANS": "zho",
 			"ZH-HK": "zho",
-			"ZH-TW": "zho"
+			"ZH-HANT": "zho"
+		}
+	},
+	"Paramount_Plus": {
+		"Settings": {
+			"Switch": "true",
+			"Type": "Official,Google,DeepL,External",
+			"PlaylistNumber": "5",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward",
+			"DeepLKey": "null"
+		},
+		"Languages": {
+			"AR": "ar",
+			"BG": "bg",
+			"CS": "cs",
+			"DA": "da",
+			"DE": "de",
+			"EL": "el",
+			"EN-GB": "en",
+			"EN-US": "en",
+			"EN-US SDH": "en",
+			"ES": "es-ES",
+			"ES-419": "es-419",
+			"ES-ES": "es-ES",
+			"ET": "et",
+			"FI": "fi",
+			"FR": "fr-FR",
+			"HU": "hu",
+			"IT": "it",
+			"JA": "ja",
+			"KO": "ko",
+			"LT": "lt",
+			"LV": "lv",
+			"NL": "nl",
+			"NO": "no",
+			"PL": "pl",
+			"PT-PT": "pt-PT",
+			"PT-BR": "pt-BR",
+			"RO": "ro",
+			"RU": "ru",
+			"SK": "sk",
+			"SL": "sl",
+			"SV": "sv",
+			"IS": "is",
+			"ZH-HANS": "zh-Hans",
+			"ZH-HK": "zh-HK",
+			"ZH-HANT": "zh-Hant"
 		}
 	},
 	"Discovery_Plus": {
 		"Settings": {
-			"type": "Official",
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en-US SDH",
-			"position": "Forward",
-			"dkey": "null"
+			"Switch": "true",
+			"Type": "Official,Google,DeepL,External",
+			"PlaylistNumber": "5",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward",
+			"DeepLKey": "null"
 		},
 		"Languages": {
 			"BG": "bg-BG",
@@ -227,37 +280,26 @@
 			"SK": "sk-SK",
 			"SL": "sl-SI",
 			"SV": "sv-SE",
-			"ZH-CN": "zh-CN",
+			"ZH-HANS": "zh-CN",
 			"ZH-HK": "zh-HK",
-			"ZH-TW": "zh-TW"
-		}
-	},
-	"Paramount_Plus": {
-		"Settings": {
-			"type": "Google",
-			"language": "EN-US",
-			"sl": "auto",
-			"tl": "en",
-			"position": "Forward",
-			"dkey": "null"
+			"ZH-HANT": "zh-TW"
 		}
 	},
 	"Netflix": {
 		"Settings": {
-			"type": "Google",
-			"lang": "English",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward",
-			"dkey": "null"
+			"Switch": "true",
+			"Type": "Official,Google,DeepL,External",
+			"PlaylistNumber": "10",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward",
+			"DeepLKey": "null"
 		}
 	},
 	"YouTube": {
 		"Settings": {
-			"type": "Enable",
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en"
+			"Switch": "true",
+			"language": "EN-US"
 		},
 		"Languages": {
 			"BG": "bg-BG",
@@ -291,9 +333,9 @@
 			"SL": "sl-SI",
 			"SV": "sv-SE",
 			"IS": "is-IS",
-			"ZH-CN": "zh-Hans",
+			"ZH-HANS": "zh-Hans",
 			"ZH-HK": "zh-Hant-HK",
-			"ZH-TW": "zh-Hant"
+			"ZH-HANT": "zh-Hant"
 		}
 	},
 	"Google": {
@@ -331,9 +373,9 @@
 			"SL": "sl",
 			"SV": "sv",
 			"IS": "is",
-			"ZH-CN": "zh-CN",
+			"ZH-HANS": "zh-CN",
 			"ZH-HK": "zh-HK",
-			"ZH-TW": "zh-TW"
+			"ZH-HANT": "zh-TW"
 		}
 	},
 	"DeepL": {

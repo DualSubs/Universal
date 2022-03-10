@@ -1,12 +1,13 @@
 {
 	"Disney_Plus": {
 		"Settings": {
-			"type": "Official", // Official, Google, DeepL, Disable
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
+			"Switch": "true", // true, false
+			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"PlaylistNumber": "10",
+			"PreferredLanguage": "ZH-HANT",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward", // Forward, Reverse
+			"DeepLKey": "null" // DeepL API Authentication Key
 		},
 		"Languages": {
 			//"AR": "ar", // 阿拉伯语
@@ -41,19 +42,20 @@
 			//"SL": "sl", // 斯洛文尼亚语
 			"SV": "sv", // 瑞典语
 			"IS": "is", // 冰岛语
-			"ZH-CN": "zh-Hans", // 中文（简体）
+			"ZH-HANS": "zh-Hans", // 中文（简体）
 			"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-Hant" // 中文（繁体）
+			"ZH-HANT": "zh-Hant" // 中文（繁体）
 		}
 	},
 	"Prime_Video": {
 		"Settings": {
-			"type": "Official", // Official, Google, DeepL, Disable
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
+			"Switch": "true", // true, false
+			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"PlaylistNumber": "5",
+			"PreferredLanguage": "ZH-HANS",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward", // Forward, Reverse
+			"DeepLKey": "null" // DeepL API Authentication Key
 		},
 		"Languages": {
 			"AR": "ar-001", // 阿拉伯语
@@ -89,19 +91,20 @@
 			//"SL": "sl-si", // 斯洛文尼亚语
 			"SV": "sv-se", // 瑞典语
 			//"IS": "is-is", // 冰岛语
-			"ZH-CN": "zh-Hans", // 中文（简体）
+			"ZH-HANS": "zh-hans", // 中文（简体）
 			//"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-Hant" // 中文（繁体）
+			"ZH-HANT": "zh-hant" // 中文（繁体）
 		}
 	},
 	"HBO_Max": {
 		"Settings": {
-			"type": "Official", // Official, Google, DeepL, Disable
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en-US SDH",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
+			"Switch": "true", // true, false
+			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"PlaylistNumber": "5",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward", // Forward, Reverse
+			"DeepLKey": "null" // DeepL API Authentication Key
 		},
 		"Languages": {
 			//"AR": "ar-001", // 阿拉伯语
@@ -136,19 +139,20 @@
 			"SL": "sl-SI", // 斯洛文尼亚语
 			"SV": "sv-SE", // 瑞典语
 			//"IS": "is-IS", // 冰岛语
-			"ZH-CN": "zh-CN", // 中文（中国）
+			"ZH-HANS": "zh-CN", // 中文（中国）
 			"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-TW" // 中文（台湾）
+			"ZH-HANT": "zh-TW" // 中文（台湾）
 		}
 	},
 	"Hulu": {
 		"Settings": {
-			"type": "Official", // Official, Google, DeepL, Disable
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en-US SDH",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
+			"Switch": "true", // true, false
+			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"PlaylistNumber": "5",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward", // Forward, Reverse
+			"DeepLKey": "null" // DeepL API Authentication Key
 		},
 		"Languages": {
 			//"AR": "ar-001", // 阿拉伯语
@@ -183,63 +187,20 @@
 			"SL": "slv", // 斯洛文尼亚语
 			"SV": "swe", // 瑞典语
 			//"IS": "isl", // 冰岛语
-			"ZH-CN": "zho", // 中文（中国）
+			"ZH-HANS": "zho", // 中文（中国）
 			"ZH-HK": "zho", // 中文（香港）
-			"ZH-TW": "zho" // 中文（台湾）
-		}
-	},
-	"Discovery_Plus": {
-		"Settings": {
-			"type": "Official", // Official, Google, DeepL, Disable
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en-US SDH",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
-		},
-		"Languages": {
-			"BG": "bg-BG", // 保加利亚语
-			//"CS": "cs-CZ", // 捷克语
-			"DA": "da-DK", // 丹麦语
-			//"DE": "de", // 德文
-			//"EL": "el", // 希腊语
-			"EN-GB": "en", // 英语（英国）
-			"EN-US": "en-US", // 英语（美国）
-			"EN-US SDH": "en-US SDH", // 英语（美国）CC
-			"ES": "es-419", // 西班牙语
-			"ES-419": "es-419", // 西班牙语（拉丁美洲）
-			"ES-ES": "es-ES", // 西班牙语
-			"ET": "et-EE", // 爱沙尼亚语
-			//"FI": "fi", // 芬兰语
-			//"FR": "fr", // 法语
-			"HU": "hu-HU", // 匈牙利语
-			"IT": "it", // 意大利语
-			//"JA": "ja", // 日语
-			//"KO": "ko", // 韩语
-			"LT": "lt-LT", // 立陶宛语
-			"LV": "lv-LV", // 拉脱维亚语
-			"NL": "nl-NL", // 荷兰语
-			"PL": "pl-PL", // 波兰语
-			"PT-PT": "pt-PT", // 葡萄牙语
-			"PT-BR": "pt-BR", // 葡萄牙语(巴西)
-			"RO": "ro-RO", // 罗马尼亚语
-			"RU": "ru-RU", // 俄罗斯
-			"SK": "sk-SK", // 斯洛伐克语
-			"SL": "sl-SI", // 斯洛文尼亚语
-			"SV": "sv-SE", // 瑞典语
-			"ZH-CN": "zh-CN", // 中文（中国）
-			"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-TW" // 中文（台湾）
+			"ZH-HANT": "zho" // 中文（台湾）
 		}
 	},
 	"Paramount_Plus": {
 		"Settings": {
-			"type": "Google", // Google, DeepL, Disable
-			"language": "EN-US",
-			"sl": "auto",
-			"tl": "en",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
+			"Switch": "true", // true, false
+			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"PlaylistNumber": "5",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward", // Forward, Reverse
+			"DeepLKey": "null" // DeepL API Authentication Key
 		},
 		"Languages": {
 			//"AR": "ar", // 阿拉伯语
@@ -274,27 +235,71 @@
 			//"SL": "sl", // 斯洛文尼亚语
 			"SV": "sv", // 瑞典语
 			"IS": "is", // 冰岛语
-			"ZH-CN": "zh-Hans", // 中文（简体）
+			"ZH-HANS": "zh-Hans", // 中文（简体）
 			"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-Hant" // 中文（繁体）
+			"ZH-HANT": "zh-Hant" // 中文（繁体）
+		}
+	},
+	"Discovery_Plus": {
+		"Settings": {
+			"Switch": "true", // true, false
+			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"PlaylistNumber": "5",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward", // Forward, Reverse
+			"DeepLKey": "null" // DeepL API Authentication Key
+		},
+		"Languages": {
+			"BG": "bg-BG", // 保加利亚语
+			//"CS": "cs-CZ", // 捷克语
+			"DA": "da-DK", // 丹麦语
+			//"DE": "de", // 德文
+			//"EL": "el", // 希腊语
+			"EN-GB": "en", // 英语（英国）
+			"EN-US": "en-US", // 英语（美国）
+			"EN-US SDH": "en-US SDH", // 英语（美国）CC
+			"ES": "es-419", // 西班牙语
+			"ES-419": "es-419", // 西班牙语（拉丁美洲）
+			"ES-ES": "es-ES", // 西班牙语
+			"ET": "et-EE", // 爱沙尼亚语
+			//"FI": "fi", // 芬兰语
+			//"FR": "fr", // 法语
+			"HU": "hu-HU", // 匈牙利语
+			"IT": "it", // 意大利语
+			//"JA": "ja", // 日语
+			//"KO": "ko", // 韩语
+			"LT": "lt-LT", // 立陶宛语
+			"LV": "lv-LV", // 拉脱维亚语
+			"NL": "nl-NL", // 荷兰语
+			"PL": "pl-PL", // 波兰语
+			"PT-PT": "pt-PT", // 葡萄牙语
+			"PT-BR": "pt-BR", // 葡萄牙语(巴西)
+			"RO": "ro-RO", // 罗马尼亚语
+			"RU": "ru-RU", // 俄罗斯
+			"SK": "sk-SK", // 斯洛伐克语
+			"SL": "sl-SI", // 斯洛文尼亚语
+			"SV": "sv-SE", // 瑞典语
+			"ZH-HANS": "zh-CN", // 中文（中国）
+			"ZH-HK": "zh-HK", // 中文（香港）
+			"ZH-HANT": "zh-TW" // 中文（台湾）
 		}
 	},
 	"Netflix": {
 		"Settings": {
-			"type": "Google", // Google, DeepL, Disable
-			"lang": "English",
-			"sl": "AUTO",
-			"tl": "en",
-			"position": "Forward", // Forward, Reverse
-			"dkey": "null" // DeepL API key
+			"Switch": "true", // true, false
+			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"PlaylistNumber": "10",
+			"PreferredLanguage": "ZH",
+			"SecondaryLanguage": "EN-US",
+			"Position": "Forward", // Forward, Reverse
+			"DeepLKey": "null" // DeepL API Authentication Key
 		}
 	},
 	"YouTube": {
 		"Settings": {
-			"type": "Enable", // Enable, Disable
-			"language": "EN-US",
-			"sl": "AUTO",
-			"tl": "en"
+			"Switch": "true", // Enable, Disable
+			"language": "EN-US"
 		},
 		"Languages": {
 			"BG": "bg-BG", // 保加利亚语
@@ -328,9 +333,9 @@
 			"SL": "sl-SI", // 斯洛文尼亚语
 			"SV": "sv-SE", // 瑞典语
 			//"IS": "is-IS", // 冰岛语
-			"ZH-CN": "zh-Hans", // 中文（简体）
+			"ZH-HANS": "zh-Hans", // 中文（简体）
 			"ZH-HK": "zh-Hant-HK", // 中文（香港）
-			"ZH-TW": "zh-Hant" // 中文（繁体）
+			"ZH-HANT": "zh-Hant" // 中文（繁体）
 		}
 	},
 	"Google": {
@@ -368,9 +373,9 @@
 			"SL": "sl", // 斯洛文尼亚语
 			"SV": "sv", // 瑞典语
 			"IS": "is", // 冰岛语
-			"ZH-CN": "zh-CN", // 中文（中国）
+			"ZH-HANS": "zh-CN", // 中文（中国）
 			"ZH-HK": "zh-HK", // 中文（香港）
-			"ZH-TW": "zh-TW" // 中文（台湾）
+			"ZH-HANT": "zh-TW" // 中文（台湾）
 		}
 	},
 	"DeepL": {

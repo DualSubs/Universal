@@ -1,9 +1,9 @@
 #!name= DualSubs
-#!desc= (0.3.0) Dual Subtitiles for Streaming Media Platform
+#!desc= (0.3.6) Dual Subtitiles for Streaming Media Platform
 
 #[Script]
 # DualSubs.YouTube
-^https?:\/\/www\.youtube\.com\/api\/timedtext(.*) url script-request-header https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.js
+^https?:\/\/www\.youtube\.com\/api\/timedtext(.*) url script-request-header https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.Disney_Plus.HLS.m3u8
 ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/cbcs-all-(.*)\.m3u8(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.Disney_Plus.WebVTT.m3u8
@@ -28,10 +28,21 @@
 # ^https?:\/\/manifest-dp\.hulustream\.com\/webvtt\?(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
 # DualSubs.Hulu.vtt
 ^https?:\/\/assets\.huluim\.com\/captions_webvtt\/(.+[^blank])\.vtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# DualSubs.Paramount_Plus.HLS.m3u8
+# ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/master\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.Paramount_Plus.WebVTT.m3u8
+# ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/stream_vtt\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.Paramount_Plus.vtt
+# ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.*)\.vtt url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+# DualSubs.Peacock.HLS.m3u8
+# ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/master_cmaf\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.Peacock.WebVTT.m3u8
+# ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
+# DualSubs.Peacock.vtt
+# ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.webvtt$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 # DualSubs.Discovery_Plus.HLS.m3u8
 # ^https?:\/\/content-discovery\.uplynk\.com\/(.+)\.m3u8\?(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.M3U8.js
-# DualSubs.Paramount_Plus.vtt
-# ^https?:\/\/(.*)\.cbs(aa|i)video\.com\/(.*)\.vtt(\?m=\d+)? url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 # DualSubs.Netflix.vtt
 # ^https?:\/\/(.*)\.nflxvideo\.net\/\?o=(\d+)&v=(\d+)&e=(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
@@ -39,4 +50,4 @@
 #^https?:\/\/raw\.githubusercontent\.com\/DualSubs\/DualSubs\/main\/database\/DualSubs\.min\.json data="https://raw.githubusercontent.com/DualSubs/DualSubs/main/database/DualSubs.min.json"
 
 #[MITM]
-hostname = www.youtube.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *-a.akamaihd.net, *.cloudfront.net, *.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, assets.huluim.com, content-discovery.uplynk.com, *-discovery1.uplynk.com, *.cbsaavideo.com, *.cbsivideo.com, *.nflxvideo.net
+hostname = www.youtube.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *-a.akamaihd.net, *.cloudfront.net, *.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, livemanifest-f.hulustream.com, live-sc.hulustream.com, assets.huluim.com, link.theplatform.com, *.cbsaavideo.com, *.cbsivideo.com, *.stream.peacocktv.com, *.cdn.peacocktv.com, content-discovery.uplynk.com, x-default-stgec.uplynk.com, *-discovery1.uplynk.com, *.nflxvideo.net

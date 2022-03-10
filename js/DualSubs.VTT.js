@@ -1,161 +1,131 @@
 /*
 README:https://github.com/DualSubs/DualSubs/
 */
-
 // Original: https://raw.githubusercontent.com/DualSubs-R/Surge/master/DualSub.js
-
-const $ = new Env("DualSubs v0.3.0");
+const $ = new Env("DualSubs v0.3.6");
 const VTT = new WebVTT("WebVTT v1.3.0");
-const DBurl = "https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json"
+// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json
+const DataBase = {"Disney_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"Prime_Video":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES":"es-es","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"HBO_Max":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Hulu":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ara","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES":"spa","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-CN":"zho","ZH-HK":"zho","ZH-TW":"zho"}},"Discovery_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Paramount_Plus":{"Settings":{"type":"Google","language":"EN-US","sl":"auto","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"Netflix":{"Settings":{"type":"Google","lang":"English","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"}},"YouTube":{"Settings":{"type":"Enable","language":"EN-US","sl":"AUTO","tl":"en"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-TW":"zh-Hant"}},"Google":{"Languages":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"DeepL":{"Languages":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH"}}}
 
 let url = $request.url
 let headers = $request.headers
 let body = $response.body
 
-
-
-/***************** Platform *****************/
-const Platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
-	: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
-		: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-			: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-				: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-					: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_plus"
-						: url.match(/www\.youtube\.com/i) ? "YouTube"
-							: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-								: undefined
-$.log(`🚧 ${$.name}, 调试信息`, `Platform: ${Platform}`, "");
-
 /***************** Processing *****************/
 !(async () => {
-	$.DualSubs = await getDataBase(DBurl);
-	[$.Settings, $.Cache] = await setENV(Platform, $.DualSubs);
-	const Parameters = await getURLparameters(Platform);
+	const Platform = await getPlatform(url);
+	[$.Settings, $.Cache] = await setENV(Platform, DataBase);
 	if ($.Settings.type == "Disable") $.done()
 	else if ($.Settings.type == "Official") {
-		//let env = await getENV(Platform)
-		$.log(`🚧 ${$.name}, 调试信息`, `*.vtt`, `Platform: ${Platform}`, `Type: ${$.Settings.type}`, "");
-		/***************** Generate VTT Subtitle *****************/
-		$.log(`🚧 ${$.name}, Generate VTT Subtitle`, "");
-		let subtitles_VTT_URLs = ($.Cache[Parameters.UUID]?.subtitles_VTT_URLs) ? $.Cache[Parameters.UUID].subtitles_VTT_URLs
-			: ($.Cache.subtitles_VTT_URLs) ? $.Cache.subtitles_VTT_URLs
-				: null
-		$.log(`🚧 ${$.name}, Generate VTT Subtitle`, `subtitles_VTT_URLs: ${subtitles_VTT_URLs}`, "");
-
-		if (subtitles_VTT_URLs != null) {
-			let result = ($.Settings.type == "Official") ? await getOfficialSubtitles(subtitles_VTT_URLs)
-				: await getTranslateSubtitles(body)
-			/***************** merge Dual Subtitles *****************/
-			let FirstSub = VTT.parse(body, ["timeStamp", "ms"]) // "multiText"
-			$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
-			$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
-			$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
-			$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
-			let SecondSub = VTT.parse(result, ["timeStamp", "ms"]) // "multiText"
-			$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
-			$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
-			$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
-			$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
-			
-			//$.log("VTT.stringify(FirstSub)", VTT.stringify(FirstSub));
-
-			let DualSub = await mergeDualSubs(FirstSub, SecondSub);
-			//$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
-			DualSub = VTT.stringify(DualSub)
-			$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
-			$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-			$.done({ "body": DualSub });
-		} else $.done();
-	}
+		const Parameters = await getParameters(Platform, url);
+		let index = $.Cache.findIndex(item => item?.ID == Parameters?.ID)
+		let WebVTT_VTTs = $.Cache[index]?.WebVTT_VTTs ?? null;
+		if (WebVTT_VTTs) $.result = await getOfficialSubtitles(Platform, WebVTT_VTTs)
+		else $.done();
+	} else if ($.Settings.type == "Translate") {
+		$.result = await getTranslateSubtitles(body);
+	} else if ($.Settings.type == "External") {
+		$.result = await getExternalSubtitles(url);
+	} else $.done();
+	/***************** merge Dual Subtitles *****************/
+	let FirstSub = VTT.parse(body, ["timeStamp", "ms"]) // "multiText"
+	$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
+	$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
+	$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
+	$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
+	let SecondSub = VTT.parse($.result, ["timeStamp", "ms"]) // "multiText"
+	$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
+	$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
+	$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
+	$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
+	let DualSub = await mergeDualSubs(FirstSub, SecondSub);
+	//$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	DualSub = VTT.stringify(DualSub)
+	$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
+	$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+	$.done({ "body": DualSub });
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done())
 
 /***************** Fuctions *****************/
 // Function 1
-// Get DataBase
-async function getDataBase(URL) {
-	// 本地数据库
-	let database = {"Disney_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"Prime_Video":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES":"es-es","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-CN":"zh-Hans","ZH-HK":"zh-HK","ZH-TW":"zh-Hant"}},"HBO_Max":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Hulu":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"AR":"ara","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES":"spa","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-CN":"zho","ZH-HK":"zho","ZH-TW":"zho"}},"Discovery_Plus":{"Settings":{"type":"Official","language":"EN-US","sl":"AUTO","tl":"en-US SDH","position":"Forward","dkey":"null"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"Paramount_Plus":{"Settings":{"type":"Google","language":"EN-US","sl":"auto","tl":"en","position":"Forward","dkey":"null"}},"Netflix":{"Settings":{"type":"Google","lang":"English","sl":"AUTO","tl":"en","position":"Forward","dkey":"null"}},"YouTube":{"Settings":{"type":"Enable","language":"EN-US","sl":"AUTO","tl":"en"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-CN":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-TW":"zh-Hant"}},"Google":{"Languages":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-CN":"zh-CN","ZH-HK":"zh-HK","ZH-TW":"zh-TW"}},"DeepL":{"Languages":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH"}}}
-	// 远程数据库
-	//let database = await $.http.get(URL).then((response) => { return JSON.parse(response.body) });
-	//$.log(`🚧 ${$.name}, 调试信息`, "Get DataBase", `database类型: ${typeof database}`, `database内容: ${JSON.stringify(database)}`, "");
-	return database;
+// Get Platform
+async function getPlatform(url) {
+	$.log(`⚠ ${$.name}, Get Platform`, "");
+	let platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
+		: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
+			: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
+				: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
+					: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
+						: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+							: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+								: url.match(/www\.youtube\.com/i) ? "YouTube"
+									: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+										: undefined
+	$.log(`🎉 ${$.name}, Get Platform`, `platform: ${platform}`, "");
+	return platform
 };
 
 // Function 2
 // Set Environment Variables
-async function setENV(Platform, DataBase) {
-	// 包装为局部变量，用完释放内存
-	/***************** Settings *****************/
-	let BoxJs = $.getjson("DualSubs", DataBase) // BoxJs
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
-	DataBase[Platform] = Object.assign(DataBase[Platform], BoxJs[Platform]); // BoxJs
-	let Settings = DataBase[Platform].Settings
-	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
-	Settings.language = DataBase[Settings.type]?.Languages?.[Settings.language] ?? DataBase[Platform]?.Languages?.[Settings.language] ?? Settings.language;
-	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
-	/***************** Cache *****************/
-	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	let Cache = DataBase[Platform]?.Cache || {};
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
+async function setENV(platform, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	let BoxJs = $.getjson("DualSubs", database) // BoxJs
+	let Settings = BoxJs[platform]?.Settings || database[platform].Settings;
+	Settings.language = database[Settings.type]?.Languages?.[Settings.language] ?? database[platform]?.Languages?.[Settings.language] ?? Settings.language;
+	let Cache = BoxJs[platform]?.Cache || [];
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
-	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	//if (ENV) $.Cache = (Platform == "Disney_Plus") ? $.Cache[ENV.UUID] : $.Cache;
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
 	return [Settings, Cache];
 };
 
 // Function 3
 // Get URL Parameters
-async function getURLparameters(Platform) {
-	$.log(`🚧 ${$.name}, Get Environment Variables`, "");
-	/***************** Regex *****************/
-	const VTT_Regex = (Platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
-		: (Platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<UUID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
-			: (Platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hbomaxcdn)\.com)\/videos\/(?<ID>[^\/]+)\/)(.*)\.vtt$/i
-				: (Platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com)\/captions_webvtt\/(\d+)\/(?<asset_id>\d+)\/)(.*)\.vtt$/i
+async function getParameters(platform, url) {
+	$.log(`⚠ ${$.name}, Get URL Parameters`, "");
+	const VTT_Regex = (platform == "Disney_Plus") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.media\.(?<DOMAIN>dssott|starott)\.com)\/(?:ps01|\w*\d*)\/disney\/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/)r\/(.+)\.vtt$/i
+		: (platform == "Prime_Video") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>cloudfront)\.net)\/(.*)\/)(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt$/i
+			: (platform == "HBO_Max") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>.*)\.(?<DOMAIN>hbomaxcdn)\.com)\/videos\/(?<ID>[^\/]+)\/)(.*)\.vtt$/i
+				: (platform == "Hulu") ? /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>assets)\.(?<DOMAIN>huluim)\.com)\/captions_webvtt\/(\d+)\/(?<ID>\d+)\/)(.*)\.vtt$/i
 					: /^(?<PATH>https?:\/\/(?<HOST>(?<CDN>[\d\w\/]+])\.(?<DOMAIN>[\d\w]+)\.(com|net))\/(.*)\/)(.*)\.vtt$/i
 	let parameters = url.match(VTT_Regex)?.groups ?? null
-	$.log(`🚧 ${$.name}, 调试信息`, `Get URL Parameters`, `HOST内容: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, "");
-	$.log(`UUID: ${parameters.UUID}`);
-	$.log(`ID: ${parameters.ID}`);
-	$.log(`asset_id: ${parameters.asset_id}`);
-	$.log("");
+	$.log(`🎉 ${$.name}, Get URL Parameters`, `HOST: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
 	return parameters
 };
 
 // Function 4
 // Get Official Subtitles
-async function getOfficialSubtitles(subtitles_VTT_URLs = new Array) {
-	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `subtitles_VTT_URLs内容: ${subtitles_VTT_URLs}`, "");
+async function getOfficialSubtitles(platform, WebVTT_VTTs = new Array) {
+	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
 
 	/***************** Slice subtitles URLs Array *****************/
 	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
 	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
 	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
-	//subtitles_VTT_URLs = subtitles_VTT_URLs.slice(start, SubtitlesIndex + 4)
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `subtitles_VTT_URLs内容: ${subtitles_VTT_URLs}`, "");
+	//WebVTT_VTTs = WebVTT_VTTs.slice(start, SubtitlesIndex + 4)
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
 
 	/***************** Get subtitles URL *****************/
-	let subtitles_VTT_URL = subtitles_VTT_URLs
-	if (Platform == "Disney_Plus") { // Disney+ 片段名称相同
+	let WebVTT_VTT = WebVTT_VTTs
+	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
 		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
 		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-		subtitles_VTT_URL = subtitles_VTT_URLs.find(item => item.includes(SubtitleName))
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${subtitles_VTT_URL}`, "")
-	} else if (Platform == "Hulu") { // Hulu 片段分型序号相同
-		let SubtitleName = url.match(/(.+_SEGMENT\d+_.+\.vtt$)/)[1]
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-		subtitles_VTT_URL = subtitles_VTT_URLs.find(item => item.includes(SubtitleName))
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${subtitles_VTT_URL}`, "")
-	} else if (Platform == "Prime_Video" || Platform == "HBO_Max") { // Amazon Prime Video HBO_Max不拆分字幕片段
-		subtitles_VTT_URL = subtitles_VTT_URLs[0]
+		WebVTT_VTT = WebVTT_VTTs.find(item => item.includes(SubtitleName))
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${WebVTT_VTT}`, "")
+	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
+			let SubtitleName = url.match(/(.+_SEGMENT\d+_.+\.vtt$)/)[1]
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
+			WebVTT_VTT = WebVTT_VTTs.find(item => item.includes(SubtitleName))
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${WebVTT_VTT}`, "")
+	} else { // Amazon Prime Video HBO_Max不拆分字幕片段
+		WebVTT_VTT = WebVTT_VTTs[0]
 	}
 	/***************** Get subtitles *****************/
 	//let result = {}
 	// 获取webVTT
-	//for (var k in subtitles_VTT_URLs) { await $.http.get({ url: subtitles_VTT_URLs[k], headers: headers }).then((response) => { result.push(response.body) }) }
-	return await $.http.get({ url: subtitles_VTT_URL, headers: headers }).then((response) => { return response.body })
+	//for (var k in WebVTT_VTTs) { await $.http.get({ url: WebVTT_VTTs[k], headers: headers }).then((response) => { result.push(response.body) }) }
+	return await $.http.get({ url: WebVTT_VTT, headers: headers }).then((response) => { return response.body })
 	//$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles", `result内容: ${result}`, "");
 };
 
@@ -171,15 +141,7 @@ async function mergeDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = {
 	$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `Sub2内容: ${JSON.stringify(Sub2)}`, "");
-
 	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
-	/*
-	let DualSub = {
-		headers: options.includes("Reverse") ? Sub2.headers : Sub1.headers,
-		CSS: options.includes("Reverse") ? Sub2.CSS : Sub1.CSS,
-		body: options.includes("Reverse") ? Sub2.body : Sub1.body
-	};
-	*/
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `let DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	// 有序数列 用不着排序
 	//FirstSub.body.sort((x, y) => x - y);
@@ -192,6 +154,20 @@ async function mergeDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = {
 		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
 		if (Math.abs(timeStamp1 - timeStamp2) <= 1000) {
 			index0 = options.includes("Reverse") ? index2 : index1;
+			// 多行字幕交替插入
+			/*
+			if (Array.isArray(text1) && Array.isArray(text2)) {
+				let a = options.includes("Reverse") ? text2 : text1;
+				let b = options.includes("Reverse") ? text1 : text2;
+				let c = [];
+				let length = a.length > b.length ? a.length : b.length;
+				for (let j = 0; j < length; j++) {
+					if (a[j]) c.push(a[j]);
+					if (b[j]) c.push(b[j]);
+				}
+				DualSub.body[index0].text = c;
+			} else 
+			*/
 			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
 			//DualSub.body[index0].timeStamp = options.includes("Reverse") ? timeStamp2 : timeStamp1;
 			//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
@@ -289,14 +265,14 @@ async function machine_subtitles(type, body) {
 
 		}
 
-		if (Platform != "Netflix") {
+		if (platform != "Netflix") {
 			//Cache.s_subtitles_url = url
 			//Cache.subtitles = body
 			//Cache.subtitles_type = settings.type
 			//Cache.subtitles_sl = settings.sl
 			//Cache.subtitles_tl = settings.language
 			//Cache.subtitles_line = settings.line
-			//$.setjson(Cache, `@DualSubs.${Platform}.Cache`)
+			//$.setjson(Cache, `@DualSubs.${platform}.Cache`)
 		}
 	}
 	$.log(`🚧 ${$.name}, Machine Subtitles`, "machine_subtitles", `body内容: ${body}`, "");

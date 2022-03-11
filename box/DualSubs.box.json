@@ -19,10 +19,26 @@
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.type",
-					"name": "双语字幕类型：",
-					"val": "Official",
-					"type": "selects",
+					"id": "@DualSubs.Disney_Plus.Settings.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.PlaylistNumber",
+					"name": "播放列表缓存数量",
+					"val": 10,
+					"type": "text",
+					"placeholder": "10",
+					"desc": "请填写播放列表缓存数量，数字"
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.Type",
+					"name": "字幕类型",
+					"val": "Official,Google,DeepL,External",
+					"type": "checkboxes",
+					"desc": "请选择要启用的字幕源",
 					"items": [
 						{
 							"key": "Official",
@@ -37,20 +53,23 @@
 							"label": "DeepL"
 						},
 						{
-							"key": "Disable",
-							"label": "禁用"
+							"key": "External",
+							"label": "外部链接"
 						}
-					],
-					"desc": "请选择双语字幕类型"
+					]
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.language",
-					"name": "双语字幕语言：",
-					"val": "EN-US",
+					"id": "@DualSubs.Disney_Plus.Settings.PreferredLanguage",
+					"name": "首选字幕语言：",
+					"val": "ZH-HANT",
 					"type": "selects",
 					"items": [
 						{
-							"key": "ZH-CN",
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
@@ -58,7 +77,7 @@
 							"label": "中文（香港）"
 						},
 						{
-							"key": "ZH-TW",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{
@@ -70,6 +89,10 @@
 							"label": "英语（美国）[CC]"
 						},
 						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
 							"key": "JA",
 							"label": "日文"
 						},
@@ -78,10 +101,55 @@
 							"label": "韩文"
 						}
 					],
-					"desc": ""
+					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.position",
+					"id": "@DualSubs.Disney_Plus.Settings.SecondaryLanguage",
+					"name": "次要字幕语言：",
+					"val": "EN-US",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -98,12 +166,12 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.dkey",
-					"name": "DeepL API key",
+					"id": "@DualSubs.Disney_Plus.Settings.DeepLKey",
+					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
-					"placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
-					"desc": "DeepL API key"
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -126,10 +194,26 @@
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Prime_Video.Settings.type",
-					"name": "双语字幕类型：",
-					"val": "Official",
-					"type": "selects",
+					"id": "@DualSubs.Prime_Video.Settings.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Prime_Video.Settings.PlaylistNumber",
+					"name": "播放列表缓存数量",
+					"val": "5",
+					"type": "text",
+					"placeholder": "5",
+					"desc": "请填写播放列表缓存数量，数字"
+				},
+				{
+					"id": "@DualSubs.Prime_Video.Settings.Type",
+					"name": "字幕类型",
+					"val": "Official,Google,DeepL,External",
+					"type": "checkboxes",
+					"desc": "请选择要启用的字幕源",
 					"items": [
 						{
 							"key": "Official",
@@ -144,20 +228,23 @@
 							"label": "DeepL"
 						},
 						{
-							"key": "Disable",
-							"label": "禁用"
+							"key": "External",
+							"label": "外部链接"
 						}
-					],
-					"desc": "请选择双语字幕类型"
+					]
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.language",
-					"name": "双语字幕语言：",
-					"val": "EN-US",
+					"id": "@DualSubs.Prime_Video.Settings.PreferredLanguage",
+					"name": "首选字幕语言：",
+					"val": "ZH-HANS",
 					"type": "selects",
 					"items": [
 						{
-							"key": "ZH-CN",
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
@@ -165,7 +252,7 @@
 							"label": "中文（香港）"
 						},
 						{
-							"key": "ZH-TW",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{
@@ -177,6 +264,10 @@
 							"label": "英语（美国）[CC]"
 						},
 						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
 							"key": "JA",
 							"label": "日文"
 						},
@@ -185,10 +276,55 @@
 							"label": "韩文"
 						}
 					],
-					"desc": ""
+					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.position",
+					"id": "@DualSubs.Prime_Video.Settings.SecondaryLanguage",
+					"name": "次要字幕语言：",
+					"val": "EN-US",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Prime_Video.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -205,12 +341,12 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.dkey",
-					"name": "DeepL API key",
+					"id": "@DualSubs.Prime_Video.Settings.DeepLKey",
+					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
-					"placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
-					"desc": "DeepL API key"
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -233,10 +369,26 @@
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.HBO_Max.Settings.type",
-					"name": "双语字幕类型：",
-					"val": "Official",
-					"type": "selects",
+					"id": "@DualSubs.HBO_Max.Settings.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.PlaylistNumber",
+					"name": "播放列表缓存数量",
+					"val": "5",
+					"type": "text",
+					"placeholder": "5",
+					"desc": "请填写播放列表缓存数量，数字"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.Type",
+					"name": "字幕类型",
+					"val": "Official,Google,DeepL,External",
+					"type": "checkboxes",
+					"desc": "请选择要启用的字幕源",
 					"items": [
 						{
 							"key": "Official",
@@ -251,20 +403,23 @@
 							"label": "DeepL"
 						},
 						{
-							"key": "Disable",
-							"label": "禁用"
+							"key": "External",
+							"label": "外部链接"
 						}
-					],
-					"desc": "请选择双语字幕类型"
+					]
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.language",
-					"name": "双语字幕语言：",
-					"val": "EN-US",
+					"id": "@DualSubs.HBO_Max.Settings.PreferredLanguage",
+					"name": "首选字幕语言：",
+					"val": "ZH",
 					"type": "selects",
 					"items": [
 						{
-							"key": "ZH-CN",
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
@@ -272,7 +427,7 @@
 							"label": "中文（香港）"
 						},
 						{
-							"key": "ZH-TW",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{
@@ -284,6 +439,10 @@
 							"label": "英语（美国）[CC]"
 						},
 						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
 							"key": "JA",
 							"label": "日文"
 						},
@@ -292,65 +451,56 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择官方字幕语言"
+					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.sl",
-					"name": "源语言：",
-					"val": "AUTO",
+					"id": "@DualSubs.HBO_Max.Settings.SecondaryLanguage",
+					"name": "次要字幕语言：",
+					"val": "EN-US",
 					"type": "selects",
 					"items": [
 						{
-							"key": "AUTO",
-							"label": "自动识别"
+							"key": "ZH",
+							"label": "中文（自动）"
 						},
 						{
-							"key": "Chinese (Simplified)",
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
-							"key": "Chinese (Hong Kong)",
+							"key": "ZH-HK",
 							"label": "中文（香港）"
 						},
 						{
-							"key": "Chinese (Traditional)",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{
-							"key": "English [CC]",
-							"label": "English [CC]"
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
 						}
 					],
-					"desc": "请选择第二字幕源语言"
+					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.tl",
-					"name": "目标语言：",
-					"val": "English [CC]",
-					"type": "selects",
-					"items": [
-						{
-							"key": "Chinese (Simplified)",
-							"label": "中文（简体）"
-						},
-						{
-							"key": "Chinese (Hong Kong)",
-							"label": "中文（香港）"
-						},
-						{
-							"key": "Chinese (Traditional)",
-							"label": "中文（繁体）"
-						},
-						{
-							"key": "English [CC]",
-							"label": "English [CC]"
-						}
-					],
-					"desc": "请选择官方或机翻字幕目标语言"
-				},
-				{
-					"id": "@DualSubs.HBO_Max.Settings.position",
-					"name": "第二字幕位置",
+					"id": "@DualSubs.HBO_Max.Settings.Position",
+					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
 					"items": [
@@ -363,15 +513,15 @@
 							"label": "第一行"
 						}
 					],
-					"desc": "请选择第二字幕位置"
+					"desc": ""
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.dkey",
-					"name": "DeepL API key",
+					"id": "@DualSubs.HBO_Max.Settings.DeepLKey",
+					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
-					"placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
-					"desc": "DeepL API key"
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -394,10 +544,26 @@
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Hulu.Settings.type",
-					"name": "双语字幕类型：",
-					"val": "Official",
-					"type": "selects",
+					"id": "@DualSubs.Hulu.Settings.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Hulu.Settings.PlaylistNumber",
+					"name": "播放列表缓存数量",
+					"val": "5",
+					"type": "text",
+					"placeholder": "5",
+					"desc": "请填写播放列表缓存数量，数字"
+				},
+				{
+					"id": "@DualSubs.Hulu.Settings.Type",
+					"name": "字幕类型",
+					"val": "Official,Google,DeepL,External",
+					"type": "checkboxes",
+					"desc": "请选择要启用的字幕源",
 					"items": [
 						{
 							"key": "Official",
@@ -412,20 +578,23 @@
 							"label": "DeepL"
 						},
 						{
-							"key": "Disable",
-							"label": "禁用"
+							"key": "External",
+							"label": "外部链接"
 						}
-					],
-					"desc": "请选择双语字幕类型"
+					]
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.language",
-					"name": "双语字幕语言：",
-					"val": "EN-US",
+					"id": "@DualSubs.Hulu.Settings.PreferredLanguage",
+					"name": "首选字幕语言：",
+					"val": "ZH",
 					"type": "selects",
 					"items": [
 						{
-							"key": "ZH-CN",
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
@@ -433,7 +602,7 @@
 							"label": "中文（香港）"
 						},
 						{
-							"key": "ZH-TW",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{
@@ -445,6 +614,10 @@
 							"label": "英语（美国）[CC]"
 						},
 						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
 							"key": "JA",
 							"label": "日文"
 						},
@@ -453,65 +626,56 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择官方字幕语言"
+					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.sl",
-					"name": "源语言：",
-					"val": "AUTO",
+					"id": "@DualSubs.Hulu.Settings.SecondaryLanguage",
+					"name": "次要字幕语言：",
+					"val": "EN-US",
 					"type": "selects",
 					"items": [
 						{
-							"key": "AUTO",
-							"label": "自动识别"
+							"key": "ZH",
+							"label": "中文（自动）"
 						},
 						{
-							"key": "Chinese (Simplified)",
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
-							"key": "Chinese (Hong Kong)",
+							"key": "ZH-HK",
 							"label": "中文（香港）"
 						},
 						{
-							"key": "Chinese (Traditional)",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{
-							"key": "English [CC]",
-							"label": "English [CC]"
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
 						}
 					],
-					"desc": "请选择第二字幕源语言"
+					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.tl",
-					"name": "目标语言：",
-					"val": "English [CC]",
-					"type": "selects",
-					"items": [
-						{
-							"key": "Chinese (Simplified)",
-							"label": "中文（简体）"
-						},
-						{
-							"key": "Chinese (Hong Kong)",
-							"label": "中文（香港）"
-						},
-						{
-							"key": "Chinese (Traditional)",
-							"label": "中文（繁体）"
-						},
-						{
-							"key": "English [CC]",
-							"label": "English [CC]"
-						}
-					],
-					"desc": "请选择官方或机翻字幕目标语言"
-				},
-				{
-					"id": "@DualSubs.Hulu.Settings.position",
-					"name": "第二字幕位置",
+					"id": "@DualSubs.Hulu.Settings.Position",
+					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
 					"items": [
@@ -524,15 +688,15 @@
 							"label": "第一行"
 						}
 					],
-					"desc": "请选择第二字幕位置"
+					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.dkey",
-					"name": "DeepL API key",
+					"id": "@DualSubs.Hulu.Settings.DeepLKey",
+					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
-					"placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
-					"desc": "DeepL API key"
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -540,6 +704,181 @@
 			"icons": [
 				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Hulu.png",
 				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hulu.png"
+			]
+		},
+		{
+			"id": "@DualSubs.Paramount_Plus",
+			"name": "DualSubs.Paramount+",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Paramount_Plus.Settings",
+				"@DualSubs.Paramount_Plus.Cache"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.PlaylistNumber",
+					"name": "播放列表缓存数量",
+					"val": "5",
+					"type": "text",
+					"placeholder": "5",
+					"desc": "请填写播放列表缓存数量，数字"
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.Type",
+					"name": "字幕类型",
+					"val": "Official,Google,DeepL,External",
+					"type": "checkboxes",
+					"desc": "请选择要启用的字幕源",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL"
+						},
+						{
+							"key": "External",
+							"label": "外部链接"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.PreferredLanguage",
+					"name": "首选字幕语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.SecondaryLanguage",
+					"name": "次要字幕语言：",
+					"val": "EN-US",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.DeepLKey",
+					"name": "DeepL API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Paramount_Plus.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Paramount_Plus.png"
 			]
 		},
 		{
@@ -555,11 +894,31 @@
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Netflix.Settings.type",
-					"name": "双语字幕类型：",
-					"val": "Google",
-					"type": "selects",
+					"id": "@DualSubs.Netflix.Settings.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.PlaylistNumber",
+					"name": "播放列表缓存数量",
+					"val": "10",
+					"type": "text",
+					"placeholder": "10",
+					"desc": "请填写播放列表缓存数量，数字"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.Type",
+					"name": "字幕类型",
+					"val": "Official,Google,DeepL,External",
+					"type": "checkboxes",
+					"desc": "请选择要启用的字幕源",
 					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
 						{
 							"key": "Google",
 							"label": "Google"
@@ -569,20 +928,23 @@
 							"label": "DeepL"
 						},
 						{
-							"key": "Disable",
-							"label": "禁用"
+							"key": "External",
+							"label": "外部链接"
 						}
-					],
-					"desc": "请选择双语字幕类型"
+					]
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.language",
-					"name": "双语字幕语言：",
-					"val": "EN-US",
+					"id": "@DualSubs.Netflix.Settings.PreferredLanguage",
+					"name": "首选字幕语言：",
+					"val": "ZH",
 					"type": "selects",
 					"items": [
 						{
-							"key": "ZH-CN",
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
@@ -590,7 +952,7 @@
 							"label": "中文（香港）"
 						},
 						{
-							"key": "ZH-TW",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{
@@ -602,6 +964,10 @@
 							"label": "英语（美国）[CC]"
 						},
 						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
 							"key": "JA",
 							"label": "日文"
 						},
@@ -610,65 +976,56 @@
 							"label": "韩文"
 						}
 					],
-					"desc": ""
+					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.sl",
-					"name": "源语言：",
-					"val": "AUTO",
+					"id": "@DualSubs.Netflix.Settings.SecondaryLanguage",
+					"name": "次要字幕语言：",
+					"val": "EN-US",
 					"type": "selects",
 					"items": [
 						{
-							"key": "AUTO",
-							"label": "自动识别"
+							"key": "ZH",
+							"label": "中文（自动）"
 						},
 						{
-							"key": "Chinese (Simplified)",
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
-							"key": "Chinese (Hong Kong)",
+							"key": "ZH-HK",
 							"label": "中文（香港）"
 						},
 						{
-							"key": "Chinese (Traditional)",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{
-							"key": "English [CC]",
-							"label": "English [CC]"
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
 						}
 					],
-					"desc": "请选择第二字幕源语言"
+					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.tl",
-					"name": "目标语言：",
-					"val": "English [CC]",
-					"type": "selects",
-					"items": [
-						{
-							"key": "Chinese (Simplified)",
-							"label": "中文（简体）"
-						},
-						{
-							"key": "Chinese (Hong Kong)",
-							"label": "中文（香港）"
-						},
-						{
-							"key": "Chinese (Traditional)",
-							"label": "中文（繁体）"
-						},
-						{
-							"key": "English [CC]",
-							"label": "English [CC]"
-						}
-					],
-					"desc": "请选择官方或机翻字幕目标语言"
-				},
-				{
-					"id": "@DualSubs.Netflix.Settings.position",
-					"name": "第二字幕位置",
+					"id": "@DualSubs.Netflix.Settings.Position",
+					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
 					"items": [
@@ -684,12 +1041,12 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.dkey",
-					"name": "DeepL API key",
+					"id": "@DualSubs.Netflix.Settings.DeepLKey",
+					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
-					"placeholder": "023e105f4ecef8ad9ca31a8372d0c353",
-					"desc": "DeepL API key"
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -712,7 +1069,7 @@
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.YouTube.Settings.type",
+					"id": "@DualSubs.YouTube.Settings.Type",
 					"name": "字幕类型：",
 					"val": "Enable",
 					"type": "radios",
@@ -735,7 +1092,7 @@
 					"type": "selects",
 					"items": [
 						{
-							"key": "ZH-CN",
+							"key": "ZH-HANS",
 							"label": "中文（简体）"
 						},
 						{
@@ -743,7 +1100,7 @@
 							"label": "中文（香港）"
 						},
 						{
-							"key": "ZH-TW",
+							"key": "ZH-HANT",
 							"label": "中文（繁体）"
 						},
 						{

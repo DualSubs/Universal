@@ -124,6 +124,7 @@ async function getWebVTT_M3U8(platform, parameters, language, body) {
 async function getWebVTT_VTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
 	delete headers["Host"]
+	delete headers["Connection"]
 	return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let WebVTT_VTTs = response.body.match(/^.+\.vtt$/gim);

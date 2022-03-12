@@ -27,7 +27,11 @@ let body = $response.body
 		let WebVTT_M3U8 = Parameters?.Secondary_WebVTT_M3U8 ?? Parameters?.Preferred_WebVTT_M3U8 ?? null;
 		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, WebVTT_M3U8);
 		//$.log(`🚧 ${$.name}`, `Parameters: ${JSON.stringify(Parameters)}`, "");
-		if (Platform == "Prime_Video") Parameters.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID // Amazon Prime Video 变更ID
+		// Amazon Prime Video 兼容
+		if (Platform == "Prime_Video") {
+			WebVTT_M3U8 = Parameters?.Preferred_WebVTT_M3U8 ?? Parameters?.Secondary_WebVTT_M3U8 ?? "";
+			Parameters.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID
+		}
 		// 刷新播放记录，所以始终置顶
 		let index = $.Cache.findIndex(item => item?.ID == Parameters?.ID)
 		if (index !== -1) delete $.Cache[index]

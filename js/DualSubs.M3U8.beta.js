@@ -11,11 +11,6 @@ let url = $request.url
 let headers = $request.headers
 let body = $response.body
 
-let test = M3U8.parse(body)
-$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(test), "");
-test = M3U8.stringify(test);
-$.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(test), "");
-
 /***************** Processing *****************/
 !(async () => {
 	const Platform = await getPlatform(url);
@@ -44,12 +39,22 @@ $.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(test), "");
 		// Amazon Prime Video 兼容
 		if (Platform == "Prime_Video") {
 			//WebVTT_M3U8 = Parameters?.Preferred_WebVTT_M3U8 ?? Parameters?.Secondary_WebVTT_M3U8 ?? "";
-			let WebVTT_M3U8 = Parameters?.Language1st?.URI ?? Parameters?.Language2nd?.URI ?? "";
+			let WebVTT_M3U8 = ENV?.Language1st?.URI ?? ENV?.Language2nd?.URI ?? "";
 			Parameters.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID
 		}
 
 		$.Cache = await setCache($.Cache, Parameters, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+
+		let newSubs = await setDualSubsArr(ENV.Language1st, $.Languages[$.Settings.SecondaryLanguage], $.Settings.Type);
+
+	 	PlayList.body.splice(index, 0, ...newSubs)
+		//SecondaryLanguage_DualSubs_array = await setDualSubsOpt(ENV.Language2nd, [$.Languages[$.Settings.SecondaryLanguage], $.Languages[$.Settings.PreferredLanguage]], $.Settings.Type);
+		//PlayList = await setDualSubs_M3U8(PlayList, $.Languages[$.Settings.PreferredLanguage], $.Settings.Type);
+		//$.log(`🚧 ${$.name}`, "setDualSubs_M3U8", JSON.stringify(PlayList), "");
+		//PlayList = M3U8.stringify(PlayList);
+		//$.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(PlayList), "");
+		//$.done({ "body": PlayList });
 	}
 })()
 	.catch((e) => $.logErr(e))
@@ -148,6 +153,77 @@ async function getSubURI(json = {}, path = "") {
 	$.log(`⚠ ${$.name}, Get Subtitle M3U8 URI`, "");
 	//查询是否有符合语言的字幕
 	let URI = json.OPTION.URI.replace(/\"/g, "")
+	// if 相对路径
+	if (!/^https?:\/\//i.test(URI)) {
+		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? path
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.m3u8 URL", `url.match: ${PATH}`, "");
+		URI = (URI == null) ? URI : PATH + URI
+	};
+	$.log(`🎉 ${$.name}, 调试信息`, "Get Subtitle M3U8 URI", `URI: ${URI}`, "");
+	return URI
+};
+
+// Function 6
+// Set DualSubs Subtitle Array
+async function setDualSubsArr(obj = {}, language = "", type = []) {
+	//let newSubs = []; // 创建新语言数组
+	//let newSub = obj; // 复制此语言选项
+	//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
+	let newSubs = type.map((item, i) => newSubs[i] = obj)
+	newSubs.forEach((item, i) => {
+		newSubs[i].OPTION.NAME = item.OPTION.NAME + "/" + language + "(" + type[i] + ")"  // 修改名称
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i].OPTION.NAME: ${newSubs[i].OPTION.NAME}`, "");
+		newSubs[i].OPTION.URI = item.OPTION.URI + "%" + type[i] + "%" // 修改链接
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i].OPTION.URI: ${newSubs[i].OPTION.URI}`, "");
+	})
+
+	/*
+	newSubs = type.map((item, i) => {
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", "000", "");
+
+		obj.OPTION.NAME = obj.OPTION.NAME + "/" + language + "(" + item + ")"  // 修改名称
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj.OPTION.NAME: ${obj.OPTION.NAME}`, "");
+		obj.OPTION.URI = obj.OPTION.URI + "%" + item + "%" // 修改链接
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj.OPTION.URI: ${obj.OPTION.URI}`, "");
+
+		//let newNAME = obj.OPTION.NAME + "/" + language + "(" + item + ")"  // 修改名称
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newNAME: ${newNAME}`, "");
+		//let newURI = obj.OPTION.URI + "%" + item + "%" // 修改链接
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newURI: ${newURI}`, "");
+
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj.OPTION.NAME: ${obj.OPTION.NAME}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj.OPTION.URI: ${obj.OPTION.URI}`, "");
+		//newSubs[i] = obj // 复制此语言选项
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj: ${JSON.stringify(obj)}`, "");
+
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i]: ${JSON.stringify(newSubs[i])}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i].OPTION.NAME: ${newSubs[i].OPTION.NAME}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i].OPTION.URI: ${newSubs[i].OPTION.URI}`, "");
+
+		//newSubs[i].OPTION.NAME = `\"${newNAME.replace(/\"/g, "")}\"`
+		//newSubs[i].OPTION.URI = `\"${newURI.replace(/\"/g, "")}\"`
+		//newSub.OPTION.NAME = `\"${json.body[index].OPTION.NAME.replace("\"", "")}+${language[1]}\"` // 修改名称
+		//newSub.OPTION.URI = `\"${json.body[index].OPTION.URI.replace("\"", "")}%${item}%\"` // 修改链接
+		//newSub.OPTION.NAME = `\"${newSub.OPTION.NAME.replace("\"", "")}+${language[1]}\"` // 修改名称
+		//newSub.OPTION.URI = `\"${newSub.OPTION.URI.replace("\"", "")}%${item}%\"` // 修改链接
+		//newSub.OPTION.NAME = newSub.OPTION.NAME + language[1] // 修改名称
+		//newSub.OPTION.URI = newSub.OPTION.URI + item // 修改链接
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i]: ${JSON.stringify(newSubs[i])}`, "");
+		//return newSubs[i]
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj: ${JSON.stringify(obj)}`, "");
+		return obj
+	})
+	*/
+	$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSubs: ${JSON.stringify(newSubs)}`, "");
+	return newSubs
+};
+
+// Function 6
+// Get Subtitle M3U8 URI
+async function getSubURI(json = {}, path = "") {
+	$.log(`⚠ ${$.name}, Get Subtitle M3U8 URI`, "");
+	//查询是否有符合语言的字幕
+	let URI = json.OPTION.URI.replace("\"", "")
 	// if 相对路径
 	if (!/^https?:\/\//i.test(URI)) {
 		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? path

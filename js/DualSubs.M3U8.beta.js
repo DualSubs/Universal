@@ -23,11 +23,13 @@ let body = $response.body
 		let Parameters = await getParameters(Platform, url);
 		let PlayList = M3U8.parse(body)
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
-		Parameters.Language1st = await getSubObj(PlayList, $.Languages[$.Settings.PreferredLanguage]);
-		Parameters.Language2nd = await getSubObj(PlayList, $.Languages[$.Settings.SecondaryLanguage]);
-		Parameters.Language1st.URI = await getSubURI(Parameters.Language2nd, Parameters.PATH);
-		Parameters.Language2nd.URI = await getSubURI(Parameters.Language1st, Parameters.PATH);
-		Parameters.WebVTT_M3U8 = Parameters?.Language2nd?.URI ?? Parameters?.Language1st?.URI ?? null;
+		let ENV = {
+			Language1st: await getSubObj(PlayList, $.Languages[$.Settings.PreferredLanguage]),
+			Language2nd: await getSubObj(PlayList, $.Languages[$.Settings.SecondaryLanguage])
+		}
+		ENV.Language1st.URI = await getSubURI(ENV.Language2nd, Parameters.PATH);
+		ENV.Language2nd.URI = await getSubURI(ENV.Language1st, Parameters.PATH);
+		Parameters.WebVTT_M3U8 = ENV?.Language2nd?.URI ?? ENV?.Language1st?.URI ?? null;
 		
 		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Parameters.WebVTT_M3U8);
 		//$.log(`🚧 ${$.name}`, `Parameters: ${JSON.stringify(Parameters)}`, "");

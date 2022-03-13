@@ -37,15 +37,8 @@ $.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(test), "");
 			WebVTT_M3U8 = Parameters?.Preferred_WebVTT_M3U8 ?? Parameters?.Secondary_WebVTT_M3U8 ?? "";
 			Parameters.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID
 		}
-		// 刷新播放记录，所以始终置顶
-		let index = $.Cache.findIndex(item => item?.ID == Parameters?.ID)
-		if (index !== -1) delete $.Cache[index]
-		$.Cache.unshift(Parameters)
-		//$.Cache = $.Cache.filter(Boolean).slice(0, 10) //去空, 留10
-		//let num = parseInt($.Settings.PlaylistNumber)
-		//$.log(`🚧 ${$.name}`, `PlaylistNumber类型: ${typeof num}`, `$.Cache内容: ${num}`, "");
-		$.Cache = $.Cache.filter(Boolean).slice(0, parseInt($.Settings.PlaylistNumber)) //去空, 留$.Settings.PlaylistNumber
-		//$.log(`🚧 ${$.name}`, `$.Cache内容: ${JSON.stringify($.Cache)}`, "");
+
+		$.Cache = await setCache($.Cache, Parameters, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	}
 })()
@@ -153,6 +146,23 @@ async function getWebVTT_VTTs(platform, url) {
 		return WebVTT_VTTs
 	})
 };
+
+// Function 6
+// Set Cache
+async function setCache(cache = {}, parameters = {}, num = new Number) {
+	$.log(`⚠ ${$.name}, Set Cache`, "");
+	// 刷新播放记录，所以始终置顶
+	let index = cache.findIndex(item => item?.ID == parameters?.ID)
+	if (index !== -1) delete cache[index]
+	cache.unshift(parameters)
+	//cache = cache.filter(Boolean).slice(0, 10) //去空, 留10
+	//let num = parseInt(number)
+	//$.log(`🚧 ${$.name}`, `PlaylistNumber类型: ${typeof num}`, `cache内容: ${num}`, "");
+	cache = cache.filter(Boolean).slice(0, num) //去空, 留$.Settings.PlaylistNumber
+	//$.log(`🚧 ${$.name}`, `cache内容: ${JSON.stringify(cache)}`, "");
+	$.log(`🎉 ${$.name},  Set Cache`, `cache: ${JSON.stringify(cache)}`, "");
+	return cache
+}
 
 /***************** Env *****************/
 // prettier-ignore

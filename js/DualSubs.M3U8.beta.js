@@ -28,12 +28,7 @@ let body = $response.body
 		Parameters.Language1st.URI = await getSubURI(Parameters.Language2nd, Parameters.PATH);
 		Parameters.Language2nd.URI = await getSubURI(Parameters.Language1st, Parameters.PATH);
 		Parameters.WebVTT_M3U8 = Parameters?.Language2nd?.URI ?? Parameters?.Language1st?.URI ?? null;
-		/*
-		//Parameters.WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, body);
-		//Parameters.Preferred_WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, $.Languages[$.Settings.PreferredLanguage], body);
-		//Parameters.Secondary_WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, $.Languages[$.Settings.SecondaryLanguage], body);
-		//let WebVTT_M3U8 = Parameters?.Secondary_WebVTT_M3U8 ?? Parameters?.Preferred_WebVTT_M3U8 ?? null;
-		*/
+		
 		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Parameters.WebVTT_M3U8);
 		//$.log(`🚧 ${$.name}`, `Parameters: ${JSON.stringify(Parameters)}`, "");
 		// Amazon Prime Video 兼容
@@ -117,26 +112,6 @@ async function getParameters(platform, url) {
 };
 
 // Function 4
-// Get Subtitle *.m3u8 URL
-async function getWebVTT_M3U8(platform, parameters, language, body) {
-	$.log(`⚠ ${$.name}, Get Subtitle *.m3u8 URL`, "");
-	const Language_Regex = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${language}".+URI="(?<WebVTT_M3U8>[^"]+)`)
-	//const PreferredLanguage_Regex = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${$.Languages[Settings.PreferredLanguage]}".+URI="(?<WebVTT_M3U8>[^"]+)`)
-	//const SecondaryLanguage_Regex = new RegExp(`TYPE=SUBTITLES.+LANGUAGE="${$.Languages[Settings.SecondaryLanguage]}".+URI="(?<WebVTT_M3U8>[^"]+)`)
-	/***************** Get Subtitle *.m3u8 URL *****************/
-	let WebVTT_M3U8 = body.match(Language_Regex)?.groups?.WebVTT_M3U8 ?? null;
-	//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.m3u8 URL", `body.match(Language_Regex)?.groups?.WebVTT_M3U8: ${WebVTT_M3U8}`, "");
-	// if 相对路径
-	if (!/^https?:\/\//i.test(WebVTT_M3U8)) {
-		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? parameters.PATH
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.m3u8 URL", `url.match: ${PATH}`, "");
-		WebVTT_M3U8 = PATH + WebVTT_M3U8
-	};
-	$.log(`🎉 ${$.name}, Get Subtitle *.m3u8 URL`, `WebVTT_M3U8: ${WebVTT_M3U8}`, "");
-	return WebVTT_M3U8
-};
-
-// Function 5
 // Get Subtitle M3U8 Object
 async function getSubObj(json = {}, langCode = "") {
 	$.log(`⚠ ${$.name}, Find Subtitle M3U8 Object`, "");
@@ -218,22 +193,6 @@ async function setDualSubsArr(obj = {}, language = "", type = []) {
 	return newSubs
 };
 
-// Function 6
-// Get Subtitle M3U8 URI
-async function getSubURI(json = {}, path = "") {
-	$.log(`⚠ ${$.name}, Get Subtitle M3U8 URI`, "");
-	//查询是否有符合语言的字幕
-	let URI = json.OPTION.URI.replace("\"", "")
-	// if 相对路径
-	if (!/^https?:\/\//i.test(URI)) {
-		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? path
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.m3u8 URL", `url.match: ${PATH}`, "");
-		URI = (URI == null) ? URI : PATH + URI
-	};
-	$.log(`🎉 ${$.name}, 调试信息`, "Get Subtitle M3U8 URI", `URI: ${URI}`, "");
-	return URI
-};
-
 // Function 7
 // Get Subtitle *.vtt URLs
 async function getWebVTT_VTTs(platform, url) {
@@ -260,7 +219,7 @@ async function getWebVTT_VTTs(platform, url) {
 	})
 };
 
-// Function 6
+// Function 8
 // Set Cache
 async function setCache(cache = {}, parameters = {}, num = new Number) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");

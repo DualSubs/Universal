@@ -30,8 +30,8 @@ $.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(test), "");
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		Parameters.Language1st = await getSubObj(PlayList, $.Languages[$.Settings.PreferredLanguage]);
 		Parameters.Language2nd = await getSubObj(PlayList, $.Languages[$.Settings.SecondaryLanguage]);
-		Parameters.Language1st.URI = await getSub_M3U8_URI(Parameters.Language2nd, Parameters.PATH);
-		Parameters.Language2nd.URI = await getSub_M3U8_URI(Parameters.Language1st, Parameters.PATH);
+		Parameters.Language1st.URI = await getSubURI(Parameters.Language2nd, Parameters.PATH);
+		Parameters.Language2nd.URI = await getSubURI(Parameters.Language1st, Parameters.PATH);
 		Parameters.WebVTT_M3U8 = Parameters?.Language2nd?.URI ?? Parameters?.Language1st?.URI ?? null;
 		/*
 		//Parameters.WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, body);
@@ -44,7 +44,7 @@ $.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(test), "");
 		// Amazon Prime Video 兼容
 		if (Platform == "Prime_Video") {
 			//WebVTT_M3U8 = Parameters?.Preferred_WebVTT_M3U8 ?? Parameters?.Secondary_WebVTT_M3U8 ?? "";
-			let WebVTT_M3U8 = Parameters?.Language1st?.OPTION.URI ?? Parameters?.Language2nd?.OPTION.URI ?? "";
+			let WebVTT_M3U8 = Parameters?.Language1st?.URI ?? Parameters?.Language2nd?.URI ?? "";
 			Parameters.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID
 		}
 
@@ -142,7 +142,23 @@ async function getSubObj(json = {}, langCode = "") {
 	else return null
 };
 
-// Function 6
+// Function 5
+// Get Subtitle M3U8 URI
+async function getSubURI(json = {}, path = "") {
+	$.log(`⚠ ${$.name}, Get Subtitle M3U8 URI`, "");
+	//查询是否有符合语言的字幕
+	let URI = json.OPTION.URI.replace(/\"/g, "")
+	// if 相对路径
+	if (!/^https?:\/\//i.test(URI)) {
+		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? path
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.m3u8 URL", `url.match: ${PATH}`, "");
+		URI = (URI == null) ? URI : PATH + URI
+	};
+	$.log(`🎉 ${$.name}, 调试信息`, "Get Subtitle M3U8 URI", `URI: ${URI}`, "");
+	return URI
+};
+
+// Function 7
 // Get Subtitle *.vtt URLs
 async function getWebVTT_VTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");

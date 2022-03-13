@@ -43,15 +43,15 @@ let body = $response.body
 		$.Cache = await setCache($.Cache, Parameters, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 
-		let newSubs = await setDualSubsArr(ENV.Language1st, $.Languages[$.Settings.SecondaryLanguage], $.Settings.Type);
+		let DualSubs_Array = await setDualSubs_Array(ENV.Language1st, ENV.Language2nd.OPTION.NAME.replace(/\"/g, ""), $.Settings.Type);
 
-	 	PlayList.body.splice(index, 0, ...newSubs)
+	 	PlayList.body.splice(index, 0, ...DualSubs_Array)
 		//SecondaryLanguage_DualSubs_array = await setDualSubsOpt(ENV.Language2nd, [$.Languages[$.Settings.SecondaryLanguage], $.Languages[$.Settings.PreferredLanguage]], $.Settings.Type);
 		//PlayList = await setDualSubs_M3U8(PlayList, $.Languages[$.Settings.PreferredLanguage], $.Settings.Type);
 		//$.log(`🚧 ${$.name}`, "setDualSubs_M3U8", JSON.stringify(PlayList), "");
-		//PlayList = M3U8.stringify(PlayList);
-		//$.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(PlayList), "");
-		//$.done({ "body": PlayList });
+		PlayList = M3U8.stringify(PlayList);
+		$.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(PlayList), "");
+		$.done({ "body": PlayList });
 	}
 })()
 	.catch((e) => $.logErr(e))
@@ -142,55 +142,24 @@ async function getSubURI(json = {}, path = "") {
 
 // Function 6
 // Set DualSubs Subtitle Array
-async function setDualSubsArr(obj = {}, language = "", type = []) {
-	//let newSubs = []; // 创建新语言数组
-	//let newSub = obj; // 复制此语言选项
-	//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
-	let newSubs = type.map((item, i) => newSubs[i] = obj)
-	newSubs.forEach((item, i) => {
-		newSubs[i].OPTION.NAME = item.OPTION.NAME + "/" + language + "(" + type[i] + ")"  // 修改名称
-		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i].OPTION.NAME: ${newSubs[i].OPTION.NAME}`, "");
-		newSubs[i].OPTION.URI = item.OPTION.URI + "%" + type[i] + "%" // 修改链接
-		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i].OPTION.URI: ${newSubs[i].OPTION.URI}`, "");
+async function setDualSubs_Array(obj = {}, lang2ndName = "", type = []) {
+	let newSubs = type.map((item, i) => {
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `item: ${JSON.stringify(item)}`, "");
+
+		let newSub = JSON.parse(JSON.stringify(obj)) // 复制此语言选项
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
+		
+		//newSub.OPTION.NAME = newSub.OPTION.NAME.replace(/^\"([^\/]+)(.*)\"$/, `\"$1/${lang2ndName}(${item})\"`) // 修改名称
+		newSub.OPTION.NAME = `\"${newSub.OPTION.NAME.replace(/\"/g, "")}/${lang2ndName}(${item})\"` // 修改名称
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
+		
+		//newSub.OPTION.URI = newSub.OPTION.URI.replace(/^\"([^%%]+)(.*)\"$/, `\"$1%%${item}%%\"`) // 修改链接
+		newSub.OPTION.URI = `\"${newSub.OPTION.URI.replace(/\"/g, "")}%${item}%\"` // 修改链接
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
+		
+		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
+		return newSub
 	})
-
-	/*
-	newSubs = type.map((item, i) => {
-		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", "000", "");
-
-		obj.OPTION.NAME = obj.OPTION.NAME + "/" + language + "(" + item + ")"  // 修改名称
-		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj.OPTION.NAME: ${obj.OPTION.NAME}`, "");
-		obj.OPTION.URI = obj.OPTION.URI + "%" + item + "%" // 修改链接
-		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj.OPTION.URI: ${obj.OPTION.URI}`, "");
-
-		//let newNAME = obj.OPTION.NAME + "/" + language + "(" + item + ")"  // 修改名称
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newNAME: ${newNAME}`, "");
-		//let newURI = obj.OPTION.URI + "%" + item + "%" // 修改链接
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newURI: ${newURI}`, "");
-
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj.OPTION.NAME: ${obj.OPTION.NAME}`, "");
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj.OPTION.URI: ${obj.OPTION.URI}`, "");
-		//newSubs[i] = obj // 复制此语言选项
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj: ${JSON.stringify(obj)}`, "");
-
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i]: ${JSON.stringify(newSubs[i])}`, "");
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i].OPTION.NAME: ${newSubs[i].OPTION.NAME}`, "");
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i].OPTION.URI: ${newSubs[i].OPTION.URI}`, "");
-
-		//newSubs[i].OPTION.NAME = `\"${newNAME.replace(/\"/g, "")}\"`
-		//newSubs[i].OPTION.URI = `\"${newURI.replace(/\"/g, "")}\"`
-		//newSub.OPTION.NAME = `\"${json.body[index].OPTION.NAME.replace("\"", "")}+${language[1]}\"` // 修改名称
-		//newSub.OPTION.URI = `\"${json.body[index].OPTION.URI.replace("\"", "")}%${item}%\"` // 修改链接
-		//newSub.OPTION.NAME = `\"${newSub.OPTION.NAME.replace("\"", "")}+${language[1]}\"` // 修改名称
-		//newSub.OPTION.URI = `\"${newSub.OPTION.URI.replace("\"", "")}%${item}%\"` // 修改链接
-		//newSub.OPTION.NAME = newSub.OPTION.NAME + language[1] // 修改名称
-		//newSub.OPTION.URI = newSub.OPTION.URI + item // 修改链接
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `newSubs[i]: ${JSON.stringify(newSubs[i])}`, "");
-		//return newSubs[i]
-		$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `i: ${i}`, `obj: ${JSON.stringify(obj)}`, "");
-		return obj
-	})
-	*/
 	$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSubs: ${JSON.stringify(newSubs)}`, "");
 	return newSubs
 };

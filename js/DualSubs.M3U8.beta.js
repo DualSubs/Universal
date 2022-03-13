@@ -26,15 +26,25 @@ $.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(test), "");
 		else $.done({ url: `${url}&tlang=${$.Settings.language}` });
 	} else {
 		let Parameters = await getParameters(Platform, url);
+		let PlayList = M3U8.parse(body)
+		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
+		Parameters.Language1st = await getSubObj(PlayList, $.Languages[$.Settings.PreferredLanguage]);
+		Parameters.Language2nd = await getSubObj(PlayList, $.Languages[$.Settings.SecondaryLanguage]);
+		Parameters.Language1st.URI = await getSub_M3U8_URI(Parameters.Language2nd, Parameters.PATH);
+		Parameters.Language2nd.URI = await getSub_M3U8_URI(Parameters.Language1st, Parameters.PATH);
+		Parameters.WebVTT_M3U8 = Parameters?.Language2nd?.URI ?? Parameters?.Language1st?.URI ?? null;
+		/*
 		//Parameters.WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, body);
-		Parameters.Preferred_WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, $.Languages[$.Settings.PreferredLanguage], body);
-		Parameters.Secondary_WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, $.Languages[$.Settings.SecondaryLanguage], body);
-		let WebVTT_M3U8 = Parameters?.Secondary_WebVTT_M3U8 ?? Parameters?.Preferred_WebVTT_M3U8 ?? null;
-		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, WebVTT_M3U8);
+		//Parameters.Preferred_WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, $.Languages[$.Settings.PreferredLanguage], body);
+		//Parameters.Secondary_WebVTT_M3U8 = await getWebVTT_M3U8(Platform, Parameters, $.Languages[$.Settings.SecondaryLanguage], body);
+		//let WebVTT_M3U8 = Parameters?.Secondary_WebVTT_M3U8 ?? Parameters?.Preferred_WebVTT_M3U8 ?? null;
+		*/
+		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Parameters.WebVTT_M3U8);
 		//$.log(`🚧 ${$.name}`, `Parameters: ${JSON.stringify(Parameters)}`, "");
 		// Amazon Prime Video 兼容
 		if (Platform == "Prime_Video") {
-			WebVTT_M3U8 = Parameters?.Preferred_WebVTT_M3U8 ?? Parameters?.Secondary_WebVTT_M3U8 ?? "";
+			//WebVTT_M3U8 = Parameters?.Preferred_WebVTT_M3U8 ?? Parameters?.Secondary_WebVTT_M3U8 ?? "";
+			let WebVTT_M3U8 = Parameters?.Language1st?.OPTION.URI ?? Parameters?.Language2nd?.OPTION.URI ?? "";
 			Parameters.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID
 		}
 
@@ -122,6 +132,17 @@ async function getWebVTT_M3U8(platform, parameters, language, body) {
 };
 
 // Function 5
+// Get Subtitle M3U8 Object
+async function getSubObj(json = {}, langCode = "") {
+	$.log(`⚠ ${$.name}, Find Subtitle M3U8 Object`, "");
+	//查询是否有符合语言的字幕
+	let index = json.body.findIndex(item => { if (item.OPTION?.TYPE == "SUBTITLES" && item.OPTION?.LANGUAGE == `\"${langCode}\"`) return true })
+	$.log(`🎉 ${$.name}, 调试信息`, "Get Subtitle M3U8 Object", `json.body.findIndex: ${index}`, "");
+	if (index != -1) return json.body[index]
+	else return null
+};
+
+// Function 6
 // Get Subtitle *.vtt URLs
 async function getWebVTT_VTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");

@@ -24,11 +24,14 @@ let body = $response.body
 		let PlayList = M3U8.parse(body)
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		let ENV = {
-			Language1st: await getSubObj(PlayList, $.Languages[$.Settings.PreferredLanguage]),
-			Language2nd: await getSubObj(PlayList, $.Languages[$.Settings.SecondaryLanguage])
+			"1stLanguage": await getSubObj(PlayList, $.Languages[$.Settings.PreferredLanguage]),
+			"2ndLanguage": await getSubObj(PlayList, $.Languages[$.Settings.SecondaryLanguage])
 		}
-		ENV.Language1st.URI = await getSubURI(ENV.Language2nd, Parameters.PATH);
-		ENV.Language2nd.URI = await getSubURI(ENV.Language1st, Parameters.PATH);
+		ENV["1stLanguage"].Index = await getSubIndex(PlayList, $.Languages[$.Settings.PreferredLanguage]);
+		ENV["2ndLanguage"].Index = await getSubIndex(PlayList, $.Languages[$.Settings.SecondaryLanguage]);
+
+		ENV["1stLanguage"].URI = await getSubURI(ENV["1stLanguage"], Parameters.PATH);
+		ENV["2ndLanguage"].URI = await getSubURI(ENV["2ndLanguage"], Parameters.PATH);
 		Parameters.WebVTT_M3U8 = ENV?.Language2nd?.URI ?? ENV?.Language1st?.URI ?? null;
 		
 		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Parameters.WebVTT_M3U8);
@@ -45,7 +48,7 @@ let body = $response.body
 
 		let DualSubs_Array = await setDualSubs_Array(ENV.Language1st, ENV.Language2nd.OPTION.NAME.replace(/\"/g, ""), $.Settings.Type);
 
-	 	PlayList.body.splice(index, 0, ...DualSubs_Array)
+	 	PlayList.body.splice(ENV["1stLanguage"].Index, 0, ...DualSubs_Array)
 		//SecondaryLanguage_DualSubs_array = await setDualSubsOpt(ENV.Language2nd, [$.Languages[$.Settings.SecondaryLanguage], $.Languages[$.Settings.PreferredLanguage]], $.Settings.Type);
 		//PlayList = await setDualSubs_M3U8(PlayList, $.Languages[$.Settings.PreferredLanguage], $.Settings.Type);
 		//$.log(`🚧 ${$.name}`, "setDualSubs_M3U8", JSON.stringify(PlayList), "");
@@ -111,6 +114,16 @@ async function getParameters(platform, url) {
 	let parameters = url.match(HLS_Regex)?.groups ?? null
 	$.log(`🎉 ${$.name}, Get URL Parameters`, `HOST: ${parameters.HOST}`, `CDN: ${parameters.CDN}`, `DOMAIN: ${parameters.DOMAIN}`, `ID: ${parameters.ID}`, "");
 	return parameters
+};
+
+// Function 4
+// Get Subtitle M3U8 Index
+async function getSubIndex(json = {}, langCode = "") {
+	$.log(`⚠ ${$.name}, Find Subtitle M3U8 Index`, "");
+	//查询是否有符合语言的字幕
+	let index = json.body.findIndex(item => { if (item.OPTION?.TYPE == "SUBTITLES" && item.OPTION?.LANGUAGE == `\"${langCode}\"`) return true })
+	$.log(`🎉 ${$.name}, 调试信息`, "Get Subtitle M3U8 Object", `json.body.findIndex: ${index}`, "");
+	return index
 };
 
 // Function 4

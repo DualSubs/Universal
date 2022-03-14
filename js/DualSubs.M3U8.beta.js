@@ -24,6 +24,11 @@ let body = $response.body
 		let PlayList = M3U8.parse(body)
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		let ENV = {
+			[$.Settings.PreferredLanguage]: await getMEDIA(PlayList, "SUBTITLES", $.Languages[$.Settings.PreferredLanguage]),
+			[$.Settings.SecondaryLanguage]: await getMEDIA(PlayList, "SUBTITLES", $.Languages[$.Settings.SecondaryLanguage])
+		}
+		/*
+		let ENV = {
 			"1stLanguage": await getSubObj(PlayList, $.Languages[$.Settings.PreferredLanguage]),
 			"2ndLanguage": await getSubObj(PlayList, $.Languages[$.Settings.SecondaryLanguage])
 		}
@@ -32,23 +37,24 @@ let body = $response.body
 
 		ENV["1stLanguage"].URI = await getSubURI(ENV["1stLanguage"], Parameters.PATH);
 		ENV["2ndLanguage"].URI = await getSubURI(ENV["2ndLanguage"], Parameters.PATH);
-		Parameters.WebVTT_M3U8 = ENV?.Language2nd?.URI ?? ENV?.Language1st?.URI ?? null;
+		*/
+		Parameters.WebVTT_M3U8 = ENV?.[$.Settings.SecondaryLanguage]?.URI ?? ENV?.[$.Settings.PreferredLanguage]?.URI ?? null;
 		
 		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Parameters.WebVTT_M3U8);
 		//$.log(`🚧 ${$.name}`, `Parameters: ${JSON.stringify(Parameters)}`, "");
 		// Amazon Prime Video 兼容
 		if (Platform == "Prime_Video") {
 			//WebVTT_M3U8 = Parameters?.Preferred_WebVTT_M3U8 ?? Parameters?.Secondary_WebVTT_M3U8 ?? "";
-			let WebVTT_M3U8 = ENV?.Language1st?.URI ?? ENV?.Language2nd?.URI ?? "";
+			let WebVTT_M3U8 = ENV?.[$.Settings.PreferredLanguage]?.URI ?? ENV?.[$.Settings.SecondaryLanguage]?.URI ?? "";
 			Parameters.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID
 		}
 
 		$.Cache = await setCache($.Cache, Parameters, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 
-		let DualSubs_Array = await setDualSubs_Array(ENV.Language1st, ENV.Language2nd.OPTION.NAME.replace(/\"/g, ""), $.Settings.Type);
+		let DualSubs_Array = await setDualSubs_Array(ENV[$.Settings.PreferredLanguage], ENV[$.Settings.SecondaryLanguage].OPTION.NAME.replace(/\"/g, ""), $.Settings.Type);
 
-	 	PlayList.body.splice(ENV["1stLanguage"].Index, 0, ...DualSubs_Array)
+	 	PlayList.body.splice(ENV[$.Settings.PreferredLanguage].Index, 0, ...DualSubs_Array)
 		//SecondaryLanguage_DualSubs_array = await setDualSubsOpt(ENV.Language2nd, [$.Languages[$.Settings.SecondaryLanguage], $.Languages[$.Settings.PreferredLanguage]], $.Settings.Type);
 		//PlayList = await setDualSubs_M3U8(PlayList, $.Languages[$.Settings.PreferredLanguage], $.Settings.Type);
 		//$.log(`🚧 ${$.name}`, "setDualSubs_M3U8", JSON.stringify(PlayList), "");
@@ -117,12 +123,28 @@ async function getParameters(platform, url) {
 };
 
 // Function 4
+// Get EXT-X-MEDIA Data
+async function getMEDIA(json = {}, type = "", langCode = "") {
+	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
+	//查询是否有符合语言的字幕
+	let index = json.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${langCode}\"`) return true });
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `Index: ${index}`, "");
+	let obj = (index != -1) ? json.body[index] : null;
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");
+	let uri = obj?.OPTION.URI.replace(/\"/g, "") ?? null;
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA URI", `URI: ${uri}`, "");
+	let data = { "Index": index, ...obj, "URI": uri}
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `Data: ${JSON.stringify(data)}`, "");
+	return data
+};
+
+// Function 4
 // Get Subtitle M3U8 Index
 async function getSubIndex(json = {}, langCode = "") {
 	$.log(`⚠ ${$.name}, Find Subtitle M3U8 Index`, "");
 	//查询是否有符合语言的字幕
 	let index = json.body.findIndex(item => { if (item.OPTION?.TYPE == "SUBTITLES" && item.OPTION?.LANGUAGE == `\"${langCode}\"`) return true })
-	$.log(`🎉 ${$.name}, 调试信息`, "Get Subtitle M3U8 Object", `json.body.findIndex: ${index}`, "");
+	$.log(`🎉 ${$.name}, 调试信息`, "Get Subtitle M3U8 Index", `Index: ${index}`, "");
 	return index
 };
 

@@ -2,10 +2,12 @@
 	"Disney_Plus": {
 		"Settings": {
 			"Switch": "true", // true, false
-			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"Type": "Official", // Official, Google, DeepL, Disable
 			"PlaylistNumber": "10",
-			"PreferredLanguage": "ZH-HANT",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH-HANT",
+				"EN-US"
+			],
 			"Position": "Forward", // Forward, Reverse
 			"DeepLKey": "null" // DeepL API Authentication Key
 		},
@@ -50,10 +52,12 @@
 	"Prime_Video": {
 		"Settings": {
 			"Switch": "true", // true, false
-			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
+			"Type": "Official", // Official, Google, DeepL, Disable
 			"PlaylistNumber": "5",
-			"PreferredLanguage": "ZH-HANS",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH-HANS",
+				"EN-US"
+			],
 			"Position": "Forward", // Forward, Reverse
 			"DeepLKey": "null" // DeepL API Authentication Key
 		},
@@ -101,8 +105,10 @@
 			"Switch": "true", // true, false
 			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
 			"PlaylistNumber": "5",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward", // Forward, Reverse
 			"DeepLKey": "null" // DeepL API Authentication Key
 		},
@@ -149,8 +155,10 @@
 			"Switch": "true", // true, false
 			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
 			"PlaylistNumber": "5",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward", // Forward, Reverse
 			"DeepLKey": "null" // DeepL API Authentication Key
 		},
@@ -197,8 +205,10 @@
 			"Switch": "true", // true, false
 			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
 			"PlaylistNumber": "5",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward", // Forward, Reverse
 			"DeepLKey": "null" // DeepL API Authentication Key
 		},
@@ -245,8 +255,10 @@
 			"Switch": "true", // true, false
 			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
 			"PlaylistNumber": "5",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward", // Forward, Reverse
 			"DeepLKey": "null" // DeepL API Authentication Key
 		},
@@ -290,8 +302,10 @@
 			"Switch": "true", // true, false
 			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
 			"PlaylistNumber": "10",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward", // Forward, Reverse
 			"DeepLKey": "null" // DeepL API Authentication Key
 		}
@@ -299,7 +313,7 @@
 	"YouTube": {
 		"Settings": {
 			"Switch": "true", // Enable, Disable
-			"language": "EN-US"
+			"Language": "EN-US"
 		},
 		"Languages": {
 			"BG": "bg-BG", // 保加利亚语

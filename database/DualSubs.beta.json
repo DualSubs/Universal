@@ -2,10 +2,12 @@
 	"Disney_Plus": {
 		"Settings": {
 			"Switch": "true",
-			"Type": "Official,Google,DeepL,External",
+			"Type": "Official",
 			"PlaylistNumber": "10",
-			"PreferredLanguage": "ZH-HANT",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH-HANT",
+				"EN-US"
+			],
 			"Position": "Forward",
 			"DeepLKey": "null"
 		},
@@ -50,10 +52,12 @@
 	"Prime_Video": {
 		"Settings": {
 			"Switch": "true",
-			"Type": "Official,Google,DeepL,External",
+			"Type": "Official",
 			"PlaylistNumber": "10",
-			"PreferredLanguage": "ZH-HANS",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH-HANS",
+				"EN-US"
+			],
 			"Position": "Forward",
 			"DeepLKey": "null"
 		},
@@ -101,8 +105,10 @@
 			"Switch": "true",
 			"Type": "Official,Google,DeepL,External",
 			"PlaylistNumber": "5",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward",
 			"DeepLKey": "null"
 		},
@@ -149,8 +155,10 @@
 			"Switch": "true",
 			"Type": "Official,Google,DeepL,External",
 			"PlaylistNumber": "10",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward",
 			"DeepLKey": "null"
 		},
@@ -197,8 +205,10 @@
 			"Switch": "true",
 			"Type": "Official,Google,DeepL,External",
 			"PlaylistNumber": "5",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward",
 			"DeepLKey": "null"
 		},
@@ -245,8 +255,10 @@
 			"Switch": "true",
 			"Type": "Official,Google,DeepL,External",
 			"PlaylistNumber": "5",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward",
 			"DeepLKey": "null"
 		},
@@ -290,8 +302,10 @@
 			"Switch": "true",
 			"Type": "Official,Google,DeepL,External",
 			"PlaylistNumber": "10",
-			"PreferredLanguage": "ZH",
-			"SecondaryLanguage": "EN-US",
+			"Language": [
+				"ZH",
+				"EN-US"
+			],
 			"Position": "Forward",
 			"DeepLKey": "null"
 		}
@@ -299,7 +313,7 @@
 	"YouTube": {
 		"Settings": {
 			"Switch": "true",
-			"language": "EN-US"
+			"Language": "EN-US"
 		},
 		"Languages": {
 			"BG": "bg-BG",

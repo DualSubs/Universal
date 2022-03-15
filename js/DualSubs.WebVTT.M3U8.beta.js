@@ -17,10 +17,11 @@ let headers = $request.headers
 	if ($.Settings.Switch == "false") $.done()
 	else if (/%Offical%$/.test(url)) {
 		$.log(`🚧 ${$.name}`, "官方字幕模式", "");
-
+		// 找缓存
 		let Index = $.Cache.findIndex(item => {
 			if (item?.[$.Settings.Language[0]]?.URI == url || item?.[$.Settings.Language[1]]?.URI == url) return true
 		})
+		// 获取VTTs地址数组
 		if (Index !== -1) {
 			$.Cache[Index].Type = url.match()
 			$.Cache[Index][$.Settings.Language[1]].VTTs = await getWebVTT_VTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI);
@@ -28,11 +29,12 @@ let headers = $request.headers
 			$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 		} else $.log(`🚧 ${$.name}`, "无匹配结果", "");
 	}
-	url = url.replace(/%[^%]+%$/, "");
-	$.done(url)
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done())
+	.finally(() => {
+		url = url.replace(/%[^%]+%$/, "");
+		$.done(url)
+	})
 
 /***************** Fuctions *****************/
 // Function 1

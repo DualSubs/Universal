@@ -15,26 +15,26 @@ let headers = $request.headers
 	const Platform = await getPlatform(url);
 	[$.Settings, $.Languages, $.Cache] = await setENV(Platform, DataBase);
 	if ($.Settings.Switch == "false") $.done()
-	else if (/%Offical%$/.test(url)) {
-		$.log(`🚧 ${$.name}`, "官方字幕模式", "");
+	else {
 		// 找缓存
-		let Index = $.Cache.findIndex(item => {
-			if (item?.[$.Settings.Language[0]]?.URI == url || item?.[$.Settings.Language[1]]?.URI == url) return true
-		})
-		// 获取VTTs地址数组
-		if (Index !== -1) {
-			$.Cache[Index].Type = url.match()
-			$.Cache[Index][$.Settings.Language[1]].VTTs = await getWebVTT_VTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI);
-			$.log(`🚧 ${$.name}`, `$.Cache[${[Index]}].${[$.Settings.Language[1]]}.stringify`, JSON.stringify($.Cache[Index][$.Settings.Language[1]]), "");
-			$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+		let Index = await getCache($.Cahce)
+		// 有缓存
+		if (Index) {
+			// 写类型
+			$.Cache[Index].Type = url.match(/%([^%]+)%$/)[1]
+			// 找类型
+			if ($.Cache[Index].Type == "Official") {
+				$.log(`🚧 ${$.name}`, "官方字幕模式", "");
+				// 获取VTTs地址数组
+				$.Cache[Index][$.Settings.Language[1]].VTTs = await getWebVTT_VTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI);
+				$.log(`🚧 ${$.name}`, `$.Cache[${[Index]}].${[$.Settings.Language[1]]}.stringify`, JSON.stringify($.Cache[Index][$.Settings.Language[1]]), "");
+			}
 		} else $.log(`🚧 ${$.name}`, "无匹配结果", "");
+		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => {
-		url = url.replace(/%[^%]+%$/, "");
-		$.done(url)
-	})
+	.finally(() => $.done(url.replace(/%[^%]+%$/, "")))
 
 /***************** Fuctions *****************/
 // Function 1
@@ -79,6 +79,17 @@ async function setENV(platform, database) {
 };
 
 // Function 3
+// Get Cache
+async function getCache(cache = {}) {
+	$.log(`⚠ ${$.name}, Get Cache`, "");
+	let index = cache.findIndex(item => {
+		if (item?.[$.Settings.Language[0]]?.URI == url || item?.[$.Settings.Language[1]]?.URI == url) return true
+	})
+	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `index: ${index}`, "");
+	if (index = -1) return null
+	else return index
+}
+// Function 4
 // Get Subtitle *.vtt URLs
 async function getWebVTT_VTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
@@ -103,6 +114,7 @@ async function getWebVTT_VTTs(platform, url) {
 		return WebVTT_VTTs
 	})
 };
+
 
 /***************** Env *****************/
 // prettier-ignore

@@ -25,7 +25,16 @@ let body = $response.body
 		}
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 
-		$.Cache = await setCache($.Cache, Cache, parseInt($.Settings.PlaylistNumber))
+		// 找缓存
+		let Index = await getCache($.Cahce)
+		// 有缓存
+		if (Index) {
+			$.Cache[Index] = Cache
+		} else {
+			$.log(`🚧 ${$.name}`, "无匹配结果", "");
+			$.Cache.unshift(Cache)
+			$.Cache = $.Cache.filter(Boolean).slice(0, parseInt($.Settings.PlaylistNumber))
+		}
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 		
 		let Language1ST = (Cache[$.Settings.Language[0]].Index != -1) ? Cache[$.Settings.Language[0]]
@@ -39,11 +48,11 @@ let body = $response.body
 		
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");
-		$.done({ "body": PlayList });
+		body = PlayList;
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done())
+	.finally(() => $.done(body))
 
 /***************** Fuctions *****************/
 // Function 1
@@ -88,6 +97,17 @@ async function setENV(platform, database) {
 };
 
 // Function 3
+// Get Cache
+async function getCache(cache = {}) {
+	$.log(`⚠ ${$.name}, Get Cache`, "");
+	let index = cache.findIndex(item => {
+		if (item?.[$.Settings.Language[0]]?.URI == url || item?.[$.Settings.Language[1]]?.URI == url) return true
+	})
+	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `index: ${index}`, "");
+	if (index = -1) return null
+	else return index
+}
+// Function 4
 // Get EXT-X-MEDIA Data
 async function getMEDIA(json = {}, type = "", langCode = "") {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
@@ -111,7 +131,7 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 	return data
 };
 
-// Function 4
+// Function 5
 // Set DualSubs Subtitle Array
 async function setDualSubs_Array(obj = {}, lang2ndName = "", type = []) {
 	let newSubs = type.map((item, i) => {
@@ -135,7 +155,8 @@ async function setDualSubs_Array(obj = {}, lang2ndName = "", type = []) {
 	return newSubs
 };
 
-// Function 5
+
+// Function 6
 // Set Cache
 async function setCache(cache = {}, playlist = {}, num = new Number) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");

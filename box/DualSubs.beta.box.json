@@ -36,7 +36,12 @@
 				{
 					"id": "@DualSubs.Disney_Plus.Settings.Type",
 					"name": "字幕类型",
-					"val": "Official,Google,DeepL,External",
+					"val": [
+						"Official",
+						"Google",
+						"DeepL",
+						"External"
+					],
 					"type": "checkboxes",
 					"desc": "请选择要启用的字幕源",
 					"items": [

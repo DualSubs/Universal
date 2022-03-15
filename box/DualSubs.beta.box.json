@@ -234,7 +234,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.PreferredLanguage",
+					"id": "@DualSubs.Prime_Video.Settings.Language[0]",
 					"name": "首选字幕语言：",
 					"val": "ZH-HANS",
 					"type": "selects",
@@ -279,7 +279,7 @@
 					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.SecondaryLanguage",
+					"id": "@DualSubs.Prime_Video.Settings.Language[1]",
 					"name": "次要字幕语言：",
 					"val": "EN-US",
 					"type": "selects",
@@ -409,7 +409,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.PreferredLanguage",
+					"id": "@DualSubs.HBO_Max.Settings.Language[0]",
 					"name": "首选字幕语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -454,7 +454,7 @@
 					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.SecondaryLanguage",
+					"id": "@DualSubs.HBO_Max.Settings.Language[1]",
 					"name": "次要字幕语言：",
 					"val": "EN-US",
 					"type": "selects",
@@ -584,7 +584,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.PreferredLanguage",
+					"id": "@DualSubs.Hulu.Settings.Language[0]",
 					"name": "首选字幕语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -629,7 +629,7 @@
 					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.SecondaryLanguage",
+					"id": "@DualSubs.Hulu.Settings.Language[1]",
 					"name": "次要字幕语言：",
 					"val": "EN-US",
 					"type": "selects",
@@ -759,7 +759,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Paramount_Plus.Settings.PreferredLanguage",
+					"id": "@DualSubs.Paramount_Plus.Settings.Language[0]",
 					"name": "首选字幕语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -804,7 +804,7 @@
 					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Paramount_Plus.Settings.SecondaryLanguage",
+					"id": "@DualSubs.Paramount_Plus.Settings.Language[1]",
 					"name": "次要字幕语言：",
 					"val": "EN-US",
 					"type": "selects",
@@ -934,7 +934,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.PreferredLanguage",
+					"id": "@DualSubs.Netflix.Settings.Language[0]",
 					"name": "首选字幕语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -979,7 +979,7 @@
 					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.SecondaryLanguage",
+					"id": "@DualSubs.Netflix.Settings.Language[1]",
 					"name": "次要字幕语言：",
 					"val": "EN-US",
 					"type": "selects",

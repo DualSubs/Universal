@@ -59,7 +59,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.PreferredLanguage",
+					"id": "@DualSubs.Disney_Plus.Settings.Language[0]",
 					"name": "首选字幕语言：",
 					"val": "ZH-HANT",
 					"type": "selects",
@@ -104,7 +104,7 @@
 					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.SecondaryLanguage",
+					"id": "@DualSubs.Disney_Plus.Settings.Language[1]",
 					"name": "次要字幕语言：",
 					"val": "EN-US",
 					"type": "selects",

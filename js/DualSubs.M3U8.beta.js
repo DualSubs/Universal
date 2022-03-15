@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.3.8");
+const $ = new Env("DualSubs v0.4.0");
 const M3U8 = new EXTM3U("EXTM3U v0.5.1");
 // https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json
 const DataBase = {"Disney_Plus":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"10","PreferredLanguage":"ZH-HANT","SecondaryLanguage":"EN-US","Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"}},"Prime_Video":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"10","PreferredLanguage":"ZH-HANS","SecondaryLanguage":"EN-US","Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES":"es-es","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-HANS":"zh-hans","ZH-HK":"zh-HK","ZH-HANT":"zh-hant"}},"HBO_Max":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"5","PreferredLanguage":"ZH","SecondaryLanguage":"EN-US","Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"Hulu":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"10","PreferredLanguage":"ZH","SecondaryLanguage":"EN-US","Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ara","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES":"spa","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-HANS":"zho","ZH-HK":"zho","ZH-HANT":"zho"}},"Paramount_Plus":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"5","PreferredLanguage":"ZH","SecondaryLanguage":"EN-US","Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"}},"Discovery_Plus":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"5","PreferredLanguage":"ZH","SecondaryLanguage":"EN-US","Position":"Forward","DeepLKey":"null"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"Netflix":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"10","PreferredLanguage":"ZH","SecondaryLanguage":"EN-US","Position":"Forward","DeepLKey":"null"}},"YouTube":{"Settings":{"Switch":"true","language":"EN-US"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-HANT":"zh-Hant"}},"Google":{"Languages":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"DeepL":{"Languages":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH"}}}
@@ -20,48 +20,51 @@ let body = $response.body
 		if (url.match(`lang=${$.Settings.language}`) || url.match(/&tlang=/)) $.done();
 		else $.done({ url: `${url}&tlang=${$.Settings.language}` });
 	} else {
-		let Parameters = await getParameters(Platform, url);
-		let PlayList = M3U8.parse(body)
-		$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
+		//let Parameters = await getParameters(Platform, url);
+		let m3u8 = M3U8.parse(body)
+		$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(m3u8), "");
 		let ENV = {
-			[$.Settings.PreferredLanguage]: await getMEDIA(PlayList, "SUBTITLES", $.Languages[$.Settings.PreferredLanguage]),
-			[$.Settings.SecondaryLanguage]: await getMEDIA(PlayList, "SUBTITLES", $.Languages[$.Settings.SecondaryLanguage])
+			[$.Settings.Language[0]]: await getMEDIA(m3u8, "SUBTITLES", $.Languages[$.Settings.Language[0]]),
+			[$.Settings.Language[1]]: await getMEDIA(m3u8, "SUBTITLES", $.Languages[$.Settings.Language[1]])
 		}
 		$.log(`🚧 ${$.name}`, "ENV.stringify", JSON.stringify(ENV), "");
 		/*
 		let ENV = {
-			"1stLanguage": await getSubObj(PlayList, $.Languages[$.Settings.PreferredLanguage]),
-			"2ndLanguage": await getSubObj(PlayList, $.Languages[$.Settings.SecondaryLanguage])
+			"1stLanguage": await getSubObj(PlayList, $.Languages[$.Settings.Language[0]]),
+			"2ndLanguage": await getSubObj(PlayList, $.Languages[$.Settings.Language[1]])
 		}
-		ENV["1stLanguage"].Index = await getSubIndex(PlayList, $.Languages[$.Settings.PreferredLanguage]);
-		ENV["2ndLanguage"].Index = await getSubIndex(PlayList, $.Languages[$.Settings.SecondaryLanguage]);
+		ENV["1stLanguage"].Index = await getSubIndex(PlayList, $.Languages[$.Settings.Language[0]]);
+		ENV["2ndLanguage"].Index = await getSubIndex(PlayList, $.Languages[$.Settings.Language[1]]);
 
 		ENV["1stLanguage"].URI = await getSubURI(ENV["1stLanguage"], Parameters.PATH);
 		ENV["2ndLanguage"].URI = await getSubURI(ENV["2ndLanguage"], Parameters.PATH);
 		*/
-		Parameters.WebVTT_M3U8 = ENV?.[$.Settings.SecondaryLanguage]?.URI ?? ENV?.[$.Settings.PreferredLanguage]?.URI ?? null;
-		
-		Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Parameters.WebVTT_M3U8);
+		//Parameters.WebVTT_M3U8 = ENV?.[$.Settings.Language[1]]?.URI ?? ENV?.[$.Settings.Language[0]]?.URI ?? null;
+
+		//Parameters.WebVTT_VTTs = await getWebVTT_VTTs(Platform, Parameters.WebVTT_M3U8);
 		//$.log(`🚧 ${$.name}`, `Parameters: ${JSON.stringify(Parameters)}`, "");
+		/*
 		// Amazon Prime Video 兼容
 		if (Platform == "Prime_Video") {
 			//WebVTT_M3U8 = Parameters?.Preferred_WebVTT_M3U8 ?? Parameters?.Secondary_WebVTT_M3U8 ?? "";
-			let WebVTT_M3U8 = ENV?.[$.Settings.PreferredLanguage]?.URI ?? ENV?.[$.Settings.SecondaryLanguage]?.URI ?? "";
+			let WebVTT_M3U8 = ENV?.[$.Settings.Language[0]]?.URI ?? ENV?.[$.Settings.Language[1]]?.URI ?? "";
 			Parameters.ID = WebVTT_M3U8.match(/(?<ID>[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$/)?.groups?.ID ?? Parameters.ID
 		}
-
-		$.Cache = await setCache($.Cache, Parameters, parseInt($.Settings.PlaylistNumber))
+		*/
+		
+		//$.Cache = await setCache($.Cache, Parameters, parseInt($.Settings.PlaylistNumber))
+		$.Cache = await setCache($.Cache, ENV, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 
-		let DualSubs_Array = await setDualSubs_Array(ENV[$.Settings.PreferredLanguage], ENV[$.Settings.SecondaryLanguage].OPTION.NAME.replace(/\"/g, ""), $.Settings.Type);
+		let DualSubs_Array = await setDualSubs_Array(ENV[$.Settings.Language[0]], ENV[$.Settings.Language[1]].OPTION.NAME.replace(/\"/g, ""), $.Settings.Type);
 
-	 	PlayList.body.splice(ENV[$.Settings.PreferredLanguage].Index, 0, ...DualSubs_Array)
-		//SecondaryLanguage_DualSubs_array = await setDualSubsOpt(ENV.Language2nd, [$.Languages[$.Settings.SecondaryLanguage], $.Languages[$.Settings.PreferredLanguage]], $.Settings.Type);
-		//PlayList = await setDualSubs_M3U8(PlayList, $.Languages[$.Settings.PreferredLanguage], $.Settings.Type);
+		m3u8.body.splice(ENV[$.Settings.Language[0]].Index, 0, ...DualSubs_Array)
+		//SecondaryLanguage_DualSubs_array = await setDualSubsOpt(ENV.Language2nd, [$.Languages[$.Settings.Language[1]], $.Languages[$.Settings.Language[0]]], $.Settings.Type);
+		//PlayList = await setDualSubs_M3U8(PlayList, $.Languages[$.Settings.Language[0]], $.Settings.Type);
 		//$.log(`🚧 ${$.name}`, "setDualSubs_M3U8", JSON.stringify(PlayList), "");
-		PlayList = M3U8.stringify(PlayList);
-		$.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(PlayList), "");
-		$.done({ "body": PlayList });
+		m3u8 = M3U8.stringify(m3u8);
+		$.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(m3u8), "");
+		$.done({ "body": m3u8 });
 	}
 })()
 	.catch((e) => $.logErr(e))
@@ -234,12 +237,14 @@ async function getWebVTT_VTTs(platform, url) {
 
 // Function 8
 // Set Cache
-async function setCache(cache = {}, parameters = {}, num = new Number) {
+async function setCache(cache = {}, playlist = {}, num = new Number) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶
-	let index = cache.findIndex(item => item?.ID == parameters?.ID)
+	let index = cache.findIndex(item => {
+		if (item?.[$.Settings.Language[0]]?.URI == playlist?.[$.Settings.Language[0]]?.URI || item?.[$.Settings.Language[1]]?.URI == playlist?.[$.Settings.Language[1]]?.URI) return true
+	})
 	if (index !== -1) delete cache[index]
-	cache.unshift(parameters)
+	cache.unshift(playlist)
 	//cache = cache.filter(Boolean).slice(0, 10) //去空, 留10
 	//let num = parseInt(number)
 	//$.log(`🚧 ${$.name}`, `PlaylistNumber类型: ${typeof num}`, `cache内容: ${num}`, "");

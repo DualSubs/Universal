@@ -9,6 +9,7 @@ const DataBase = {"Disney_Plus":{"Settings":{"Switch":"true","Type":"Official","
 
 let url = $request.url
 let headers = $request.headers
+//let body = $response.body
 
 /***************** Processing *****************/
 !(async () => {
@@ -17,24 +18,32 @@ let headers = $request.headers
 	if ($.Settings.Switch == "false") $.done()
 	else {
 		// 找缓存
-		let Index = await getCache($.Cahce)
+		let Index = await getCache($.Cache)
+
+		// 创建缓存
+		let Cache = {
+			// 获取当前字幕类型
+			Type: url.match(/%([^%]+)%$/)[1],
+			// 获取VTT字幕地址数组
+			[$.Settings.Language[0]]: {VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[0]].URI)},
+			[$.Settings.Language[1]]: {VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI)},
+		}
+		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
+
 		// 有缓存
 		if (Index) {
-			// 写类型
-			$.Cache[Index].Type = url.match(/%([^%]+)%$/)[1]
-			// 找类型
-			if ($.Cache[Index].Type == "Official") {
-				$.log(`🚧 ${$.name}`, "官方字幕模式", "");
-				// 获取VTTs地址数组
-				$.Cache[Index][$.Settings.Language[1]].VTTs = await getWebVTT_VTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI);
-				$.log(`🚧 ${$.name}`, `$.Cache[${[Index]}].${[$.Settings.Language[1]]}.stringify`, JSON.stringify($.Cache[Index][$.Settings.Language[1]]), "");
-			}
-		} else $.log(`🚧 ${$.name}`, "无匹配结果", "");
+			// 合并缓存
+			Object.assign($.Cache[Index], Cache)
+		} else {
+			$.log(`🚧 ${$.name}`, "无匹配结果", "");
+			// 设置缓存数量
+			$.Cache = $.Cache.filter(Boolean).slice(0, parseInt($.Settings.PlaylistNumber))
+		}
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done(url.replace(/%[^%]+%$/, "")))
+	.finally(() => $.done({ url: url.replace(/%[^%]+%$/, "") }))
 
 /***************** Fuctions *****************/
 // Function 1
@@ -91,7 +100,7 @@ async function getCache(cache = {}) {
 }
 // Function 4
 // Get Subtitle *.vtt URLs
-async function getWebVTT_VTTs(platform, url) {
+async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
 	delete headers["Host"]
 	delete headers["Connection"]

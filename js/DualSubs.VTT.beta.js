@@ -1,7 +1,7 @@
 /*
 README:https://github.com/DualSubs/DualSubs/
 */
-// Original: https://raw.githubusercontent.com/DualSubs-R/Surge/master/DualSub.js
+
 const $ = new Env("DualSubs v0.4.0");
 const VTT = new WebVTT("WebVTT v1.4.1");
 // https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json
@@ -18,44 +18,52 @@ let body = $response.body
 	if ($.Settings.Switch == "false") $.done()
 	else {
 		// 找缓存
-		let Index = await getCache($.Cahce)
+		let Index = await getCache($.Cache)
+
+		// 序列化VTT
+		let OriginVTT = VTT.parse(body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
+		//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(OriginVTT), "");
+
 		// 有缓存
 		if (Index) {
-			// 找类型
+			// 获取类型
 			if ($.Cache[Index].Type == "Official") {
 				$.log(`🚧 ${$.name}`, "官方字幕模式", "");
-				let WebVTT_VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
-				if (WebVTT_VTTs) $.result = await getOfficialSubtitles(Platform, WebVTT_VTTs)
+				let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
+				if (VTTs) $.result = await getOfficialSubtitles(Platform, VTTs)
 				else $.done();
 			} else if ($.Cache[Index].Type == "Translate") {
 				$.result = await getTranslateSubtitles(body);
 			} else if ($.Cache[Index].Type == "External") {
 				$.result = await getExternalSubtitles(url);
 			} else $.done();
-		} else $.log(`🚧 ${$.name}`, "无匹配结果", "");
-		//$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-	
-	/***************** merge Dual Subtitles *****************/
-	let FirstSub = VTT.parse(body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
-	//$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
-	//$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
-	//$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
-	//$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
-	let SecondSub = VTT.parse($.result, ["timeStamp", "ms", "singleLine"]) // "multiLine"
-	//$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
-	//$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
-	//$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
-	//$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
-	let DualSub = await mergeDualSubs(FirstSub, SecondSub, $.Settings.Position);
-	//$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
-	//$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
-	DualSub = VTT.stringify(DualSub)
-	//$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
-	body = DualSub
+			/***************** merge Dual Subtitles *****************/
+			//let OriginVTT = VTT.parse(body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
+			//$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
+			//$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
+			//$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
+			//$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
+			let SecondVTT = VTT.parse($.result, ["timeStamp", "ms", "singleLine"]) // "multiLine"
+			//$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
+			//$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
+			//$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
+			//$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
+			let DualSub = await mergeDualSubs(OriginVTT, SecondVTT, $.Settings.Position);
+			//$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
+			//$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
+			DualSub = VTT.stringify(DualSub)
+			//$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
+			body = DualSub
+		} else {
+			$.log(`🚧 ${$.name}`, "无匹配结果", "");
+			// 设置缓存数量
+			$.Cache = $.Cache.filter(Boolean).slice(0, parseInt($.Settings.PlaylistNumber))
+		}
+		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done(body))
+	.finally(() => $.done({ body }))
 
 /***************** Fuctions *****************/
 // Function 1

@@ -16,31 +16,29 @@ let body = $response.body
 	const Platform = await getPlatform(url);
 	[$.Settings, $.Languages, $.Cache] = await setENV(Platform, DataBase);
 	if ($.Settings.Switch == "false") $.done()
-	else if (Platform == "YouTube") {
-		if (url.match(`lang=${$.Settings.language}`) || url.match(/&tlang=/)) $.done();
-		else $.done({ url: `${url}&tlang=${$.Settings.language}` });
-	} else {
-		//let Parameters = await getParameters(Platform, url);
-		let m3u8 = M3U8.parse(body)
-		$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(m3u8), "");
-		let ENV = {
-			[$.Settings.Language[0]]: await getMEDIA(m3u8, "SUBTITLES", $.Languages[$.Settings.Language[0]]),
-			[$.Settings.Language[1]]: await getMEDIA(m3u8, "SUBTITLES", $.Languages[$.Settings.Language[1]])
+	else {
+		let PlayList = M3U8.parse(body)
+		$.log(`🚧 ${$.name}`, "PlayList.parse", JSON.stringify(PlayList), "");
+
+		let Cache = {
+			[$.Settings.Language[0]]: await getMEDIA(PlayList, "SUBTITLES", $.Languages[$.Settings.Language[0]]),
+			[$.Settings.Language[1]]: await getMEDIA(PlayList, "SUBTITLES", $.Languages[$.Settings.Language[1]])
 		}
-		$.log(`🚧 ${$.name}`, "ENV.stringify", JSON.stringify(ENV), "");
+		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 
-		$.Cache = await setCache($.Cache, ENV, parseInt($.Settings.PlaylistNumber))
+		$.Cache = await setCache($.Cache, Cache, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+		let DualSubs_Array = (Cache[$.Settings.Language[0]].Index != -1) ? await setDualSubs_Array(Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]].Name, $.Settings.Type)
+			: (Cache[$.Settings.Language[1]].Index != -1) ? await setDualSubs_Array(Cache[$.Settings.Language[1]], Cache[$.Settings.Language[0]].Name, $.Settings.Type)
+				: ""
 
-		let DualSubs_Array = await setDualSubs_Array(ENV[$.Settings.Language[0]], ENV[$.Settings.Language[1]].OPTION.NAME.replace(/\"/g, ""), $.Settings.Type);
-
-		m3u8.body.splice(ENV[$.Settings.Language[0]].Index, 0, ...DualSubs_Array)
-		//SecondaryLanguage_DualSubs_array = await setDualSubsOpt(ENV.Language2nd, [$.Languages[$.Settings.Language[1]], $.Languages[$.Settings.Language[0]]], $.Settings.Type);
-		//PlayList = await setDualSubs_M3U8(PlayList, $.Languages[$.Settings.Language[0]], $.Settings.Type);
+		PlayList.body.splice(Cache[$.Settings.Language[0]].Index, 0, ...DualSubs_Array)
+		//SecondaryLanguage_DualSubs_array = await setDualSubsOpt(Cache.Language2nd, [$.Languages[$.Settings.Language[1]], $.Languages[$.Settings.Language[0]]], $.Settings.Type);
+		//Cache = await setDualSubs_M3U8(Cache, $.Languages[$.Settings.Language[0]], $.Settings.Type);
 		//$.log(`🚧 ${$.name}`, "setDualSubs_M3U8", JSON.stringify(PlayList), "");
-		m3u8 = M3U8.stringify(m3u8);
-		$.log(`🚧 ${$.name}`, "M3U8.stringify", JSON.stringify(m3u8), "");
-		$.done({ "body": m3u8 });
+		PlayList = M3U8.stringify(PlayList);
+		$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");
+		$.done({ "body": PlayList });
 	}
 })()
 	.catch((e) => $.logErr(e))
@@ -97,6 +95,8 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `Index: ${index}`, "");
 	let obj = (index != -1) ? json.body[index] : null;
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");
+	let name = obj?.OPTION.NAME.replace(/\"/g, "") ?? langCode;
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Name: ${name}`, "");
 	let URI = obj?.OPTION.URI.replace(/\"/g, "") ?? null;
 	// if 相对路径
 	if (!/^https?:\/\//i.test(URI)) {
@@ -105,7 +105,7 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 		URI = (URI == null) ? URI : PATH + URI
 	};
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA URI", `URI: ${URI}`, "");
-	let data = { "Index": index, ...obj, "URI": URI}
+	let data = { "Index": index, "Name": name, ...obj, "URI": URI }
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `Data: ${JSON.stringify(data)}`, "");
 	return data
 };

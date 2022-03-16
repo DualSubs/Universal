@@ -121,21 +121,23 @@ async function getVTTs(platform, url) {
 	delete headers["Connection"]
 	return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
-		let WebVTT_VTTs = response.body.match(/^.+\.vtt$/gim);
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${WebVTT_VTTs}`, "");
+		let VTTs = response.body.match(/^.+\.vtt$/gim);
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
 		// if 相对路径
-		if (!/^https?:\/\//gim.test(WebVTT_VTTs)) {
+		if (!/^https?:\/\//gim.test(VTTs)) {
 			let PATH = url.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? null
 			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `PATH: ${PATH}`, "");
-			WebVTT_VTTs = WebVTT_VTTs.map(item => item = PATH + item)
-			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `WebVTT_VTTs.map内容: ${WebVTT_VTTs}`, "");
+			VTTs = VTTs.map(item => item = PATH + item)
+			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `VTTs.map内容: ${VTTs}`, "");
 		};
 		// Disney + 筛选字幕
-		if (platform == "Disney_Plus") WebVTT_VTTs = WebVTT_VTTs.filter(item => !/\/subtitles_empty\//i.test(item))
-		// if (platform == "Disney_Plus") WebVTT_VTTs = WebVTT_VTTs.filter(item => /.+-MAIN.+/i.test(item))
+		if (platform == "Disney_Plus") {
+			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))
+			if (VTTs.some(item  => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+		}
 
-		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
-		return WebVTT_VTTs
+		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
+		return VTTs
 	})
 };
 

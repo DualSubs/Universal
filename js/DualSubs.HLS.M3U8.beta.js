@@ -26,6 +26,8 @@ let body = $response.body
 
 		// 创建缓存
 		let Cache = {
+			// PlayList.m3u8 URL
+			URL: url,
 			// 提取数据
 			[$.Settings.Language[0]]: await getMEDIA(PlayList, "SUBTITLES", $.Languages[$.Settings.Language[0]]),
 			[$.Settings.Language[1]]: await getMEDIA(PlayList, "SUBTITLES", $.Languages[$.Settings.Language[1]])
@@ -33,7 +35,7 @@ let body = $response.body
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 
 		// 有缓存
-		if (Index) {
+		if (Index != -1) {
 			// 合并缓存
 			Object.assign($.Cache[Index], Cache)
 		} else {
@@ -116,12 +118,25 @@ async function setENV(platform, database) {
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let index = cache.findIndex(item => {
-		if (item?.[$.Settings.Language[0]]?.URI == url || item?.[$.Settings.Language[1]]?.URI == url) return true
+		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.URI, item?.[$.Settings.Language[1]]?.URI, ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
+		$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
+		// 方法1
+		// URLs中有一项包含在url中即true
+		for (let URL of URLs) {
+			if (url.includes(URL)) return true
+		}
+		// 以下不适用，因为存在相对路径和加参数路径，所以url始终包含URL
+		// 方法2
+		// 扩展运算符，展开后查询
+		//if (URLs.includes(url)) return true
+		// 方法3
+		// Array.includes不能用于嵌套数组，所以先转字符串
+		//if (JSON.stringify(URLs).includes(url)) return true
 	})
 	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `index: ${index}`, "");
-	if (index = -1) return null
-	else return index
-}
+	return index
+};
+
 // Function 4
 // Get EXT-X-MEDIA Data
 async function getMEDIA(json = {}, type = "", langCode = "") {

@@ -60,12 +60,12 @@ let body = $response.body
 		*/
 		
 		// 创建字幕选项
-		let DualSubs_Array = await setDualSubs_Array(Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]].Name, $.Settings.Type);
+		let DualSubs_Array = await setDualSubs_Array(Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
 		// 插入字幕选项
 		PlayList.body.splice(Cache[$.Settings.Language[0]].Index + 1, 0, ...DualSubs_Array)
 		// 修改原字幕选项
-		PlayList.body[Cache[$.Settings.Language[0]].Index].OPTION.URI = `\"${PlayList.body[Cache[$.Settings.Language[0]].Index].OPTION.URI.replace(/\"/g, "")}%OFF%\"`
-		PlayList.body[Cache[$.Settings.Language[1]].Index].OPTION.URI = `\"${PlayList.body[Cache[$.Settings.Language[1]].Index].OPTION.URI.replace(/\"/g, "")}%OFF%\"`
+		PlayList.body[Cache[$.Settings.Language[0]].Index].OPTION.URI = `\"${Cache[$.Settings.Language[0]].URI}%Off%\"`
+		PlayList.body[Cache[$.Settings.Language[1]].Index].OPTION.URI = `\"${Cache[$.Settings.Language[1]].URI}%Off%\"`
 		
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
@@ -168,19 +168,26 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 
 // Function 5
 // Set DualSubs Subtitle Array
-async function setDualSubs_Array(obj = {}, lang2ndName = "", type = []) {
+async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = []) {
 	let newSubs = type.map((item, i) => {
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `item: ${JSON.stringify(item)}`, "");
 
-		let newSub = JSON.parse(JSON.stringify(obj)) // 复制此语言选项
+		let newSub = JSON.parse(JSON.stringify(obj1)) // 复制此语言选项
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
 		
 		//newSub.OPTION.NAME = newSub.OPTION.NAME.replace(/^\"([^\/]+)(.*)\"$/, `\"$1/${lang2ndName}(${item})\"`) // 修改名称
-		newSub.OPTION.NAME = `\"${newSub.OPTION.NAME.replace(/\"/g, "")}/${lang2ndName}(${item})\"` // 修改名称
+		//newSub.OPTION.NAME = `\"${obj1.OPTION.NAME.replace(/\"/g, "")}/${obj2.OPTION.NAME.replace(/\"/g, "")}(${item})\"` // 修改名称
+		newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}(${item})\"` // 修改名称
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
-		
+
+		//newSub.OPTION.LANGUAGE = newSub.OPTION.LANGUAGE.replace(/^\"([^\/]+)(.*)\"$/, `\"$1/${lang2ndName}\"`) // 修改语言代码
+		//newSub.OPTION.LANGUAGE = `\"${obj1.OPTION.LANGUAGE.replace(/\"/g, "")}/${obj2.OPTION.LANGUAGE.replace(/\"/g, "")}\"` // 修改语言代码
+		newSub.OPTION.LANGUAGE = `\"${obj1.Language}/${obj2.Language}--${item}--\"` // 修改语言代码
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
+
 		//newSub.OPTION.URI = newSub.OPTION.URI.replace(/^\"([^%%]+)(.*)\"$/, `\"$1%%${item}%%\"`) // 修改链接
-		newSub.OPTION.URI = `\"${newSub.OPTION.URI.replace(/\"/g, "")}%${item}%\"` // 修改链接
+		//newSub.OPTION.URI = `\"${newSub.OPTION.URI.replace(/\"/g, "")}%${item}%\"` // 修改链接
+		newSub.OPTION.URI = `\"${obj1.URI}%${item}%\"` // 修改链接
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
 		
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");

@@ -58,11 +58,14 @@ let body = $response.body
 			: (Cache[$.Settings.Language[0]].Index != -1) ? Cache[$.Settings.Language[0]]
 				: null
 		*/
-
+		
 		// 创建字幕选项
 		let DualSubs_Array = await setDualSubs_Array(Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]].Name, $.Settings.Type);
 		// 插入字幕选项
 		PlayList.body.splice(Cache[$.Settings.Language[0]].Index + 1, 0, ...DualSubs_Array)
+		// 修改原字幕选项
+		PlayList.body[Cache[$.Settings.Language[0]].Index].OPTION.URI = `\"${PlayList.body[Cache[$.Settings.Language[0]].Index].OPTION.URI.replace(/\"/g, "")}%OFF%\"`
+		PlayList.body[Cache[$.Settings.Language[1]].Index].OPTION.URI = `\"${PlayList.body[Cache[$.Settings.Language[1]].Index].OPTION.URI.replace(/\"/g, "")}%OFF%\"`
 		
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);

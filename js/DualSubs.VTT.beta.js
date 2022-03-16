@@ -27,7 +27,8 @@ let body = $response.body
 		// 有缓存
 		if (Index != -1) {
 			// 获取类型
-			if ($.Cache[Index].Type == "Official") {
+			if ($.Cache[Index].Type == "Off")  $.done();
+			else if ($.Cache[Index].Type == "Official") {
 				$.log(`🚧 ${$.name}`, "官方字幕模式", "");
 				let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
 				if (VTTs) $.result = await getOfficialSubtitles(Platform, VTTs)

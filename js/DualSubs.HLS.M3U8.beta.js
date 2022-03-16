@@ -153,6 +153,8 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");
 	let name = obj?.OPTION.NAME.replace(/\"/g, "") ?? langCode;
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Name: ${name}`, "");
+	let language = obj?.OPTION.LANGUAGE.replace(/\"/g, "") ?? langCode;
+	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Language: ${language}`, "");
 	let URI = obj?.OPTION.URI.replace(/\"/g, "") ?? null;
 	// if 相对路径
 	if (!/^https?:\/\//i.test(URI)) {
@@ -161,7 +163,7 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 		URI = (URI == null) ? URI : PATH + URI
 	};
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA URI", `URI: ${URI}`, "");
-	let data = { "Index": index, "Name": name, ...obj, "URI": URI }
+	let data = { "Index": index, "Name": name, "Language": language, ...obj, "URI": URI }
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `Data: ${JSON.stringify(data)}`, "");
 	return data
 };

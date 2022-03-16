@@ -173,36 +173,36 @@ async function getWebVTTvtt(url = "") {
 
 // Function 5
 // Get Official Subtitles
-async function getOfficialSubtitles(platform, WebVTT_VTTs = new Array) {
-	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
+async function getOfficialSubtitles(platform, VTTs = []) {
+	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `VTTs: ${VTTs}`, "");
 
 	/***************** Slice subtitles URLs Array *****************/
 	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
 	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
 	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
-	//WebVTT_VTTs = WebVTT_VTTs.slice(start, SubtitlesIndex + 4)
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `WebVTT_VTTs: ${WebVTT_VTTs}`, "");
+	//VTTs = VTTs.slice(start, SubtitlesIndex + 4)
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `VTTs: ${VTTs}`, "");
 
 	/***************** Get subtitles URL *****************/
-	let WebVTT_VTT = WebVTT_VTTs
+	let VTT = VTTs
 	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
 		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
 		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-		WebVTT_VTT = WebVTT_VTTs.find(item => item.includes(SubtitleName))
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${WebVTT_VTT}`, "")
+		VTT = VTTs.find(item => item.includes(SubtitleName))
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
 	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
 			let SubtitleName = url.match(/(.+_SEGMENT\d+_.+\.vtt$)/)[1]
 			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-			WebVTT_VTT = WebVTT_VTTs.find(item => item.includes(SubtitleName))
-			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${WebVTT_VTT}`, "")
+			VTT = VTTs.find(item => item.includes(SubtitleName))
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
 	} else { // Amazon Prime Video HBO_Max不拆分字幕片段
-		WebVTT_VTT = WebVTT_VTTs[0]
+		VTT = VTTs[0]
 	}
 	/***************** Get subtitles *****************/
 	//let result = {}
 	// 获取webVTT
-	//for (var k in WebVTT_VTTs) { await $.http.get({ url: WebVTT_VTTs[k], headers: headers }).then((response) => { result.push(response.body) }) }
-	return await $.http.get({ url: WebVTT_VTT, headers: headers }).then((response) => { return response.body })
+	//for (var k in VTTs) { await $.http.get({ url: VTTs[k], headers: headers }).then((response) => { result.push(response.body) }) }
+	return await $.http.get({ url: VTT, headers: headers }).then((response) => { return response.body })
 	//$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles", `result内容: ${result}`, "");
 };
 

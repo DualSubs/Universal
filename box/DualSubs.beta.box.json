@@ -451,7 +451,7 @@
 				{
 					"id": "@DualSubs.HBO_Max.Settings.Language[0]",
 					"name": "首选语言：",
-					"val": "ZH",
+					"val": "EN-US SDH",
 					"type": "selects",
 					"items": [
 						{
@@ -481,6 +481,14 @@
 						{
 							"key": "ES-ES",
 							"label": "西班牙语"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
 						},
 						{
 							"key": "JA",
@@ -496,7 +504,7 @@
 				{
 					"id": "@DualSubs.HBO_Max.Settings.Language[1]",
 					"name": "次选语言：",
-					"val": "EN-US",
+					"val": "ES-419 SDH",
 					"type": "selects",
 					"items": [
 						{
@@ -526,6 +534,14 @@
 						{
 							"key": "ES-ES",
 							"label": "西班牙语"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
 						},
 						{
 							"key": "JA",

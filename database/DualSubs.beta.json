@@ -120,8 +120,8 @@
 				"External"
 			],
 			"Language": [
-				"ZH",
-				"EN-US"
+				"EN-US SDH",
+				"ES-419 SDH"
 			],
 			"Position": "Forward",
 			"CacheSize": 3,
@@ -139,9 +139,9 @@
 			"EL": "el-GR",
 			"EN-GB": "en-UK",
 			"EN-US": "en-US",
-			"EN-US SDH": "en-US SDH",
-			"ES": "es-419",
+			"EN-US SDH": "en-US",
 			"ES-419": "es-419",
+			"ES-419 SDH": "es-419",
 			"ES-ES": "es-ES",
 			"ET": "et-EE",
 			"FI": "fi-FI",

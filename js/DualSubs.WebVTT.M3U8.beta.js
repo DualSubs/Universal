@@ -33,7 +33,7 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 		}
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 
-		$.Cache = await setCache(Index, $.Cache, Cache, parseInt($.Settings.PlaylistNumber))
+		$.Cache = await setCache(Index, $.Cache, Cache, parseInt($.Settings.CacheSize))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 		
 		let response = await getWebVTTm3u8(url, type)

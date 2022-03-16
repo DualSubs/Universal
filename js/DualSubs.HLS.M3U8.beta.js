@@ -33,7 +33,7 @@ let body = $response.body
 		}
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 
-		$.Cache = await setCache(Index, $.Cache, Cache, parseInt($.Settings.PlaylistNumber))
+		$.Cache = await setCache(Index, $.Cache, Cache, parseInt($.Settings.CacheSize))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 		
 		// 语言回退机制

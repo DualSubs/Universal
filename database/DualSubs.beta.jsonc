@@ -1,15 +1,20 @@
 {
 	"Disney_Plus": {
 		"Settings": {
-			"Switch": "true", // true, false
-			"Type": "Official", // Official, Google, DeepL, Disable
-			"PlaylistNumber": "10",
+			"Switch": true, // true, false
+			"Type": [
+				"Official" // Official, Google, DeepL, External
+			],
 			"Language": [
 				"ZH-HANT",
 				"EN-US"
 			],
 			"Position": "Forward", // Forward, Reverse
-			"DeepLKey": "null" // DeepL API Authentication Key
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null // DeepL API Authentication Key
 		},
 		"Languages": {
 			//"AR": "ar", // 阿拉伯语
@@ -19,11 +24,11 @@
 			"DE": "de", // 德文
 			//"EL": "el", // 希腊语
 			"EN-GB": "en", // 英语（英国）
- 			"EN-US": "en", // 英语（美国）
- 			"EN-US SDH": "en", // 英语（美国）CC
- 			"ES": "es-ES", // 西班牙语
- 			"ES-419": "es-419", // 西班牙语（拉丁美洲）
- 			"ES-ES": "es-ES", // 西班牙语
+			"EN-US": "en", // 英语（美国）
+			"EN-US SDH": "en", // 英语（美国）CC
+			"ES": "es-ES", // 西班牙语
+			"ES-419": "es-419", // 西班牙语（拉丁美洲）
+			"ES-ES": "es-ES", // 西班牙语
 			//"ET": "et", // 爱沙尼亚语
 			"FI": "fi", // 芬兰语
 			"FR": "fr-FR", // 法语
@@ -51,15 +56,20 @@
 	},
 	"Prime_Video": {
 		"Settings": {
-			"Switch": "true", // true, false
-			"Type": "Official", // Official, Google, DeepL, Disable
-			"PlaylistNumber": "5",
+			"Switch": true, // true, false
+			"Type": [
+				"Official" // Official, Google, DeepL, External
+			],
 			"Language": [
 				"ZH-HANS",
 				"EN-US"
 			],
 			"Position": "Forward", // Forward, Reverse
-			"DeepLKey": "null" // DeepL API Authentication Key
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null // DeepL API Authentication Key
 		},
 		"Languages": {
 			"AR": "ar-001", // 阿拉伯语
@@ -102,15 +112,23 @@
 	},
 	"HBO_Max": {
 		"Settings": {
-			"Switch": "true", // true, false
-			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
-			"PlaylistNumber": "5",
+			"Switch": true, // true, false
+			"Type": [ // Official, Google, DeepL, External
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward", // Forward, Reverse
-			"DeepLKey": "null" // DeepL API Authentication Key
+			"CacheSize": 3,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null // DeepL API Authentication Key
 		},
 		"Languages": {
 			//"AR": "ar-001", // 阿拉伯语
@@ -152,15 +170,23 @@
 	},
 	"Hulu": {
 		"Settings": {
-			"Switch": "true", // true, false
-			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
-			"PlaylistNumber": "5",
+			"Switch": true, // true, false
+			"Type": [ // Official, Google, DeepL, External
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward", // Forward, Reverse
-			"DeepLKey": "null" // DeepL API Authentication Key
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null // DeepL API Authentication Key
 		},
 		"Languages": {
 			//"AR": "ar-001", // 阿拉伯语
@@ -202,15 +228,23 @@
 	},
 	"Paramount_Plus": {
 		"Settings": {
-			"Switch": "true", // true, false
-			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
-			"PlaylistNumber": "5",
+			"Switch": true, // true, false
+			"Type": [ // Official, Google, DeepL, External
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward", // Forward, Reverse
-			"DeepLKey": "null" // DeepL API Authentication Key
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null // DeepL API Authentication Key
 		},
 		"Languages": {
 			//"AR": "ar", // 阿拉伯语
@@ -220,11 +254,11 @@
 			"DE": "de", // 德文
 			//"EL": "el", // 希腊语
 			"EN-GB": "en", // 英语（英国）
- 			"EN-US": "en", // 英语（美国）
- 			"EN-US SDH": "en", // 英语（美国）CC
- 			"ES": "es-ES", // 西班牙语
- 			"ES-419": "es-419", // 西班牙语（拉丁美洲）
- 			"ES-ES": "es-ES", // 西班牙语
+			"EN-US": "en", // 英语（美国）
+			"EN-US SDH": "en", // 英语（美国）CC
+			"ES": "es-ES", // 西班牙语
+			"ES-419": "es-419", // 西班牙语（拉丁美洲）
+			"ES-ES": "es-ES", // 西班牙语
 			//"ET": "et", // 爱沙尼亚语
 			"FI": "fi", // 芬兰语
 			"FR": "fr-FR", // 法语
@@ -252,15 +286,23 @@
 	},
 	"Discovery_Plus": {
 		"Settings": {
-			"Switch": "true", // true, false
-			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
-			"PlaylistNumber": "5",
+			"Switch": true, // true, false
+			"Type": [ // Official, Google, DeepL, External
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward", // Forward, Reverse
-			"DeepLKey": "null" // DeepL API Authentication Key
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null // DeepL API Authentication Key
 		},
 		"Languages": {
 			"BG": "bg-BG", // 保加利亚语
@@ -299,21 +341,35 @@
 	},
 	"Netflix": {
 		"Settings": {
-			"Switch": "true", // true, false
-			"Type": "Official,Google,DeepL,External", // Official, Google, DeepL, Disable
-			"PlaylistNumber": "10",
+			"Switch": true, // true, false
+			"Type": [ // Official, Google, DeepL, External
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward", // Forward, Reverse
-			"DeepLKey": "null" // DeepL API Authentication Key
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null // DeepL API Authentication Key
 		}
 	},
 	"YouTube": {
 		"Settings": {
-			"Switch": "true", // Enable, Disable
-			"Language": "EN-US"
+			"Switch": true, // Enable, Disable
+			"Type": [ // Official, Google, DeepL, External
+				"Official"
+			],
+			"Language": [
+				"ZH",
+				"EN-US"
+			]
 		},
 		"Languages": {
 			"BG": "bg-BG", // 保加利亚语

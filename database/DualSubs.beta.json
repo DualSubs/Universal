@@ -1,15 +1,20 @@
 {
 	"Disney_Plus": {
 		"Settings": {
-			"Switch": "true",
-			"Type": "Official",
-			"PlaylistNumber": "10",
+			"Switch": true,
+			"Type": [
+				"Official"
+			],
 			"Language": [
 				"ZH-HANT",
 				"EN-US"
 			],
 			"Position": "Forward",
-			"DeepLKey": "null"
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null
 		},
 		"Languages": {
 			"AR": "ar",
@@ -51,15 +56,20 @@
 	},
 	"Prime_Video": {
 		"Settings": {
-			"Switch": "true",
-			"Type": "Official",
-			"PlaylistNumber": "10",
+			"Switch": true,
+			"Type": [
+				"Official"
+			],
 			"Language": [
 				"ZH-HANS",
 				"EN-US"
 			],
 			"Position": "Forward",
-			"DeepLKey": "null"
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null
 		},
 		"Languages": {
 			"AR": "ar-001",
@@ -102,15 +112,23 @@
 	},
 	"HBO_Max": {
 		"Settings": {
-			"Switch": "true",
-			"Type": "Official,Google,DeepL,External",
-			"PlaylistNumber": "5",
+			"Switch": true,
+			"Type": [
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward",
-			"DeepLKey": "null"
+			"CacheSize": 3,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null
 		},
 		"Languages": {
 			"AR": "ar-001",
@@ -152,15 +170,23 @@
 	},
 	"Hulu": {
 		"Settings": {
-			"Switch": "true",
-			"Type": "Official,Google,DeepL,External",
-			"PlaylistNumber": "10",
+			"Switch": true,
+			"Type": [
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward",
-			"DeepLKey": "null"
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null
 		},
 		"Languages": {
 			"AR": "ara",
@@ -202,15 +228,23 @@
 	},
 	"Paramount_Plus": {
 		"Settings": {
-			"Switch": "true",
-			"Type": "Official,Google,DeepL,External",
-			"PlaylistNumber": "5",
+			"Switch": true,
+			"Type": [
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward",
-			"DeepLKey": "null"
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null
 		},
 		"Languages": {
 			"AR": "ar",
@@ -252,15 +286,23 @@
 	},
 	"Discovery_Plus": {
 		"Settings": {
-			"Switch": "true",
-			"Type": "Official,Google,DeepL,External",
-			"PlaylistNumber": "5",
+			"Switch": true,
+			"Type": [
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward",
-			"DeepLKey": "null"
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null
 		},
 		"Languages": {
 			"BG": "bg-BG",
@@ -299,21 +341,35 @@
 	},
 	"Netflix": {
 		"Settings": {
-			"Switch": "true",
-			"Type": "Official,Google,DeepL,External",
-			"PlaylistNumber": "10",
+			"Switch": true,
+			"Type": [
+				"Official",
+				"Google",
+				"DeepL",
+				"External"
+			],
 			"Language": [
 				"ZH",
 				"EN-US"
 			],
 			"Position": "Forward",
-			"DeepLKey": "null"
+			"CacheSize": 10,
+			"Offset": 0,
+			"Tolerance": 1000,
+			"GoogleCloud": null,
+			"DeepLKey": null
 		}
 	},
 	"YouTube": {
 		"Settings": {
-			"Switch": "true",
-			"Language": "EN-US"
+			"Switch": true,
+			"Type": [
+				"Official"
+			],
+			"Language": [
+				"ZH",
+				"EN-US"
+			]
 		},
 		"Languages": {
 			"BG": "bg-BG",

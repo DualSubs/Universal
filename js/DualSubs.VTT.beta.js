@@ -19,8 +19,7 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 !(async () => {
 	const Platform = await getPlatform(url);
 	[$.Settings, $.Languages, $.Cache] = await setENV(Platform, DataBase);
-	if ($.Settings.Switch == "false") $.done()
-	else {
+	if ($.Settings.Switch) {
 		// 找缓存
 		let Index = await getCacheIndex($.Cache)
 		
@@ -98,7 +97,11 @@ async function setENV(platform, database) {
 	let BoxJs = $.getjson("DualSubs", database) // BoxJs
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
 	let Settings = BoxJs[platform]?.Settings || database[platform].Settings;
+	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	Settings.Type = Settings.Type.split(",") // BoxJs字符串转数组
+	Settings.CacheSize = parseInt(Settings.CacheSize,10) // BoxJs字符串转数字
+	Settings.Offset = parseInt(Settings.Offset,10) // BoxJs字符串转数字
+	Settings.Tolerance = parseInt(Settings.Tolerance,10) // BoxJs字符串转数字
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
 	let Languages = database[platform].Languages;
 	//Settings.language = database[Settings.type]?.Languages?.[Settings.language] ?? database[platform]?.Languages?.[Settings.language] ?? Settings.language;

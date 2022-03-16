@@ -57,9 +57,9 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 		//$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
 		//$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
 		//$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
-		let DualSub = await mergeDualSubs(OriginVTT, SecondVTT, $.Settings.Position);
-		//$.log(`🚧 ${$.name}, merge Dual Subtitles`, "await mergeDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
-		//$.log(`🚧 ${$.name}, merge Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
+		let DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
+		//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "await CombineDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
+		//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
 		DualSub = VTT.stringify(DualSub)
 		//$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
 		response.body = DualSub
@@ -219,12 +219,12 @@ async function getTranslateSubtitles(body) {
 
 // Function 6
 // Combine Dual Subtitles
-async function mergeDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, options = ["Forward"]) { // options = ["Forward", "Reverse"]
-	$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", "");
-	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `Sub1内容: ${JSON.stringify(Sub1)}`, "");
-	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `Sub2内容: ${JSON.stringify(Sub2)}`, "");
+async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
+	$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "");
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
 	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
-	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `let DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`let DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	// 有序数列 用不着排序
 	//FirstSub.body.sort((x, y) => x - y);
 	//SecondSub.body.sort((x, y) => x - y);
@@ -232,9 +232,9 @@ async function mergeDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = {
 	let index0 = 0, index1 = 0, index2 = 0;
 	// 双指针法查找两个数组中的相同元素
 	while (index1 < length1 && index2 < length2) {
-		const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp;
+		const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp + Offset;
 		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
-		if (Math.abs(timeStamp1 - timeStamp2) <= 1000) {
+		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 			index0 = options.includes("Reverse") ? index2 : index1;
 			// 多行字幕交替插入
 			/*
@@ -255,13 +255,13 @@ async function mergeDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = {
 			//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
 			index1++;
 			index2++;
-		} else if (timeStamp2 - timeStamp1 > 1000) {
+		} else if (timeStamp2 - timeStamp1 > Tolerance) {
 			index1++;
 		} else {
 			index2++;
 		}
 	}
-	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "mergeDualSubs", `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;
 };
 

@@ -38,6 +38,8 @@ let body = $response.body
 		if (Index != -1) {
 			// 合并缓存
 			Object.assign($.Cache[Index], Cache)
+			// 置顶
+			if (Index != 0) $.Cache.unshift($.Cache.splice(Index, 1)[0])
 		} else {
 			$.log(`🚧 ${$.name}`, "无匹配结果", "");
 			// 设置缓存数量

@@ -7,9 +7,14 @@ const $ = new Env("DualSubs v0.4.1");
 // https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json
 const DataBase = {"Disney_Plus":{"Settings":{"Switch":"true","Type":"Official","PlaylistNumber":"10","Language":["ZH-HANT","EN-US"],"Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"}},"Prime_Video":{"Settings":{"Switch":"true","Type":"Official","PlaylistNumber":"10","Language":["ZH-HANS","EN-US"],"Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES":"es-es","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-HANS":"zh-hans","ZH-HK":"zh-HK","ZH-HANT":"zh-hant"}},"HBO_Max":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"5","Language":["ZH","EN-US"],"Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"Hulu":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"10","Language":["ZH","EN-US"],"Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ara","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES":"spa","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-HANS":"zho","ZH-HK":"zho","ZH-HANT":"zho"}},"Paramount_Plus":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"5","Language":["ZH","EN-US"],"Position":"Forward","DeepLKey":"null"},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"}},"Discovery_Plus":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"5","Language":["ZH","EN-US"],"Position":"Forward","DeepLKey":"null"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"Netflix":{"Settings":{"Switch":"true","Type":"Official,Google,DeepL,External","PlaylistNumber":"10","Language":["ZH","EN-US"],"Position":"Forward","DeepLKey":"null"}},"YouTube":{"Settings":{"Switch":"true","Language":"EN-US"},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es-419","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-HANT":"zh-Hant"}},"Google":{"Languages":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es-ES","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"DeepL":{"Languages":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH"}}}
 
-let url = $request.url
+const type = $request.url.match(/%([^%]+)%$/)[1]
+$.log(`🚧 ${$.name}`, "type", type, "");
+const url = $request.url.replace(/%[^%]+%$/, "")
+$.log(`🚧 ${$.name}`, "url", url, "");
 let headers = $request.headers
-//let body = $response.body
+delete headers["Host"]
+delete headers["Connection"]
+$.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 
 /***************** Processing *****************/
 !(async () => {
@@ -18,12 +23,10 @@ let headers = $request.headers
 	if ($.Settings.Switch == "false") $.done()
 	else {
 		// 找缓存
-		let Index = await getCache($.Cache)
+		let Index = await getCacheIndex($.Cache)
 
 		// 创建缓存
 		let Cache = {
-			// 获取当前字幕类型
-			Type: url.match(/%([^%]+)%$/)[1],
 			// 获取VTT字幕地址数组
 			[$.Settings.Language[0]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[0]].URI) },
 			[$.Settings.Language[1]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI) },
@@ -32,13 +35,14 @@ let headers = $request.headers
 
 		$.Cache = await setCache(Index, $.Cache, Cache, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-
-		let response = await getWebVTTm3u8(url.replace(/%[^%]+%$/, ""), $.Cache[Index].Type)
+		
+		let response = await getWebVTTm3u8(url, type)
+		$.log(`🚧 ${$.name}`, "response.stringify", JSON.stringify(response), "");
 		$.done({ response })
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done({ url: url.replace(/%[^%]+%$/, "") }))
+	.finally(() => $.done({ url }))
 
 /***************** Fuctions *****************/
 // Function 1
@@ -83,12 +87,12 @@ async function setENV(platform, database) {
 };
 
 // Function 3
-// Get Cache
-async function getCache(cache = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, "");
+// Get Cache Index
+async function getCacheIndex(cache = {}) {
+	$.log(`⚠ ${$.name}, Get Cache Index`, "");
 	let index = cache.findIndex(item => {
 		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.URI, item?.[$.Settings.Language[1]]?.URI, ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
-		$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
+		$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `URLs: ${URLs}`, "");
 		// 方法1
 		// URLs中有一项包含在url中即true
 		for (let URL of URLs) {
@@ -102,7 +106,7 @@ async function getCache(cache = {}) {
 		// Array.includes不能用于嵌套数组，所以先转字符串
 		//if (JSON.stringify(URLs).includes(url)) return true
 	})
-	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `index: ${index}`, "");
+	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `index: ${index}`, "");
 	return index
 };
 
@@ -131,8 +135,6 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 // Get Subtitle *.vtt URLs
 async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
-	delete headers["Host"]
-	delete headers["Connection"]
 	return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let VTTs = response.body.match(/^.+\.vtt$/gim);
@@ -159,14 +161,12 @@ async function getVTTs(platform, url) {
 // Get Subtitle WebVTT *.m3u8
 async function getWebVTTm3u8(url = "", type = "") {
 	$.log(`⚠ ${$.name}, Get Subtitle WebVTT *.m3u8`, "");
-	delete headers["Host"]
-	delete headers["Connection"]
 	return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body: ${response.body}`, "");
 		response.body = response.body.replace(/^.+\.vtt$/gim, `$&%${type}%`);
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body.replace: ${response.body}`, "");
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body.replace: ${response.body}`, "");
 
-		$.log(`🎉 ${$.name}, Get Subtitle WebVTT *.m3u8`, `response: ${response}`, "");
+		$.log(`🎉 ${$.name}, Get Subtitle WebVTT *.m3u8`, `response: ${JSON.stringify(response)}`, "");
 		return response
 	})
 };

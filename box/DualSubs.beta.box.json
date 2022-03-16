@@ -26,14 +26,6 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.PlaylistNumber",
-					"name": "播放列表缓存数量",
-					"val": 10,
-					"type": "text",
-					"placeholder": "10",
-					"desc": "请填写播放列表缓存数量，数字"
-				},
-				{
 					"id": "@DualSubs.Disney_Plus.Settings.Type",
 					"name": "字幕类型",
 					"val": "Official",
@@ -60,7 +52,7 @@
 				},
 				{
 					"id": "@DualSubs.Disney_Plus.Settings.Language[0]",
-					"name": "首选字幕语言：",
+					"name": "首选语言：",
 					"val": "ZH-HANT",
 					"type": "selects",
 					"items": [
@@ -101,11 +93,11 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
+					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
 					"id": "@DualSubs.Disney_Plus.Settings.Language[1]",
-					"name": "次要字幕语言：",
+					"name": "次选语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -146,7 +138,7 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
 					"id": "@DualSubs.Disney_Plus.Settings.Position",
@@ -163,7 +155,39 @@
 							"label": "第一行"
 						}
 					],
-					"desc": ""
+					"desc": "次要字幕的位置"
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 10,
+					"type": "number",
+					"placeholder": "10",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.Offset",
+					"name": "时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				},
+				{
+					"id": "@DualSubs.Disney_Plus.Settings.GoogleCloud",
+					"name": "Google Cloud Translation API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
 					"id": "@DualSubs.Disney_Plus.Settings.DeepLKey",
@@ -171,7 +195,7 @@
 					"val": "",
 					"type": "text",
 					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
+					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -201,14 +225,6 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.PlaylistNumber",
-					"name": "播放列表缓存数量",
-					"val": "5",
-					"type": "text",
-					"placeholder": "5",
-					"desc": "请填写播放列表缓存数量，数字"
-				},
-				{
 					"id": "@DualSubs.Prime_Video.Settings.Type",
 					"name": "字幕类型",
 					"val": "Official",
@@ -235,7 +251,7 @@
 				},
 				{
 					"id": "@DualSubs.Prime_Video.Settings.Language[0]",
-					"name": "首选字幕语言：",
+					"name": "首选语言：",
 					"val": "ZH-HANS",
 					"type": "selects",
 					"items": [
@@ -276,11 +292,11 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
+					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
 					"id": "@DualSubs.Prime_Video.Settings.Language[1]",
-					"name": "次要字幕语言：",
+					"name": "次选语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -321,7 +337,7 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
 					"id": "@DualSubs.Prime_Video.Settings.Position",
@@ -341,12 +357,44 @@
 					"desc": ""
 				},
 				{
+					"id": "@DualSubs.Prime_Video.Settings.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 3,
+					"type": "number",
+					"placeholder": "3",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Prime_Video.Settings.Offset",
+					"name": "时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
+				},
+				{
+					"id": "@DualSubs.Prime_Video.Settings.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				},
+				{
+					"id": "@DualSubs.Prime_Video.Settings.GoogleCloud",
+					"name": "Google Cloud Translation API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
 					"id": "@DualSubs.Prime_Video.Settings.DeepLKey",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
 					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
+					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -376,14 +424,6 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.PlaylistNumber",
-					"name": "播放列表缓存数量",
-					"val": "5",
-					"type": "text",
-					"placeholder": "5",
-					"desc": "请填写播放列表缓存数量，数字"
-				},
-				{
 					"id": "@DualSubs.HBO_Max.Settings.Type",
 					"name": "字幕类型",
 					"val": "Official,Google,DeepL,External",
@@ -410,7 +450,7 @@
 				},
 				{
 					"id": "@DualSubs.HBO_Max.Settings.Language[0]",
-					"name": "首选字幕语言：",
+					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
 					"items": [
@@ -451,11 +491,11 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
+					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
 					"id": "@DualSubs.HBO_Max.Settings.Language[1]",
-					"name": "次要字幕语言：",
+					"name": "次选语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -496,7 +536,7 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
 					"id": "@DualSubs.HBO_Max.Settings.Position",
@@ -516,12 +556,44 @@
 					"desc": ""
 				},
 				{
+					"id": "@DualSubs.HBO_Max.Settings.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 3,
+					"type": "number",
+					"placeholder": "3",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.Offset",
+					"name": "时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.GoogleCloud",
+					"name": "Google Cloud Translation API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
 					"id": "@DualSubs.HBO_Max.Settings.DeepLKey",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
 					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
+					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -551,14 +623,6 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.PlaylistNumber",
-					"name": "播放列表缓存数量",
-					"val": "5",
-					"type": "text",
-					"placeholder": "5",
-					"desc": "请填写播放列表缓存数量，数字"
-				},
-				{
 					"id": "@DualSubs.Hulu.Settings.Type",
 					"name": "字幕类型",
 					"val": "Official,Google,DeepL,External",
@@ -585,7 +649,7 @@
 				},
 				{
 					"id": "@DualSubs.Hulu.Settings.Language[0]",
-					"name": "首选字幕语言：",
+					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
 					"items": [
@@ -626,11 +690,11 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
+					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
 					"id": "@DualSubs.Hulu.Settings.Language[1]",
-					"name": "次要字幕语言：",
+					"name": "次选语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -671,7 +735,7 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
 					"id": "@DualSubs.Hulu.Settings.Position",
@@ -691,12 +755,44 @@
 					"desc": ""
 				},
 				{
+					"id": "@DualSubs.Hulu.Settings.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 3,
+					"type": "number",
+					"placeholder": "3",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Hulu.Settings.Offset",
+					"name": "时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
+				},
+				{
+					"id": "@DualSubs.Hulu.Settings.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				},
+				{
+					"id": "@DualSubs.Hulu.Settings.GoogleCloud",
+					"name": "Google Cloud Translation API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
 					"id": "@DualSubs.Hulu.Settings.DeepLKey",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
 					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
+					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -726,14 +822,6 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Paramount_Plus.Settings.PlaylistNumber",
-					"name": "播放列表缓存数量",
-					"val": "5",
-					"type": "text",
-					"placeholder": "5",
-					"desc": "请填写播放列表缓存数量，数字"
-				},
-				{
 					"id": "@DualSubs.Paramount_Plus.Settings.Type",
 					"name": "字幕类型",
 					"val": "Official,Google,DeepL,External",
@@ -760,7 +848,7 @@
 				},
 				{
 					"id": "@DualSubs.Paramount_Plus.Settings.Language[0]",
-					"name": "首选字幕语言：",
+					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
 					"items": [
@@ -801,11 +889,11 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
+					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
 					"id": "@DualSubs.Paramount_Plus.Settings.Language[1]",
-					"name": "次要字幕语言：",
+					"name": "次选语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -846,7 +934,7 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
 					"id": "@DualSubs.Paramount_Plus.Settings.Position",
@@ -866,12 +954,44 @@
 					"desc": ""
 				},
 				{
+					"id": "@DualSubs.Paramount_Plus.Settings.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 3,
+					"type": "number",
+					"placeholder": "3",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.Offset",
+					"name": "时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				},
+				{
+					"id": "@DualSubs.Paramount_Plus.Settings.GoogleCloud",
+					"name": "Google Cloud Translation API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
 					"id": "@DualSubs.Paramount_Plus.Settings.DeepLKey",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
 					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
+					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -901,14 +1021,6 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.PlaylistNumber",
-					"name": "播放列表缓存数量",
-					"val": "10",
-					"type": "text",
-					"placeholder": "10",
-					"desc": "请填写播放列表缓存数量，数字"
-				},
-				{
 					"id": "@DualSubs.Netflix.Settings.Type",
 					"name": "字幕类型",
 					"val": "Official,Google,DeepL,External",
@@ -935,7 +1047,7 @@
 				},
 				{
 					"id": "@DualSubs.Netflix.Settings.Language[0]",
-					"name": "首选字幕语言：",
+					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
 					"items": [
@@ -976,11 +1088,11 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择首选字幕语言，选择后，将为此语言添加额外字幕选项"
+					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
 					"id": "@DualSubs.Netflix.Settings.Language[1]",
-					"name": "次要字幕语言：",
+					"name": "次选语言：",
 					"val": "EN-US",
 					"type": "selects",
 					"items": [
@@ -1021,7 +1133,7 @@
 							"label": "韩文"
 						}
 					],
-					"desc": "请选择次要字幕语言, 选择后，会将此语言添加为额外的字幕语言"
+					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
 					"id": "@DualSubs.Netflix.Settings.Position",
@@ -1041,12 +1153,44 @@
 					"desc": ""
 				},
 				{
+					"id": "@DualSubs.Netflix.Settings.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 3,
+					"type": "number",
+					"placeholder": "3",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.Offset",
+					"name": "时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.GoogleCloud",
+					"name": "Google Cloud Translation API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
 					"id": "@DualSubs.Netflix.Settings.DeepLKey",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
 					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "DeepL API 认证密钥，留空时不会启用DeepL类型字幕"
+					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -1069,28 +1213,47 @@
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.YouTube.Settings.Type",
-					"name": "字幕类型：",
-					"val": "Enable",
-					"type": "radios",
-					"items": [
-						{
-							"key": "Enable",
-							"label": "启用"
-						},
-						{
-							"key": "Disable",
-							"label": "禁用"
-						}
-					],
-					"desc": "请选择字幕类型"
+					"id": "@DualSubs.YouTube.Settings.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.YouTube.Settings.language",
-					"name": "字幕语言：",
-					"val": "EN-US",
+					"id": "@DualSubs.YouTube.Settings.Type",
+					"name": "字幕类型",
+					"val": "Official",
+					"type": "checkboxes",
+					"desc": "请选择要启用的字幕源",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL"
+						},
+						{
+							"key": "External",
+							"label": "外部链接"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.Language[0]",
+					"name": "首选语言：",
+					"val": "ZH-HANS",
 					"type": "selects",
 					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
 						{
 							"key": "ZH-HANS",
 							"label": "中文（简体）"
@@ -1112,12 +1275,78 @@
 							"label": "英语（美国）[CC]"
 						},
 						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
 							"key": "JA",
 							"label": "日文"
 						},
 						{
 							"key": "KO",
 							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.Language[1]",
+					"name": "次选语言：",
+					"val": "EN-US",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
 						}
 					],
 					"desc": ""

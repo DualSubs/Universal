@@ -34,19 +34,7 @@ let body = $response.body
 		}
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 
-		// 有缓存
-		if (Index != -1) {
-			// 合并缓存
-			Object.assign($.Cache[Index], Cache)
-			// 置顶
-			if (Index != 0) $.Cache.unshift($.Cache.splice(Index, 1)[0])
-		} else {
-			$.log(`🚧 ${$.name}`, "无匹配结果", "");
-			// 设置缓存数量
-			$.Cache = $.Cache.filter(Boolean).slice(0, parseInt($.Settings.PlaylistNumber))
-			// 头部插入缓存
-			$.Cache.unshift(Cache)
-		}
+		$.Cache = await setCache(Index, $.Cache, Cache, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 		
 		// 语言回退机制
@@ -143,6 +131,27 @@ async function getCache(cache = {}) {
 };
 
 // Function 4
+// Set Cache
+async function setCache(index = -1, target = {}, sources = {}, num = 1) {
+	$.log(`⚠ ${$.name}, Set Cache`, "");
+	// 刷新播放记录，所以始终置顶
+	if (index !== -1) { // 有缓存
+		// 合并缓存
+		Object.assign(target[index], sources)
+		// 置顶
+		if (index !== 0) target.unshift(target.splice(index, 1)[0])
+	} else { // 无缓存
+		$.log(`🚧 ${$.name}`, "无匹配结果", "");
+		// 设置缓存数量
+		target = target.filter(Boolean).slice(0, num) //去空, 留$.Settings.PlaylistNumber
+		// 头部插入缓存
+		target.unshift(sources)
+	}
+	$.log(`🎉 ${$.name},  Set Cache`, `target: ${JSON.stringify(target)}`, "");
+	return target
+};
+
+// Function 5
 // Get EXT-X-MEDIA Data
 async function getMEDIA(json = {}, type = "", langCode = "") {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
@@ -168,7 +177,7 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 	return data
 };
 
-// Function 5
+// Function 6
 // Set DualSubs Subtitle Array
 async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = []) {
 	let newSubs = type.map((item, i) => {
@@ -198,26 +207,6 @@ async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = []) {
 	$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSubs: ${JSON.stringify(newSubs)}`, "");
 	return newSubs
 };
-
-
-// Function 6
-// Set Cache
-async function setCache(cache = {}, playlist = {}, num = new Number) {
-	$.log(`⚠ ${$.name}, Set Cache`, "");
-	// 刷新播放记录，所以始终置顶
-	let index = cache.findIndex(item => {
-		if (item?.[$.Settings.Language[0]]?.URI == playlist?.[$.Settings.Language[0]]?.URI || item?.[$.Settings.Language[1]]?.URI == playlist?.[$.Settings.Language[1]]?.URI) return true
-	})
-	if (index !== -1) delete cache[index]
-	cache.unshift(playlist)
-	//cache = cache.filter(Boolean).slice(0, 10) //去空, 留10
-	//let num = parseInt(number)
-	//$.log(`🚧 ${$.name}`, `PlaylistNumber类型: ${typeof num}`, `cache内容: ${num}`, "");
-	cache = cache.filter(Boolean).slice(0, num) //去空, 留$.Settings.PlaylistNumber
-	//$.log(`🚧 ${$.name}`, `cache内容: ${JSON.stringify(cache)}`, "");
-	$.log(`🎉 ${$.name},  Set Cache`, `cache: ${JSON.stringify(cache)}`, "");
-	return cache
-}
 
 /***************** Env *****************/
 // prettier-ignore

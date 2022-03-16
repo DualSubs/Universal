@@ -30,18 +30,11 @@ let headers = $request.headers
 		}
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 
-		// 有缓存
-		if (Index != -1) {
-			// 合并缓存
-			Object.assign($.Cache[Index], Cache)
-			// 置顶
-			if (Index != 0) $.Cache.unshift($.Cache.splice(Index, 1)[0])
-		} else {
-			$.log(`🚧 ${$.name}`, "无匹配结果", "");
-			// 设置缓存数量
-			$.Cache = $.Cache.filter(Boolean).slice(0, parseInt($.Settings.PlaylistNumber))
-		}
+		$.Cache = await setCache(Index, $.Cache, Cache, parseInt($.Settings.PlaylistNumber))
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+
+		let response = await getWebVTTm3u8(url.replace(/%[^%]+%$/, ""), $.Cache[Index].Type)
+		$.done({ response })
 	}
 })()
 	.catch((e) => $.logErr(e))
@@ -114,6 +107,27 @@ async function getCache(cache = {}) {
 };
 
 // Function 4
+// Set Cache
+async function setCache(index = -1, target = {}, sources = {}, num = 1) {
+	$.log(`⚠ ${$.name}, Set Cache`, "");
+	// 刷新播放记录，所以始终置顶
+	if (index !== -1) { // 有缓存
+		// 合并缓存
+		Object.assign(target[index], sources)
+		// 置顶
+		if (index !== 0) target.unshift(target.splice(index, 1)[0])
+	} else { // 无缓存
+		$.log(`🚧 ${$.name}`, "无匹配结果", "");
+		// 设置缓存数量
+		target = target.filter(Boolean).slice(0, num) //去空, 留$.Settings.PlaylistNumber
+		// 头部插入缓存
+		target.unshift(sources)
+	}
+	$.log(`🎉 ${$.name},  Set Cache`, `target: ${JSON.stringify(target)}`, "");
+	return target
+};
+
+// Function 4
 // Get Subtitle *.vtt URLs
 async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
@@ -141,6 +155,21 @@ async function getVTTs(platform, url) {
 	})
 };
 
+// Function 4
+// Get Subtitle WebVTT *.m3u8
+async function getWebVTTm3u8(url = "", type = "") {
+	$.log(`⚠ ${$.name}, Get Subtitle WebVTT *.m3u8`, "");
+	delete headers["Host"]
+	delete headers["Connection"]
+	return await $.http.get({ url: url, headers: headers }).then((response) => {
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body: ${response.body}`, "");
+		response.body = response.body.replace(/^.+\.vtt$/gim, `$&%${type}%`);
+		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body.replace: ${response.body}`, "");
+
+		$.log(`🎉 ${$.name}, Get Subtitle WebVTT *.m3u8`, `response: ${response}`, "");
+		return response
+	})
+};
 
 /***************** Env *****************/
 // prettier-ignore

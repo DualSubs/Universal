@@ -19,7 +19,7 @@ let body = $response.body
 
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body)
-		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
+		$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 
 		// 创建缓存
 		let Cache = {
@@ -45,7 +45,7 @@ let body = $response.body
 		*/
 		
 		// 创建字幕选项
-		let DualSubs_Array = await setDualSubs_Array(Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
+		let DualSubs_Array = await setDualSubs_Array(Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type, Platform);
 		// 插入字幕选项
 		PlayList.body.splice(Cache[$.Settings.Language[0]].Index + 1, 0, ...DualSubs_Array)
 		
@@ -183,7 +183,7 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 
 // Function 6
 // Set DualSubs Subtitle Array
-async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = []) {
+async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = [], platform = "") {
 	let newSubs = type.map((item, i) => {
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `item: ${JSON.stringify(item)}`, "");
 
@@ -192,12 +192,15 @@ async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = []) {
 		
 		//newSub.OPTION.NAME = newSub.OPTION.NAME.replace(/^\"([^\/]+)(.*)\"$/, `\"$1/${lang2ndName}(${item})\"`) // 修改名称
 		//newSub.OPTION.NAME = `\"${obj1.OPTION.NAME.replace(/\"/g, "")}/${obj2.OPTION.NAME.replace(/\"/g, "")}(${item})\"` // 修改名称
-		newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}(${item})\"` // 修改名称
+		newSub.OPTION.NAME = (platform == "HBO_Max") ? `\"${obj1.Name}\"`
+			: `\"${obj1.Name}/${obj2.Name} (${item})\"` // 修改名称
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
 
 		//newSub.OPTION.LANGUAGE = newSub.OPTION.LANGUAGE.replace(/^\"([^\/]+)(.*)\"$/, `\"$1/${lang2ndName}\"`) // 修改语言代码
 		//newSub.OPTION.LANGUAGE = `\"${obj1.OPTION.LANGUAGE.replace(/\"/g, "")}/${obj2.OPTION.LANGUAGE.replace(/\"/g, "")}\"` // 修改语言代码
-		newSub.OPTION.LANGUAGE = `\"${obj1.Language}/${obj2.Language}--${item}--\"` // 修改语言代码
+		newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${item}--\"`
+			: (platform == "HBO_Max") ? `\"${obj1.Language}\"`
+				: `\"${obj1.Language}/${obj2.Language}--${item}--\"` // 修改语言代码
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
 
 		//newSub.OPTION.URI = newSub.OPTION.URI.replace(/^\"([^%%]+)(.*)\"$/, `\"$1%%${item}%%\"`) // 修改链接

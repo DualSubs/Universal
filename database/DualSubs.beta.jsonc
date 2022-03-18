@@ -6,8 +6,8 @@
 				"Official" // Official, Google, DeepL, External
 			],
 			"Language": [
-				"ZH-HANT",
-				"EN-US"
+				"ZH",
+				"EN"
 			],
 			"Position": "Forward", // Forward, Reverse
 			"CacheSize": 10,
@@ -26,7 +26,6 @@
 			"EN-GB": "en", // 英语（英国）
 			"EN-US": "en", // 英语（美国）
 			"EN-US SDH": "en", // 英语（美国）CC
-			"ES": "es-ES", // 西班牙语
 			"ES-419": "es-419", // 西班牙语（拉丁美洲）
 			"ES-ES": "es-ES", // 西班牙语
 			//"ET": "et", // 爱沙尼亚语
@@ -61,8 +60,8 @@
 				"Official" // Official, Google, DeepL, External
 			],
 			"Language": [
-				"ZH-HANS",
-				"EN-US"
+				"ZH",
+				"EN"
 			],
 			"Position": "Forward", // Forward, Reverse
 			"CacheSize": 10,
@@ -81,7 +80,6 @@
 			"EN-GB": "en-gb", // 英语（英国）
 			"EN-US": "en-us", // 英语（美国）
 			"EN-US SDH": "en-us", // 英语（美国）CC
-			"ES": "es-es", // 西班牙语
 			"ES-419": "es-419", // 西班牙语（拉丁美洲）
 			"ES-ES": "es-es", // 西班牙语
 			//"ET": "et-ee", // 爱沙尼亚语
@@ -120,8 +118,8 @@
 				"External"
 			],
 			"Language": [
-				"EN-US SDH",
-				"ES-419 SDH"
+				"EN",
+				"ES"
 			],
 			"Position": "Forward", // Forward, Reverse
 			"CacheSize": 3,
@@ -179,7 +177,7 @@
 			],
 			"Language": [
 				"ZH",
-				"EN-US"
+				"EN"
 			],
 			"Position": "Forward", // Forward, Reverse
 			"CacheSize": 10,
@@ -198,7 +196,6 @@
 			"EN-GB": "eng", // 英语（英国）
 			"EN-US": "eng", // 英语（美国）
 			"EN-US SDH": "eng", // 英语（美国）CC
-			"ES": "spa", // 西班牙语
 			"ES-419": "spa", // 西班牙语（拉丁美洲）
 			"ES-ES": "spa", // 西班牙语
 			"ET": "est", // 爱沙尼亚语
@@ -237,7 +234,7 @@
 			],
 			"Language": [
 				"ZH",
-				"EN-US"
+				"EN"
 			],
 			"Position": "Forward", // Forward, Reverse
 			"CacheSize": 10,
@@ -256,7 +253,6 @@
 			"EN-GB": "en", // 英语（英国）
 			"EN-US": "en", // 英语（美国）
 			"EN-US SDH": "en", // 英语（美国）CC
-			"ES": "es-ES", // 西班牙语
 			"ES-419": "es-419", // 西班牙语（拉丁美洲）
 			"ES-ES": "es-ES", // 西班牙语
 			//"ET": "et", // 爱沙尼亚语
@@ -295,7 +291,7 @@
 			],
 			"Language": [
 				"ZH",
-				"EN-US"
+				"EN"
 			],
 			"Position": "Forward", // Forward, Reverse
 			"CacheSize": 10,
@@ -313,7 +309,6 @@
 			"EN-GB": "en", // 英语（英国）
 			"EN-US": "en-US", // 英语（美国）
 			"EN-US SDH": "en-US SDH", // 英语（美国）CC
-			"ES": "es-419", // 西班牙语
 			"ES-419": "es-419", // 西班牙语（拉丁美洲）
 			"ES-ES": "es-ES", // 西班牙语
 			"ET": "et-EE", // 爱沙尼亚语
@@ -350,7 +345,7 @@
 			],
 			"Language": [
 				"ZH",
-				"EN-US"
+				"EN"
 			],
 			"Position": "Forward", // Forward, Reverse
 			"CacheSize": 10,
@@ -368,7 +363,7 @@
 			],
 			"Language": [
 				"ZH",
-				"EN-US"
+				"EN"
 			]
 		},
 		"Languages": {
@@ -380,7 +375,6 @@
 			"EN-GB": "en", // 英语（英国）
 			"EN-US": "en-US", // 英语（美国）
 			"EN-US SDH": "en-US SDH", // 英语（美国）CC
-			"ES": "es-419", // 西班牙语
 			"ES-419": "es-419", // 西班牙语（拉丁美洲）
 			"ES-ES": "es-ES", // 西班牙语
 			"ET": "et-EE", // 爱沙尼亚语
@@ -420,7 +414,6 @@
 			"EN-GB": "en", // 英语（英国）
 			"EN-US": "en", // 英语（美国）
 			"EN-US SDH": "en", // 英语（美国）CC
-			"ES": "es", // 西班牙文
 			"ES-419": "es", // 西班牙语（拉丁美洲）
 			"ES-ES": "es", // 西班牙文
 			"ET": "et", // 爱沙尼亚语
@@ -456,11 +449,9 @@
 			"DA": "DA", // 丹麦语
 			"DE": "de", // 德文
 			"EL": "el", // 希腊语
-			"EN": "EN", // 英语（英国）
 			"EN-GB": "EN-GB", // 英语（英国）
 			"EN-US": "EN-US", // 英语（美国）
 			"EN-US SDH": "EN-US", // 英语（美国）CC
-			"ES": "ES", // 西班牙文
 			"ES-419": "ES", // 西班牙语（拉丁美洲）
 			"ES-ES": "ES", // 西班牙文
 			"ET": "ET", // 爱沙尼亚语

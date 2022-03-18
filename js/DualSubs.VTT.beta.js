@@ -31,31 +31,53 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 
 		// 序列化VTT
 		let OriginVTT = VTT.parse(response.body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
+		//$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
+		//$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
+		//$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
+		//$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
 		//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(OriginVTT), "");
-
+		
+		// 创建请求
+		let request = {
+			"url": "",
+			"headers": "",
+			"body": ""
+		}
 		// 获取类型
 		if (type == "") $.done();
 		else if (type == "Official") {
 			$.log(`🚧 ${$.name}`, "官方字幕模式", "");
 			let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
+			if (VTTs) {
+				request.url = await getOfficialSubURL(Platform, VTTs)
+				request.headers = headers;
+			} else $.done();
+			/*
+			let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
 			if (VTTs) $.result = await getOfficialSubtitles(Platform, VTTs)
 			else $.done();
-		} else if (type == "Translate") {
-			$.result = await getTranslateSubtitles(response.body);
+			*/
+		} else if (type == "Google") {
+			request.url = await getGoogleURL(OriginVTT);
+			request.headers = headers;
+		} else if (type == "GoogleCloud") {
+			request.url = await getGoogleCloudURL(OriginVTT);
+			request.headers = headers;
+		} else if (type == "DeepL") {
+			request.url = await getDeepLURL(OriginVTT);
+			request.headers = headers;
 		} else if (type == "External") {
-			$.result = await getExternalSubtitles(url);
+			request.url = $.Settings.ExternalURL
 		} else $.done();
-		/***************** merge Dual Subtitles *****************/
-		//let OriginVTT = VTT.parse(body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
-		//$.log("FirstSub.headers", JSON.stringify(FirstSub.headers))
-		//$.log("FirstSub.CSS", JSON.stringify(FirstSub.CSS))
-		//$.log("FirstSub.body[0]", JSON.stringify(FirstSub.body[0]))
-		//$.log("FirstSub.body[10]", JSON.stringify(FirstSub.body[10]))
-		let SecondVTT = VTT.parse($.result, ["timeStamp", "ms", "singleLine"]) // "multiLine"
+		let SecondVTT = await $.http.get(request).then((response) => {
+			$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`)
+			return VTT.parse(response.body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
+		})
 		//$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
 		//$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
 		//$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
 		//$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
+		/***************** merge Dual Subtitles *****************/
 		let DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
 		//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "await CombineDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
 		//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
@@ -169,12 +191,47 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	return target
 };
 
+// Function 5
+// Get Official Subtitles URL
+async function getOfficialSubURL(platform, VTTs = []) {
+	$.log(`⚠ ${$.name}, Get Official Subtitles URL`, "");
+	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1]
+		: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
+			: null;
+	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
+	let VTT = VTTs.find(item => item.includes(fileName)) || VTTs[0];
+	$.log(`🎉 ${$.name}, Get Official Subtitles URL`, `VTT: ${VTT}`, "")
+	return VTT
+	// 旧方法
+	/***************** Slice subtitles URLs Array *****************/
+	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
+	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
+	//VTTs = VTTs.slice(start, SubtitlesIndex + 4)
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `VTTs: ${VTTs}`, "");
+	/***************** Get subtitles URL *****************/
+	/*
+	let VTT = VTTs
+	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
+		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
+		VTT = VTTs.find(item => item.includes(SubtitleName))
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
+	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
+			let SubtitleName = url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
+			VTT = VTTs.find(item => item.includes(SubtitleName))
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
+	} else { // Amazon Prime Video HBO_Max不拆分字幕片段
+		VTT = VTTs[0]
+	}
+	*/
+};
+
 // Function 4
 // Get Subtitle WebVTT *.vtt
 async function getWebVTTvtt(url = "") {
 	$.log(`⚠ ${$.name}, Get Subtitle WebVTT *.vtt`, "");
-	delete headers["Host"]
-	delete headers["Connection"]
 	return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body: ${response.body}`, "");
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body.replace: ${response.body}`, "");
@@ -188,14 +245,6 @@ async function getWebVTTvtt(url = "") {
 async function getOfficialSubtitles(platform, VTTs = []) {
 	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `VTTs: ${VTTs}`, "");
 
-	/***************** Slice subtitles URLs Array *****************/
-	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
-	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
-	//VTTs = VTTs.slice(start, SubtitlesIndex + 4)
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `VTTs: ${VTTs}`, "");
-
-	/***************** Get subtitles URL *****************/
 	let VTT = VTTs
 	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
 		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]

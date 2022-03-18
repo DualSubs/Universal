@@ -203,7 +203,7 @@ async function getOfficialSubtitles(platform, VTTs = []) {
 		VTT = VTTs.find(item => item.includes(SubtitleName))
 		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
 	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
-			let SubtitleName = url.match(/(.+_SEGMENT\d+_.+\.vtt$)/)[1]
+			let SubtitleName = url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
 			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
 			VTT = VTTs.find(item => item.includes(SubtitleName))
 			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")

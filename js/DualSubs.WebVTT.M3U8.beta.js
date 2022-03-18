@@ -72,7 +72,7 @@ async function setENV(platform, database) {
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
 	let Settings = BoxJs[platform]?.Settings || database[platform].Settings;
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
-	Settings.Type = Settings.Type.split(",") // BoxJs字符串转数组
+	if (typeof Settings.Type == "string") Settings.Type = Settings.Type.split(",") // BoxJs字符串转数组
 	Settings.CacheSize = parseInt(Settings.CacheSize,10) // BoxJs字符串转数字
 	Settings.Offset = parseInt(Settings.Offset,10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance,10) // BoxJs字符串转数字

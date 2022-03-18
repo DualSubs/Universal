@@ -33,6 +33,8 @@ let body = $response.body
 
 		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+
+
 		
 		// 语言回退机制
 		/*
@@ -93,9 +95,18 @@ async function setENV(platform, database) {
 	Settings.Offset = parseInt(Settings.Offset,10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance,10) // BoxJs字符串转数字
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
-	let Languages = database[platform].Languages;
+	//let Languages = database[platform].Languages;	
+	let Languages = database[platform].Languages.forEach(element => {
+		if (element.includes(",")) return element.split(",")
+	});
+	/*
+	let Languages = (database[platform].Languages == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
+		: (database[platform].Languages == "EN") ? ["EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
+			: (database[platform].Languages == "ES") ? ["ES-419 SDH", "ES-419", "ES-ES"] // 西班牙语（自动）
+				: database[platform].Languages
+	*/
 	//Settings.language = database[Settings.type]?.Languages?.[Settings.language] ?? database[platform]?.Languages?.[Settings.language] ?? Settings.language;
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
+	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
 	/***************** Cache *****************/
 	let Cache = BoxJs[platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
@@ -164,7 +175,13 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 async function getMEDIA(json = {}, type = "", langCode = "") {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
 	//查询是否有符合语言的字幕
-	let index = json.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${langCode}\"`) return true });
+	let index = new Number
+	if (Array.isArray(langCode)) {
+		for (var lang of langCode) {
+			index = json.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
+			if (index !== -1) break;
+		}
+	} else index = json.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${langCode}\"`) return true });
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `Index: ${index}`, "");
 	let obj = (index != -1) ? json.body[index] : null;
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");

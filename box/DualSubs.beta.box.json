@@ -57,7 +57,11 @@
 					"type": "selects",
 					"items": [
 						{
-							"key": "ZH",
+							"key": [
+								"ZH-HANS",
+								"ZH-HANT",
+								"ZH-HK"
+							],
 							"label": "中文（自动）"
 						},
 						{

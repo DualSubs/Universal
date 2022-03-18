@@ -11,7 +11,7 @@
 # DualSubs.Disney_Plus.vtt
 ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.vtt(%.*%)$ url script-echo-response https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 # DualSubs.Prime_Video.HLS.m3u8
-^https?:\/\/(.*)\.(hls\.row\.aiv-cdn|akamaihd)\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+^https?:\/\/(.*)\.(hls\.row\.aiv-cdn|akamaihd)\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(\?.*)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
 # DualSubs.Prime_Video.WebVTT.m3u8
 ^https?:\/\/(.*)\.cloudfront\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(%.*%)$ url script-echo-response https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
 # DualSubs.Prime_video.vtt

@@ -32,18 +32,10 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 		// 序列化VTT
 		let OriginVTT = VTT.parse(response.body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
 		//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(OriginVTT), "");
-		$.log("OriginVTT.headers", JSON.stringify(OriginVTT.headers))
-		$.log("OriginVTT.CSS", JSON.stringify(OriginVTT.CSS))
-		$.log("OriginVTT.body[0]", JSON.stringify(OriginVTT.body[0]))
-		$.log("OriginVTT.body[10]", JSON.stringify(OriginVTT.body[10]))
-		
-		// json2txt 测试
-		let json2txt = VTT.json2txt(OriginVTT)
-		$.log(`🚧 ${$.name}`, "VTT.json2txt", json2txt, "");
-
-		// json2txt 测试
-		let txt2json = VTT.txt2json(json2txt)
-		$.log(`🚧 ${$.name}`, "VTT.txt2json", JSON.stringify(txt2json), "");
+		//$.log("OriginVTT.headers", JSON.stringify(OriginVTT.headers))
+		//$.log("OriginVTT.CSS", JSON.stringify(OriginVTT.CSS))
+		//$.log("OriginVTT.body[0]", JSON.stringify(OriginVTT.body[0]))
+		//$.log("OriginVTT.body[10]", JSON.stringify(OriginVTT.body[10]))
 
 		// 创建请求
 		let request = {
@@ -51,6 +43,8 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 			"headers": "",
 			"body": ""
 		}
+		// 创建第二字幕JSON
+		let SecondVTT = {};
 		// 获取类型
 		if (type == "") $.done();
 		else if (type == "Official") {
@@ -65,22 +59,52 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 			if (VTTs) $.result = await getOfficialSubtitles(Platform, VTTs)
 			else $.done();
 			*/
+			SecondVTT = await $.http.get(request).then((response) => {
+				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
+				let vtt = response.body
+				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			});
 		} else if (type == "Google") {
-			request.url = await getGoogleURL(OriginVTT);
+			let txt = VTT.json2txt(OriginVTT)
+			$.log(`🚧 ${$.name}`, "VTT.json2txt", txt, "");
+			request.url = "";
 			request.headers = headers;
+			request.body = txt;
+			SecondVTT = await $.http.post(request).then((response) => {
+				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
+				let vtt = VTT.txt2json(response.body);
+				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			});
 		} else if (type == "GoogleCloud") {
-			request.url = await getGoogleCloudURL(OriginVTT);
+			request.url = ""
 			request.headers = headers;
+			request.body = txt;
+			SecondVTT = await $.http.post(request).then((response) => {
+				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
+				let vtt = VTT.txt2json(response.body);
+				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			});
 		} else if (type == "DeepL") {
-			request.url = await getDeepLURL(OriginVTT);
-			request.headers = headers;
+			request.url = "https://api-free.deepl.com/v2/translate"
+			request.headers = {
+				"Accept": "*/*",
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/x-www-form-urlencoded"
+			};
+			request.body = `auth_key=${$.Settings.dkey}&source_lang=${DataBase.DeepL.Languages[$.Settings.Language[1]]}&target_lang=${DataBase.DeepL.Languages[$.Settings.Language[0]]}&text=${txt}`;
+			SecondVTT = await $.http.post(request).then((response) => {
+				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
+				let vtt = VTT.txt2json(response.body);
+				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			});
 		} else if (type == "External") {
 			request.url = $.Settings.ExternalURL
+			SecondVTT = await $.http.get(request).then((response) => {
+				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
+				let vtt = response.body
+				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			});
 		} else $.done();
-		let SecondVTT = await $.http.get(request).then((response) => {
-			$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`)
-			return VTT.parse(response.body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
-		})
 		//$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
 		//$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
 		//$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))

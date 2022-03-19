@@ -236,51 +236,6 @@ async function getOfficialSubURL(platform, VTTs = []) {
 	*/
 };
 
-// Function 4
-// Get Subtitle WebVTT *.vtt
-async function getWebVTTvtt(url = "") {
-	$.log(`⚠ ${$.name}, Get Subtitle WebVTT *.vtt`, "");
-	return await $.http.get({ url: url, headers: headers }).then((response) => {
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body: ${response.body}`, "");
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body.replace: ${response.body}`, "");
-		//$.log(`🎉 ${$.name}, Get Subtitle WebVTT *.m3u8`, `response: ${response}`, "");
-		return response
-	})
-};
-
-// Function 5
-// Get Official Subtitles
-async function getOfficialSubtitles(platform, VTTs = []) {
-	$.log(`🚧 ${$.name}, Get Official Subtitles`, "getOfficialSubtitles", `VTTs: ${VTTs}`, "");
-
-	let VTT = VTTs
-	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
-		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-		VTT = VTTs.find(item => item.includes(SubtitleName))
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
-	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
-			let SubtitleName = url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
-			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-			VTT = VTTs.find(item => item.includes(SubtitleName))
-			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
-	} else { // Amazon Prime Video HBO_Max不拆分字幕片段
-		VTT = VTTs[0]
-	}
-	/***************** Get subtitles *****************/
-	//let result = {}
-	// 获取webVTT
-	//for (var k in VTTs) { await $.http.get({ url: VTTs[k], headers: headers }).then((response) => { result.push(response.body) }) }
-	return await $.http.get({ url: VTT, headers: headers }).then((response) => { return response.body })
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles", `result内容: ${result}`, "");
-};
-
-// Function 5
-// Get Translate Subtitles
-async function getTranslateSubtitles(body) {
-	$.log(`🚧 ${$.name},  Get Translate Subtitles`, "getTranslateSubtitles", "");
-};
-
 // Function 6
 // Combine Dual Subtitles
 async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]

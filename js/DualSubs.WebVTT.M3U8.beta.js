@@ -22,17 +22,18 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 	if ($.Settings.Switch) {
 		// 找缓存
 		let Index = await getCacheIndex($.Cache)
+		if (Index !== -1) {
+			// 创建缓存
+			let Cache = {
+				// 获取VTT字幕地址数组
+				[$.Settings.Language[0]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[0]].URI) },
+				[$.Settings.Language[1]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI) },
+			}
+			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 
-		// 创建缓存
-		let Cache = {
-			// 获取VTT字幕地址数组
-			[$.Settings.Language[0]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[0]].URI) },
-			[$.Settings.Language[1]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI) },
-		}
-		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-
-		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
-		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+			$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
+			$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+		};
 		
 		let response = await getWebVTTm3u8(url, type)
 		$.log(`🚧 ${$.name}`, "response.stringify", JSON.stringify(response), "");

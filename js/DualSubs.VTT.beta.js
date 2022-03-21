@@ -3,7 +3,7 @@ README:https://github.com/DualSubs/DualSubs/
 */
 
 const $ = new Env("DualSubs v0.4.1");
-const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]);
+const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 // https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.beta.min.json
 const DataBase = {"Disney_Plus":{"Settings":{"Switch":true,"Type":["Official"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":10,"Offset":0,"Tolerance":1000,"Key":{"GoogleCloud":null,"DeepL":null}},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"}},"Prime_Video":{"Settings":{"Switch":true,"Type":["Official"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":10,"Offset":0,"Tolerance":1000,"Key":{"GoogleCloud":null,"DeepL":null}},"Languages":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-HANS":"zh-hans","ZH-HK":"zh-HK","ZH-HANT":"zh-hant"}},"HBO_Max":{"Settings":{"Switch":true,"Type":["Official","Google","DeepL","External"],"Language":["EN","ES"],"Position":"Forward","CacheSize":3,"Offset":0,"Tolerance":1000,"Key":{"GoogleCloud":null,"DeepL":null}},"Languages":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US","ES-419":"es-419","ES-419 SDH":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"Hulu":{"Settings":{"Switch":true,"Type":["Official","Google","DeepL","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":10,"Offset":0,"Tolerance":1000,"Key":{"GoogleCloud":null,"DeepL":null}},"Languages":{"AR":"ara","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-HANS":"zho","ZH-HK":"zho","ZH-HANT":"zho"}},"Paramount_Plus":{"Settings":{"Switch":true,"Type":["Official","Google","DeepL","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":10,"Offset":0,"Tolerance":1000,"Key":{"GoogleCloud":null,"DeepL":null}},"Languages":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"}},"Discovery_Plus":{"Settings":{"Switch":true,"Type":["Official","Google","DeepL","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":10,"Offset":0,"Tolerance":1000,"Key":{"GoogleCloud":null,"DeepL":null}},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"Netflix":{"Settings":{"Switch":true,"Type":["Official","Google","DeepL","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":10,"Offset":0,"Tolerance":1000,"Key":{"GoogleCloud":null,"DeepL":null}}},"YouTube":{"Settings":{"Switch":true,"Type":["Official"],"Language":["ZH","EN"]},"Languages":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US SDH","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-HANT":"zh-Hant"}},"Google":{"Languages":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-CN","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"}},"DeepL":{"Languages":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}}}
 const type = $request.url.match(/%([^%]+)%$/)[1]
@@ -30,90 +30,68 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 		//$.log(`🚧 ${$.name}`, "response.stringify", JSON.stringify(response), "");
 
 		// 序列化VTT
-		let OriginVTT = VTT.parse(response.body, ["timeStamp", "ms", "singleLine"]) // "multiLine"
+		let OriginVTT = VTT.parse(response.body);
 		//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(OriginVTT), "");
-		//$.log("OriginVTT.headers", JSON.stringify(OriginVTT.headers))
-		//$.log("OriginVTT.CSS", JSON.stringify(OriginVTT.CSS))
-		//$.log("OriginVTT.body[0]", JSON.stringify(OriginVTT.body[0]))
-		//$.log("OriginVTT.body[10]", JSON.stringify(OriginVTT.body[10]))
-
-		// 创建请求
-		let request = {
-			"url": "",
-			"headers": "",
-			"body": ""
-		}
-		// 创建第二字幕JSON
-		let SecondVTT = {};
+		// 创建双语字幕JSON
+		let DualSub = {};
 		// 获取类型
 		if (type == "") $.done();
 		else if (type == "Official") {
 			$.log(`🚧 ${$.name}`, "官方字幕模式", "");
 			let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
-			if (VTTs) {
-				request.url = await getOfficialSubURL(Platform, VTTs)
-				request.headers = headers;
-			} else $.done();
+			if (!VTTs) $.done();
+			let request = await getOfficialRequest(Platform, VTTs);
 			/*
+			let request = {
+				"url": await getOfficialSubURL(Platform, VTTs),
+				"headers": headers
+			}
 			let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
 			if (VTTs) $.result = await getOfficialSubtitles(Platform, VTTs)
 			else $.done();
 			*/
-			SecondVTT = await $.http.get(request).then((response) => {
+			let SecondVTT = await $.http.get(request).then((response) => {
 				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = response.body
+				let vtt = response.body;
 				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
 			});
+			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
 		} else if (type == "Google") {
-			let txt = VTT.json2txt(OriginVTT)
-			$.log(`🚧 ${$.name}`, "VTT.json2txt", txt, "");
-			request.url = "";
-			request.headers = headers;
-			request.body = txt;
-			SecondVTT = await $.http.post(request).then((response) => {
-				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = VTT.txt2json(response.body);
-				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
-			});
+			$.log(`🚧 ${$.name}`, "Google翻译模式", "");
+			DualSub = OriginVTT;
+			DualSub.body = await Promise.all(DualSub.body.map(async item => {
+				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
+				let text2 = await $.http.get(request).then((response) => response.body.translations[0].text);
+				item.text = item.text + "/n" + text2;
+				return item
+			}));
 		} else if (type == "GoogleCloud") {
-			request.url = ""
-			request.headers = headers;
-			request.body = txt;
-			SecondVTT = await $.http.post(request).then((response) => {
-				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = VTT.txt2json(response.body);
-				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			$.log(`🚧 ${$.name}`, "Google Cloud翻译模式", "");
+			DualSub = OriginVTT;
+			DualSub.body = DualSub.body.map(async item => {
+				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
+				let text2 = await $.http.post(request).then((response) => response.body.translations[0].text);
+				item.text = item.text + "/n" + text2;
+				return item
 			});
 		} else if (type == "DeepL") {
-			request.url = "https://api-free.deepl.com/v2/translate"
-			request.headers = {
-				"Accept": "*/*",
-				"User-Agent": "DualSubs",
-				"Content-Type": "application/x-www-form-urlencoded"
-			};
-			request.body = `auth_key=${$.Settings.dkey}&source_lang=${DataBase.DeepL.Languages[$.Settings.Language[1]]}&target_lang=${DataBase.DeepL.Languages[$.Settings.Language[0]]}&text=${txt}`;
-			// 整体翻译
-			SecondVTT = await $.http.post(request).then((response) => {
-				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = VTT.txt2json(response.body);
-				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			$.log(`🚧 ${$.name}`, "DeepL翻译模式", "");
+			DualSub = OriginVTT;
+			DualSub.body = DualSub.body.map(async item => {
+				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
+				let text2 = await $.http.post(request).then((response) => response.body.data.translations[0].translatedText);
+				item.text = item.text + "/n" + text2;
+				return item
 			});
 		} else if (type == "External") {
 			request.url = $.Settings.ExternalURL
 			SecondVTT = await $.http.get(request).then((response) => {
 				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = response.body
+				let vtt = response.body;
 				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
 			});
+			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
 		} else $.done();
-		//$.log("SecondSub.headers", JSON.stringify(SecondSub.headers))
-		//$.log("SecondSub.CSS", JSON.stringify(SecondSub.CSS))
-		//$.log("SecondSub.body[0]", JSON.stringify(SecondSub.body[0]))
-		//$.log("SecondSub.body[10]", JSON.stringify(SecondSub.body[10]))
-		/***************** merge Dual Subtitles *****************/
-		let DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
-		//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "await CombineDualSubs(FirstSub, SecondSub)", `DualSub内容: ${JSON.stringify(DualSub)}`, "");
-		//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, `DualSub类型: ${typeof DualSub}`, `DualSub内容: ${DualSub}`, "");
 		DualSub = VTT.stringify(DualSub)
 		//$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
 		response.body = DualSub
@@ -261,7 +239,182 @@ async function getOfficialSubURL(platform, VTTs = []) {
 	*/
 };
 
+// Function 5
+// Get Official Request
+async function getOfficialRequest(platform, VTTs = []) {
+	$.log(`⚠ ${$.name}, Get Official Request`, "");
+	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1]
+	: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
+		: null;
+	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
+	let request = {
+		"url": VTTs.find(item => item.includes(fileName)) || VTTs[0],
+		"headers": headers,
+	};
+	$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");
+	return request
+};
+
+// Function 5
+// Get Official Subtitles URL
+async function getOfficialSubURL(platform, VTTs = []) {
+	$.log(`⚠ ${$.name}, Get Official Subtitles URL`, "");
+	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1]
+		: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
+			: null;
+	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
+	let VTT = VTTs.find(item => item.includes(fileName)) || VTTs[0];
+	$.log(`🎉 ${$.name}, Get Official Subtitles URL`, `VTT: ${VTT}`, "")
+	return VTT
+	// 旧方法
+	/***************** Slice subtitles URLs Array *****************/
+	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
+	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
+	//VTTs = VTTs.slice(start, SubtitlesIndex + 4)
+	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `VTTs: ${VTTs}`, "");
+	/***************** Get subtitles URL *****************/
+	/*
+	let VTT = VTTs
+	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
+		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
+		VTT = VTTs.find(item => item.includes(SubtitleName))
+		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
+	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
+			let SubtitleName = url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
+			VTT = VTTs.find(item => item.includes(SubtitleName))
+			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
+	} else { // Amazon Prime Video HBO_Max不拆分字幕片段
+		VTT = VTTs[0]
+	}
+	*/
+};
+
 // Function 6
+// Get Translate Request
+async function GetTranslateRequest(type = "", source = "", target = "", text = "") {
+	$.log(`🚧 ${$.name}, Get Translate Request`, "");
+	let request = {
+		"url": "",
+		"headers": "",
+	};
+	if (type == "Google") {
+		const BaseURL = "http://translate.google.cn/translate_a/single?";
+		const UserAgents = [
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0", // 6.4%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:95.0) Gecko/20100101 Firefox/95.0", // 6.2%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36", // 5.2%
+			"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36" // 4.8%
+		];
+		request.url = BaseURL + `client=at&sl=${DataBase.Google.Languages[source]}&tl=${DataBase.Google.Languages[target]}&dt=t&q=${encodeURIComponent(text)}`
+		// 随机UA索引值
+		let randomIndex = Math.floor(Math.random() * UserAgents.length);
+		request.headers = UserAgents[randomIndex];
+	} else if (type == "GoogleCloud") {
+		request.url = "https://translation.googleapis.com/language/translate/v2"
+		request.headers = {
+			"Accept": "*/*",
+			"User-Agent": "DualSubs",
+			"Content-Type": "application/x-www-form-urlencoded"
+		};
+		request.body = {
+			"q": text,
+			"source": DataBase.Google.Languages[source],
+			"target": DataBase.Google.Languages[target],
+			"format": "text",
+			"key": $.Settings.Key.GoogleCloud
+		};
+	} else if (type == "DeepL") {
+		request.url = "https://api-free.deepl.com/v2/translate"
+		request.headers = {
+			"Accept": "*/*",
+			"User-Agent": "DualSubs",
+			"Content-Type": "application/x-www-form-urlencoded"
+		};
+		const BaseBody = `auth_key=${$.Settings.Key.DeepL}&source_lang=${DataBase.DeepL.Languages[source]}&target_lang=${DataBase.DeepL.Languages[target]}`;
+		request.body = BaseBody + `&text=${encodeURIComponent(text)}`;
+	}
+	$.log(`🚧 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
+	return request
+};
+/*
+// Function 6
+// Get Translate Subtitles
+async function Translate(type, mode, body) {
+	$.log(`🚧 ${$.name}, Translate Subtitles`, "");
+	if (type == "Google") {
+		// 整体翻译
+		if (mode == "All") {
+			let txt = VTT.json2txt(body)
+			$.log(`🚧 ${$.name}`, "VTT.json2txt", txt, "");
+			let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], txt)
+			SecondVTT = await $.http.get(request).then((response) => {
+				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
+				let vtt = VTT.txt2json(response.body.text);
+				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			});
+			DualSub = await CombineDualSubs(body, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
+		} else { // 逐句翻译
+			DualSub = body;
+			DualSub.body = DualSub.body.map(item => {
+				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text)
+				let text2 = await $.http.get(request).then((response) => response.body.translations[0].text)
+				item.text = item.text + "/n" + text2;
+				return item
+			})
+		};
+	} else if (type == "GoogleCloud") {
+		// 整体翻译
+		if (mode == "All") {
+			let txt = VTT.json2txt(body)
+			$.log(`🚧 ${$.name}`, "VTT.json2txt", txt, "");
+			let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], txt)
+			SecondVTT = await $.http.post(request).then((response) => {
+				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
+				let vtt = VTT.txt2json(response.body);
+				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			});
+			DualSub = await CombineDualSubs(body, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
+		} else { // 逐句翻译
+			DualSub = body;
+			DualSub.body = DualSub.body.map(item => {
+				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text)
+				let text2 = await $.http.post(request).then((response) => response.body.translations[0].text)
+				item.text = item.text + "/n" + text2;
+				return item
+			})
+		};
+	} else if (type == "DeepL") {
+		// 整体翻译
+		if (mode == "All") {
+			let txt = VTT.json2txt(OriginVTT)
+			$.log(`🚧 ${$.name}`, "VTT.json2txt", txt, "");
+			let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], txt)
+			SecondVTT = await $.http.post(request).then((response) => {
+				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
+				let vtt = VTT.txt2json(response.body);
+				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+			});
+			DualSub = await CombineDualSubs(body, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
+		} else { // 逐句翻译
+			DualSub = body;
+			DualSub.body = DualSub.body.map(item => {
+				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text)
+				let text2 = await $.http.post(request).then((response) => response.body.data.translations[0].translatedText)
+				item.text = item.text + "/n" + text2;
+				return item
+			});
+		};
+	}
+	//$.log(`🚧 ${$.name}, Translate Subtitles`, `body内容: ${body}`, "");
+	return DualSub;
+};
+*/
+// Function 7
 // Combine Dual Subtitles
 async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
 	$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "");
@@ -309,123 +462,6 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 	return DualSub;
 };
 
-/*
-// Function
-// Machine Subtitles
-async function machine_subtitles(type, body) {
-	$.log(`🚧 ${$.name}, Machine Subtitles`, "machine_subtitles", "");
-
-	body = body.replace(/(\d+:\d\d:\d\d.\d\d\d -->.+line.+\n.+)\n(.+)/g, "$1 $2")
-	body = body.replace(/(\d+:\d\d:\d\d.\d\d\d -->.+line.+\n.+)\n(.+)/g, "$1 $2")
-
-	let dialogue = body.match(/\d+:\d\d:\d\d.\d\d\d -->.+line.+\n.+/g)
-	if (!dialogue) $.done()
-
-	let timeline = body.match(/\d+:\d\d:\d\d.\d\d\d -->.+line.+/g)
-
-	let s_sentences = []
-	for (var i in dialogue) { s_sentences.push(`${type == "Google" ? "~" + i + "~" : "&text="}${dialogue[i].replace(/<\/*(c\.[^>]+|i)>/g, "").replace(/\d+:\d\d:\d\d.\d\d\d -->.+line.+\n/, "")}`) }
-	s_sentences = await groupAgain(s_sentences, type == "Google" ? 80 : 50)
-
-	let t_sentences = []
-	let trans_result = []
-
-	if (type == "Google") {
-		for (var p in s_sentences) {
-			let options = {
-				url: `https://translate.google.com/translate_a/single?client=it&dt=qca&dt=t&dt=rmt&dt=bd&dt=rms&dt=sos&dt=md&dt=gt&dt=ld&dt=ss&dt=ex&otf=2&dj=1&hl=en&ie=UTF-8&oe=UTF-8&sl=${Settings.sl}&tl=${Settings.language}`,
-				headers: {
-					"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
-				},
-				body: `q=${encodeURIComponent(s_sentences[p].join("\n"))}`
-			}
-
-			//let trans = await send_request(options, "post")
-			await $.http.post(options).then((resp) => {
-				//let trans = resp.body
-				if (resp.body.sentences) {
-					let sentences = resp.body.sentences
-					for (var k in sentences) {
-						if (sentences[k].trans) trans_result.push(sentences[k].trans.replace(/\n$/g, "").replace(/\n/g, " ").replace(/〜|～/g, "~"))
-					}
-				}
-			})
-		}
-
-		if (trans_result.length > 0) {
-			t_sentences = trans_result.join(" ").match(/~\d+~[^~]+/g)
-		}
-
-	} else if (type == "DeepL") {
-		for (var l in s_sentences) {
-			let options = {
-				url: "https://api-free.deepl.com/v2/translate",
-				body: `auth_key=${Settings.dkey}${Settings.sl == "AUTO" ? "" : `&source_lang=${Settings.sl}`}&target_lang=${Settings.language}${s_sentences[l].join("")}`
-			}
-
-			//let trans = await send_request(options, "post")
-			await $.http.post(options).then((resp) => {
-				//let trans = resp.body
-				if (resp.body.translations) trans_result.push(resp.body.translations)
-			})
-		}
-
-		if (trans_result.length > 0) {
-			for (var o in trans_result) {
-				for (var u in trans_result[o]) { t_sentences.push(trans_result[o][u].text.replace(/\n/g, " ")) }
-			}
-		}
-	}
-
-	if (t_sentences.length > 0) {
-		let g_t_sentences = t_sentences.join("\n").replace(/\s\n/g, "\n")
-
-		for (var j in dialogue) {
-			let patt = new RegExp(`(${timeline[j]})`)
-			if (Settings.line == "s") patt = new RegExp(`(${dialogue[j].replace(/(\[|\]|\(|\)|\?)/g, "\\$1")})`)
-
-			let patt2 = new RegExp(`~${j}~\\s*(.+)`)
-
-			if (type == "Google" && g_t_sentences.match(patt2)) body = body.replace(patt, `$1\n${g_t_sentences.match(patt2)[1]}`)
-			else if (type == "DeepL") body = body.replace(patt, `$1\n${t_sentences[j]}`)
-
-		}
-
-		if (platform != "Netflix") {
-			//Cache.s_subtitles_url = url
-			//Cache.subtitles = body
-			//Cache.subtitles_type = settings.type
-			//Cache.subtitles_sl = settings.sl
-			//Cache.subtitles_tl = settings.language
-			//Cache.subtitles_line = settings.line
-			//$.setjson(Cache, `@DualSubs.${platform}.Cache`)
-		}
-	}
-	$.log(`🚧 ${$.name}, Machine Subtitles`, "machine_subtitles", `body内容: ${body}`, "");
-	return body
-};
-
-// Function
-// External Subtitles
-async function external_subtitles(external_subtitles, body) {
-	let patt = new RegExp(`(\\d+\\n)*\\d+:\\d\\d:\\d\\d.\\d\\d\\d --> \\d+:\\d\\d:\\d\\d.\\d.+(\\n|.)+`)
-	if (!external_subtitles.match(patt)) $.done()
-	if (!body.match(patt)) $.done()
-	let external = external_subtitles.replace(/(\d+:\d\d:\d\d),(\d\d\d)/g, "$1.$2")
-	body = body.replace(patt, external.match(patt)[0])
-	return body
-};
-
-// Function
-// groupAgain
-async function groupAgain(data, num) {
-	var result = []
-	for (var i = 0; i < data.length; i += num) {
-		result.push(data.slice(i, i + num))
-	}
-	return result
-};
-*/
 /***************** Env *****************/
 // prettier-ignore
 // https://github.com/chavyleung/scripts/blob/master/Env.min.js

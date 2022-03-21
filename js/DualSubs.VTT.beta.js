@@ -56,39 +56,23 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
 			});
 			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
-		} else if (type == "Google") {
-			$.log(`🚧 ${$.name}`, "Google翻译模式", "");
+		} else if (type == "Google" || type == "GoogleCloud" || type == "DeepL") {
+			$.log(`🚧 ${$.name}`, `${type}翻译模式`, "");
 			DualSub = OriginVTT;
 			DualSub.body = await Promise.all(DualSub.body.map(async item => {
-				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
-				let text2 = await $.http.get(request).then((response) => response.body.translations[0].text);
-				item.text = item.text + "/n" + text2;
+				let text2 = await Translate(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
+				item.text = ($.Settings.Position == "Forward") ? text2 + "\n" + item.text
+					: ($.Settings.Position == "Reverse") ? item.text + "\n" + text2
+						: text2 + "\n" + item.text;
 				return item
 			}));
-		} else if (type == "GoogleCloud") {
-			$.log(`🚧 ${$.name}`, "Google Cloud翻译模式", "");
-			DualSub = OriginVTT;
-			DualSub.body = DualSub.body.map(async item => {
-				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
-				let text2 = await $.http.post(request).then((response) => response.body.translations[0].text);
-				item.text = item.text + "/n" + text2;
-				return item
-			});
-		} else if (type == "DeepL") {
-			$.log(`🚧 ${$.name}`, "DeepL翻译模式", "");
-			DualSub = OriginVTT;
-			DualSub.body = DualSub.body.map(async item => {
-				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
-				let text2 = await $.http.post(request).then((response) => response.body.data.translations[0].translatedText);
-				item.text = item.text + "/n" + text2;
-				return item
-			});
 		} else if (type == "External") {
+			$.log(`🚧 ${$.name}`, "外部字幕模式", "");
 			request.url = $.Settings.ExternalURL
 			SecondVTT = await $.http.get(request).then((response) => {
 				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
 				let vtt = response.body;
-				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+				return VTT.parse(vtt); // "multiLine"
 			});
 			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
 		} else $.done();
@@ -243,9 +227,9 @@ async function getOfficialSubURL(platform, VTTs = []) {
 // Get Official Request
 async function getOfficialRequest(platform, VTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, "");
-	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1]
-	: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
-		: null;
+	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1] // Disney+ 片段名称相同
+	: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1] // Hulu 片段分型序号相同
+		: null; // Amazon Prime Video HBO_Max不拆分字幕片段
 	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
 	let request = {
 		"url": VTTs.find(item => item.includes(fileName)) || VTTs[0],
@@ -255,92 +239,158 @@ async function getOfficialRequest(platform, VTTs = []) {
 	return request
 };
 
-// Function 5
-// Get Official Subtitles URL
-async function getOfficialSubURL(platform, VTTs = []) {
-	$.log(`⚠ ${$.name}, Get Official Subtitles URL`, "");
-	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1]
-		: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
-			: null;
-	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
-	let VTT = VTTs.find(item => item.includes(fileName)) || VTTs[0];
-	$.log(`🎉 ${$.name}, Get Official Subtitles URL`, `VTT: ${VTT}`, "")
-	return VTT
-	// 旧方法
-	/***************** Slice subtitles URLs Array *****************/
-	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
-	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
-	//VTTs = VTTs.slice(start, SubtitlesIndex + 4)
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `VTTs: ${VTTs}`, "");
-	/***************** Get subtitles URL *****************/
-	/*
-	let VTT = VTTs
-	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
-		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-		VTT = VTTs.find(item => item.includes(SubtitleName))
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
-	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
-			let SubtitleName = url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
-			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-			VTT = VTTs.find(item => item.includes(SubtitleName))
-			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
-	} else { // Amazon Prime Video HBO_Max不拆分字幕片段
-		VTT = VTTs[0]
-	}
-	*/
-};
-
 // Function 6
-// Get Translate Request
-async function GetTranslateRequest(type = "", source = "", target = "", text = "") {
-	$.log(`🚧 ${$.name}, Get Translate Request`, "");
-	let request = {
-		"url": "",
-		"headers": "",
-	};
-	if (type == "Google") {
-		const BaseURL = "http://translate.google.com/translate_a/single?";
-		const UserAgents = [
+// Translate
+async function Translate(type = "", source = "", target = "", text = "") {
+	$.log(`🚧 ${$.name}, Translate`, `text: ${text}`, "");
+	// 构造请求
+	let request = await GetRequest(type, source, target, text);
+	// 发送请求
+	let text2 = await GetData(type, request);
+	$.log(`🚧 ${$.name}, Translate`, `text2: ${text2}`, "");
+	return text2
+	// Function 6.1
+	// Get Translate Request
+	async function GetRequest(type = "", source = "", target = "", text = "") {
+		$.log(`🚧 ${$.name}, Get Translate Request`, "");
+		const UAPool = [
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0", // 6.4%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:95.0) Gecko/20100101 Firefox/95.0", // 6.2%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36", // 5.2%
-			"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36" // 4.8%
+			"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36", // 4.8%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134",
+			"Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
+			"Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
 		];
-		request.url = BaseURL + `client=at&sl=${DataBase.Google.Languages[source]}&tl=${DataBase.Google.Languages[target]}&dt=t&q=${encodeURIComponent(text)}`
-		// 随机UA索引值
-		let randomIndex = Math.floor(Math.random() * UserAgents.length);
-		request.headers = UserAgents[randomIndex];
-	} else if (type == "GoogleCloud") {
-		request.url = "https://translation.googleapis.com/language/translate/v2"
-		request.headers = {
-			"Accept": "*/*",
-			"User-Agent": "DualSubs",
-			"Content-Type": "application/x-www-form-urlencoded"
-		};
-		request.body = {
-			"q": text,
-			"source": DataBase.Google.Languages[source],
-			"target": DataBase.Google.Languages[target],
-			"format": "text",
-			"key": $.Settings.Key.GoogleCloud
-		};
-	} else if (type == "DeepL") {
-		request.url = "https://api-free.deepl.com/v2/translate"
-		request.headers = {
-			"Accept": "*/*",
-			"User-Agent": "DualSubs",
-			"Content-Type": "application/x-www-form-urlencoded"
-		};
-		const BaseBody = `auth_key=${$.Settings.Key.DeepL}&source_lang=${DataBase.DeepL.Languages[source]}&target_lang=${DataBase.DeepL.Languages[target]}`;
-		request.body = BaseBody + `&text=${encodeURIComponent(text)}`;
-	}
-	$.log(`🚧 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
-	return request
+		let request = {};
+		if (type == "Google") {
+			const BaseURL = [
+				"https://translate.google.cn",
+				"https://translate.google.com",
+				"https://translate.google.com.hk",
+				"https://translate.google.com.tw",
+				"https://translate.google.com.sg",
+				"https://translate.google.co.jp",
+				"https://translate.google.co.kr"
+			]
+			const Client = [
+				"t",
+				"at",
+				"gtx",
+				"it",
+			]
+			request.url = `${BaseURL[Math.floor(Math.random() * BaseURL.length)]}/translate_a/single?client=at&sl=${DataBase.Google.Languages[source]}&tl=${DataBase.Google.Languages[target]}&dt=t&q=${encodeURIComponent(text)}`;
+			request.headers = {
+				"Accept": "*/*",
+				"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
+			};
+		} else if (type == "GoogleCloud") {
+			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${$.Settings.Key.GoogleCloud}`;
+			request.headers = {
+				//"Authorization": `Bearer ${$.Settings.Key.GoogleCloud}`,
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/json; charset=utf-8"
+			};
+			request.body = {
+				"q": text,
+				"source": DataBase.Google.Languages[source],
+				"target": DataBase.Google.Languages[target],
+				"format": "text",
+				//"key": $.Settings.Key.GoogleCloud
+			};
+		} else if (type == "Microsoft") {
+			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Azure.Languages[source]}&to=${DataBase.Azure.Languages[target]}`;
+			request.headers = {
+				"Accept": "*/*",
+				"User-Agent": "DualSubs",
+				"Content-type": 'application/json',
+				//"Authorization": `Bearer ${$.Settings.Key.Azure}`,
+				"Ocp-Apim-Subscription-Key": $.Settings.Key.Azure,
+				//"Ocp-Apim-Subscription-Region": "Southeast Asia",
+				//"X-ClientTraceId": uuidv4().toString()
+			};
+			request.body = [{
+				"text": text
+			}];
+		} else if (type == "Azure") {
+			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
+			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Azure.Languages[source]}&to=${DataBase.Azure.Languages[target]}`;
+			request.headers = {
+				"Accept": "*/*",
+				"User-Agent": "DualSubs",
+				"Content-type": 'application/json',
+				//"Authorization": `Bearer ${$.Settings.Key.Azure}`,
+				"Ocp-Apim-Subscription-Key": $.Settings.Key.Azure,
+				//"Ocp-Apim-Subscription-Region": "Southeast Asia",
+				//"X-ClientTraceId": uuidv4().toString()
+			};
+			request.body = [{
+				"text": text
+			}];
+		} else if (type == "AzureCN") {
+			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
+			request.url = `https://api.translator.azure.cn/translate?api-version=3.0&textType=html&from=${DataBase.Azure.Languages[source]}&to=${DataBase.Azure.Languages[target]}`;
+			request.headers = {
+				"Accept": "*/*",
+				"User-Agent": "DualSubs",
+				"Content-type": 'application/json; charset=UTF-8',
+				//"Authorization": `Bearer ${$.Settings.Key.AzureCN}`,
+				"Ocp-Apim-Subscription-Key": $.Settings.Key.AzureCN,
+				"Ocp-Apim-Subscription-Region": "chinanorth", // chinanorth, chinaeast2
+				//"X-ClientTraceId": uuidv4().toString()
+			};
+			request.body = [{
+				"text": text
+			}];
+		} else if (type == "DeepL") {
+			request.url = "https://api-free.deepl.com/v2/translate"
+			request.headers = {
+				"Accept": "*/*",
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/x-www-form-urlencoded"
+			};
+			const BaseBody = `auth_key=${$.Settings.Key.DeepL}&source_lang=${DataBase.DeepL.Languages[source]}&target_lang=${DataBase.DeepL.Languages[target]}`;
+			request.body = BaseBody + `&text=${encodeURIComponent(text)}`;
+		}
+		$.log(`🚧 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
+		return request
+	};
+	// Function 6.2
+	// Get Translate Data
+	async function GetData(type, request) {
+		$.log(`🚧 ${$.name}, Get Translate Data`, "");
+		let text = ""
+		if (type == "Google") {
+			text = await $.http.get(request).then((response) => {
+				$.log(`🚧 ${$.name}, Get Translate Data`, `headers: ${JSON.stringify(response.headers)}`);
+				$.log(`🚧 ${$.name}, Get Translate Data`, `body: ${JSON.stringify(response.body)}`);
+				return JSON.parse(response.body)?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `Content Missing, Type: ${type}`
+			})
+		} else if (type == "Microsoft" || type == "Azure" || type == "AzureCN") {
+			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
+			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
+			text = await $.http.post(request).then((response) => {
+				$.log(`headers: ${JSON.stringify(response.headers)}`);
+				$.log(`body: ${JSON.stringify(response.body)}`);
+				let body = JSON.parse(response.body)
+				return text = body?.[0]?.translations?.[0]?.text ?? `Content Missing, Type: ${type}`
+			})
+		} else if (type == "GoogleCloud" || type == "DeepL") {
+			text = await $.http.post(request).then((response) => {
+				$.log(`headers: ${JSON.stringify(response.headers)}`);
+				$.log(`body: ${JSON.stringify(response.body)}`);
+				let body = JSON.parse(response.body)
+				return text = body?.data?.translations?.[0]?.translatedText ?? body?.data?.translations?.[0]?.text ?? `Content Missing, Type: ${type}`
+			})
+		}
+		$.log(`🚧 ${$.name}, Get Translate Data`, `text: ${text}`, "");
+		return text
+	};
 };
+
 /*
 // Function 6
 // Get Translate Subtitles

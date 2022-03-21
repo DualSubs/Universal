@@ -41,6 +41,10 @@
 							"label": "Google"
 						},
 						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud"
+						},
+						{
 							"key": "DeepL",
 							"label": "DeepL"
 						},
@@ -280,6 +284,10 @@
 							"label": "Google"
 						},
 						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud"
+						},
+						{
 							"key": "DeepL",
 							"label": "DeepL"
 						},
@@ -517,6 +525,10 @@
 						{
 							"key": "Google",
 							"label": "Google"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud"
 						},
 						{
 							"key": "DeepL",
@@ -774,6 +786,10 @@
 							"label": "Google"
 						},
 						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud"
+						},
+						{
 							"key": "DeepL",
 							"label": "DeepL"
 						},
@@ -1011,6 +1027,10 @@
 						{
 							"key": "Google",
 							"label": "Google"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud"
 						},
 						{
 							"key": "DeepL",
@@ -1252,6 +1272,10 @@
 							"label": "Google"
 						},
 						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud"
+						},
+						{
 							"key": "DeepL",
 							"label": "DeepL"
 						},
@@ -1489,6 +1513,10 @@
 						{
 							"key": "Google",
 							"label": "Google"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud"
 						},
 						{
 							"key": "DeepL",

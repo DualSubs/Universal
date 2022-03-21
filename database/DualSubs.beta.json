@@ -450,6 +450,7 @@
 			"SL": "sl",
 			"SV": "sv",
 			"IS": "is",
+			"ZH": "zh-CN",
 			"ZH-HANS": "zh-CN",
 			"ZH-HK": "zh-HK",
 			"ZH-HANT": "zh-TW"
@@ -487,7 +488,10 @@
 			"SK": "SK",
 			"SL": "SL",
 			"SV": "SV",
-			"ZH": "ZH"
+			"ZH": "ZH",
+			"ZH-HANS": "ZH",
+			"ZH-HK": "ZH",
+			"ZH-HANT": "ZH"
 		}
 	}
 }

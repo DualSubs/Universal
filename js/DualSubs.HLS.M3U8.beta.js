@@ -19,7 +19,7 @@ let body = $response.body
 
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body)
-		$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
+		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 
 		// 创建缓存
 		let Cache = {
@@ -33,11 +33,12 @@ let body = $response.body
 
 		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-
-
 		
 		// 语言回退机制
 		/*
+		let Language1 = (Cache[$.Settings.Language[0]].Index === -1) ? Cache[$.Settings.Language[1]]
+			: (Cache[$.Settings.Language[1]].Index === -1) ? Cache[$.Settings.Language[0]]
+				: null
 		let Language1ST = (Cache[$.Settings.Language[0]].Index != -1) ? Cache[$.Settings.Language[0]]
 			: (Cache[$.Settings.Language[1]].Index != -1) ? Cache[$.Settings.Language[1]]
 				: null
@@ -206,10 +207,13 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 // Function 6
 // Set DualSubs Subtitle Array
 async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = [], platform = "") {
+	// 无首选语言时删除官方字幕选项
+	if (obj1.Index === -1) type.splice(type.indexOf("Official"), 1)
 	let newSubs = type.map((item, i) => {
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `item: ${JSON.stringify(item)}`, "");
 
-		let newSub = JSON.parse(JSON.stringify(obj1)) // 复制此语言选项
+		let newSub = (obj1.Index !== -1) ? JSON.parse(JSON.stringify(obj1)) // 复制此语言选项
+			: JSON.parse(JSON.stringify(obj2))
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
 		
 		//newSub.OPTION.NAME = newSub.OPTION.NAME.replace(/^\"([^\/]+)(.*)\"$/, `\"$1/${lang2ndName}(${item})\"`) // 修改名称
@@ -227,7 +231,7 @@ async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = [], platform = "")
 
 		//newSub.OPTION.URI = newSub.OPTION.URI.replace(/^\"([^%%]+)(.*)\"$/, `\"$1%%${item}%%\"`) // 修改链接
 		//newSub.OPTION.URI = `\"${newSub.OPTION.URI.replace(/\"/g, "")}%${item}%\"` // 修改链接
-		newSub.OPTION.URI = `\"${obj1.URI}%${item}%\"` // 修改链接
+		newSub.OPTION.URI = `\"${newSub.URI}%${item}%\"` // 修改链接
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
 		
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");

@@ -222,7 +222,7 @@
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.GoogleCloud",
+					"id": "@DualSubs.Disney_Plus.Settings.Key.GoogleCloud",
 					"name": "Google Cloud Translation API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -230,7 +230,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.DeepLKey",
+					"id": "@DualSubs.Disney_Plus.Settings.Key.DeepL",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -461,7 +461,7 @@
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.GoogleCloud",
+					"id": "@DualSubs.Prime_Video.Settings.Key.GoogleCloud",
 					"name": "Google Cloud Translation API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -469,7 +469,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.DeepLKey",
+					"id": "@DualSubs.Prime_Video.Settings.Key.DeepL",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -716,7 +716,7 @@
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.GoogleCloud",
+					"id": "@DualSubs.HBO_Max.Settings.Key.GoogleCloud",
 					"name": "Google Cloud Translation API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -724,7 +724,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.DeepLKey",
+					"id": "@DualSubs.HBO_Max.Settings.Key.DeepL",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -955,7 +955,7 @@
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.GoogleCloud",
+					"id": "@DualSubs.Hulu.Settings.Key.GoogleCloud",
 					"name": "Google Cloud Translation API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -963,7 +963,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.DeepLKey",
+					"id": "@DualSubs.Hulu.Settings.Key.DeepL",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -1194,7 +1194,7 @@
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
 				},
 				{
-					"id": "@DualSubs.Paramount_Plus.Settings.GoogleCloud",
+					"id": "@DualSubs.Paramount_Plus.Settings.Key.GoogleCloud",
 					"name": "Google Cloud Translation API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -1202,7 +1202,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Paramount_Plus.Settings.DeepLKey",
+					"id": "@DualSubs.Paramount_Plus.Settings.Key.DeepL",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -1433,7 +1433,7 @@
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.GoogleCloud",
+					"id": "@DualSubs.Netflix.Settings.Key.GoogleCloud",
 					"name": "Google Cloud Translation API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -1441,7 +1441,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.DeepLKey",
+					"id": "@DualSubs.Netflix.Settings.Key.DeepL",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",

@@ -13,8 +13,10 @@
 			"CacheSize": 10,
 			"Offset": 0,
 			"Tolerance": 1000,
-			"GoogleCloud": null,
-			"DeepLKey": null // DeepL API Authentication Key
+			"Key": {
+				"GoogleCloud": null,
+				"DeepL": null // DeepL API Authentication Key
+			}
 		},
 		"Languages": {
 			//"AR": "ar", // 阿拉伯语
@@ -67,8 +69,10 @@
 			"CacheSize": 10,
 			"Offset": 0,
 			"Tolerance": 1000,
-			"GoogleCloud": null,
-			"DeepLKey": null // DeepL API Authentication Key
+			"Key": {
+				"GoogleCloud": null,
+				"DeepL": null // DeepL API Authentication Key
+			}
 		},
 		"Languages": {
 			"AR": "ar-001", // 阿拉伯语
@@ -125,8 +129,10 @@
 			"CacheSize": 3,
 			"Offset": 0,
 			"Tolerance": 1000,
-			"GoogleCloud": null,
-			"DeepLKey": null // DeepL API Authentication Key
+			"Key": {
+				"GoogleCloud": null,
+				"DeepL": null // DeepL API Authentication Key
+			}
 		},
 		"Languages": {
 			//"AR": "ar-001", // 阿拉伯语
@@ -183,8 +189,10 @@
 			"CacheSize": 10,
 			"Offset": 0,
 			"Tolerance": 1000,
-			"GoogleCloud": null,
-			"DeepLKey": null // DeepL API Authentication Key
+			"Key": {
+				"GoogleCloud": null,
+				"DeepL": null // DeepL API Authentication Key
+			}
 		},
 		"Languages": {
 			//"AR": "ar-001", // 阿拉伯语
@@ -240,8 +248,10 @@
 			"CacheSize": 10,
 			"Offset": 0,
 			"Tolerance": 1000,
-			"GoogleCloud": null,
-			"DeepLKey": null // DeepL API Authentication Key
+			"Key": {
+				"GoogleCloud": null,
+				"DeepL": null // DeepL API Authentication Key
+			}
 		},
 		"Languages": {
 			//"AR": "ar", // 阿拉伯语
@@ -297,8 +307,10 @@
 			"CacheSize": 10,
 			"Offset": 0,
 			"Tolerance": 1000,
-			"GoogleCloud": null,
-			"DeepLKey": null // DeepL API Authentication Key
+			"Key": {
+				"GoogleCloud": null,
+				"DeepL": null // DeepL API Authentication Key
+			}
 		},
 		"Languages": {
 			"BG": "bg-BG", // 保加利亚语
@@ -351,8 +363,10 @@
 			"CacheSize": 10,
 			"Offset": 0,
 			"Tolerance": 1000,
-			"GoogleCloud": null,
-			"DeepLKey": null // DeepL API Authentication Key
+			"Key": {
+				"GoogleCloud": null,
+				"DeepL": null // DeepL API Authentication Key
+			}
 		}
 	},
 	"YouTube": {

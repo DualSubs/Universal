@@ -147,7 +147,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 // Get Subtitle *.vtt URLs
 async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
-	return await $.http.get({ url: url, headers: headers }).then((response) => {
+	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let VTTs = response.body.match(/^.+\.vtt$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
@@ -161,12 +161,13 @@ async function getVTTs(platform, url) {
 		// Disney + 筛选字幕
 		if (platform == "Disney_Plus") {
 			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))
-			if (VTTs.some(item  => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
 		}
 
 		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
 		return VTTs
 	})
+	else return null;
 };
 
 // Function 4

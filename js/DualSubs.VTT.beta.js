@@ -143,7 +143,7 @@ async function setENV(platform, database) {
 	let Cache = BoxJs[platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
-	$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
+	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
 	return [Settings, Languages, Cache];
 };
 
@@ -153,7 +153,7 @@ async function getCacheIndex(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache Index`, "");
 	let index = cache.findIndex(item => {
 		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.URI, item?.[$.Settings.Language[1]]?.URI, ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
-		$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `URLs: ${URLs}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `URLs: ${URLs}`, "");
 		// 方法1
 		// URLs中有一项包含在url中即true
 		for (let URL of URLs) {
@@ -198,7 +198,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 		target.unshift(sources)
 	}
 	*/
-	$.log(`🎉 ${$.name},  Set Cache`, `target: ${JSON.stringify(target)}`, "");
+	//$.log(`🎉 ${$.name},  Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
 };
 

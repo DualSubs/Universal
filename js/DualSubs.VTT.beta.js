@@ -41,15 +41,6 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 			let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
 			if (!VTTs) $.done();
 			let request = await getOfficialRequest(Platform, VTTs);
-			/*
-			let request = {
-				"url": await getOfficialSubURL(Platform, VTTs),
-				"headers": headers
-			}
-			let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
-			if (VTTs) $.result = await getOfficialSubtitles(Platform, VTTs)
-			else $.done();
-			*/
 			let SecondVTT = await $.http.get(request).then((response) => {
 				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
 				let vtt = response.body;
@@ -138,18 +129,10 @@ async function getCacheIndex(cache = {}) {
 	let index = cache.findIndex(item => {
 		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.URI, item?.[$.Settings.Language[1]]?.URI, ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
 		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `URLs: ${URLs}`, "");
-		// 方法1
 		// URLs中有一项包含在url中即true
 		for (let URL of URLs) {
 			if (url.includes(URL)) return true
 		}
-		// 以下不适用，因为存在相对路径和加参数路径，所以url始终包含URL
-		// 方法2
-		// 扩展运算符，展开后查询
-		//if (URLs.includes(url)) return true
-		// 方法3
-		// Array.includes不能用于嵌套数组，所以先转字符串
-		//if (JSON.stringify(URLs).includes(url)) return true
 	})
 	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `index: ${index}`, "");
 	return index
@@ -168,59 +151,8 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 		target.unshift(sources) // 头部插入缓存
 		target = target.filter(Boolean).slice(0, num) // 设置缓存数量
 	}
-	/*
-	if (index !== -1) {
-		// 合并缓存
-		Object.assign(target[index], sources)
-		// 置顶
-		if (index !== 0) target.unshift(target.splice(index, 1)[0])
-	} else { // 无缓存
-		$.log(`🚧 ${$.name}`, "无匹配结果", "");
-		// 设置缓存数量
-		target = target.filter(Boolean).slice(0, num) //去空, 留$.Settings.PlaylistNumber
-		// 头部插入缓存
-		target.unshift(sources)
-	}
-	*/
 	//$.log(`🎉 ${$.name},  Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
-};
-
-// Function 5
-// Get Official Subtitles URL
-async function getOfficialSubURL(platform, VTTs = []) {
-	$.log(`⚠ ${$.name}, Get Official Subtitles URL`, "");
-	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1]
-		: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
-			: null;
-	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
-	let VTT = VTTs.find(item => item.includes(fileName)) || VTTs[0];
-	$.log(`🎉 ${$.name}, Get Official Subtitles URL`, `VTT: ${VTT}`, "")
-	return VTT
-	// 旧方法
-	/***************** Slice subtitles URLs Array *****************/
-	//let SubtitlesIndex = parseInt(url.match(/(\d+)\.vtt/)[1])
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "official_subtitles", `SubtitlesIndex内容: ${SubtitlesIndex}`, "");
-	//let start = SubtitlesIndex - 3 < 0 ? 0 : SubtitlesIndex - 3
-	//VTTs = VTTs.slice(start, SubtitlesIndex + 4)
-	//$.log(`🚧 ${$.name}, Official Subtitles`, "Combine subtitles urls", `VTTs: ${VTTs}`, "");
-	/***************** Get subtitles URL *****************/
-	/*
-	let VTT = VTTs
-	if (platform == "Disney_Plus") { // Disney+ 片段名称相同
-		let SubtitleName = url.match(/([^\/]+\.vtt$)/)[1]
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-		VTT = VTTs.find(item => item.includes(SubtitleName))
-		$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
-	} else if (platform == "Hulu") { // Hulu 片段分型序号相同
-			let SubtitleName = url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1]
-			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `SubtitleName内容: ${SubtitleName}`, "")
-			VTT = VTTs.find(item => item.includes(SubtitleName))
-			$.log(`🚧 ${$.name}, Official Subtitles`, "Get subtitles URL", `subtitles_VTT_URL内容: ${VTT}`, "")
-	} else { // Amazon Prime Video HBO_Max不拆分字幕片段
-		VTT = VTTs[0]
-	}
-	*/
 };
 
 // Function 5
@@ -391,79 +323,6 @@ async function Translate(type = "", source = "", target = "", text = "") {
 	};
 };
 
-/*
-// Function 6
-// Get Translate Subtitles
-async function Translate(type, mode, body) {
-	$.log(`🚧 ${$.name}, Translate Subtitles`, "");
-	if (type == "Google") {
-		// 整体翻译
-		if (mode == "All") {
-			let txt = VTT.json2txt(body)
-			$.log(`🚧 ${$.name}`, "VTT.json2txt", txt, "");
-			let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], txt)
-			SecondVTT = await $.http.get(request).then((response) => {
-				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = VTT.txt2json(response.body.text);
-				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
-			});
-			DualSub = await CombineDualSubs(body, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
-		} else { // 逐句翻译
-			DualSub = body;
-			DualSub.body = DualSub.body.map(item => {
-				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text)
-				let text2 = await $.http.get(request).then((response) => response.body.translations[0].text)
-				item.text = item.text + "/n" + text2;
-				return item
-			})
-		};
-	} else if (type == "GoogleCloud") {
-		// 整体翻译
-		if (mode == "All") {
-			let txt = VTT.json2txt(body)
-			$.log(`🚧 ${$.name}`, "VTT.json2txt", txt, "");
-			let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], txt)
-			SecondVTT = await $.http.post(request).then((response) => {
-				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = VTT.txt2json(response.body);
-				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
-			});
-			DualSub = await CombineDualSubs(body, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
-		} else { // 逐句翻译
-			DualSub = body;
-			DualSub.body = DualSub.body.map(item => {
-				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text)
-				let text2 = await $.http.post(request).then((response) => response.body.translations[0].text)
-				item.text = item.text + "/n" + text2;
-				return item
-			})
-		};
-	} else if (type == "DeepL") {
-		// 整体翻译
-		if (mode == "All") {
-			let txt = VTT.json2txt(OriginVTT)
-			$.log(`🚧 ${$.name}`, "VTT.json2txt", txt, "");
-			let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], txt)
-			SecondVTT = await $.http.post(request).then((response) => {
-				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = VTT.txt2json(response.body);
-				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
-			});
-			DualSub = await CombineDualSubs(body, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
-		} else { // 逐句翻译
-			DualSub = body;
-			DualSub.body = DualSub.body.map(item => {
-				let request = await GetTranslateRequest(type, $.Settings.Language[1], $.Settings.Language[0], item.text)
-				let text2 = await $.http.post(request).then((response) => response.body.data.translations[0].translatedText)
-				item.text = item.text + "/n" + text2;
-				return item
-			});
-		};
-	}
-	//$.log(`🚧 ${$.name}, Translate Subtitles`, `body内容: ${body}`, "");
-	return DualSub;
-};
-*/
 // Function 7
 // Combine Dual Subtitles
 async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]

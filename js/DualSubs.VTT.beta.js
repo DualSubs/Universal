@@ -234,7 +234,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				//"key": $.Settings.Key.GoogleCloud
 			};
 		} else if (type == "Microsoft") {
-			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Azure.Languages[source]}&to=${DataBase.Azure.Languages[target]}`;
+			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
@@ -249,7 +249,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			}];
 		} else if (type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
-			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Azure.Languages[source]}&to=${DataBase.Azure.Languages[target]}`;
+			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
@@ -264,7 +264,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			}];
 		} else if (type == "AzureCN") {
 			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-			request.url = `https://api.translator.azure.cn/translate?api-version=3.0&textType=html&from=${DataBase.Azure.Languages[source]}&to=${DataBase.Azure.Languages[target]}`;
+			request.url = `https://api.translator.azure.cn/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
@@ -286,6 +286,40 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			};
 			const BaseBody = `auth_key=${$.Settings.Key.DeepL}&source_lang=${DataBase.DeepL.Languages[source]}&target_lang=${DataBase.DeepL.Languages[target]}`;
 			request.body = BaseBody + `&text=${encodeURIComponent(text)}`;
+		} else if (type == "BaiduFanyi") {
+			// https://fanyi-api.baidu.com/doc/24
+			request.url = `https://fanyi-api.baidu.com/api/trans/vip/language`;
+			request.headers = {
+				//"Authorization": `Bearer ${$.Settings.Key.GoogleCloud}`,
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/x-www-form-urlencoded"
+			};
+			request.body = {
+				"q": text,
+				"from": DataBase.Baidu.Languages[source],
+				"to": DataBase.Baidu.Languages[target],
+				"appid": $.Settings.Key.BaiduFanyi,
+				"salt": uuidv4().toString(),
+				"sign": "",
+			};
+		} else if (type == "YoudaoAI") {
+				// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
+				request.url = `https://openapi.youdao.com/api`;
+				request.headers = {
+					//"Authorization": `Bearer ${$.Settings.Key.GoogleCloud}`,
+					"User-Agent": "DualSubs",
+					"Content-Type": "application/json; charset=utf-8"
+				};
+				request.body = {
+					"q": text,
+					"from": DataBase.Youdao.Languages[source],
+					"to": DataBase.Youdao.Languages[target],
+					"appKey": $.Settings.Key.YoudaoAI,
+					"salt": uuidv4().toString(),
+					"signType": "v3",
+					"sign": "",
+					"curtime": Math.floor(+new Date() / 1000)
+				};
 		}
 		$.log(`🚧 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request

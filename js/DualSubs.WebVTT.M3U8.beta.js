@@ -34,11 +34,11 @@ delete headers["Connection"]
 				[$.Settings.Language[1]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI) },
 			}
 			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-
+			// 写入缓存
 			$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
 			$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
 		};
-		
+		// 构建WebVTT.m3u8
 		let response = await getWebVTTm3u8(url, type)
 		$.log(`🚧 ${$.name}`, "response.stringify", JSON.stringify(response), "");
 		$.done({ response })

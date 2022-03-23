@@ -18,7 +18,7 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 /***************** Processing *****************/
 !(async () => {
 	const Platform = await getPlatform(url);
-	[$.Settings, $.Languages, $.Cache] = await setENV(Platform, DataBase);
+	[$.Settings, $.Languages, $.Cache, $.Verify] = await setENV(Platform, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
 		let Index = await getCacheIndex($.Cache)
@@ -113,13 +113,16 @@ async function setENV(platform, database) {
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Languages *****************/
 	let Languages = database[platform].Languages;
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings.language内容: ${Settings.language}`, "");
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Language内容: ${Language}`, "");
 	/***************** Cache *****************/
 	let Cache = BoxJs[platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
+	/***************** Verify *****************/
+	let Verify = BoxJs?.Verify || {};
+	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Verify内容: ${JSON.stringify(Verify)}`, "");	
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	return [Settings, Languages, Cache];
+	return [Settings, Languages, Cache, Verify];
 };
 
 // Function 3
@@ -220,7 +223,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
 			};
 		} else if (type == "GoogleCloud") {
-			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${$.Settings.Key.GoogleCloud}`;
+			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${$.Verify.GoogleCloud?.Key}`;
 			request.headers = {
 				//"Authorization": `Bearer ${$.Settings.Key.GoogleCloud}`,
 				"User-Agent": "DualSubs",
@@ -231,7 +234,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"source": DataBase.Google.Languages[source],
 				"target": DataBase.Google.Languages[target],
 				"format": "text",
-				//"key": $.Settings.Key.GoogleCloud
+				//"key": $.Verify.GoogleCloud?.Key
 			};
 		} else if (type == "Microsoft") {
 			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
@@ -239,8 +242,8 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
 				"Content-type": 'application/json',
-				//"Authorization": `Bearer ${$.Settings.Key.Azure}`,
-				"Ocp-Apim-Subscription-Key": $.Settings.Key.Azure,
+				//"Authorization": `Bearer ${$.Verify.Microsoft?.Key}`,
+				"Ocp-Apim-Subscription-Key": $.Verify.Microsoft?.Key,
 				//"Ocp-Apim-Subscription-Region": "Southeast Asia",
 				//"X-ClientTraceId": uuidv4().toString()
 			};
@@ -249,48 +252,39 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			}];
 		} else if (type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
-			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
+			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
+			const BaseURL = ($.Verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
+				: ($.Verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
+					: "https://api.cognitive.microsofttranslator.com"
+			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
 				"Content-type": 'application/json',
-				//"Authorization": `Bearer ${$.Settings.Key.Azure}`,
-				"Ocp-Apim-Subscription-Key": $.Settings.Key.Azure,
-				//"Ocp-Apim-Subscription-Region": "Southeast Asia",
-				//"X-ClientTraceId": uuidv4().toString()
-			};
-			request.body = [{
-				"text": text
-			}];
-		} else if (type == "AzureCN") {
-			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-			request.url = `https://api.translator.azure.cn/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
-			request.headers = {
-				"Accept": "*/*",
-				"User-Agent": "DualSubs",
-				"Content-type": 'application/json; charset=UTF-8',
-				//"Authorization": `Bearer ${$.Settings.Key.AzureCN}`,
-				"Ocp-Apim-Subscription-Key": $.Settings.Key.AzureCN,
-				"Ocp-Apim-Subscription-Region": "chinanorth", // chinanorth, chinaeast2
+				//"Authorization": `Bearer ${$.Verify.Azure?.Key}`,
+				"Ocp-Apim-Subscription-Key": $.Verify.Azure?.Key,
+				"Ocp-Apim-Subscription-Region": $.Verify.Azure?.Region ?? "", // chinanorth, chinaeast2
 				//"X-ClientTraceId": uuidv4().toString()
 			};
 			request.body = [{
 				"text": text
 			}];
 		} else if (type == "DeepL") {
-			request.url = "https://api-free.deepl.com/v2/translate"
+			const BaseURL = ($.Verify.DeepL.Mode == "Free") ? "https://api-free.deepl.com"
+				: ($.Verify.DeepL.Mode == "Pro") ? "https://api.deepl.com"
+					: "https://api-free.deepl.com"
+			request.url = `${BaseURL}/v2/translate`
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
 				"Content-Type": "application/x-www-form-urlencoded"
 			};
-			const BaseBody = `auth_key=${$.Settings.Key.DeepL}&source_lang=${DataBase.DeepL.Languages[source]}&target_lang=${DataBase.DeepL.Languages[target]}`;
+			const BaseBody = `auth_key=${$.Verify.DeepL?.Key}&source_lang=${DataBase.DeepL.Languages[source]}&target_lang=${DataBase.DeepL.Languages[target]}`;
 			request.body = BaseBody + `&text=${encodeURIComponent(text)}`;
 		} else if (type == "BaiduFanyi") {
 			// https://fanyi-api.baidu.com/doc/24
 			request.url = `https://fanyi-api.baidu.com/api/trans/vip/language`;
 			request.headers = {
-				//"Authorization": `Bearer ${$.Settings.Key.GoogleCloud}`,
 				"User-Agent": "DualSubs",
 				"Content-Type": "application/x-www-form-urlencoded"
 			};
@@ -298,7 +292,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"q": text,
 				"from": DataBase.Baidu.Languages[source],
 				"to": DataBase.Baidu.Languages[target],
-				"appid": $.Settings.Key.BaiduFanyi,
+				"appid": $.Verify.BaiduFanyi?.Key,
 				"salt": uuidv4().toString(),
 				"sign": "",
 			};
@@ -306,7 +300,6 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
 				request.url = `https://openapi.youdao.com/api`;
 				request.headers = {
-					//"Authorization": `Bearer ${$.Settings.Key.GoogleCloud}`,
 					"User-Agent": "DualSubs",
 					"Content-Type": "application/json; charset=utf-8"
 				};
@@ -314,7 +307,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 					"q": text,
 					"from": DataBase.Youdao.Languages[source],
 					"to": DataBase.Youdao.Languages[target],
-					"appKey": $.Settings.Key.YoudaoAI,
+					"appKey": $.Verify.YoudaoAI?.Key,
 					"salt": uuidv4().toString(),
 					"signType": "v3",
 					"sign": "",
@@ -333,22 +326,23 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			text = await $.http.get(request).then((response) => {
 				$.log(`🚧 ${$.name}, Get Translate Data`, `headers: ${JSON.stringify(response.headers)}`);
 				$.log(`🚧 ${$.name}, Get Translate Data`, `body: ${JSON.stringify(response.body)}`);
-				return JSON.parse(response.body)?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `Content Missing, Type: ${type}`
+				let body = JSON.parse(response.body);
+				return text = body?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `Content Missing, Type: ${type}`
 			})
-		} else if (type == "Microsoft" || type == "Azure" || type == "AzureCN") {
+		} else if (type == "Microsoft" || type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
 			text = await $.http.post(request).then((response) => {
 				$.log(`headers: ${JSON.stringify(response.headers)}`);
 				$.log(`body: ${JSON.stringify(response.body)}`);
-				let body = JSON.parse(response.body)
+				let body = JSON.parse(response.body);
 				return text = body?.[0]?.translations?.[0]?.text ?? `Content Missing, Type: ${type}`
 			})
 		} else if (type == "GoogleCloud" || type == "DeepL") {
 			text = await $.http.post(request).then((response) => {
 				$.log(`headers: ${JSON.stringify(response.headers)}`);
 				$.log(`body: ${JSON.stringify(response.body)}`);
-				let body = JSON.parse(response.body)
+				let body = JSON.parse(response.body);
 				return text = body?.data?.translations?.[0]?.translatedText ?? body?.data?.translations?.[0]?.text ?? `Content Missing, Type: ${type}`
 			})
 		}

@@ -1,0 +1,133 @@
+{
+	"Verify": {
+		"GoogleCloud": {
+			"Mode": "Key", // Token, Key
+			"Auth": null
+		},
+		"Azure": {
+			"Version": "Azure", // Azure, AzureCN
+			"Region": null,
+			"Mode": "Key", // Token, Key
+			"Auth": null
+		},
+		"DeepL": {
+			"Mode": "Free", // Free, Pro
+			"Auth": null // DeepL API Authentication Key
+		}
+	},
+	"Disney_Plus": {
+		"Switch": true, // true, false
+		"Type": [
+			"Official" // Official, Google, DeepL, External
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 10,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"Prime_Video": {
+		"Switch": true, // true, false
+		"Type": [
+			"Official" // Official, Google, DeepL, External
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 10,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"HBO_Max": {
+		"Switch": true, // true, false
+		"Type": [ // Official, Google, DeepL, External
+			"Google",
+			"External"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 3,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"Hulu": {
+		"Switch": true, // true, false
+		"Type": [ // Official, Google, DeepL, External
+			"Google",
+			"External"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 10,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"Paramount_Plus": {
+		"Switch": true, // true, false
+		"Type": [ // Official, Google, DeepL, External
+			"Google",
+			"External"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 10,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"Discovery_Plus": {
+		"Switch": true, // true, false
+		"Type": [ // Official, Google, DeepL, External
+			"Google",
+			"External"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 10,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"Netflix": {
+		"Switch": true, // true, false
+		"Type": [ // Official, Google, DeepL, External
+			"Official",
+			"Google",
+			"External"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 10,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"YouTube": {
+		"Switch": true, // Enable, Disable
+		"Type": [ // Official, Google, DeepL, External
+			"Official"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward" // Forward, Reverse
+	}
+}

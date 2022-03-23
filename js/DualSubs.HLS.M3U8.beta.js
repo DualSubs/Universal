@@ -34,22 +34,9 @@ let body = $response.body
 			[$.Settings.Language[1]]: await getMEDIA(PlayList, "SUBTITLES", $.Settings.Language[1])
 		}
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-
+		// 写入缓存
 		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
 		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-		
-		// 语言回退机制
-		/*
-		let Language1 = (Cache[$.Settings.Language[0]].Index === -1) ? Cache[$.Settings.Language[1]]
-			: (Cache[$.Settings.Language[1]].Index === -1) ? Cache[$.Settings.Language[0]]
-				: null
-		let Language1ST = (Cache[$.Settings.Language[0]].Index != -1) ? Cache[$.Settings.Language[0]]
-			: (Cache[$.Settings.Language[1]].Index != -1) ? Cache[$.Settings.Language[1]]
-				: null
-		let Language2ND = (Cache[$.Settings.Language[1]].Index != -1) ? Cache[$.Settings.Language[1]]
-			: (Cache[$.Settings.Language[0]].Index != -1) ? Cache[$.Settings.Language[0]]
-				: null
-		*/
 		
 		// 创建字幕选项
 		let DualSubs_Array = await setDualSubs_Array(Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type, Platform);
@@ -181,7 +168,7 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 		URI = (URI == null) ? URI : PATH + URI
 	};
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA URI", `URI: ${URI}`, "");
-	let data = { "Index": index, "Name": name, "Language": language, ...obj, "URI": URI }
+	let data = { "Index": index, "Name": name, "Language": language,"URI": URI, ...obj }
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `Data: ${JSON.stringify(data)}`, "");
 	return data
 };
@@ -193,21 +180,21 @@ async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = [], platform = "")
 	if (obj1.Index === -1) type.splice(type.indexOf("Official"), 1)
 	let newSubs = type.map((item, i) => {
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `item: ${JSON.stringify(item)}`, "");
-
-		let newSub = (obj1.Index !== -1) ? JSON.parse(JSON.stringify(obj1)) // 复制此语言选项
+		// 复制此语言选项
+		let newSub = (obj1.Index !== -1) ? JSON.parse(JSON.stringify(obj1))
 			: JSON.parse(JSON.stringify(obj2))
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
-		
-		newSub.OPTION.NAME = (platform == "HBO_Max") ? `\"${obj1.Name}\"`
-			: `\"${obj1.Name}/${obj2.Name} (${item})\"` // 修改名称
+		// 修改名称
+		newSub.OPTION.NAME = (platform == "HBO_Max") ? `\"${obj1.Name} ${i}\"`
+			: `\"${obj1.Name}/${obj2.Name} (${item})\"` 
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
-
+		// 修改语言代码
 		newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${item}--\"`
-			: (platform == "HBO_Max") ? `\"${obj1.Language}\"`
-				: `\"${obj1.Language}/${obj2.Language}--${item}--\"` // 修改语言代码
+			: (platform == "HBO_Max") ? `\"${obj1.Language} ${i}\"`
+				: `\"${obj1.Language}\"`
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
-
-		newSub.OPTION.URI = `\"${newSub.URI}%${item}%\"` // 修改链接
+		// 修改链接
+		newSub.OPTION.URI = `\"${newSub.URI}%${item}%\"`
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
 		
 		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");

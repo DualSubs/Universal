@@ -7,6 +7,125 @@
 	"repo": "https://github.com/DualSubs",
 	"apps": [
 		{
+			"id": "@DualSubs.Verify.beta",
+			"name": "DualSubs.Verify β",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Verify"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Verify.GoogleCloud.Mode",
+					"name": "Google Cloud Translation API 认证方式",
+					"val": "Key",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Token",
+							"label": "令牌"
+						},
+						{
+							"key": "Key",
+							"label": "密钥"
+						}
+					],
+					"desc": "验证方式二选一"
+				},
+				{
+					"id": "@DualSubs.Verify.GoogleCloud.Key",
+					"name": "Google Cloud Translation API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.Verify.Azure.Version",
+					"name": "Microsoft Azure Translator 版本",
+					"val": "Azure",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Azure",
+							"label": "国际版"
+						},
+						{
+							"key": "AzureCN",
+							"label": "中国版"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Verify.Azure.Region",
+					"name": "Microsoft Azure Translator 区域代码",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "如果开通Azure Translator时没有选择全球global，则需要填写开通的地区代码，如chinanorth, chinaeast2等"
+				},
+				{
+					"id": "@DualSubs.Verify.Azure.Mode",
+					"name": "Microsoft Azure Translator 认证方式",
+					"val": "Key",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Token",
+							"label": "令牌"
+						},
+						{
+							"key": "Key",
+							"label": "密钥"
+						}
+					],
+					"desc": "验证方式二选一"
+				},
+				{
+					"id": "@DualSubs.Verify.Azure.Key",
+					"name": "Microsoft Azure Translator 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.Verify.DeepL.Mode",
+					"name": "DeepL API 模式",
+					"val": "Free",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Free",
+							"label": "Free"
+						},
+						{
+							"key": "Pro",
+							"label": "Pro"
+						}
+					],
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.Verify.DeepL.Key",
+					"name": "DeepL API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "未提供时不会启用此类型字幕"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/beta",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Unlock.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Unlock.png"
+			]
+		},
+		{
 			"id": "@DualSubs.Disney_Plus.beta",
 			"name": "DualSubs.Disney+ β",
 			"descs_html": [
@@ -69,16 +188,8 @@
 							"label": "Azure Translator"
 						},
 						{
-							"key": "AzureCN",
-							"label": "Azure.cn Translator"
-						},
-						{
-							"key": "DeepLFree",
-							"label": "DeepL API Free"
-						},
-						{
-							"key": "DeepLPro",
-							"label": "DeepL API Pro"
+							"key": "DeepL",
+							"label": "DeepL API"
 						},
 						{
 							"key": "External",
@@ -239,7 +350,7 @@
 					"val": 10,
 					"type": "number",
 					"placeholder": "10",
-					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
 					"id": "@DualSubs.Disney_Plus.Settings.Offset",
@@ -256,22 +367,6 @@
 					"type": "number",
 					"placeholder": "1000",
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
-				},
-				{
-					"id": "@DualSubs.Disney_Plus.Settings.Key.GoogleCloud",
-					"name": "Google Cloud Translation API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
-					"desc": "未提供时不会启用此类型字幕"
-				},
-				{
-					"id": "@DualSubs.Disney_Plus.Settings.Key.DeepL",
-					"name": "DeepL API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -344,16 +439,8 @@
 							"label": "Azure Translator"
 						},
 						{
-							"key": "AzureCN",
-							"label": "Azure.cn Translator"
-						},
-						{
-							"key": "DeepLFree",
-							"label": "DeepL API Free"
-						},
-						{
-							"key": "DeepLPro",
-							"label": "DeepL API Pro"
+							"key": "DeepL",
+							"label": "DeepL API"
 						},
 						{
 							"key": "External",
@@ -531,22 +618,6 @@
 					"type": "number",
 					"placeholder": "1000",
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
-				},
-				{
-					"id": "@DualSubs.Prime_Video.Settings.Key.GoogleCloud",
-					"name": "Google Cloud Translation API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
-					"desc": "未提供时不会启用此类型字幕"
-				},
-				{
-					"id": "@DualSubs.Prime_Video.Settings.Key.DeepL",
-					"name": "DeepL API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -619,16 +690,8 @@
 							"label": "Azure Translator"
 						},
 						{
-							"key": "AzureCN",
-							"label": "Azure.cn Translator"
-						},
-						{
-							"key": "DeepLFree",
-							"label": "DeepL API Free"
-						},
-						{
-							"key": "DeepLPro",
-							"label": "DeepL API Pro"
+							"key": "DeepL",
+							"label": "DeepL API"
 						},
 						{
 							"key": "External",
@@ -822,22 +885,6 @@
 					"type": "number",
 					"placeholder": "1000",
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
-				},
-				{
-					"id": "@DualSubs.HBO_Max.Settings.Key.GoogleCloud",
-					"name": "Google Cloud Translation API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
-					"desc": "未提供时不会启用此类型字幕"
-				},
-				{
-					"id": "@DualSubs.HBO_Max.Settings.Key.DeepL",
-					"name": "DeepL API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -910,16 +957,8 @@
 							"label": "Azure Translator"
 						},
 						{
-							"key": "AzureCN",
-							"label": "Azure.cn Translator"
-						},
-						{
-							"key": "DeepLFree",
-							"label": "DeepL API Free"
-						},
-						{
-							"key": "DeepLPro",
-							"label": "DeepL API Pro"
+							"key": "DeepL",
+							"label": "DeepL API"
 						},
 						{
 							"key": "External",
@@ -1097,22 +1136,6 @@
 					"type": "number",
 					"placeholder": "1000",
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
-				},
-				{
-					"id": "@DualSubs.Hulu.Settings.Key.GoogleCloud",
-					"name": "Google Cloud Translation API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
-					"desc": "未提供时不会启用此类型字幕"
-				},
-				{
-					"id": "@DualSubs.Hulu.Settings.Key.DeepL",
-					"name": "DeepL API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -1185,16 +1208,8 @@
 							"label": "Azure Translator"
 						},
 						{
-							"key": "AzureCN",
-							"label": "Azure.cn Translator"
-						},
-						{
-							"key": "DeepLFree",
-							"label": "DeepL API Free"
-						},
-						{
-							"key": "DeepLPro",
-							"label": "DeepL API Pro"
+							"key": "DeepL",
+							"label": "DeepL API"
 						},
 						{
 							"key": "External",
@@ -1372,22 +1387,6 @@
 					"type": "number",
 					"placeholder": "1000",
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
-				},
-				{
-					"id": "@DualSubs.Paramount_Plus.Settings.Key.GoogleCloud",
-					"name": "Google Cloud Translation API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
-					"desc": "未提供时不会启用此类型字幕"
-				},
-				{
-					"id": "@DualSubs.Paramount_Plus.Settings.Key.DeepL",
-					"name": "DeepL API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -1460,16 +1459,8 @@
 							"label": "Azure Translator"
 						},
 						{
-							"key": "AzureCN",
-							"label": "Azure.cn Translator"
-						},
-						{
-							"key": "DeepLFree",
-							"label": "DeepL API Free"
-						},
-						{
-							"key": "DeepLPro",
-							"label": "DeepL API Pro"
+							"key": "DeepL",
+							"label": "DeepL API"
 						},
 						{
 							"key": "External",
@@ -1647,22 +1638,6 @@
 					"type": "number",
 					"placeholder": "1000",
 					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
-				},
-				{
-					"id": "@DualSubs.Netflix.Settings.Key.GoogleCloud",
-					"name": "Google Cloud Translation API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
-					"desc": "未提供时不会启用此类型字幕"
-				},
-				{
-					"id": "@DualSubs.Netflix.Settings.Key.DeepL",
-					"name": "DeepL API 认证密钥",
-					"val": "",
-					"type": "text",
-					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
-					"desc": "未提供时不会启用此类型字幕"
 				}
 			],
 			"author": "@DualSubs",
@@ -1735,16 +1710,8 @@
 							"label": "Azure Translator"
 						},
 						{
-							"key": "AzureCN",
-							"label": "Azure.cn Translator"
-						},
-						{
-							"key": "DeepLFree",
-							"label": "DeepL API Free"
-						},
-						{
-							"key": "DeepLPro",
-							"label": "DeepL API Pro"
+							"key": "DeepL",
+							"label": "DeepL API"
 						},
 						{
 							"key": "External",

@@ -25,14 +25,13 @@ delete headers["Connection"]
 	if ($.Settings.Switch) {
 		// 找缓存
 		let Index = await getCacheIndex($.Cache)
-		// 拿回复
-		let response = await $.http.get({ "url": url, "headers": headers }).then((response) => {
-			return response
+		// 获取序列化VTT
+		let OriginVTT = await $.http.get({ "url": url, "headers": headers }).then((response) => {
+			$.log("OriginVTT", `headers: ${JSON.stringify(response.headers)}`);
+			let vtt = VTT.parse(response.body);
+			//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(vtt), "");
+			return vtt;
 		})
-		//$.log(`🚧 ${$.name}`, "response.stringify", JSON.stringify(response), "");
-		// 序列化VTT
-		let OriginVTT = VTT.parse(response.body);
-		//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(OriginVTT), "");
 		// 创建双语字幕JSON
 		let DualSub = {};
 		// 获取类型
@@ -53,8 +52,9 @@ delete headers["Connection"]
 			}
 			let SecondVTT = await $.http.get(request).then((response) => {
 				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = response.body;
-				return VTT.parse(vtt);
+				let vtt = VTT.parse(response.body);
+				//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(vtt), "");
+				return vtt;
 			});
 			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, Offset, $.Settings.Tolerance, [$.Settings.Position]);
 		} else {

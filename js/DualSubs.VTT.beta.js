@@ -39,20 +39,29 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 		// 创建双语字幕JSON
 		let DualSub = {};
 		// 获取类型
-		if (type == "") $.done();
-		else if (type == "Official") {
-			$.log(`🚧 ${$.name}`, "官方字幕模式", "");
-			let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
-			if (!VTTs) $.done();
-			let request = await getOfficialRequest(Platform, VTTs);
+		if (!type) $.done();
+		else if (type == "Official" || type == "External") {
+			let Offset = new Number;
+			let request = {};
+			if (type == "Official") {
+				$.log(`🚧 ${$.name}`, "官方字幕", "");
+				let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
+				if (!VTTs) $.done();
+				request = await getOfficialRequest(Platform, VTTs);
+				Offset = 0;
+			} else if (type == "External") {
+				$.log(`🚧 ${$.name}`, "外挂字幕", "");
+				request.url = $.Settings.ExternalURL
+				Offset = $.Settings.Offset;
+			}
 			let SecondVTT = await $.http.get(request).then((response) => {
 				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
 				let vtt = response.body;
-				return VTT.parse(vtt, ["timeStamp", "ms", "singleLine"]); // "multiLine"
+				return VTT.parse(vtt);
 			});
-			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
-		} else if (type == "Google" || type == "GoogleCloud" || type == "DeepL") {
-			$.log(`🚧 ${$.name}`, `${type}翻译模式`, "");
+			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, Offset, $.Settings.Tolerance, [$.Settings.Position]);
+		} else {
+			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			DualSub = OriginVTT;
 			DualSub.body = await Promise.all(DualSub.body.map(async item => {
 				let text2 = await Translate(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
@@ -61,16 +70,7 @@ $.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 						: text2 + "\n" + item.text;
 				return item
 			}));
-		} else if (type == "External") {
-			$.log(`🚧 ${$.name}`, "外部字幕模式", "");
-			request.url = $.Settings.ExternalURL
-			SecondVTT = await $.http.get(request).then((response) => {
-				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = response.body;
-				return VTT.parse(vtt); // "multiLine"
-			});
-			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
-		} else $.done();
+		}
 		DualSub = VTT.stringify(DualSub)
 		//$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
 		response.body = DualSub

@@ -21,8 +21,7 @@ delete headers["Connection"]
 
 /***************** Processing *****************/
 !(async () => {
-	const Platform = await getPlatform(url);
-	[$.Settings, $.Languages, $.Cache] = await setENV(Platform, DataBase);
+	[$.Platform, $.Settings, $.Cache] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
 		let Index = await getCacheIndex($.Cache)
@@ -30,8 +29,8 @@ delete headers["Connection"]
 			// 创建缓存
 			let Cache = {
 				// 获取VTT字幕地址数组
-				[$.Settings.Language[0]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[0]].URI) },
-				[$.Settings.Language[1]]: { VTTs: await getVTTs(Platform, $.Cache[Index][$.Settings.Language[1]].URI) },
+				[$.Settings.Language[0]]: { VTTs: await getVTTs($.Platform, $.Cache[Index][$.Settings.Language[0]].URI) },
+				[$.Settings.Language[1]]: { VTTs: await getVTTs($.Platform, $.Cache[Index][$.Settings.Language[1]].URI) },
 			}
 			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 			// 写入缓存
@@ -49,48 +48,39 @@ delete headers["Connection"]
 
 /***************** Fuctions *****************/
 // Function 1
-// Get Platform
-async function getPlatform(url) {
-	$.log(`⚠ ${$.name}, Get Platform`, "");
-	let platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
-		: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
-			: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-				: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-					: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
-						: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
-							: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-								: url.match(/www\.youtube\.com/i) ? "YouTube"
-									: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-										: undefined
-	$.log(`🎉 ${$.name}, Get Platform`, `platform: ${platform}`, "");
-	return platform
-};
-
-// Function 2
 // Set Environment Variables
-async function setENV(platform, database) {
+async function setENV(url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Platform *****************/
+	let Platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
+	: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
+		: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
+			: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
+				: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
+					: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+						: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+							: url.match(/www\.youtube\.com/i) ? "YouTube"
+								: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+									: undefined
+	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Platform: ${Platform}`, "");
+	/***************** Settings *****************/
 	// 包装为局部变量，用完释放内存
 	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	/***************** Settings *****************/
 	let BoxJs = $.getjson("DualSubs", database) // BoxJs
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
-	let Settings = BoxJs[platform]?.Settings || database?.Settings?.[platform];
+	let Settings = BoxJs[Platform]?.Settings || database?.Settings?.[Platform];
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Type == "string") Settings.Type = Settings.Type.split(",") // BoxJs字符串转数组
 	Settings.CacheSize = parseInt(Settings.CacheSize,10) // BoxJs字符串转数字
 	Settings.Offset = parseInt(Settings.Offset,10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance,10) // BoxJs字符串转数字
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
-	/***************** Languages *****************/
-	let Languages = database?.Languages?.[platform];
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Language内容: ${Language}`, "");
 	/***************** Cache *****************/
-	let Cache = BoxJs[platform]?.Cache || [];
+	let Cache = BoxJs[Platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	return [Settings, Languages, Cache];
+	return [Platform, Settings, Cache];
 };
 
 // Function 3

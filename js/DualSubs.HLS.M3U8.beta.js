@@ -15,34 +15,29 @@ let body = $response.body
 
 /***************** Processing *****************/
 !(async () => {
-	const Platform = await getPlatform(url);
-	[$.Settings, $.Languages, $.Cache] = await setENV(Platform, DataBase);
+	[$.Platform, $.Settings, $.Cache] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
 		let Index = await getCacheIndex($.Cache)
-
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body)
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
-
 		// 创建缓存
 		let Cache = {
 			// PlayList.m3u8 URL
 			URL: url,
 			// 提取数据
-			[$.Settings.Language[0]]: await getMEDIA(PlayList, "SUBTITLES", $.Settings.Language[0]),
-			[$.Settings.Language[1]]: await getMEDIA(PlayList, "SUBTITLES", $.Settings.Language[1])
+			[$.Settings.Language[0]]: await getMEDIA($.Platform, PlayList, "SUBTITLES", $.Settings.Language[0]),
+			[$.Settings.Language[1]]: await getMEDIA($.Platform, PlayList, "SUBTITLES", $.Settings.Language[1])
 		}
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 		// 写入缓存
 		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
-		$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
-		
+		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		// 创建字幕选项
-		let DualSubs_Array = await setDualSubs_Array(Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type, Platform);
+		let DualSubs_Array = await setDualSubs_Array($.Platform, Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
 		// 插入字幕选项
 		PlayList.body.splice(Cache[$.Settings.Language[0]].Index + 1, 0, ...DualSubs_Array)
-		
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");
@@ -54,48 +49,39 @@ let body = $response.body
 
 /***************** Fuctions *****************/
 // Function 1
-// Get Platform
-async function getPlatform(url) {
-	$.log(`⚠ ${$.name}, Get Platform`, "");
-	let platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
-		: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
-			: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-				: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-					: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
-						: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
-							: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-								: url.match(/www\.youtube\.com/i) ? "YouTube"
-									: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-										: undefined
-	$.log(`🎉 ${$.name}, Get Platform`, `platform: ${platform}`, "");
-	return platform
-};
-
-// Function 2
 // Set Environment Variables
-async function setENV(platform, database) {
+async function setENV(url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Platform *****************/
+	let Platform = url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
+	: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
+		: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
+			: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
+				: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
+					: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+						: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+							: url.match(/www\.youtube\.com/i) ? "YouTube"
+								: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+									: undefined
+	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Platform: ${Platform}`, "");
+	/***************** Settings *****************/
 	// 包装为局部变量，用完释放内存
 	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	/***************** Settings *****************/
 	let BoxJs = $.getjson("DualSubs", database) // BoxJs
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
-	let Settings = BoxJs[platform]?.Settings || database?.Settings?.[platform];
+	let Settings = BoxJs[Platform]?.Settings || database?.Settings?.[Platform];
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Type == "string") Settings.Type = Settings.Type.split(",") // BoxJs字符串转数组
 	Settings.CacheSize = parseInt(Settings.CacheSize,10) // BoxJs字符串转数字
 	Settings.Offset = parseInt(Settings.Offset,10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance,10) // BoxJs字符串转数字
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
-	/***************** Languages *****************/
-	let Languages = database?.Languages?.[platform];
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Language内容: ${Language}`, "");
 	/***************** Cache *****************/
-	let Cache = BoxJs[platform]?.Cache || [];
+	let Cache = BoxJs[Platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	return [Settings, Languages, Cache];
+	return [Platform, Settings, Cache];
 };
 
 // Function 3
@@ -133,7 +119,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 
 // Function 5
 // Get EXT-X-MEDIA Data
-async function getMEDIA(json = {}, type = "", langCode = "") {
+async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
 	// 自动语言转换
 	let langcode = (langCode == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
@@ -145,12 +131,12 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 	let index = new Number
 	if (Array.isArray(langcode)) {
 		for (var lang of langcode) {
-			lang = $.Languages[lang]
+			lang = DataBase?.Languages?.[platform]?.[lang]
 			index = json.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
 			if (index !== -1) break;
 		}
 	} else {
-		lang = $.Languages[langcode]
+		lang = DataBase?.Languages?.[platform]?.[langcode]
 		index = json.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
 	}
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `Index: ${index}`, "");
@@ -175,7 +161,7 @@ async function getMEDIA(json = {}, type = "", langCode = "") {
 
 // Function 6
 // Set DualSubs Subtitle Array
-async function setDualSubs_Array(obj1 = {}, obj2 = {}, type = [], platform = "") {
+async function setDualSubs_Array(platform = "", obj1 = {}, obj2 = {}, type = []) {
 	// 无首选语言时删除官方字幕选项
 	if (obj1.Index === -1) type.splice(type.indexOf("Official"), 1)
 	let newSubs = type.map((item, i) => {

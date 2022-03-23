@@ -35,7 +35,7 @@
 					"desc": "验证方式二选一"
 				},
 				{
-					"id": "@DualSubs.Verify.GoogleCloud.Key",
+					"id": "@DualSubs.Verify.GoogleCloud.Auth",
 					"name": "Google Cloud Translation API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -85,7 +85,7 @@
 					"desc": "验证方式二选一"
 				},
 				{
-					"id": "@DualSubs.Verify.Azure.Key",
+					"id": "@DualSubs.Verify.Azure.Auth",
 					"name": "Microsoft Azure Translator 认证密钥",
 					"val": "",
 					"type": "text",
@@ -110,7 +110,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Verify.DeepL.Key",
+					"id": "@DualSubs.Verify.DeepL.Auth",
 					"name": "DeepL API 认证密钥",
 					"val": "",
 					"type": "text",

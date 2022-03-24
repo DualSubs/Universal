@@ -18,7 +18,7 @@ let body = $response.body
 	[$.Platform, $.Settings, $.Cache] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
-		let Index = await getCacheIndex($.Cache)
+		let Indices = await getCacheIndices($.Cache)
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body)
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
@@ -30,18 +30,24 @@ let body = $response.body
 		};
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 		// 写入缓存
-		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize);
+		$.Cache = await setCache(Indices[0], $.Cache, Cache, $.Settings.CacheSize);
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`);
 		// 字幕选项
 		for (var Language1 of Cache[$.Settings.Language[0]]) {
-			let Options = [];
+			//let Options = [];
 			for (var Language2 of Cache[$.Settings.Language[1]]) {
 				// 创建字幕选项
-				let Option = await setDualSubs_Array($.Platform, Language1, Language2, $.Settings.Type);
-				Options.push(Option);
+				if (Language1.OPTION["GROUP-ID"] == Language2.OPTION["GROUP-ID"] && Language2.OPTION.FORCED !== "YES") {
+					let Option = await setDualSubs_Array($.Platform, Language1, Language2, $.Settings.Type);
+					//Options.push(...Option);
+					$.log(`🚧 ${$.name}`, "Options", JSON.stringify(Option), "");
+					// 插入字幕选项
+					PlayList.body.splice(Language1.Index + 1, 0, ...Option)
+				}
 			}
+			//$.log(`🚧 ${$.name}`, "Options", JSON.stringify(Options), "");
 			// 插入字幕选项
-			PlayList.body.splice(Language1.Index + 1, 0, ...Options)
+			//PlayList.body.splice(Language1.Index + 1, 0, ...Options)
 		};
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
@@ -86,24 +92,36 @@ async function setENV(url, database) {
 	let Cache = BoxJs[Platform]?.Cache || [];
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
-	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
 	return [Platform, Settings, Cache];
 };
 
 // Function 2
-// Get Cache Index
-async function getCacheIndex(cache = {}) {
+// Get Cache Indices
+async function getCacheIndices(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache Index`, "");
-	let index = cache.findIndex(item => {
-		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.URI, item?.[$.Settings.Language[1]]?.URI, ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `URLs: ${URLs}`, "");
+	let Indices = new Array;
+	let Index1 = cache.findIndex(item => {
+		$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `item: ${JSON.stringify(item)}`, "");
+		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(obj => obj?.URI), item?.[$.Settings.Language[1]]?.map(obj => obj?.URI), ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
+		$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `URLs: ${URLs}`, "");
 		// URLs中有一项包含在url中即true
-		for (let URL of URLs) {
-			if (url.includes(URL)) return true
-		}
-	})
-	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `index: ${index}`, "");
-	return index
+		return URLs.some(URL => url.includes(URL))
+	});
+	let LangCode = new String;
+	let Index3 = new Number;
+	if (Index1 !== -1) {
+		$.Settings.Language.forEach(language => {
+			Index3 = cache[Index1][language].findIndex(item => {
+				let URLs = [item?.URI, ...item?.VTTs ?? []]
+				return URLs.some(URL => url.includes(URL))
+			});
+			Index2 = (Index3 !== -1) ? language : null;
+		});
+	}
+	Indices = [Index1, LangCode, Index3];
+	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Indices", `Indices: ${Indices}`, "");
+	return Indices
 };
 
 // Function 3
@@ -173,11 +191,11 @@ async function setMEDIA(platform = "", json = {}, type = "", langCode = "") {
 		$.log(`⚠ ${$.name}, Find EXT-X-MEDIA Indices`, "");
 		let indices = [];
 		let m3u8 = JSON.parse(JSON.stringify(json));
-		let index = m3u8.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
+		let index = m3u8.body.findIndex(item => { if (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
 		while (index != -1) {
 			indices.push(index);
 			delete m3u8.body[index];
-			index = m3u8.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
+			index = m3u8.body.findIndex(item => { if (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
 		}
 		$.log(`⚠ ${$.name}, Find EXT-X-MEDIA Indices`, `indices: ${indices}`,  "");
 		return indices
@@ -187,13 +205,13 @@ async function setMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	// Get EXT-X-MEDIA Data
 	async function getMEDIA(json = {}, index = -1, langCode = "") {
 		$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Datas`, "");
-		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `Index: ${index}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `Index: ${index}`, "");
 		let obj = (index != -1) ? json.body[index] : null;
-		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");
 		let name = obj?.OPTION.NAME.replace(/\"/g, "") ?? langCode;
-		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Name: ${name}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Name: ${name}`, "");
 		let language = obj?.OPTION.LANGUAGE.replace(/\"/g, "") ?? langCode;
-		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Language: ${language}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Language: ${language}`, "");
 		let URI = obj?.OPTION.URI.replace(/\"/g, "") ?? null;
 		// if 相对路径
 		if (!/^https?:\/\//i.test(URI)) {
@@ -201,9 +219,10 @@ async function setMEDIA(platform = "", json = {}, type = "", langCode = "") {
 			$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.m3u8 URL", `url.match: ${PATH}`, "");
 			URI = (URI == null) ? URI : PATH + URI
 		};
-		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA URI", `URI: ${URI}`, "");
-		let data = { "Index": index, "Name": name, "Language": language, "URI": URI, ...obj }
+		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA URI", `URI: ${URI}`, "");
+		let data = { "Index": index, "Name": name, "Language": language, ...obj, "URI": URI }
 		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Datas", `Data: ${JSON.stringify(data)}`, "");
+		return data
 	};
 };
 

@@ -15,6 +15,20 @@
 			"Auth": null // DeepL API Authentication Key
 		}
 	},
+	"Apple_TV": {
+		"Switch": true, // true, false
+		"Type": [
+			"Official" // Official, Google, DeepL, External
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 10,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
 	"Disney_Plus": {
 		"Switch": true, // true, false
 		"Type": [

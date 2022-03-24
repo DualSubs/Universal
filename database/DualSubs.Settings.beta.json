@@ -15,6 +15,20 @@
 			"Auth": null
 		}
 	},
+	"Apple_TV": {
+		"Switch": true,
+		"Type": [
+			"Official"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward",
+		"CacheSize": 10,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
 	"Disney_Plus": {
 		"Switch": true,
 		"Type": [

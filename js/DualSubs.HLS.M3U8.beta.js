@@ -90,12 +90,10 @@ async function setENV(url, database) {
 async function getCacheIndex(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache Index`, "");
 	let index = cache.findIndex(item => {
-		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.URI, item?.[$.Settings.Language[1]]?.URI, ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
+		let URLs = [item?.URL, item?.[$.Settings.Language[0]].map(d => d?.URI), item?.[$.Settings.Language[1]].map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
 		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `URLs: ${URLs}`, "");
 		// URLs中有一项包含在url中即true
-		for (let URL of URLs) {
-			if (url.includes(URL)) return true
-		}
+		return URLs.some(URL => url.includes(URL))
 	})
 	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `index: ${index}`, "");
 	return index

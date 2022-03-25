@@ -129,19 +129,14 @@ async function getCacheIndices(cache = {}) {
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶
-	if (index !== -1) delete target[index]; //删除旧缓存
-	target.unshift(sources) // 头部插入缓存
-	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	/*
 	if (index !== -1) {
-		target[index], sources // 合并
+		Object.assign(target[index], sources) // 合并
 		if (index !== 0) target.unshift(target.splice(index, 1)[0]) // 置顶
 	}
 	if (index === -1) {
 		target.unshift(sources) // 头部插入缓存
 		target = target.filter(Boolean).slice(0, num) // 设置缓存数量
 	}
-	*/
 	//$.log(`🎉 ${$.name},  Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
 };

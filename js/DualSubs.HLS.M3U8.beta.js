@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.4.1");
+const $ = new Env("DualSubs v0.5.0");
 const M3U8 = new EXTM3U("EXTM3U v0.5.3");
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -24,26 +24,17 @@ let body = $response.body
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		// 创建缓存
 		Cache.URL = url; // PlayList.m3u8 URL
-		// 提取数据
-		$.Settings.Language.forEach(async language => {
+		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
+		for await (var language of $.Settings.Language) {
 			Cache[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
 			$.log(`🚧 ${$.name}`, "Cache[language].stringify", JSON.stringify(Cache[language]), "");
-		});
-		/*
-		await Promise.all($.Settings.Language.map(async language => {
-			Cache[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
-			$.log(`🚧 ${$.name}`, "Cache[language].stringify", JSON.stringify(Cache[language]), "");
-		}));
-		*/
+		}
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 		// 写入缓存
 		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
-		$.log(`🚧 ${$.name}`, "$.Cache.stringify", JSON.stringify($.Cache), "");
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
-		// 创建字幕选项
-		let DualSubs_Array = await setDualSubs_Array($.Platform, Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
-		// 插入字幕选项
-		PlayList.body.splice(Cache[$.Settings.Language[0]].Index + 1, 0, ...DualSubs_Array)
+		// 写入选项
+		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");
@@ -96,13 +87,13 @@ async function setENV(url, database) {
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let index = cache.findIndex(item => {
-		let URLs = [item?.URL, item?.[$.Settings.Language[0]].map(d => d?.URI), item?.[$.Settings.Language[1]].map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
+		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(d => d?.URI), item?.[$.Settings.Language[1]]?.map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.map(d => d?.VTTs) ?? [], ...item?.[$.Settings.Language[1]]?.map(d => d?.VTTs) ?? []]
 		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
 		// URLs中有一项包含在url中即true
 		return URLs.some(URL => url.includes(URL))
 	})
-	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `index: ${index}`, "");
-	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `cache: ${JSON.stringify(cache[index])}`, "");
+	$.log(`🎉 ${$.name}, Get Cache`, `index: ${index}`, "");
+	$.log(`🎉 ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache[index])}`, "");
 	return [index, cache[index]]
 };
 
@@ -111,22 +102,10 @@ async function getCache(cache = {}) {
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶
-	if (index !== -1) delete target[index]
+	if (index !== -1) delete target[index] // 删除旧记录
 	target.unshift(sources) // 头部插入缓存
 	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	/*
-	if (index !== -1) {
-		Object.assign(target[index], sources) // 合并
-		target[index] = new Set(target[index]) // 去重
-		//target[index] = new Set([...target[index], ...sources]) // 合并去重
-		if (index !== 0) target.unshift(target.splice(index, 1)[0]) // 置顶
-	}
-	if (index === -1) {
-		target.unshift(sources) // 头部插入缓存
-		target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	}
-	*/
-	$.log(`🎉 ${$.name},  Set Cache`, `target: ${JSON.stringify(target)}`, "");
+	$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
 };
 
@@ -150,7 +129,7 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 				let language = item?.OPTION.LANGUAGE.replace(/\"/g, "") ?? lang;
 				let URI = item?.OPTION.URI.replace(/\"/g, "") ?? null;
 				let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? ""
-				datas.push({ "Index": index, "Name": name, "Language": language, "URI": URI, "PATH": PATH, ...item });
+				datas.push({ "Index": index, "Name": name, "Language": language, "PATH": PATH, ...item, "URI": URI });
 			}
 		});
 		if (datas !== []) break;
@@ -179,34 +158,77 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 };
 
 // Function 6
-// Set DualSubs Subtitle Array
-async function setDualSubs_Array(platform = "", obj1 = {}, obj2 = {}, type = []) {
-	// 无首选语言时删除官方字幕选项
-	if (obj1.Index === -1) type.splice(type.indexOf("Official"), 1)
-	let newSubs = type.map((item, i) => {
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `item: ${JSON.stringify(item)}`, "");
-		// 复制此语言选项
-		let newSub = (obj1.Index !== -1) ? JSON.parse(JSON.stringify(obj1))
-			: JSON.parse(JSON.stringify(obj2))
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
-		// 修改名称
-		newSub.OPTION.NAME = (platform == "HBO_Max") ? `\"${obj1.Name} ${i}\"`
-			: `\"${obj1.Name}/${obj2.Name} (${item})\"` 
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
-		// 修改语言代码
-		newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${item}--\"`
-			: (platform == "HBO_Max") ? `\"${obj1.Language} ${i}\"`
-				: `\"${obj1.Language}\"`
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
-		// 修改链接
-		newSub.OPTION.URI = `\"${newSub.URI}%${item}%\"`
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
-		
-		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
-		return newSub
-	})
-	$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSubs: ${JSON.stringify(newSubs)}`, "");
-	return newSubs
+// Set DualSubs Subtitle Options
+async function setOptions(platform = "", json = {}, languages1 = [], languages2 = [], type = []) {
+	for await (var obj1 of languages1) {
+		// 无首选语言时删除官方字幕选项
+		if (obj1.Index === -1) type.splice(type.indexOf("Official"), 1)
+		for await (var obj2 of languages2) {
+			//$.log(`🚧 ${$.name}`, "obj2?.OPTION.FORCED", obj2?.OPTION.FORCED, "");
+			if (obj2?.OPTION.FORCED !== "YES") { // 强制字幕不生成
+				//$.log(`🚧 ${$.name}`, "obj1?.OPTION[\"GROUP-ID\"]", obj1?.OPTION["GROUP-ID"], "");
+				//$.log(`🚧 ${$.name}`, "obj2?.OPTION[\"GROUP-ID\"]", obj2?.OPTION["GROUP-ID"], "");
+				if (obj1?.OPTION["GROUP-ID"] == obj2?.OPTION["GROUP-ID"]) { // 只生成同组字幕
+					if (platform == "Apple_TV") { // Apple_TV兼容
+						if (obj1?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+							// 创建字幕选项
+							let Options = await getOptions(platform, obj1, obj2, type);
+							$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Options: ${JSON.stringify(Options)}`, "");
+							// 计算位置
+							let Index = json.body.findIndex(item => {
+								if (item?.OPTION?.LANGUAGE == obj1?.OPTION?.LANGUAGE
+									&& item?.OPTION?.["GROUP-ID"] == obj1?.OPTION?.["GROUP-ID"]
+									&& item?.OPTION?.["STABLE-RENDITION-ID"] == obj1?.OPTION?.["STABLE-RENDITION-ID"]) {
+									return true
+								}
+							})
+							// 插入字幕选项
+							json.body.splice(Index + 1, 0, ...Options);
+						}
+					} else {
+						// 创建字幕选项
+						let Options = await getOptions(platform, obj1, obj2, type);
+						$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Options: ${JSON.stringify(Options)}`, "");
+						// 计算位置
+						let Index = json.body.findIndex(item => {
+							if (item?.OPTION?.LANGUAGE == obj1?.OPTION?.LANGUAGE
+								&& item?.OPTION?.["GROUP-ID"] == obj1?.OPTION?.["GROUP-ID"]) {
+								return true
+							}
+						})
+						// 插入字幕选项
+						json.body.splice(Index + 1, 0, ...Options);
+					}
+				}
+			}
+		}
+	};
+	return json
+
+	async function getOptions(platform = "", obj1 = {}, obj2 = {}, type = []) {
+		return type.map((item, i) => {
+			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `item: ${JSON.stringify(item)}`, "");
+			// 复制此语言选项
+			let newSub = (obj1.Index !== -1) ? JSON.parse(JSON.stringify(obj1))
+				: JSON.parse(JSON.stringify(obj2))
+			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
+			// 修改名称
+			newSub.OPTION.NAME = (platform == "HBO_Max") ? `\"${obj1.Name} ${i}\"`
+				: `\"${obj1.Name}/${obj2.Name} (${item})\"`
+			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
+			// 修改语言代码
+			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${item}--\"`
+				: (platform == "HBO_Max") ? `\"${obj1.Language} ${i}\"`
+					: `\"${obj1.Language}\"`
+			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
+			// 修改链接
+			newSub.OPTION.URI = `\"${newSub.URI}%${item}%\"`
+			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
+
+			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
+			return newSub
+		})
+	}
 };
 
 /***************** Env *****************/

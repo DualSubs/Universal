@@ -23,16 +23,22 @@ let body = $response.body
 		let PlayList = M3U8.parse(body)
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		// 创建缓存
-		let Cache = {
-			// PlayList.m3u8 URL
-			URL: url,
-			// 提取数据
-			[$.Settings.Language[0]]: await getMEDIA($.Platform, PlayList, "SUBTITLES", $.Settings.Language[0]),
-			[$.Settings.Language[1]]: await getMEDIA($.Platform, PlayList, "SUBTITLES", $.Settings.Language[1])
-		}
+		let Cache = { "URL": url }; // PlayList.m3u8 URL
+		// 提取数据
+		$.Settings.Language.forEach(async language => {
+			Cache[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
+			$.log(`🚧 ${$.name}`, "Cache[language].stringify", JSON.stringify(Cache[language]), "");
+		});
+		/*
+		await Promise.all($.Settings.Language.map(async language => {
+			Cache[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
+			$.log(`🚧 ${$.name}`, "Cache[language].stringify", JSON.stringify(Cache[language]), "");
+		}));
+		*/
 		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 		// 写入缓存
 		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
+		$.log(`🚧 ${$.name}`, "$.Cache.stringify", JSON.stringify($.Cache), "");
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		// 创建字幕选项
 		let DualSubs_Array = await setDualSubs_Array($.Platform, Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
@@ -105,7 +111,9 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶
 	if (index !== -1) {
-		Object.assign(target[index], sources) // 合并
+		//Object.assign(target[index], sources) // 合并
+		//target[index] = new Set(target[index]) // 去重
+		target[index] = new Set([...target[index], ...sources]) // 合并去重
 		if (index !== 0) target.unshift(target.splice(index, 1)[0]) // 置顶
 	}
 	if (index === -1) {
@@ -118,28 +126,33 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 
 // Function 5
 // Get EXT-X-MEDIA Data
-async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
+async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
 	// 自动语言转换
 	let langcode = (langCode == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
 	: (langCode == "EN") ? ["EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
 		: (langCode == "ES") ? ["ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
-			: langCode
+			: [langCode]
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `langcode: ${langcode}`, "");
 	//查询是否有符合语言的字幕
-	let index = new Number
-	if (Array.isArray(langcode)) {
-		for (var lang of langcode) {
-			lang = DataBase?.Languages?.[platform]?.[lang]
-			index = json.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
-			if (index !== -1) break;
-		}
-	} else {
-		lang = DataBase?.Languages?.[platform]?.[langcode]
-		index = json.body.findIndex(item => { if (item.OPTION?.TYPE == type && item.OPTION?.LANGUAGE == `\"${lang}\"`) return true });
-	}
-	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `Index: ${index}`, "");
-	let obj = (index != -1) ? json.body[index] : null;
+	let datas = [];
+	for (var lang of langcode) {
+		lang = DataBase?.Languages?.[platform]?.[lang]
+		json.body.forEach((item, index) => {
+			if (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`) {
+				let name = item?.OPTION.NAME.replace(/\"/g, "") ?? lang;
+				let language = item?.OPTION.LANGUAGE.replace(/\"/g, "") ?? lang;
+				let URI = item?.OPTION.URI.replace(/\"/g, "") ?? null;
+				let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? ""
+				datas.push({ "Index": index, "Name": name, "Language": language, "URI": URI, "PATH": PATH, ...item });
+			}
+		});
+		if (datas !== []) break;
+	};
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `datas: ${JSON.stringify(datas)}`, "");
+	return datas
+	/*
+	let obj = (index != -1) ? body[index] : null;
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");
 	let name = obj?.OPTION.NAME.replace(/\"/g, "") ?? langCode;
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Name: ${name}`, "");
@@ -156,6 +169,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	let data = { "Index": index, "Name": name, "Language": language,"URI": URI, ...obj }
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `Data: ${JSON.stringify(data)}`, "");
 	return data
+	*/
 };
 
 // Function 6

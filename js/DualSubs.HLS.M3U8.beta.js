@@ -18,12 +18,12 @@ let body = $response.body
 	[$.Platform, $.Settings, $.Cache] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
-		let Index = await getCacheIndex($.Cache)
+		let [Index, Cache] = await getCache($.Cache)
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body)
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		// 创建缓存
-		let Cache = { "URL": url }; // PlayList.m3u8 URL
+		Cache.URL = url; // PlayList.m3u8 URL
 		// 提取数据
 		$.Settings.Language.forEach(async language => {
 			Cache[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
@@ -92,17 +92,18 @@ async function setENV(url, database) {
 };
 
 // Function 3
-// Get Cache Index
-async function getCacheIndex(cache = {}) {
-	$.log(`⚠ ${$.name}, Get Cache Index`, "");
+// Get Cache
+async function getCache(cache = {}) {
+	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let index = cache.findIndex(item => {
 		let URLs = [item?.URL, item?.[$.Settings.Language[0]].map(d => d?.URI), item?.[$.Settings.Language[1]].map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.VTTs ?? [], ...item?.[$.Settings.Language[1]]?.VTTs ?? []]
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `URLs: ${URLs}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
 		// URLs中有一项包含在url中即true
 		return URLs.some(URL => url.includes(URL))
 	})
-	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache Index", `index: ${index}`, "");
-	return index
+	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `index: ${index}`, "");
+	$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `cache: ${JSON.stringify(cache[index])}`, "");
+	return [index, cache[index]]
 };
 
 // Function 4

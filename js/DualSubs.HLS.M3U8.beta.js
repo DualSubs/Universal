@@ -15,7 +15,7 @@ let body = $response.body
 
 /***************** Processing *****************/
 !(async () => {
-	[$.Platform, $.Settings, $.Cache] = await setENV(url, DataBase);
+	[$.Platform, $.Settings, $.Cache, $.Verify] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
 		let [Index = -1, Cache = {}] = await getCache($.Cache)
@@ -79,7 +79,9 @@ async function setENV(url, database) {
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
 	if (typeof Cache == "string") Cache = JSON.parse(Cache)
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	return [Platform, Settings, Cache];
+	/***************** Verify *****************/
+	let Verify = BoxJs?.Verify?.Settings || database?.Settings?.Verify;
+	return [Platform, Settings, Cache, Verify];
 };
 
 // Function 3

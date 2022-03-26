@@ -125,7 +125,7 @@ async function getCache(cache = {}) {
 	};
 
 	function aPath(Link = "", URL = "") {
-		//$.log(`⚠ ${$.name}, Get Absolute Path`, "");
+		$.log(`⚠ ${$.name}, Get Absolute Path`, `Link: ${Link}`, `URL: ${URL}`, "");
 		let rURL = (!/^https?:\/\//i.test(URL)) ? URL : null;
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `rURL: ${rURL}`, "");
 		let PATH = Link.match(/^https?:\/\/(.+)\//i)?.[0] ?? null;

@@ -88,9 +88,9 @@ async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let index = cache.findIndex(item => {
 		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(d => d?.URI), item?.[$.Settings.Language[1]]?.map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.map(d => d?.VTTs) ?? [], ...item?.[$.Settings.Language[1]]?.map(d => d?.VTTs) ?? []]
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
+		$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
 		// URLs中有一项包含在url中即true
-		return URLs.some(URL => url.includes(URL))
+		return URLs.some(URL => url.includes(URL || null))
 	})
 	$.log(`🎉 ${$.name}, Get Cache`, `index: ${index}`, "");
 	$.log(`🎉 ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache[index])}`, "");

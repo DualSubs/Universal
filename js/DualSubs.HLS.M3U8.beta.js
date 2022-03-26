@@ -18,7 +18,7 @@ let body = $response.body
 	[$.Platform, $.Settings, $.Cache] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
-		let [Index, Cache] = await getCache($.Cache)
+		let [Index = -1, Cache = {}] = await getCache($.Cache)
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body,["EXT-X-SESSION-DATA", "EXT-X-STREAM-INF"])
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");

@@ -217,14 +217,20 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 				: `\"${obj1.Name}/${obj2.Name} (${item})\"`
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
 			// 修改语言代码
+			//newSub.OPTION.LANGUAGE = obj1.OPTION.LANGUAGE
+			/*
 			newSub.OPTION.LANGUAGE = (platform == "Apple_TV" || platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${item}--\"`
 				: (platform == "HBO_Max") ? `\"${obj1.Language} ${i}\"`
 					: `\"${obj1.Language}\"`
+			*/
+			// 增加副语言
+			newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} ${item}\"`
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
 			// 修改链接
 			newSub.OPTION.URI = `\"${newSub.URI}%${item}%\"`
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
-
+			// 非自动选择
+			newSub.OPTION.AUTOSELECT = "NO"
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})

@@ -22,13 +22,13 @@ let body = $response.body
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body);
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
-		// 创建缓存
+		
 		Cache.URL = url; // PlayList.m3u8 URL
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
 		let Data = {};
 		for await (var language of $.Settings.Language) {
 			Data[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
-			$.log(`🚧 ${$.name}`, `Data[${language}]`, JSON.stringify(Data[language]), "");
+			//$.log(`🚧 ${$.name}`, `Data[${language}]`, JSON.stringify(Data[language]), "");
 			Cache[language] = Data[language].map(item => { return { "Index": item.Index, "Name": item.Name, "Language": item.Language, "PATH": item.PATH, "URI": item.URI } });
 			$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		}
@@ -108,7 +108,7 @@ async function getCache(cache = {}) {
 				let VTTs = item?.[language]?.map(d => d?.VTTs) ?? [];
 				URLs.push(URI, ...(VTTs?.map(VTT => aPath(URI, VTT))))
 			};
-			//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			// URLs中有一项包含在url中即true
 			return URLs.some(URL => url.includes(URL || null))
 		})
@@ -119,7 +119,7 @@ async function getCache(cache = {}) {
 			let URI = aPath(item?.PATH, item?.URI);
 			let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
 			let URLs = [URI, ...VTTs];
-			//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
 			// URLs中有一项包含在url中即true
 			return URLs.some(URL => url.includes(URL || null))
 		})

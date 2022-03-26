@@ -114,25 +114,29 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
 	// 自动语言转换
-	let langcode = (langCode == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
+	let langcodes = (langCode == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
 	: (langCode == "EN") ? ["EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
 		: (langCode == "ES") ? ["ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
 			: [langCode]
-	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `langcode: ${langcode}`, "");
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `langcode: ${langcodes}`, "");
 	//查询是否有符合语言的字幕
 	let datas = [];
-	for (var lang of langcode) {
-		lang = DataBase?.Languages?.[platform]?.[lang]
+	for (var langcode of langcodes) {
+		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `langcode: ${langcode}`, "");
+		lang = DataBase?.Languages?.[platform]?.[langcode]
+		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `lang: ${lang}`, "");
 		json.body.forEach((item, index) => {
 			if (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`) {
 				let name = item?.OPTION.NAME.replace(/\"/g, "") ?? lang;
 				let language = item?.OPTION.LANGUAGE.replace(/\"/g, "") ?? lang;
 				let URI = item?.OPTION.URI.replace(/\"/g, "") ?? null;
 				let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? ""
-				datas.push({ "Index": index, "Name": name, "Language": language, "PATH": PATH, ...item, "URI": URI });
+				let data = { "Index": index, "Name": name, "Language": language, "PATH": PATH, ...item, "URI": URI };
+				$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `data: ${JSON.stringify(data)}`, "");
+				datas.push(data);
 			}
 		});
-		if (datas !== []) break;
+		if (datas.length !== 0) break;
 	};
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `datas: ${JSON.stringify(datas)}`, "");
 	return datas

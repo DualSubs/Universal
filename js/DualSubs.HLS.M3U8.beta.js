@@ -29,11 +29,7 @@ let body = $response.body
 		for await (var language of $.Settings.Language) {
 			Data[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
 			$.log(`🚧 ${$.name}`, `Data[${language}]`, JSON.stringify(Data[language]), "");
-			Cache[language] = Data[language].map(item => {
-				delete item.EXT
-				delete item.OPTION
-				return item
-			});
+			Cache[language] = Data[language].map(item => { return { "Index": item.Index, "Name": item.Name, "Language": item.Language, "PATH": item.PATH, "URI": item.URI } });
 			$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		}
 		//$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");

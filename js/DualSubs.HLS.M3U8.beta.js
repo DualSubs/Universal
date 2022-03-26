@@ -28,13 +28,13 @@ let body = $response.body
 		let Data = {};
 		for await (var language of $.Settings.Language) {
 			Data[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
-			$.log(`🚧 ${$.name}`, "Cache[language]", JSON.stringify(Data[language]), "");
+			$.log(`🚧 ${$.name}`, `Data[${language}]`, JSON.stringify(Data[language]), "");
 			Cache[language] = Data[language].map(item => {
 				delete item.EXT
 				delete item.OPTION
 				return item
 			});
-			$.log(`🚧 ${$.name}`, "Cache[language].Lang", JSON.stringify(Cache[language]), "");
+			$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		}
 		//$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 		// 写入缓存
@@ -99,27 +99,45 @@ async function getCache(cache = {}) {
 	Indices.Index = await getIndex(cache);
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
 
-	for (var language of $.Settings.Language) Indices[language] = await getData(Indices.Index, language)
+	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 
 	return [Indices, cache[Indices.Index]]
-
+	/***************** Fuctions *****************/
 	async function getIndex(cache) {
 		return cache.findIndex(item => {
-			let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(d => d?.URI), item?.[$.Settings.Language[1]]?.map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.map(d => d?.VTTs) ?? [], ...item?.[$.Settings.Language[1]]?.map(d => d?.VTTs) ?? []]
+			let URLs = [item?.URL];
+			for (var language of $.Settings.Language) {
+				let URI = item?.[language]?.map(d => aPath(item?.PATH, d?.URI));
+				let VTTs = item?.[language]?.map(d => d?.VTTs) ?? [];
+				URLs.push(URI, ...(VTTs?.map(VTT => aPath(URI, VTT))))
+			};
 			//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
 			// URLs中有一项包含在url中即true
 			return URLs.some(URL => url.includes(URL || null))
 		})
 	};
 
-	async function getData(index, lang) {
-		return cache[index][lang].findIndex(item => {
-			let URLs = [item?.URI, ...item?.VTTs ?? []]
+	async function getDataIndex(index, lang) {
+		return cache?.[index]?.[lang]?.findIndex(item => {
+			let URI = aPath(item?.PATH, item?.URI);
+			let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
+			let URLs = [URI, ...VTTs];
 			//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
 			// URLs中有一项包含在url中即true
 			return URLs.some(URL => url.includes(URL || null))
 		})
+	};
+
+	function aPath(Link = "", URL = "") {
+		//$.log(`⚠ ${$.name}, Get Absolute Path`, "");
+		let rURL = (!/^https?:\/\//i.test(URL)) ? URL : null;
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `rURL: ${rURL}`, "");
+		let PATH = Link.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)?/i)?.groups?.PATH ?? null;
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
+		let aURL = (rURL) ? PATH + rURL : URL;
+		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
+		return aURL
 	};
 };
 

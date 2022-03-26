@@ -24,7 +24,7 @@ delete headers["Connection"]
 	[$.Platform, $.Settings, $.Cache, $.Verify] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
-		let [Index = -1, Cache = {}] = await getCache($.Cache)
+		let [Indices = {}, Cache = {}] = await getCache($.Cache);
 		// 获取序列化VTT
 		let OriginVTT = await $.http.get({ "url": url, "headers": headers }).then((response) => {
 			$.log("OriginVTT", `headers: ${JSON.stringify(response.headers)}`);
@@ -41,7 +41,7 @@ delete headers["Connection"]
 			let request = {};
 			if (type == "Official") {
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
-				let VTTs = $.Cache[Index]?.[$.Settings.Language[1]]?.VTTs ?? null;
+				let VTTs = Cache[language][Indices[language]].VTTs ?? null;
 				if (!VTTs) $.done();
 				request = await getOfficialRequest($.Platform, VTTs);
 				Offset = 0;
@@ -121,15 +121,50 @@ async function setENV(url, database) {
 // Get Cache
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let index = cache.findIndex(item => {
-		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(d => d?.URI), item?.[$.Settings.Language[1]]?.map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.map(d => d?.VTTs) ?? [], ...item?.[$.Settings.Language[1]]?.map(d => d?.VTTs) ?? []]
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
-		// URLs中有一项包含在url中即true
-		return URLs.some(URL => url.includes(URL || null))
-	})
-	$.log(`🎉 ${$.name}, Get Cache`, `index: ${index}`, "");
-	$.log(`🎉 ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache[index])}`, "");
-	return [index, cache[index]]
+	let Indices = {};
+	Indices.Index = await getIndex(cache);
+	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
+
+	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
+	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
+
+	return [Indices, cache[Indices.Index]]
+	/***************** Fuctions *****************/
+	async function getIndex(cache) {
+		return cache.findIndex(item => {
+			let URLs = [item?.URL];
+			for (var language of $.Settings.Language) {
+				let URI = item?.[language]?.map(d => aPath(item?.PATH, d?.URI));
+				let VTTs = item?.[language]?.map(d => d?.VTTs) ?? [];
+				URLs.push(URI, ...(VTTs?.map(VTT => aPath(URI, VTT))))
+			};
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
+			// URLs中有一项包含在url中即true
+			return URLs.some(URL => url.includes(URL || null))
+		})
+	};
+
+	async function getDataIndex(index, lang) {
+		return cache?.[index]?.[lang]?.findIndex(item => {
+			let URI = aPath(item?.PATH, item?.URI);
+			let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
+			let URLs = [URI, ...VTTs];
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
+			// URLs中有一项包含在url中即true
+			return URLs.some(URL => url.includes(URL || null))
+		})
+	};
+
+	function aPath(Link = "", URL = "") {
+		//$.log(`⚠ ${$.name}, Get Absolute Path`, "");
+		let rURL = (!/^https?:\/\//i.test(URL)) ? URL : null;
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `rURL: ${rURL}`, "");
+		let PATH = Link.match(/^https?:\/\/(.+)\//i)?.[0] ?? null;
+		$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
+		let aURL = (rURL) ? PATH + rURL : URL;
+		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
+		return aURL
+	};
 };
 
 // Function 4

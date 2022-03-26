@@ -24,18 +24,18 @@ delete headers["Connection"]
 	[$.Platform, $.Settings, $.Cache, $.Verify] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
-		let [Index = -1, Cache = {}] = await getCache($.Cache)
-		if (Index !== -1) {
+		let [Indices = {}, Cache = {}] = await getCache($.Cache);
+		if (Indices.Index !== -1) {
 			// 创建缓存
-			let Cache = {
-				// 获取VTT字幕地址数组
-				[$.Settings.Language[0]]: { VTTs: await getVTTs($.Platform, $.Cache[Index][$.Settings.Language[0]].URI) },
-				[$.Settings.Language[1]]: { VTTs: await getVTTs($.Platform, $.Cache[Index][$.Settings.Language[1]].URI) },
+			// 获取VTT字幕地址数组
+			for await (var language of $.Settings.Language) {
+				Cache[language][Indices[language]].VTTs = await getVTTs($.Platform, Cache[language][Indices[language]].URI);
+				$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 			}
-			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
+			//$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 			// 写入缓存
-			$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
-			$.setjson($.Cache, `@DualSubs.${Platform}.Cache`)
+			$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
+			$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		};
 		// 构建WebVTT.m3u8
 		let response = await getWebVTTm3u8(url, type)
@@ -90,15 +90,50 @@ async function setENV(url, database) {
 // Get Cache
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let index = cache.findIndex(item => {
-		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(d => d?.URI), item?.[$.Settings.Language[1]]?.map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.map(d => d?.VTTs) ?? [], ...item?.[$.Settings.Language[1]]?.map(d => d?.VTTs) ?? []]
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
-		// URLs中有一项包含在url中即true
-		return URLs.some(URL => url.includes(URL || null))
-	})
-	$.log(`🎉 ${$.name}, Get Cache`, `index: ${index}`, "");
-	$.log(`🎉 ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache[index])}`, "");
-	return [index, cache[index]]
+	let Indices = {};
+	Indices.Index = await getIndex(cache);
+	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
+
+	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
+	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
+
+	return [Indices, cache[Indices.Index]]
+	/***************** Fuctions *****************/
+	async function getIndex(cache) {
+		return cache.findIndex(item => {
+			let URLs = [item?.URL];
+			for (var language of $.Settings.Language) {
+				let URI = item?.[language]?.map(d => aPath(item?.PATH, d?.URI));
+				let VTTs = item?.[language]?.map(d => d?.VTTs) ?? [];
+				URLs.push(URI, ...(VTTs?.map(VTT => aPath(URI, VTT))))
+			};
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
+			// URLs中有一项包含在url中即true
+			return URLs.some(URL => url.includes(URL || null))
+		})
+	};
+
+	async function getDataIndex(index, lang) {
+		return cache?.[index]?.[lang]?.findIndex(item => {
+			let URI = aPath(item?.PATH, item?.URI);
+			let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
+			let URLs = [URI, ...VTTs];
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
+			// URLs中有一项包含在url中即true
+			return URLs.some(URL => url.includes(URL || null))
+		})
+	};
+
+	function aPath(Link = "", URL = "") {
+		//$.log(`⚠ ${$.name}, Get Absolute Path`, "");
+		let rURL = (!/^https?:\/\//i.test(URL)) ? URL : null;
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `rURL: ${rURL}`, "");
+		let PATH = Link.match(/^https?:\/\/(.+)\//i)?.[0] ?? null;
+		$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
+		let aURL = (rURL) ? PATH + rURL : URL;
+		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
+		return aURL
+	};
 };
 
 // Function 4
@@ -121,6 +156,7 @@ async function getVTTs(platform, url) {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let VTTs = response.body.match(/^.+\.vtt$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
+		/*
 		// if 相对路径
 		if (!/^https?:\/\//gim.test(VTTs)) {
 			let PATH = url.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? null
@@ -128,6 +164,7 @@ async function getVTTs(platform, url) {
 			VTTs = VTTs.map(item => item = PATH + item)
 			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `VTTs.map内容: ${VTTs}`, "");
 		};
+		*/
 		// Disney + 筛选字幕
 		if (platform == "Disney_Plus") {
 			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))

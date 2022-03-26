@@ -18,23 +18,30 @@ let body = $response.body
 	[$.Platform, $.Settings, $.Cache, $.Verify] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
-		let [Index = -1, Cache = {}] = await getCache($.Cache)
+		let [Indices = {}, Cache = {}] = await getCache($.Cache);
 		// 序列化M3U8
-		let PlayList = M3U8.parse(body,["EXT-X-SESSION-DATA", "EXT-X-STREAM-INF"])
+		let PlayList = M3U8.parse(body);
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		// 创建缓存
 		Cache.URL = url; // PlayList.m3u8 URL
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
+		let Data = {};
 		for await (var language of $.Settings.Language) {
-			Cache[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
-			$.log(`🚧 ${$.name}`, "Cache[language].stringify", JSON.stringify(Cache[language]), "");
+			Data[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
+			$.log(`🚧 ${$.name}`, "Cache[language]", JSON.stringify(Data[language]), "");
+			Cache[language] = Data[language].map(item => {
+				delete item.EXT
+				delete item.OPTION
+				return item
+			});
+			$.log(`🚧 ${$.name}`, "Cache[language].Lang", JSON.stringify(Cache[language]), "");
 		}
 		//$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 		// 写入缓存
-		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
+		$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		// 写入选项
-		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
+		PlayList = await setOptions($.Platform, PlayList, Data[$.Settings.Language[0]], Data[$.Settings.Language[1]], $.Settings.Type);
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");
@@ -88,15 +95,32 @@ async function setENV(url, database) {
 // Get Cache
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let index = cache.findIndex(item => {
-		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(d => d?.URI), item?.[$.Settings.Language[1]]?.map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.map(d => d?.VTTs) ?? [], ...item?.[$.Settings.Language[1]]?.map(d => d?.VTTs) ?? []]
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
-		// URLs中有一项包含在url中即true
-		return URLs.some(URL => url.includes(URL || null))
-	})
-	$.log(`🎉 ${$.name}, Get Cache`, `index: ${index}`, "");
-	$.log(`🎉 ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache[index])}`, "");
-	return [index, cache[index]]
+	let Indices = {};
+	Indices.Index = await getIndex(cache);
+	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
+
+	for (var language of $.Settings.Language) Indices[language] = await getData(Indices.Index, language)
+	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
+
+	return [Indices, cache[Indices.Index]]
+
+	async function getIndex(cache) {
+		return cache.findIndex(item => {
+			let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(d => d?.URI), item?.[$.Settings.Language[1]]?.map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.map(d => d?.VTTs) ?? [], ...item?.[$.Settings.Language[1]]?.map(d => d?.VTTs) ?? []]
+			//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
+			// URLs中有一项包含在url中即true
+			return URLs.some(URL => url.includes(URL || null))
+		})
+	};
+
+	async function getData(index, lang) {
+		return cache[index][lang].findIndex(item => {
+			let URLs = [item?.URI, ...item?.VTTs ?? []]
+			//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
+			// URLs中有一项包含在url中即true
+			return URLs.some(URL => url.includes(URL || null))
+		})
+	};
 };
 
 // Function 4

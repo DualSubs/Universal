@@ -29,7 +29,7 @@ let body = $response.body
 			Cache[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
 			$.log(`🚧 ${$.name}`, "Cache[language].stringify", JSON.stringify(Cache[language]), "");
 		}
-		$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
+		//$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 		// 写入缓存
 		$.Cache = await setCache(Index, $.Cache, Cache, $.Settings.CacheSize)
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
@@ -88,7 +88,7 @@ async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let index = cache.findIndex(item => {
 		let URLs = [item?.URL, item?.[$.Settings.Language[0]]?.map(d => d?.URI), item?.[$.Settings.Language[1]]?.map(d => d?.URI), ...item?.[$.Settings.Language[0]]?.map(d => d?.VTTs) ?? [], ...item?.[$.Settings.Language[1]]?.map(d => d?.VTTs) ?? []]
-		$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, " Get Cache", `URLs: ${URLs}`, "");
 		// URLs中有一项包含在url中即true
 		return URLs.some(URL => url.includes(URL || null))
 	})
@@ -105,7 +105,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	if (index !== -1) delete target[index] // 删除旧记录
 	target.unshift(sources) // 头部插入缓存
 	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
+	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
 };
 
@@ -118,13 +118,13 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 	: (langCode == "EN") ? ["EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
 		: (langCode == "ES") ? ["ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
 			: [langCode]
-	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `langcode: ${langcodes}`, "");
+	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `langcode: ${langcodes}`, "");
 	//查询是否有符合语言的字幕
 	let datas = [];
 	for (var langcode of langcodes) {
-		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `langcode: ${langcode}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `langcode: ${langcode}`, "");
 		lang = DataBase?.Languages?.[platform]?.[langcode]
-		$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `lang: ${lang}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `lang: ${lang}`, "");
 		json.body.forEach((item, index) => {
 			if (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`) {
 				let name = item?.OPTION.NAME.replace(/\"/g, "") ?? lang;
@@ -132,13 +132,13 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 				let URI = item?.OPTION.URI.replace(/\"/g, "") ?? null;
 				let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? ""
 				let data = { "Index": index, "Name": name, "Language": language, "PATH": PATH, ...item, "URI": URI };
-				$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `data: ${JSON.stringify(data)}`, "");
+				//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
 				datas.push(data);
 			}
 		});
 		if (datas.length !== 0) break;
 	};
-	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Index", `datas: ${JSON.stringify(datas)}`, "");
+	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
 	/*
 	let obj = (index != -1) ? body[index] : null;
@@ -222,11 +222,8 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
 			// 修改语言代码
 			//newSub.OPTION.LANGUAGE = obj1.OPTION.LANGUAGE
-			/*
-			newSub.OPTION.LANGUAGE = (platform == "Apple_TV" || platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${item}--\"`
-				: (platform == "HBO_Max") ? `\"${obj1.Language} ${i}\"`
-					: `\"${obj1.Language}\"`
-			*/
+			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${item}--\"`
+				: obj1.OPTION.LANGUAGE
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} ${item}\"`
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");

@@ -134,7 +134,7 @@ async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
 	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
-		let VTTs = response.body.match(/^.+\.vtt$/gim);
+		let VTTs = response.body.match(/^.+\.(web)?vtt$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
 		// Disney + 筛选字幕
 		if (platform == "Disney_Plus") {

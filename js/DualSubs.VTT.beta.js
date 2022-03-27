@@ -25,38 +25,44 @@ delete headers["Connection"]
 	if ($.Settings.Switch) {
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
+		if (Indices.Index == -1) $.done();
+		// 获取response
+		let response = await $.http.get({ "url": url, "headers": headers }).then(response => {
+			$.log("response", `headers: ${JSON.stringify(response.headers)}`);
+			return response
+		});
 		// 获取序列化VTT
-		let OriginVTT = await $.http.get({ "url": url, "headers": headers }).then((response) => {
-			$.log("OriginVTT", `headers: ${JSON.stringify(response.headers)}`);
-			let vtt = VTT.parse(response.body);
-			//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(vtt), "");
-			return vtt;
-		})
+		let OriginVTT = VTT.parse(response.body)
+		//$.log(`🚧 ${$.name}`, "OriginVTT.parse", JSON.stringify(OriginVTT), "");
 		// 创建双语字幕JSON
 		let DualSub = {};
 		// 获取类型
 		if (!type) $.done();
 		else if (type == "Official" || type == "External") {
-			let Offset = new Number;
-			let request = {};
+			//let Offset = new Number;
+			//let request = {};
 			if (type == "Official") {
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
 				let VTTs = Cache[$.Settings.Language[1]][Indices[$.Settings.Language[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
-				request = await getOfficialRequest($.Platform, VTTs);
-				Offset = 0;
+				else if ($.Platform == "Apple_TV") {
+					for await (var vtt of VTTs) {
+						//let request = { "url": vtt, "headers": headers };
+						let SecondVTT = await getWebVTT({ "url": vtt, "headers": headers });
+						DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
+					};
+				} else {
+					let request = await getOfficialRequest($.Platform, VTTs);
+					let SecondVTT = await getWebVTT(request);
+					DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
+				}
 			} else if (type == "External") {
 				$.log(`🚧 ${$.name}`, "外挂字幕", "");
 				request.url = $.Settings.ExternalURL
-				Offset = $.Settings.Offset;
+				let SecondVTT = await getWebVTT(request);
+				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
 			}
-			let SecondVTT = await $.http.get(request).then((response) => {
-				$.log("SecondVTT", `headers: ${JSON.stringify(response.headers)}`);
-				let vtt = VTT.parse(response.body);
-				//$.log(`🚧 ${$.name}`, "VTT.parse", JSON.stringify(vtt), "");
-				return vtt;
-			});
-			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, Offset, $.Settings.Tolerance, [$.Settings.Position]);
+			async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
 		} else {
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			DualSub = OriginVTT;
@@ -69,8 +75,9 @@ delete headers["Connection"]
 			}));
 		}
 		DualSub = VTT.stringify(DualSub)
-		//$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
+		$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
 		response.body = DualSub
+		$.log(`🚧 ${$.name}`, "response.stringify", JSON.stringify(response), "");
 		$.done({ response })
 	}
 })()
@@ -142,7 +149,6 @@ async function getCache(cache = {}) {
 		return cache.findIndex(item => {
 			let URLs = [item?.URL];
 			for (var language of $.Settings.Language) URLs.push(item?.[language]?.map(d => getURIs(d)));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
 	};

@@ -121,8 +121,7 @@ async function setENV(url, database) {
 // Get Cache
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let Indices = {};
-	Indices.Index = await getIndex(cache);
+	let Indices = { "Index": await getIndex(cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
 	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
 	if (Indices[$.Settings.Language[0]] !== -1) {

@@ -30,7 +30,6 @@ delete headers["Connection"]
 			// 获取VTT字幕地址数组
 			if (type == "Official") {
 				for await (var language of $.Settings.Language) {
-					//let indices = (Indices?.[language] == -1) ? 0 : Indices?.[language]
 					for await (var data of Cache[language]) data.VTTs = await getVTTs($.Platform, data.URI);
 					$.log(`🚧 ${$.name}`, `${Object.keys(Cache[language])}`, JSON.stringify(Cache[language]), "");
 				}
@@ -97,8 +96,7 @@ async function setENV(url, database) {
 // Get Cache
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let Indices = {};
-	Indices.Index = await getIndex(cache);
+	let Indices = { "Index": await getIndex(cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
 	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
@@ -141,9 +139,7 @@ async function getVTTs(platform, url) {
 			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))
 			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
 		}
-
 		VTTs = VTTs.map(VTT => aPath(url, VTT));
-
 		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
 		return VTTs
 	})

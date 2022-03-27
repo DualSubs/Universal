@@ -28,9 +28,16 @@ delete headers["Connection"]
 		if (Indices.Index !== -1) {
 			// 创建缓存
 			// 获取VTT字幕地址数组
-			for await (var language of $.Settings.Language) {
-				Cache[language][Indices[language]].VTTs = await getVTTs($.Platform, Cache[language][Indices[language]].URI);
-				$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
+			if (type == "Official") {
+				for await (var language of $.Settings.Language) {
+					//let indices = (Indices?.[language] == -1) ? 0 : Indices?.[language]
+					for await (var data of Cache[language]) data.VTTs = await getVTTs($.Platform, data.URI);
+					$.log(`🚧 ${$.name}`, `${Object.keys(Cache[language])}`, JSON.stringify(Cache[language]), "");
+				}
+			}
+			else {
+				let language = $.Settings.Language[0]
+				Cache[language][Indices[language]].VTTs = await getVTTs($.Platform, url);
 			}
 			//$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 			// 写入缓存

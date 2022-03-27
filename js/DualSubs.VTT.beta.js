@@ -41,7 +41,7 @@ delete headers["Connection"]
 			let request = {};
 			if (type == "Official") {
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
-				let VTTs = Cache[language][Indices[language]].VTTs ?? null;
+				let VTTs = Cache[$.Settings.Language[1]][Indices[$.Settings.Language[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
 				request = await getOfficialRequest($.Platform, VTTs);
 				Offset = 0;

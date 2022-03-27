@@ -25,19 +25,19 @@ let body = $response.body
 		
 		Cache.URL = url; // PlayList.m3u8 URL
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
-		let Data = {};
+		//let Data = {};
 		for await (var language of $.Settings.Language) {
-			Data[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
+			Cache[language] = await MEDIA($.Platform, PlayList, "SUBTITLES", language);
 			//$.log(`🚧 ${$.name}`, `Data[${language}]`, JSON.stringify(Data[language]), "");
-			Cache[language] = Data[language].map(item => { return { "Index": item.Index, "Name": item.Name, "Language": item.Language, "PATH": item.PATH, "URI": item.URI } });
-			$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
+			//Cache[language] = Data[language].map(item => { return { "Index": item.Index, "Name": item.Name, "Language": item.Language, "PATH": item.PATH, "URI": item.URI } });
+			//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		}
 		//$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 		// 写入缓存
 		$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		// 写入选项
-		PlayList = await setOptions($.Platform, PlayList, Data[$.Settings.Language[0]], Data[$.Settings.Language[1]], $.Settings.Type);
+		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");

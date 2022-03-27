@@ -25,7 +25,7 @@
 			"EN"
 		],
 		"Position": "Forward", // Forward, Reverse
-		"CacheSize": 10,
+		"CacheSize": 3,
 		"Offset": 0,
 		"Tolerance": 1000
 	},

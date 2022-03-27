@@ -94,9 +94,7 @@ async function getCache(cache = {}) {
 	let Indices = {};
 	Indices.Index = await getIndex(cache);
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-
 	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
-
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return [Indices, cache[Indices.Index]]
 	/***************** Fuctions *****************/
@@ -107,48 +105,9 @@ async function getCache(cache = {}) {
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
-		// 分步骤
-		/*
-		return cache.findIndex(item => {
-			let URLs = [item?.URL];
-			for (var language of $.Settings.Language) {
-				let URLss = item?.[language]?.map(d => getURIs(d))
-				$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLss: ${URLss}`, "");
-				URLs.push(URLss);
-			};
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			// URLs中有一项包含在url中即true
-			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
-			return result
-		})
-		*/
 	};
-
 	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	// 分步骤
-	/*
-	async function getDataIndex(index, lang) {
-		return cache?.[index]?.[lang]?.findIndex(item => {
-			let URLs = getURIs(item)
-			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
-			return result
-		})
-	};
-	*/
-
 	function getURIs(item) { return [item?.URI, item?.VTTs?.map(VTT => VTT)] }
-	/*
-	function getURIs(item) {
-		let URI = aPath(item?.PATH, item?.URI);
-		let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
-		return [URI, VTTs]
-		//let URLs = [URI, VTTs];
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
-		//return URLs
-	};
-	*/
 };
 
 // Function 4
@@ -180,20 +139,6 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 		lang = DataBase?.Languages?.[platform]?.[langcode]
 		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `lang: ${lang}`, "");
 		datas = json.body.filter(item => (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`));
-
-		/*
-		json.body.forEach((item, index) => {
-			if (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`) {
-				let name = item?.OPTION.NAME.replace(/\"/g, "") ?? lang;
-				let language = item?.OPTION.LANGUAGE.replace(/\"/g, "") ?? lang;
-				let URI = item?.OPTION.URI.replace(/\"/g, "") ?? null;
-				let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? ""
-				let data = { "Index": index, "Name": name, "Language": language, "PATH": PATH, ...item, "URI": URI };
-				//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
-				datas.push(data);
-			}
-		});
-		*/
 		if (datas.length !== 0) break;
 	};
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
@@ -208,38 +153,8 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
 
+	/***************** Fuctions *****************/
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] + URL };
-	/*
-	function aPath(Link = "", URL = "") {
-		//$.log(`⚠ ${$.name}, Get Absolute Path`, `Link: ${Link}`, `URL: ${URL}`, "");
-		let PATH = Link.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
-		//let PATH = Link.match(/^(?<PATH>https?:\/\/(?:.+)\/)/i)?.groups?.PATH ?? "";
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
-		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
-		let aURL = (/^https?:\/\//i.test(URL)) ? URL : PATH + URL;
-		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
-		return aURL
-	};
-	*/
-	/*
-	let obj = (index != -1) ? body[index] : null;
-	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");
-	let name = obj?.OPTION.NAME.replace(/\"/g, "") ?? langCode;
-	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Name: ${name}`, "");
-	let language = obj?.OPTION.LANGUAGE.replace(/\"/g, "") ?? langCode;
-	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Language: ${language}`, "");
-	let URI = obj?.OPTION.URI.replace(/\"/g, "") ?? null;
-	// if 相对路径
-	if (!/^https?:\/\//i.test(URI)) {
-		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? ""
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.m3u8 URL", `url.match: ${PATH}`, "");
-		URI = (URI == null) ? URI : PATH + URI
-	};
-	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA URI", `URI: ${URI}`, "");
-	let data = { "Index": index, "Name": name, "Language": language,"URI": URI, ...obj }
-	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `Data: ${JSON.stringify(data)}`, "");
-	return data
-	*/
 };
 
 // Function 6

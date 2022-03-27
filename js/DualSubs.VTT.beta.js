@@ -124,9 +124,7 @@ async function getCache(cache = {}) {
 	let Indices = {};
 	Indices.Index = await getIndex(cache);
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-
 	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
-
 	if (Indices[$.Settings.Language[0]] !== -1) {
 		Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
 			if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION.CHARACTERISTICS) return true;
@@ -148,60 +146,9 @@ async function getCache(cache = {}) {
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
-		// 分步骤
-		/*
-		return cache.findIndex(item => {
-			let URLs = [item?.URL];
-			for (var language of $.Settings.Language) {
-				let URLss = item?.[language]?.map(d => getURIs(d))
-				$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLss: ${URLss}`, "");
-				URLs.push(URLss);
-			};
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			// URLs中有一项包含在url中即true
-			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
-			return result
-		})
-		*/
 	};
-
-	async function getDataIndex(index, lang) {
-		return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null)));
-		// 分步骤
-		/*
-		return cache?.[index]?.[lang]?.findIndex(item => {
-			let URLs = getURIs(item)
-			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
-			return result
-		})
-		*/
-	};
-
-	function getURIs(item) {
-		let URI = aPath(item?.PATH, item?.URI);
-		let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
-		return [URI, VTTs]
-		/*
-		let URLs = [URI, VTTs];
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
-		return URLs
-		*/
-	};
-
-	function aPath(Link = "", URL = "") {
-		//$.log(`⚠ ${$.name}, Get Absolute Path`, `Link: ${Link}`, `URL: ${URL}`, "");
-		let PATH = Link.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
-		//let PATH = Link.match(/^(?<PATH>https?:\/\/(?:.+)\/)/i)?.groups?.PATH ?? "";
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
-		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
-		/*
-		let aURL = (/^https?:\/\//i.test(URL)) ? URL : PATH + URL;
-		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
-		return aURL
-		*/
-	};
+	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
+	function getURIs(item) { return [item?.URI, item?.VTTs?.map(VTT => VTT)] }
 };
 
 // Function 4

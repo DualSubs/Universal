@@ -100,9 +100,7 @@ async function getCache(cache = {}) {
 	let Indices = {};
 	Indices.Index = await getIndex(cache);
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-
 	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
-
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return [Indices, cache[Indices.Index]]
 	/***************** Fuctions *****************/
@@ -113,60 +111,9 @@ async function getCache(cache = {}) {
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
-		// 分步骤
-		/*
-		return cache.findIndex(item => {
-			let URLs = [item?.URL];
-			for (var language of $.Settings.Language) {
-				let URLss = item?.[language]?.map(d => getURIs(d))
-				$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLss: ${URLss}`, "");
-				URLs.push(URLss);
-			};
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			// URLs中有一项包含在url中即true
-			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
-			return result
-		})
-		*/
 	};
-
-	async function getDataIndex(index, lang) {
-		return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null)));
-		// 分步骤
-		/*
-		return cache?.[index]?.[lang]?.findIndex(item => {
-			let URLs = getURIs(item)
-			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
-			return result
-		})
-		*/
-	};
-
-	function getURIs(item) {
-		let URI = aPath(item?.PATH, item?.URI);
-		let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
-		return [URI, VTTs]
-		/*
-		let URLs = [URI, VTTs];
-		//$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
-		return URLs
-		*/
-	};
-
-	function aPath(Link = "", URL = "") {
-		//$.log(`⚠ ${$.name}, Get Absolute Path`, `Link: ${Link}`, `URL: ${URL}`, "");
-		let PATH = Link.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
-		//let PATH = Link.match(/^(?<PATH>https?:\/\/(?:.+)\/)/i)?.groups?.PATH ?? "";
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
-		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
-		/*
-		let aURL = (/^https?:\/\//i.test(URL)) ? URL : PATH + URL;
-		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
-		return aURL
-		*/
-	};
+	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
+	function getURIs(item) { return [item?.URI, item?.VTTs?.map(VTT => VTT)] }
 };
 
 // Function 4
@@ -189,15 +136,6 @@ async function getVTTs(platform, url) {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let VTTs = response.body.match(/^.+\.vtt$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
-		/*
-		// if 相对路径
-		if (!/^https?:\/\//gim.test(VTTs)) {
-			let PATH = url.match(/(?<PATH>^https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? null
-			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `PATH: ${PATH}`, "");
-			VTTs = VTTs.map(item => item = PATH + item)
-			//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `VTTs.map内容: ${VTTs}`, "");
-		};
-		*/
 		// Disney + 筛选字幕
 		if (platform == "Disney_Plus") {
 			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))
@@ -210,11 +148,8 @@ async function getVTTs(platform, url) {
 		return VTTs
 	})
 	else return null;
-
-	function aPath(aURL = "", URL = "") {
-		let PATH = aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
-		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
-	};
+	/***************** Fuctions *****************/
+	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] + URL };
 };
 
 // Function 4

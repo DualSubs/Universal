@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.0");
+const $ = new Env("DualSubs v0.5.0-3");
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -96,8 +96,8 @@ async function getCache(cache = {}) {
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
 
 	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
-	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 
+	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return [Indices, cache[Indices.Index]]
 	/***************** Fuctions *****************/
 	async function getIndex(cache) {
@@ -141,9 +141,12 @@ async function getCache(cache = {}) {
 	function getURIs(item) {
 		let URI = aPath(item?.PATH, item?.URI);
 		let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
+		return [URI, VTTs]
+		/*
 		let URLs = [URI, VTTs];
 		//$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
 		return URLs
+		*/
 	};
 
 	function aPath(Link = "", URL = "") {
@@ -151,9 +154,12 @@ async function getCache(cache = {}) {
 		let PATH = Link.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
 		//let PATH = Link.match(/^(?<PATH>https?:\/\/(?:.+)\/)/i)?.groups?.PATH ?? "";
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
+		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
+		/*
 		let aURL = (/^https?:\/\//i.test(URL)) ? URL : PATH + URL;
 		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
 		return aURL
+		*/
 	};
 };
 

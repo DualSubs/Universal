@@ -213,13 +213,17 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 	datas = datas.map((item, index) => {
 		let name = item?.OPTION.NAME.replace(/\"/g, "") ?? lang;
 		let language = item?.OPTION.LANGUAGE.replace(/\"/g, "") ?? lang;
-		let URI = item?.OPTION.URI.replace(/\"/g, "") ?? null;
-		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? ""
+		let URI = aPath(url, item?.OPTION.URI.replace(/\"/g, "") ?? null);
 		return { "Index": index, "Name": name, "Language": language, "PATH": PATH, ...item, "URI": URI };
 		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
 	});
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
+
+	function aPath(aURL = "", URL = "") {
+		let PATH = aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
+		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
+	};
 	/*
 	let obj = (index != -1) ? body[index] : null;
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");

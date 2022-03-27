@@ -204,10 +204,17 @@ async function getVTTs(platform, url) {
 			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
 		}
 
+		VTTs = VTTs.map(VTT => aPath(url, VTT));
+
 		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
 		return VTTs
 	})
 	else return null;
+
+	function aPath(aURL = "", URL = "") {
+		let PATH = aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
+		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
+	};
 };
 
 // Function 4

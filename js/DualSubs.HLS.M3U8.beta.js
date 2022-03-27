@@ -103,35 +103,55 @@ async function getCache(cache = {}) {
 	async function getIndex(cache) {
 		return cache.findIndex(item => {
 			let URLs = [item?.URL];
+			for (var language of $.Settings.Language) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
+			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
+		})
+		// 分步骤
+		/*
+		return cache.findIndex(item => {
+			let URLs = [item?.URL];
 			for (var language of $.Settings.Language) {
-				let URI = item?.[language]?.map(d => aPath(item?.PATH, d?.URI));
-				let VTTs = item?.[language]?.map(d => d?.VTTs) ?? [];
-				URLs.push(URI, ...(VTTs?.map(VTT => aPath(URI, VTT))))
+				let URLss = item?.[language]?.map(d => getURIs(d))
+				$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLss: ${URLss}`, "");
+				URLs.push(URLss);
 			};
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			// URLs中有一项包含在url中即true
-			return URLs.some(URL => url.includes(URL || null))
+			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
+			return result
 		})
+		*/
 	};
 
 	async function getDataIndex(index, lang) {
+		return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null)));
+		// 分步骤
+		/*
 		return cache?.[index]?.[lang]?.findIndex(item => {
-			let URI = aPath(item?.PATH, item?.URI);
-			let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
-			let URLs = [URI, ...VTTs];
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
-			// URLs中有一项包含在url中即true
-			return URLs.some(URL => url.includes(URL || null))
+			let URLs = getURIs(item)
+			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
+			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
+			return result
 		})
+		*/
+	};
+
+	function getURIs(item) {
+		let URI = aPath(item?.PATH, item?.URI);
+		let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
+		let URLs = [URI, VTTs];
+		//$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
+		return URLs
 	};
 
 	function aPath(Link = "", URL = "") {
-		$.log(`⚠ ${$.name}, Get Absolute Path`, `Link: ${Link}`, `URL: ${URL}`, "");
-		let rURL = (!/^https?:\/\//i.test(URL)) ? URL : null;
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `rURL: ${rURL}`, "");
-		let PATH = Link.match(/^https?:\/\/(.+)\//i)?.[0] ?? null;
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
-		let aURL = (rURL) ? PATH + rURL : URL;
+		//$.log(`⚠ ${$.name}, Get Absolute Path`, `Link: ${Link}`, `URL: ${URL}`, "");
+		let PATH = Link.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
+		//let PATH = Link.match(/^(?<PATH>https?:\/\/(?:.+)\/)/i)?.groups?.PATH ?? "";
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
+		let aURL = (/^https?:\/\//i.test(URL)) ? URL : PATH + URL;
 		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
 		return aURL
 	};

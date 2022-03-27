@@ -129,13 +129,13 @@ async function getCache(cache = {}) {
 
 	if (Indices[$.Settings.Language[0]] !== -1) {
 		Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
-			if (platform == "Apple_TV") {
-				if (data.OPTION[GROUP - ID] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION[GROUP - ID]
-					&& data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION[GROUP - ID]) return true;
-			} else {
-				if (data.OPTION[GROUP - ID] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION[GROUP - ID]) return true;
-			}
+			if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION.CHARACTERISTICS) return true;
 		});
+		if (Indices[$.Settings.Language[1]] == -1) {
+			Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
+				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"]) return true;
+			});
+		}
 	}
 
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");

@@ -204,26 +204,26 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 	};
 	return json
 
-	async function getOptions(platform = "", obj1 = {}, obj2 = {}, type = []) {
-		return type.map((item, i) => {
-			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `item: ${JSON.stringify(item)}`, "");
+	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = []) {
+		return types.map((type, i) => {
+			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `type: ${JSON.stringify(type)}`, "");
 			// 复制此语言选项
 			let newSub = (obj1.Index !== -1) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub: ${JSON.stringify(newSub)}`, "");
 			// 修改名称
 			newSub.OPTION.NAME = (platform == "HBO_Max") ? `\"${obj1.Name} ${i}\"`
-				: `\"${obj1.Name}/${obj2.Name} (${item})\"`
+				: `\"${obj1.Name}/${obj2.Name} (${type})\"`
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
 			// 修改语言代码
 			//newSub.OPTION.LANGUAGE = obj1.OPTION.LANGUAGE
-			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${item}--\"`
+			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${type}--\"`
 				: obj1.OPTION.LANGUAGE
 			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} ${item}\"`
+			newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} ${type}\"`
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
 			// 修改链接
-			newSub.OPTION.URI = `\"${newSub.URI}%${item}%\"`
+			newSub.OPTION.URI = `\"${newSub.URI}?dualsubs=${type}\"`
 			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Array", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
 			// 非自动选择
 			newSub.OPTION.AUTOSELECT = "NO"

@@ -125,42 +125,30 @@ async function getCache(cache = {}) {
 		*/
 	};
 
+	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
+	// 分步骤
+	/*
 	async function getDataIndex(index, lang) {
-		return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null)));
-		// 分步骤
-		/*
 		return cache?.[index]?.[lang]?.findIndex(item => {
 			let URLs = getURIs(item)
 			let result = URLs.flat(Infinity).some(URL => url.includes(URL || null));
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `result: ${result}`, "");
 			return result
 		})
-		*/
 	};
+	*/
 
+	function getURIs(item) { return [item?.URI, item?.VTTs?.map(VTT => VTT)] }
+	/*
 	function getURIs(item) {
 		let URI = aPath(item?.PATH, item?.URI);
 		let VTTs = item?.VTTs?.map(VTT => aPath(URI, VTT)) ?? [];
 		return [URI, VTTs]
-		/*
-		let URLs = [URI, VTTs];
+		//let URLs = [URI, VTTs];
 		//$.log(`🎉 ${$.name}, 调试信息`, " Get Data Index", `URLs: ${URLs}`, "");
-		return URLs
-		*/
+		//return URLs
 	};
-
-	function aPath(Link = "", URL = "") {
-		//$.log(`⚠ ${$.name}, Get Absolute Path`, `Link: ${Link}`, `URL: ${URL}`, "");
-		let PATH = Link.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
-		//let PATH = Link.match(/^(?<PATH>https?:\/\/(?:.+)\/)/i)?.groups?.PATH ?? "";
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
-		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
-		/*
-		let aURL = (/^https?:\/\//i.test(URL)) ? URL : PATH + URL;
-		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
-		return aURL
-		*/
-	};
+	*/
 };
 
 // Function 4
@@ -220,10 +208,19 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
 
-	function aPath(aURL = "", URL = "") {
-		let PATH = aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
+	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] + URL };
+	/*
+	function aPath(Link = "", URL = "") {
+		//$.log(`⚠ ${$.name}, Get Absolute Path`, `Link: ${Link}`, `URL: ${URL}`, "");
+		let PATH = Link.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] ?? null;
+		//let PATH = Link.match(/^(?<PATH>https?:\/\/(?:.+)\/)/i)?.groups?.PATH ?? "";
+		//$.log(`🚧 ${$.name}, 调试信息`, "Get Absolute Path", `PATH: ${PATH}`, "");
 		return (/^https?:\/\//i.test(URL)) ? URL : PATH + URL
+		let aURL = (/^https?:\/\//i.test(URL)) ? URL : PATH + URL;
+		//$.log(`🎉 ${$.name}, Get Absolute Path`, `aURL: ${aURL}`, "");
+		return aURL
 	};
+	*/
 	/*
 	let obj = (index != -1) ? body[index] : null;
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Object", `Object: ${JSON.stringify(obj)}`, "");

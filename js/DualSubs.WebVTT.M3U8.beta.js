@@ -134,8 +134,10 @@ async function getVTTs(platform, url) {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let VTTs = response.body.match(/^.+\.(web)?vtt$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
-		// Disney + 筛选字幕
-		if (platform == "Disney_Plus") {
+		// 筛选字幕
+		if (platform == "Apple_TV") {
+			VTTs = VTTs.filter(item => !/\/empty-\d+\.webvtt/.test(item))
+		} else if (platform == "Disney_Plus") {
 			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))
 			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
 		}

@@ -147,7 +147,7 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 		let name = item?.OPTION.NAME.replace(/\"/g, "") ?? lang;
 		let language = item?.OPTION.LANGUAGE.replace(/\"/g, "") ?? lang;
 		let URI = aPath(url, item?.OPTION.URI.replace(/\"/g, "") ?? null);
-		return { "Index": index, "Name": name, "Language": language, "PATH": PATH, ...item, "URI": URI };
+		return { "Index": index, "Name": name, "Language": language, ...item, "URI": URI };
 		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
 	});
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");

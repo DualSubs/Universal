@@ -165,6 +165,9 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `langcode: ${langcode}`, "");
 		lang = DataBase?.Languages?.[platform]?.[langcode]
 		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `lang: ${lang}`, "");
+		datas = json.body.filter(item => (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`));
+
+		/*
 		json.body.forEach((item, index) => {
 			if (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == `\"${lang}\"`) {
 				let name = item?.OPTION.NAME.replace(/\"/g, "") ?? lang;
@@ -176,9 +179,20 @@ async function MEDIA(platform = "", json = {}, type = "", langCode = "") {
 				datas.push(data);
 			}
 		});
+		*/
 		if (datas.length !== 0) break;
 	};
-	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
+
+	datas = datas.map((item, index) => {
+		let name = item?.OPTION.NAME.replace(/\"/g, "") ?? lang;
+		let language = item?.OPTION.LANGUAGE.replace(/\"/g, "") ?? lang;
+		let URI = item?.OPTION.URI.replace(/\"/g, "") ?? null;
+		let PATH = url.match(/^(?<PATH>https?:\/\/(?:.+)\/)(?<fileName>[^\/]+\.m3u8)/i)?.groups?.PATH ?? ""
+		return { "Index": index, "Name": name, "Language": language, "PATH": PATH, ...item, "URI": URI };
+		//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
+	});
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
 	/*
 	let obj = (index != -1) ? body[index] : null;

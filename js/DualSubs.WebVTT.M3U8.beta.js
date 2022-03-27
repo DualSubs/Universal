@@ -158,7 +158,7 @@ async function getWebVTTm3u8(url = "", type = "") {
 	$.log(`⚠ ${$.name}, Get Subtitle WebVTT *.m3u8`, "");
 	return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body: ${response.body}`, "");
-		response.body = response.body.replace(/^.+\.vtt$/gim, `$&%${type}%`);
+		response.body = response.body.replace(/^.+\.(web)?vtt$/gim, `$&%${type}%`);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body.replace: ${response.body}`, "");
 
 		$.log(`🎉 ${$.name}, Get Subtitle WebVTT *.m3u8`, `response: ${JSON.stringify(response)}`, "");

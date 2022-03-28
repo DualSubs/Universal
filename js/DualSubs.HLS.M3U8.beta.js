@@ -127,7 +127,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 // Function 5.1
 // Get EXT-X-MEDIA Data
 async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
-	$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
+	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
 	// 自动语言转换
 	let langcodes = await switchLangCode(platform, langCode, DataBase);
 	//查询是否有符合语言的字幕
@@ -231,7 +231,7 @@ async function setOptions(platform = "", json = {}, type = [], langCode = "") {
 };
 
 async function switchLangCode(platform = "", langCode = "", database) {
-	$.log(`🎉 ${$.name}, switch LangCode`, `langcode: ${langcodes}`, "");
+	$.log(`🎉 ${$.name}, switch LangCode`, `langCode: ${langCode}`, "");
 	// 自动语言转换
 	let langcodes = (langCode == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
 		: (langCode == "EN") ? ["EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）

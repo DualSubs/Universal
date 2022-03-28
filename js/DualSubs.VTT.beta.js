@@ -21,7 +21,7 @@ delete headers["Connection"]
 
 /***************** Processing *****************/
 !(async () => {
-	[$.Platform, $.Settings, $.Cache, $.Verify] = await setENV(url, DataBase);
+	[$.Platform, $.Verify, $.Settings, $.Cache] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
@@ -87,46 +87,7 @@ delete headers["Connection"]
 /***************** Fuctions *****************/
 // Function 1
 // Set Environment Variables
-async function setENV(url, database) {
-	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
-	/***************** Platform *****************/
-	let Platform = url.match(/\.(tv|itunes)\.apple\.com/i) ? "Apple_TV"
-		: url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
-			: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
-				: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-					: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-						: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
-							: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
-								: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-									: url.match(/www\.youtube\.com/i) ? "YouTube"
-										: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-											: undefined
-	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Platform: ${Platform}`, "");
-	/***************** BoxJs *****************/
-	// 包装为局部变量，用完释放内存
-	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	let BoxJs = $.getjson("DualSubs", database) // BoxJs
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
-	/***************** Verify *****************/
-	let Verify = BoxJs?.Verify?.Settings || database?.Settings?.Verify;
-	/***************** Settings *****************/
-	let Settings = BoxJs[Platform]?.Settings || database?.Settings?.[Platform];
-	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
-	if (typeof Settings.Type == "string") Settings.Type = Settings.Type.split(",") // BoxJs字符串转数组
-	if (!Verify.GoogleCloud.Auth) Settings.Type.splice(Settings.Type.indexOf("GoogleCloud"), 1);
-	if (!Verify.Azure.Auth) Settings.Type.splice(Settings.Type.indexOf("Azure"), 1);
-	if (!Verify.DeepL.Auth) Settings.Type.splice(Settings.Type.indexOf("DeepL"), 1);
-	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
-	Settings.Offset = parseInt(Settings.Offset, 10) // BoxJs字符串转数字
-	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
-	/***************** Cache *****************/
-	let Cache = BoxJs[Platform]?.Cache || [];
-	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
-	if (typeof Cache == "string") Cache = JSON.parse(Cache)
-	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	return [Platform, Settings, Cache, Verify];
-};
+async function setENV(e,t){let i=e.match(/\.(tv|itunes)\.apple\.com/i)?"Apple_TV":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),a=c?.Verify?.Settings||t?.Settings?.Verify,o=c[i]?.Settings||t?.Settings?.[i];o.Switch=JSON.parse(o.Switch),"string"==typeof o.Type&&(o.Type=o.Type.split(",")),a.GoogleCloud.Auth||o.Type.splice(o.Type.indexOf("GoogleCloud"),1),a.Azure.Auth||o.Type.splice(o.Type.indexOf("Azure"),1),a.DeepL.Auth||o.Type.splice(o.Type.indexOf("DeepL"),1),o.CacheSize=parseInt(o.CacheSize,10),o.Offset=parseInt(o.Offset,10),o.Tolerance=parseInt(o.Tolerance,10);let s=c[i]?.Cache||[];return"string"==typeof s&&(s=JSON.parse(s)),[i,a,o,s]}
 
 // Function 3
 // Get Cache

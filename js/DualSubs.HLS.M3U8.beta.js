@@ -36,7 +36,7 @@ let body = $response.body
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		// 写入选项
 		//PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
-		PlayList = await setOptions($.Platform, PlayList, $.Settings.Type, $.Settings.Language[0])
+		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Language[1]], $.Settings.Type, $.Settings.Language[0])
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");
@@ -49,7 +49,49 @@ let body = $response.body
 /***************** Fuctions *****************/
 // Function 1
 // Set Environment Variables
-async function setENV(e,t){let i=e.match(/\.(tv|itunes)\.apple\.com/i)?"Apple_TV":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),a=c?.Verify?.Settings||t?.Settings?.Verify,o=c[i]?.Settings||t?.Settings?.[i];o.Switch=JSON.parse(o.Switch),"string"==typeof o.Type&&(o.Type=o.Type.split(",")),a.GoogleCloud.Auth||o.Type.splice(o.Type.indexOf("GoogleCloud"),1),a.Azure.Auth||o.Type.splice(o.Type.indexOf("Azure"),1),a.DeepL.Auth||o.Type.splice(o.Type.indexOf("DeepL"),1),o.CacheSize=parseInt(o.CacheSize,10),o.Offset=parseInt(o.Offset,10),o.Tolerance=parseInt(o.Tolerance,10);let s=c[i]?.Cache||[];return"string"==typeof s&&(s=JSON.parse(s)),[i,a,o,s]}
+// Set Environment Variables
+async function setENV(url, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Platform *****************/
+	let Platform = url.match(/\.(tv|itunes)\.apple\.com/i) ? "Apple_TV"
+		//: url.match(/(play-edge|vod-.*-aoc)\.(tv|itunes)\.apple\.com/i) ? "Apple_TV"
+		//: url.match(/(play|vod-.*-amt)\.(tv|itunes)\.apple\.com/i) ? "iTunes"
+		: url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
+			: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
+				: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
+					: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
+						: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
+							: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+								: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+									: url.match(/www\.youtube\.com/i) ? "YouTube"
+										: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+											: undefined
+	$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Platform: ${Platform}`, "");
+	/***************** BoxJs *****************/
+	// 包装为局部变量，用完释放内存
+	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
+	let BoxJs = $.getjson("DualSubs", database) // BoxJs
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
+	/***************** Verify *****************/
+	let Verify = BoxJs?.Verify?.Settings || database?.Settings?.Verify;
+	/***************** Settings *****************/
+	let Settings = BoxJs[Platform]?.Settings || database?.Settings?.[Platform];
+	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	if (typeof Settings.Type == "string") Settings.Type = Settings.Type.split(",") // BoxJs字符串转数组
+	if (!Verify.GoogleCloud.Auth) Settings.Type = Settings.Type.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+	if (!Verify.Azure.Auth) Settings.Type = Settings.Type.filter(e => e !== "Azure");
+	if (!Verify.DeepL.Auth) Settings.Type = Settings.Type.filter(e => e !== "DeepL");
+	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
+	Settings.Offset = parseInt(Settings.Offset, 10) // BoxJs字符串转数字
+	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Settings内容: ${JSON.stringify(Settings)}`, "");
+	/***************** Cache *****************/
+	let Cache = BoxJs[Platform]?.Cache || [];
+	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
+	if (typeof Cache == "string") Cache = JSON.parse(Cache)
+	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
+	return [Platform, Verify, Settings, Cache];
+};
 
 // Function 3
 // Get Cache
@@ -108,17 +150,18 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 // Set EXT-X-MEDIA Data
 async function setMEDIA(data = {}, langCode = "") {
 	$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
-	data.name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
-	data.language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
+	data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
+	data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
 	data.URI = aPath(url, data?.OPTION.URI.replace(/\"/g, "") ?? null);
 	//let Data = { "Index": index, "Name": name, "Language": language, ...data, "URI": URI };
-	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
+	$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
 	return data
 };
 
 // Function 6
 // Set DualSubs Subtitle Options
-async function setOptions(platform = "", json = {}, type = [], langCode = "") {
+async function setOptions(platform = "", json = {}, language2 = [], types = [], langCode = "") {
+	$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `types: ${types}`, "");
 	// 自动语言转换
 	let langcodes = await switchLangCode(platform, langCode, DataBase);
 	// 构建新m3u8对象
@@ -128,67 +171,79 @@ async function setOptions(platform = "", json = {}, type = [], langCode = "") {
 		"body": json.body
 	};
 	// 提取第二语言选项
-	let languages2 = await getMEDIA(json = {}, type = "SUBTITLES", $.Settings.Language[1])
+	//let languages2 = await getMEDIA(json = {}, type = "SUBTITLES", $.Settings.Language[1])
+	//let languages2 = Cache[$.Settings.Language[1]];
 	// 添加字幕选项
-	m3u8.body = await Promise.all(json.body.map(async (item, index) => {
-		for (var langcode of langcodes) { // 依次查找符合语言
-			if (item?.OPTION?.TYPE == "SUBTITLES" && item?.OPTION?.LANGUAGE == langcode && item?.OPTION?.FORCED !== "YES") { // 找字幕
-				for (var obj2 of languages2) {
-					if (item?.OPTION?.["GROUP-ID"] == obj2?.OPTION?.["GROUP-ID"] && obj2?.OPTION?.FORCED !== "YES") { // 同组字幕且不是强制字幕
+	await Promise.all(json.body.map(async (lang1, index) => {
+		for await (var langcode of langcodes) { // 依次查找符合语言
+			if (lang1?.OPTION?.TYPE == "SUBTITLES" && lang1?.OPTION?.LANGUAGE == langcode && lang1?.OPTION?.FORCED !== "YES") { // 找字幕
+				$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `langcode: ${langcode}`, "");
+				$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `lang1: ${JSON.stringify(lang1)}`, "");
+				for await (var lang2 of language2) {
+					$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `lang2: ${JSON.stringify(lang2)}`, "");
+					if (lang1?.OPTION?.["GROUP-ID"] == lang2?.OPTION?.["GROUP-ID"] && lang2?.OPTION?.FORCED !== "YES") { // 同组字幕且不是强制字幕
 						// 创建字幕选项
 						let Options = [];
 						if (platform == "Apple_TV") { // Apple_TV 兼容
-							if (item?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS // 只生成同属性
-								&& item?.OPTION?.["STABLE-RENDITION-ID"] == obj2?.OPTION?.["STABLE-RENDITION-ID"]) { // 只生成ID相同
-								let obj1 = await setMEDIA(item, langcode);
-								Options = await getOptions(platform, obj1, obj2, type);
+							if (lang1?.OPTION.CHARACTERISTICS == lang2?.OPTION.CHARACTERISTICS // 只生成同属性
+								&& lang1?.OPTION?.["STABLE-RENDITION-ID"] == lang2?.OPTION?.["STABLE-RENDITION-ID"]) { // 只生成ID相同
+								//lang1 = await setMEDIA(lang1, langcode);
+								Options = await getOptions(platform, await setMEDIA(lang1, langcode), lang2, types);
+								m3u8.body.splice(index + 1, 0, ...Options);
 							}
 						} else {
-							let obj1 = await setMEDIA(item, langcode);
-							Options = await getOptions(platform, obj1, obj2, type);
+							//lang1 = await setMEDIA(lang1, langcode);
+							Options = await getOptions(platform, await setMEDIA(lang1, langcode), lang2, types);
+							m3u8.body.splice(index + 1, 0, ...Options);
 						}
 						$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Options: ${JSON.stringify(Options)}`, "");
+						/*
 						if (Options.length !== 0) {
 							// 插入字幕选项
-							json.body.splice(index + 1, 0, ...Options);
+							m3u8.body.splice(index + 1, 0, ...Options);
 						}
+						*/
 						break; // 匹配到就暂停
-					}
-				}
-			}
+					};
+				};
+				break; // 匹配到就暂停
+			};
 		};
+		//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `lang1: ${JSON.stringify(lang1)}`, "");
+		//return lang1; // 返回对象
+		return
 	}));
 	return m3u8
 
 	/***************** Fuctions *****************/
 	// Function 5.3
-	// Set DualSubs Subtitle Options
+	// Get DualSubs Subtitle Options
 	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = []) {
 		return types.map(type => {
-			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `type: ${JSON.stringify(type)}`, "");
+			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `type: ${JSON.stringify(type)}`, "");
 			// 复制此语言选项
 			let newSub = (obj1.Index !== -1) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
-			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `newSub: ${JSON.stringify(newSub)}`, "");
+			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub: ${JSON.stringify(newSub)}`, "");
 			// 修改名称
 			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
-			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
+			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
 			// 修改语言代码
 			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${type}--\"`
 				: obj1.OPTION.LANGUAGE
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} ${type}\"`
-			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
+			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub.OPTION.LANGUAGE.replace: ${newSub.OPTION.LANGUAGE}`, "");
 			// 修改链接
 			newSub.OPTION.URI = (newSub.URI.includes("?")) ? `\"${newSub.URI}&dualsubs=${type}\"`
 				: `\"${newSub.URI}?dualsubs=${type}\"`
-			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
+			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
 			// 非自动选择
 			newSub.OPTION.AUTOSELECT = "NO"
-			//$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `newSub: ${JSON.stringify(newSub)}`, "");
+			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})
-	}
+	};
 };
 
 async function switchLangCode(platform = "", langCode = "", database) {

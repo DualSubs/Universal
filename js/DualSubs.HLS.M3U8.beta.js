@@ -107,7 +107,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	// Function 4.1
 	// Switch Language Code
 	async function switchLangCode(platform = "", langCode = "", database) {
-		$.log(`🎉 ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
+		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
 		// 自动语言转换
 		let langcodes = (langCode == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
 			: (langCode == "EN") ? ["EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
@@ -147,7 +147,6 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 					if (Options.length !== 0) {
 						// 计算位置
 						let Index = await getIndex(platform, json, obj2);
-						$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Index: ${Index}`, "");
 						// 插入字幕选项
 						json.body.splice(Index + 1, 0, ...Options);
 					}
@@ -196,7 +195,7 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
 			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub.OPTION.NAME.replace: ${newSub.OPTION.NAME}`, "");
 			// 修改语言代码
-			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${type}--\"`
+			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu") ? `\"${obj1.Language} ${obj2.Language} ${type}\"`
 				: `\"${obj1.Language}\"`
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} ${type}\"`
@@ -212,8 +211,9 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 		})
 	};
 	// Function 5.2
-	// Get Smae Options Index
+	// Get Same Options Index
 	async function getIndex(platform, json, obj) {
+		$.log(`⚠ ${$.name}, Get Same Options Index`, "");
 		// 计算位置
 		let Index = json.body.findIndex(item => {
 			if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
@@ -229,6 +229,8 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 				}
 			}
 		})
+		$.log(`🎉 ${$.name}, 调试信息`, "Get Same Options Index", `Index: ${Index}`, "");
+		return Index
 	};
 };
 

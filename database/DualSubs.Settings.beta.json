@@ -29,6 +29,20 @@
 		"Offset": 0,
 		"Tolerance": 1000
 	},
+	"Apple_TV_Plus": {
+		"Switch": true,
+		"Type": [
+			"Official"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward",
+		"CacheSize": 3,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
 	"Disney_Plus": {
 		"Switch": true,
 		"Type": [

@@ -210,7 +210,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"gtx",
 				"it",
 			]
-			request.url = `${BaseURL[Math.floor(Math.random() * BaseURL.length)]}/translate_a/single?client=at&sl=${DataBase.Google.Languages[source]}&tl=${DataBase.Google.Languages[target]}&dt=t&q=${encodeURIComponent(text)}`;
+			request.url = `${BaseURL[Math.floor(Math.random() * BaseURL.length)]}/translate_a/single?client=at&sl=${DataBase.Languages.Google[source]}&tl=${DataBase.Languages.Google[target]}&dt=t&q=${encodeURIComponent(text)}`;
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
@@ -224,13 +224,13 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			};
 			request.body = {
 				"q": text,
-				"source": DataBase.Google.Languages[source],
-				"target": DataBase.Google.Languages[target],
+				"source": DataBase.Languages.Google[source],
+				"target": DataBase.Languages.Google[target],
 				"format": "text",
 				//"key": $.Verify.GoogleCloud?.Key
 			};
 		} else if (type == "Microsoft") {
-			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
+			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Languages.Microsoft[source]}&to=${DataBase.Languages.Microsoft[target]}`;
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
@@ -249,7 +249,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			const BaseURL = ($.Verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
 				: ($.Verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
 					: "https://api.cognitive.microsofttranslator.com"
-			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&from=${DataBase.Microsoft.Languages[source]}&to=${DataBase.Microsoft.Languages[target]}`;
+			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&from=${DataBase.Languages.Microsoft[source]}&to=${DataBase.Languages.Microsoft[target]}`;
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
@@ -274,7 +274,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"User-Agent": "DualSubs",
 				"Content-Type": "application/x-www-form-urlencoded"
 			};
-			const BaseBody = `auth_key=${$.Verify.DeepL?.Auth}&source_lang=${DataBase.DeepL.Languages[source]}&target_lang=${DataBase.DeepL.Languages[target]}`;
+			const BaseBody = `auth_key=${$.Verify.DeepL?.Auth}&source_lang=${DataBase.Languages.DeepL[source]}&target_lang=${DataBase.Languages.DeepL[target]}`;
 			request.body = BaseBody + `&text=${encodeURIComponent(text)}`;
 		} else if (type == "BaiduFanyi") {
 			// https://fanyi-api.baidu.com/doc/24
@@ -285,8 +285,8 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			};
 			request.body = {
 				"q": text,
-				"from": DataBase.Baidu.Languages[source],
-				"to": DataBase.Baidu.Languages[target],
+				"from": DataBase.Languages.Baidu[source],
+				"to": DataBase.Languages.Baidu[target],
 				"appid": $.Verify.BaiduFanyi?.Key,
 				"salt": uuidv4().toString(),
 				"sign": "",
@@ -300,8 +300,8 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				};
 				request.body = {
 					"q": text,
-					"from": DataBase.Youdao.Languages[source],
-					"to": DataBase.Youdao.Languages[target],
+					"from": DataBase.Languages.Youdao[source],
+					"to": DataBase.Languages.Youdao[target],
 					"appKey": $.Verify.YoudaoAI?.Key,
 					"salt": uuidv4().toString(),
 					"signType": "v3",

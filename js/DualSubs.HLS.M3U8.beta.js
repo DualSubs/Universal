@@ -19,6 +19,7 @@ let body = $response.body
 	if ($.Settings.Switch) {
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
+		$.log(`🚧 ${$.name}`, "body", body, "");
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body);
 		$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
@@ -53,7 +54,7 @@ async function setENV(e,t){let a=e.match(/(play|play-edge)\.itunes\.apple\.com\/
 // Function 2
 // Get Cache
 async function getCache(cache = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, "");
+	$.log(`⚠ ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache)}`,"");
 	let Indices = { "Index": await getIndex(cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
 	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)

@@ -98,7 +98,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
 			break;
-		}
+		} else datas = [await setMEDIA({}, langcode)];
 	};
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
@@ -124,12 +124,12 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	// Set EXT-X-MEDIA Data
 	async function setMEDIA(data = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
-		data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
-		data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
-		data.URI = aPath(url, data?.OPTION.URI.replace(/\"/g, "") ?? null);
-		//let Data = { "Index": index, "Name": name, "Language": language, ...data, "URI": URI };
-		$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
-		return data
+		let Data = { ...data };
+		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
+		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
+		Data.URI = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
+		return Data
 	};
 };
 

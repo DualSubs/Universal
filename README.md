@@ -21,9 +21,11 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   3. 双语官方字幕
   4. 双语翻译字幕
      1. Google翻译
-     2. Google Cloud Translate API
+     2. [Google Cloud Translate API](https://cloud.google.com/translate)
      3. Azure/Azure.cn Translator
-     4. DeepL Free/Pro
+        1. [国际版](https://azure.microsoft.com/zh-cn/services/cognitive-services/translator/)
+        2. [中国版](https://www.azure.cn)
+     4. [DeepL Free/Pro](https://www.deepl.com/pro-api)
   5. 双语外挂字幕
   6. 中文，英文，西班牙文自动回退
      * 中文回退顺序为`中文（简体）`-`中文（繁體）`-`中文（香港）/粤语（廣東話）`

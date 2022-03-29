@@ -12,7 +12,6 @@ http:
     - "d27xxe7juh1us6.cloudfront.net:80"
   mitm:
     - "www.youtube.com"
-    - "play.itunes.apple.com"
     - "play-edge.itunes.apple.com"
     - "vod-*.tv.apple.com"
     - "*.media.dssott.com"

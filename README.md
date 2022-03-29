@@ -43,15 +43,15 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
        * Loon: [boxjs.rewrite.loon.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.plugin "BoxJs")
        * Quantumult X: [boxjs.rewrite.quanx.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf "BoxJs")
        * Surge (Shadowrocket): [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
-       * Stash: [boxjs.rewrite.stash.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.sgmodule "BoxJs")
+       * Stash: [boxjs.rewrite.stash.stoverride](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.stoverride "BoxJs")
     2. 导入本项目订阅:
-       * [DualSubs.boxjs.json](./box/DualSubs.boxjs.json?raw=true "🍿️ DualSubs")
+       * [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
 
 
 ## 安装链接
-  * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs")
+  * Loon: [DualSubs.plugin](./plugins/DualSubs.plugin?raw=true "🍿️ DualSubs")
   * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs")
-  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs")
+  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodules/DualSubs.sgmodule?raw=true "🍿️ DualSubs")
   * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs")
 
 

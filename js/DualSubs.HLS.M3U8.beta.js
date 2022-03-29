@@ -184,6 +184,7 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 	// Function 5.1
 	// Get DualSubs Subtitle Options
 	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = []) {
+		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
 		return types.map(type => {
 			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `type: ${JSON.stringify(type)}`, "");
 			// 复制此语言选项
@@ -205,7 +206,7 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
 			// 非自动选择
 			newSub.OPTION.AUTOSELECT = "NO"
-			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub: ${JSON.stringify(newSub)}`, "");
+			$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})
 	};

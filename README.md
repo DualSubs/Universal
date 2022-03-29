@@ -2,7 +2,7 @@
 Dual Subtitles for Streaming Media  
 流媒体自定义多字幕  
 需要启用`重写`、`脚本`、`MitM`功能  
-有问题请至Issue页面反馈 
+有问题请至Issue页面反馈  
 Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries) 
 
 ---
@@ -56,10 +56,10 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 
 
 ## 支持列表
-|  供应商  |iOS/iPadOS|  tvOS  |  macOS  | Appx<br>Universal Windows Platform apps | Web | 备注 |
+|  供应商  |iOS/iPadOS|  tvOS  |  macOS  | Appx | Web | 备注 |
 |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
-|Apple TV+|   ✅   |   ✅   |   ✅   |   N/A   |        |        |
-|Apple TV |   ✅   |   ✅   |   ✅   |   N/A   |        |iTunes英文字幕为CC字幕<br>整合于视频流无法提取<br>其他语言字幕正常|
+|Apple TV+|   ✅   |   ✅   |   ✅   |   N/A   |   ✅   |        |
+|Apple TV |   ✅   |   ✅   |   ✅   |   N/A   |   N/A   |iTunes英文字幕为CC字幕<br>整合于视频流无法提取<br>其他语言字幕正常|
 | Disney+ |   ✅   |   ✅   |   N/A   |        |   ✅   |        |
 |Amazon<br>Prime Video|   ✅   |   ✅   |   ❌   |        |   ❓   | macOS版App采用TTML格式字幕<br>暂不支持<br>Web版未知原因无法加载 |
 | HBO Max |         |         |         |         |         |

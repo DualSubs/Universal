@@ -5,7 +5,8 @@
 force-http-engine-hosts = %APPEND% *.hls.row.aiv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net
 
 [Script]
-DualSubs.YouTube = type=http-request, pattern=^https?:\/\/www\.youtube\.com\/api\/timedtext(.*), requires-body=0, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.beta.js
+DualSubs.YouTube.player = type=http-response, pattern=^https?:\/\/www\.youtube\.com\/youtubei\/v1\/player(\?.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.Player.beta.js
+# DualSubs.YouTube.timedtext = type=http-request, pattern=^https?:\/\/www\.youtube\.com\/api\/timedtext(.*), requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.TimedText.beta.js
 
 DualSubs.Apple_TV.HLS.m3u8 = type=http-response, pattern=^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8\?(.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.M3U8.beta.js
 DualSubs.Apple_TV.WebVTT.m3u8 = type=http-request, pattern=^https?:\/\/vod-(.*)-amt\.tv\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)_subtitles\.m3u8(\?.*dualsubs=\w+)$, requires-body=0, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.WebVTT.M3U8.beta.js

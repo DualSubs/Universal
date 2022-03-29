@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.0-3");
+const $ = new Env("DualSubs v0.5.0-5");
 
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -57,7 +57,7 @@ delete headers["Connection"]
 // Set Environment Variables
 async function setENV(e,t){let i=e.match(/\.(tv|itunes)\.apple\.com/i)?"Apple_TV":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),a=c?.Verify?.Settings||t?.Settings?.Verify,o=c[i]?.Settings||t?.Settings?.[i];o.Switch=JSON.parse(o.Switch),"string"==typeof o.Type&&(o.Type=o.Type.split(",")),a.GoogleCloud.Auth||o.Type.splice(o.Type.indexOf("GoogleCloud"),1),a.Azure.Auth||o.Type.splice(o.Type.indexOf("Azure"),1),a.DeepL.Auth||o.Type.splice(o.Type.indexOf("DeepL"),1),o.CacheSize=parseInt(o.CacheSize,10),o.Offset=parseInt(o.Offset,10),o.Tolerance=parseInt(o.Tolerance,10);let s=c[i]?.Cache||[];return"string"==typeof s&&(s=JSON.parse(s)),[i,a,o,s]}
 
-// Function 3
+// Function 2
 // Get Cache
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
@@ -76,10 +76,10 @@ async function getCache(cache = {}) {
 		})
 	};
 	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URI, item?.VTTs?.map(VTT => VTT)] }
+	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
-// Function 4
+// Function 3
 // Set Cache
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
@@ -100,7 +100,7 @@ async function getVTTs(platform, url) {
 		let VTTs = response.body.match(/^.+\.(web)?vtt$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
 		// 筛选字幕
-		if (platform == "Apple_TV") {
+		if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
 			VTTs = VTTs.filter(item => !/\/empty-\d+\.webvtt/.test(item))
 		} else if (platform == "Disney_Plus") {
 			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))

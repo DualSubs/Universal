@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.0-3");
+const $ = new Env("DualSubs v0.5.0-5");
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -45,7 +45,7 @@ delete headers["Connection"]
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
 				let VTTs = Cache[$.Settings.Language[1]][Indices[$.Settings.Language[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
-				else if ($.Platform == "Apple_TV") {
+				else if ($.Platform == "Apple_TV" || platform == "Apple_TV_Plus") {
 					for await (var vtt of VTTs) {
 						//let request = { "url": vtt, "headers": headers };
 						let SecondVTT = await getWebVTT({ "url": vtt, "headers": headers });
@@ -89,7 +89,7 @@ delete headers["Connection"]
 // Set Environment Variables
 async function setENV(e,t){let i=e.match(/\.(tv|itunes)\.apple\.com/i)?"Apple_TV":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),a=c?.Verify?.Settings||t?.Settings?.Verify,o=c[i]?.Settings||t?.Settings?.[i];o.Switch=JSON.parse(o.Switch),"string"==typeof o.Type&&(o.Type=o.Type.split(",")),a.GoogleCloud.Auth||o.Type.splice(o.Type.indexOf("GoogleCloud"),1),a.Azure.Auth||o.Type.splice(o.Type.indexOf("Azure"),1),a.DeepL.Auth||o.Type.splice(o.Type.indexOf("DeepL"),1),o.CacheSize=parseInt(o.CacheSize,10),o.Offset=parseInt(o.Offset,10),o.Tolerance=parseInt(o.Tolerance,10);let s=c[i]?.Cache||[];return"string"==typeof s&&(s=JSON.parse(s)),[i,a,o,s]}
 
-// Function 3
+// Function 2
 // Get Cache
 async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
@@ -121,7 +121,7 @@ async function getCache(cache = {}) {
 	function getURIs(item) { return [item?.URI, item?.VTTs?.map(VTT => VTT)] }
 };
 
-// Function 4
+// Function 3
 // Set Cache
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
@@ -133,14 +133,14 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	return target
 };
 
-// Function 5
+// Function 4
 // Get Official Request
 async function getOfficialRequest(platform, VTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, "");
-	let fileName = (platform == "Apple_TV") ? url.match(/.+_(subtitles_V\d-\d+\.webvtt$)/)[1] // Apple_TV 片段分型序号相同
-		: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1] // Disney+ 片段名称相同
+	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1] // Disney+ 片段名称相同
 			: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1] // Hulu 片段分型序号相同
-				: null; // Amazon Prime Video HBO_Max不拆分字幕片段
+			: null; // Amazon Prime Video HBO_Max不拆分字幕片段
+	//: (platform == "Apple_TV" || platform == "Apple_TV_Plus") ? url.match(/.+_(subtitles_V\d-\d+\.webvtt$)/)[1] // Apple_TV 片段分型序号不同
 	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
 	let request = {
 		"url": VTTs.find(item => item.includes(fileName)) || VTTs[0],
@@ -150,7 +150,7 @@ async function getOfficialRequest(platform, VTTs = []) {
 	return request
 };
 
-// Function 6
+// Function 5
 // Translate
 async function Translate(type = "", source = "", target = "", text = "") {
 	$.log(`🚧 ${$.name}, Translate`, `text: ${text}`, "");
@@ -295,7 +295,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 		$.log(`🚧 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
-	// Function 6.2
+	// Function 5.1
 	// Get Translate Data
 	async function GetData(type, request) {
 		$.log(`🚧 ${$.name}, Get Translate Data`, "");
@@ -329,7 +329,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 	};
 };
 
-// Function 7
+// Function 6
 // Combine Dual Subtitles
 async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
 	$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "");

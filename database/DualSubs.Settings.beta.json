@@ -74,8 +74,7 @@
 	"HBO_Max": {
 		"Switch": true,
 		"Type": [
-			"Google",
-			"External"
+			"Google"
 		],
 		"Language": [
 			"ZH",
@@ -89,8 +88,7 @@
 	"Hulu": {
 		"Switch": true,
 		"Type": [
-			"Google",
-			"External"
+			"Google"
 		],
 		"Language": [
 			"ZH",
@@ -104,8 +102,21 @@
 	"Paramount_Plus": {
 		"Switch": true,
 		"Type": [
-			"Google",
-			"External"
+			"Google"
+		],
+		"Language": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"Peacock_TV": {
+		"Switch": true,
+		"Type": [
+			"Google"
 		],
 		"Language": [
 			"ZH",
@@ -119,8 +130,7 @@
 	"Discovery_Plus": {
 		"Switch": true,
 		"Type": [
-			"Google",
-			"External"
+			"Google"
 		],
 		"Language": [
 			"ZH",

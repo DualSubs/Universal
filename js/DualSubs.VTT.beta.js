@@ -45,10 +45,10 @@ delete headers["Connection"]
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
 				let VTTs = Cache[$.Settings.Language[1]][Indices[$.Settings.Language[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
-				else if ($.Platform == "Apple_TV" || platform == "Apple_TV_Plus") {
-					for await (var vtt of VTTs) {
-						//let request = { "url": vtt, "headers": headers };
-						let SecondVTT = await getWebVTT({ "url": vtt, "headers": headers });
+				else if ($.Platform == "Apple_TV" || $.Platform == "Apple_TV_Plus") {
+					let requests = await getOfficialRequest($.Platform, VTTs);
+					for await (var request of requests) {
+						let SecondVTT = await getWebVTT(request);
 						DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
 					};
 				} else {
@@ -137,17 +137,33 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 // Get Official Request
 async function getOfficialRequest(platform, VTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, "");
-	let fileName = (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1] // Disney+ 片段名称相同
-			: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1] // Hulu 片段分型序号相同
-			: null; // Amazon Prime Video HBO_Max不拆分字幕片段
-	//: (platform == "Apple_TV" || platform == "Apple_TV_Plus") ? url.match(/.+_(subtitles_V\d-\d+\.webvtt$)/)[1] // Apple_TV 片段分型序号不同
+	let fileName = (platform == "Apple_TV") ? url.match(/.+_(subtitles-\d+\.webvtt$)/)[1] // Apple TV 片段分型序号不同
+		: (platform == "Apple_TV_Plus") ? url.match(/.+_(subtitles_V\d-\d+\.webvtt$)/)[1] // Apple TV+ 片段分型序号不同
+			: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1] // Disney+ 片段名称相同
+				: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1] // Hulu 片段分型序号相同
+					: null; // Amazon Prime Video HBO_Max不拆分字幕片段
 	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
-	let request = {
-		"url": VTTs.find(item => item.includes(fileName)) || VTTs[0],
-		"headers": headers,
-	};
-	$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");
-	return request
+
+	if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
+		let Index = VTTs.findIndex(item => item.includes(fileName))
+		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_TV_Index: ${Index}`, "")
+		nearlyVTTs = VTTs.slice((Index - 5 < 0) ? 0 : Index - 5, Index + 5);
+		let requests = nearlyVTTs.map(VTT => {
+			return {
+				"url": VTT,
+				"headers": headers,
+			}
+		});
+		$.log(`🚧 ${$.name}, Get Official Request`, `requests: ${JSON.stringify(requests)}`, "");
+		return requests
+	} else {
+		let request = {
+			"url": VTTs.find(item => item.includes(fileName)) || VTTs[0],
+			"headers": headers,
+		};
+		$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");
+		return request
+	}
 };
 
 // Function 5

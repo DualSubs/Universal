@@ -23,7 +23,7 @@ async function setENV(url, database) {
 	let BoxJs = $.getjson("DualSubs", database) // BoxJs
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
 	/***************** Verify *****************/
-	let Verify = BoxJs?.Verify?.Settings || database?.Settings?.Verify;
+	let Verify = BoxJs?.Verify || database?.Settings?.Verify;
 	/***************** Settings *****************/
 	let Settings = BoxJs[Platform]?.Settings || database?.Settings?.[Platform];
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean

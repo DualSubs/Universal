@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.0-5");
+const $ = new Env("DualSubs v0.5.1");
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -170,7 +170,7 @@ async function getOfficialRequest(platform, VTTs = []) {
 // Function 5
 // Translate
 async function Translate(type = "", source = "", target = "", text = "") {
-	$.log(`🚧 ${$.name}, Translate`, `text: ${text}`, "");
+	$.log(`⚠ ${$.name}, Translate`, `text: ${text}`, "");
 	// 构造请求
 	let request = await GetRequest(type, source, target, text);
 	// 发送请求
@@ -309,13 +309,13 @@ async function Translate(type = "", source = "", target = "", text = "") {
 					"curtime": Math.floor(+new Date() / 1000)
 				};
 		}
-		$.log(`🚧 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
+		$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
 	// Function 5.1
 	// Get Translate Data
 	async function GetData(type, request) {
-		$.log(`🚧 ${$.name}, Get Translate Data`, "");
+		$.log(`⚠ ${$.name}, Get Translate Data`, "");
 		let text = ""
 		if (type == "Google") {
 			text = await $.http.get(request).then((response) => {
@@ -341,7 +341,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				return text = body?.data?.translations?.[0]?.translatedText ?? body?.data?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
 			})
 		}
-		$.log(`🚧 ${$.name}, Get Translate Data`, `result: ${text}`, "");
+		$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${text}`, "");
 		return text
 	};
 };
@@ -349,7 +349,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 // Function 6
 // Combine Dual Subtitles
 async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
-	$.log(`🚧 ${$.name}, Combine Dual Subtitles`, "");
+	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
 	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
@@ -390,7 +390,7 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 			index2++;
 		}
 	}
-	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;
 };
 

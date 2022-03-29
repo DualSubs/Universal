@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.0-5");
+const $ = new Env("DualSubs v0.5.1");
 
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -27,15 +27,10 @@ delete headers["Connection"]
 		if (Indices.Index !== -1) {
 			// 创建缓存
 			// 获取VTT字幕地址数组
-			if (type == "Official") {
-				for await (var language of $.Settings.Language) {
+			for await (var language of $.Settings.Language) {
+				if (type == "Official") {
 					for await (var data of Cache[language]) data.VTTs = await getVTTs($.Platform, data.URI);
-					$.log(`🚧 ${$.name}`, `${Object.keys(Cache[language])}`, JSON.stringify(Cache[language]), "");
-				}
-			}
-			else {
-				let language = $.Settings.Language[0]
-				Cache[language][Indices[language]].VTTs = await getVTTs($.Platform, url);
+				} else if (Indices[language] !== -1) Cache[language][Indices[language]].VTTs = await getVTTs($.Platform, url);
 			}
 			// 写入缓存
 			$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
@@ -53,7 +48,7 @@ delete headers["Connection"]
 /***************** Fuctions *****************/
 // Function 1
 // Set Environment Variables
-async function setENV(e,t){let a=e.match(/(play|vod-.*-amt)\.(tv|itunes)\.apple\.com/i)?"Apple_TV":e.match(/(play-edge|vod-.*-aoc)\.(tv|itunes)\.apple\.com/i)?"Apple_TV_Plus":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,i=$.getjson("DualSubs",t),o=i?.Verify?.Settings||t?.Settings?.Verify,c=i[a]?.Settings||t?.Settings?.[a];c.Switch=JSON.parse(c.Switch),"string"==typeof c.Type&&(c.Type=c.Type.split(",")),o.GoogleCloud.Auth||(c.Type=c.Type.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(c.Type=c.Type.filter((e=>"Azure"!==e))),o.DeepL.Auth||(c.Type=c.Type.filter((e=>"DeepL"!==e))),c.CacheSize=parseInt(c.CacheSize,10),c.Offset=parseInt(c.Offset,10),c.Tolerance=parseInt(c.Tolerance,10);let s=i[a]?.Cache||[];return"string"==typeof s&&(s=JSON.parse(s)),[a,o,c,s]}
+async function setENV(e,t){let a=e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/(?!subscription\/)/i)||e.match(/vod-.*-amt\.tv\.apple\.com/i)?"Apple_TV":e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i)||e.match(/vod-.*-aoc\.tv\.apple\.com/i)?"Apple_TV_Plus":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),i=c?.Verify?.Settings||t?.Settings?.Verify,o=c[a]?.Settings||t?.Settings?.[a];o.Switch=JSON.parse(o.Switch),"string"==typeof o.Type&&(o.Type=o.Type.split(",")),i.GoogleCloud.Auth||(o.Type=o.Type.filter((e=>"GoogleCloud"!==e))),i.Azure.Auth||(o.Type=o.Type.filter((e=>"Azure"!==e))),i.DeepL.Auth||(o.Type=o.Type.filter((e=>"DeepL"!==e))),o.CacheSize=parseInt(o.CacheSize,10),o.Offset=parseInt(o.Offset,10),o.Tolerance=parseInt(o.Tolerance,10);let l=c[a]?.Cache||[];return"string"==typeof l&&(l=JSON.parse(l)),[a,i,o,l]}
 
 // Function 2
 // Get Cache

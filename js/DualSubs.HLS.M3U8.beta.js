@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.0-5");
+const $ = new Env("DualSubs v0.5.1");
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -22,8 +22,8 @@ let body = $response.body
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body);
 		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
-		
-		Cache.URL = url; // PlayList.m3u8 URL
+		// PlayList.m3u8 URL		
+		Cache.URL = url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
 		//let Data = {};
 		for await (var language of $.Settings.Language) {
@@ -36,7 +36,6 @@ let body = $response.body
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		// 写入选项
 		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Language[0]], Cache[$.Settings.Language[1]], $.Settings.Type);
-		//PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Language[1]], $.Settings.Type, $.Settings.Language[0])
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");

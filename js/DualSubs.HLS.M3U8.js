@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.0-5");
+const $ = new Env("DualSubs v0.5.1");
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -43,7 +43,7 @@ let body = $response.body
 /***************** Fuctions *****************/
 // Function 1
 // Set Environment Variables
-async function setENV(e,t){let a=e.match(/(play|vod-.*-amt)\.(tv|itunes)\.apple\.com/i)?"Apple_TV":e.match(/(play-edge|vod-.*-aoc)\.(tv|itunes)\.apple\.com/i)?"Apple_TV_Plus":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,i=$.getjson("DualSubs",t),o=i?.Verify?.Settings||t?.Settings?.Verify,c=i[a]?.Settings||t?.Settings?.[a];c.Switch=JSON.parse(c.Switch),"string"==typeof c.Type&&(c.Type=c.Type.split(",")),o.GoogleCloud.Auth||(c.Type=c.Type.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(c.Type=c.Type.filter((e=>"Azure"!==e))),o.DeepL.Auth||(c.Type=c.Type.filter((e=>"DeepL"!==e))),c.CacheSize=parseInt(c.CacheSize,10),c.Offset=parseInt(c.Offset,10),c.Tolerance=parseInt(c.Tolerance,10);let s=i[a]?.Cache||[];return"string"==typeof s&&(s=JSON.parse(s)),[a,o,c,s]}
+async function setENV(e,t){let a=e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/(?!subscription\/)/i)||e.match(/vod-.*-amt\.tv\.apple\.com/i)?"Apple_TV":e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i)||e.match(/vod-.*-aoc\.tv\.apple\.com/i)?"Apple_TV_Plus":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),i=c?.Verify?.Settings||t?.Settings?.Verify,o=c[a]?.Settings||t?.Settings?.[a];o.Switch=JSON.parse(o.Switch),"string"==typeof o.Type&&(o.Type=o.Type.split(",")),i.GoogleCloud.Auth||(o.Type=o.Type.filter((e=>"GoogleCloud"!==e))),i.Azure.Auth||(o.Type=o.Type.filter((e=>"Azure"!==e))),i.DeepL.Auth||(o.Type=o.Type.filter((e=>"DeepL"!==e))),o.CacheSize=parseInt(o.CacheSize,10),o.Offset=parseInt(o.Offset,10),o.Tolerance=parseInt(o.Tolerance,10);let l=c[a]?.Cache||[];return"string"==typeof l&&(l=JSON.parse(l)),[a,i,o,l]}
 
 // Function 2
 // Get Cache
@@ -92,7 +92,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
 			break;
-		}
+		} else datas = [await setMEDIA({}, langcode)];
 	};
 	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
@@ -101,7 +101,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	// Function 4.1
 	// Switch Language Code
 	async function switchLangCode(platform = "", langCode = "", database) {
-		$.log(`🎉 ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
+		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
 		// 自动语言转换
 		let langcodes = (langCode == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
 			: (langCode == "EN") ? ["EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
@@ -118,11 +118,12 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	// Set EXT-X-MEDIA Data
 	async function setMEDIA(data = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
-		data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
-		data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
-		data.URI = aPath(url, data?.OPTION.URI.replace(/\"/g, "") ?? null);
-		//$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `data: ${JSON.stringify(data)}`, "");
-		return data
+		let Data = { ...data };
+		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
+		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
+		Data.URI = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		//$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
+		return Data
 	};
 };
 
@@ -130,10 +131,23 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 // Set DualSubs Subtitle Options
 async function setOptions(platform = "", json = {}, languages1 = [], languages2 = [], type = []) {
 	for await (var obj1 of languages1) {
-		// 无首选语言时删除官方字幕选项
-		if (obj1.Index === -1) type = type.filter(e => e !== "Official");
 		for await (var obj2 of languages2) {
-			if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
+			// 无首选字幕时
+			if (!obj1?.EXT) {
+				// 无首选语言时删除官方字幕选项
+				type = type.filter(e => e !== "Official");
+				for await (var obj2 of languages2) {
+					Options = await getOptions(platform, obj1, obj2, type);
+					if (Options.length !== 0) {
+						// 计算位置
+						let Index = await getIndex(platform, json, obj2);
+						// 插入字幕选项
+						json.body.splice(Index + 1, 0, ...Options);
+					}
+				}
+			}
+			
+			else if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
 				if (obj1?.OPTION?.["GROUP-ID"] == obj2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
 					// 创建字幕选项
 					let Options = [];
@@ -147,21 +161,8 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 					$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Options: ${JSON.stringify(Options)}`, "");
 					if (Options.length !== 0) {
 						// 计算位置
-						let Index = json.body.findIndex(item => {
-							if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
-								if (item?.OPTION?.LANGUAGE == obj1?.OPTION?.LANGUAGE
-									&& item?.OPTION?.["GROUP-ID"] == obj1?.OPTION?.["GROUP-ID"]
-									&& item?.OPTION?.["STABLE-RENDITION-ID"] == obj1?.OPTION?.["STABLE-RENDITION-ID"]) {
-									return true
-								}
-							} else {
-								if (item?.OPTION?.LANGUAGE == obj1?.OPTION?.LANGUAGE
-									&& item?.OPTION?.["GROUP-ID"] == obj1?.OPTION?.["GROUP-ID"]) {
-									return true
-								}
-							}
-						})
-						$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Index: ${Index}`, "");					
+						let Index = await getIndex(platform, json, obj1);
+						$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Index: ${Index}`, "");
 						// 插入字幕选项
 						json.body.splice(Index + 1, 0, ...Options);
 					}
@@ -176,15 +177,14 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 	// Get DualSubs Subtitle Options
 	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = []) {
 		return types.map(type => {
-			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `type: ${JSON.stringify(type)}`, "");
 			// 复制此语言选项
-			let newSub = (obj1.Index !== -1) ? JSON.parse(JSON.stringify(obj1))
+			let newSub = (obj1?.EXT) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
 			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
 			// 修改语言代码
-			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus") ? `\"${obj1.Language}/${obj2.Language}--${type}--\"`
-				: obj1.OPTION.LANGUAGE
+			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu") ? `\"${obj1.Language} ${obj2.Language} ${type}\"`
+				: `\"${obj1.Language}\"`
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} ${type}\"`
 			// 修改链接
@@ -195,6 +195,28 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})
+	};
+	// Function 5.2
+	// Get Same Options Index
+	async function getIndex(platform, json, obj) {
+		$.log(`⚠ ${$.name}, Get Same Options Index`, "");
+		// 计算位置
+		let Index = json.body.findIndex(item => {
+			if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
+				if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
+					&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
+					&& item?.OPTION?.["STABLE-RENDITION-ID"] == obj?.OPTION?.["STABLE-RENDITION-ID"]) {
+					return true
+				}
+			} else {
+				if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
+					&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]) {
+					return true
+				}
+			}
+		})
+		$.log(`🎉 ${$.name}, 调试信息`, "Get Same Options Index", `Index: ${Index}`, "");
+		return Index
 	};
 };
 

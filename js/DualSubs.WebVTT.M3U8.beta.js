@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.0-5");
+const $ = new Env("DualSubs v0.5.1");
 
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -115,10 +115,7 @@ async function getVTTs(platform, url) {
 async function getWebVTTm3u8(url = "", type = "") {
 	$.log(`⚠ ${$.name}, Get Subtitle WebVTT *.m3u8`, "");
 	return await $.http.get({ url: url, headers: headers }).then((response) => {
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body: ${response.body}`, "");
 		response.body = response.body.replace(/^.+\.(web)?vtt$/gim, `$&?dualsubs=${type}`);
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle WebVTT *.m3u8", `response.body.replace: ${response.body}`, "");
-
 		$.log(`🎉 ${$.name}, Get Subtitle WebVTT *.m3u8`, `response: ${JSON.stringify(response)}`, "");
 		return response
 	})

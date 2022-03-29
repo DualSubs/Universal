@@ -1,5 +1,5 @@
 #!name= 🍿️ DualSubs
-#!desc= (0.5.0) Dual Subtitiles for Streaming Media Platform
+#!desc= (0.5.1) Dual Subtitiles for Streaming Media Platform
 
 [General]
 force-http-engine-hosts = %APPEND% *.hls.row.aiv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net

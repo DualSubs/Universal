@@ -25,7 +25,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 3,
+		"CacheSize": 2,
 		"Offset": 0,
 		"Tolerance": 1000
 	},
@@ -39,7 +39,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 3,
+		"CacheSize": 2,
 		"Offset": 0,
 		"Tolerance": 1000
 	},
@@ -53,7 +53,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 10,
+		"CacheSize": 5,
 		"Offset": 0,
 		"Tolerance": 1000
 	},
@@ -67,7 +67,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 10,
+		"CacheSize": 5,
 		"Offset": 0,
 		"Tolerance": 1000
 	},
@@ -82,7 +82,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 3,
+		"CacheSize": 2,
 		"Offset": 0,
 		"Tolerance": 1000
 	},
@@ -97,7 +97,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 10,
+		"CacheSize": 2,
 		"Offset": 0,
 		"Tolerance": 1000
 	},
@@ -112,7 +112,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 10,
+		"CacheSize": 2,
 		"Offset": 0,
 		"Tolerance": 1000
 	},
@@ -127,7 +127,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 10,
+		"CacheSize": 2,
 		"Offset": 0,
 		"Tolerance": 1000
 	},
@@ -143,7 +143,7 @@
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 10,
+		"CacheSize": 2,
 		"Offset": 0,
 		"Tolerance": 1000
 	},

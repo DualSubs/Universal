@@ -347,9 +347,9 @@
 				{
 					"id": "@DualSubs.Apple_TV.Settings.CacheSize",
 					"name": "播放记录缓存数量",
-					"val": 3,
+					"val": 2,
 					"type": "number",
-					"placeholder": "3",
+					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
@@ -598,9 +598,9 @@
 				{
 					"id": "@DualSubs.Apple_TV_Plus.Settings.CacheSize",
 					"name": "播放记录缓存数量",
-					"val": 3,
+					"val": 2,
 					"type": "number",
-					"placeholder": "3",
+					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
@@ -849,9 +849,9 @@
 				{
 					"id": "@DualSubs.Disney_Plus.Settings.CacheSize",
 					"name": "播放记录缓存数量",
-					"val": 10,
+					"val": 5,
 					"type": "number",
-					"placeholder": "10",
+					"placeholder": "5",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
@@ -1100,9 +1100,9 @@
 				{
 					"id": "@DualSubs.Prime_Video.Settings.CacheSize",
 					"name": "播放记录缓存数量",
-					"val": 3,
+					"val": 2,
 					"type": "number",
-					"placeholder": "3",
+					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
@@ -1367,9 +1367,9 @@
 				{
 					"id": "@DualSubs.HBO_Max.Settings.CacheSize",
 					"name": "播放记录缓存数量",
-					"val": 3,
+					"val": 2,
 					"type": "number",
-					"placeholder": "3",
+					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
@@ -1618,9 +1618,9 @@
 				{
 					"id": "@DualSubs.Hulu.Settings.CacheSize",
 					"name": "播放记录缓存数量",
-					"val": 3,
+					"val": 2,
 					"type": "number",
-					"placeholder": "3",
+					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
@@ -1869,9 +1869,9 @@
 				{
 					"id": "@DualSubs.Paramount_Plus.Settings.CacheSize",
 					"name": "播放记录缓存数量",
-					"val": 3,
+					"val": 2,
 					"type": "number",
-					"placeholder": "3",
+					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{

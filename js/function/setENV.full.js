@@ -2,8 +2,10 @@
 async function setENV(url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
 	/***************** Platform *****************/
-	let Platform = url.match(/(play|vod-.*-amt)\.(tv|itunes)\.apple\.com/i) ? "Apple_TV"
-		: url.match(/(play-edge|vod-.*-aoc)\.(tv|itunes)\.apple\.com/i) ? "Apple_TV_Plus"
+	let Platform = url.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/(?!subscription\/)/i) ? "Apple_TV"
+		: url.match(/vod-.*-amt\.tv\.apple\.com/i) ? "Apple_TV"
+		: url.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i) ? "Apple_TV_Plus"
+		: url.match(/vod-.*-aoc\.tv\.apple\.com/i) ? "Apple_TV_Plus"
 			: url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
 				: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
 					: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"

@@ -2,18 +2,20 @@
 async function setENV(url, database) {
 	//$.log(`⚠ ${$.name}, Set Environment Variables`, "");
 	/***************** Platform *****************/
-	let Platform = url.match(/(play|vod-.*-amt)\.(tv|itunes)\.apple\.com/i) ? "Apple_TV"
-		: url.match(/(play-edge|vod-.*-aoc)\.(tv|itunes)\.apple\.com/i) ? "Apple_TV_Plus"
-			: url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
-				: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
-					: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-						: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-							: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
-								: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
-									: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-										: url.match(/www\.youtube\.com/i) ? "YouTube"
-											: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-												: undefined
+	let Platform = url.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/(?!subscription\/)/i) ? "Apple_TV"
+		: url.match(/vod-.*-amt\.tv\.apple\.com/i) ? "Apple_TV"
+			: url.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i) ? "Apple_TV_Plus"
+				: url.match(/vod-.*-aoc\.tv\.apple\.com/i) ? "Apple_TV_Plus"
+					: url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
+						: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
+							: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
+								: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
+									: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
+										: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+											: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+												: url.match(/www\.youtube\.com/i) ? "YouTube"
+													: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+														: undefined
 	//$.log(`🚧 ${$.name}, 调试信息`, "Set Environment Variables", `Platform: ${Platform}`, "");
 	/***************** BoxJs *****************/
 	// 包装为局部变量，用完释放内存

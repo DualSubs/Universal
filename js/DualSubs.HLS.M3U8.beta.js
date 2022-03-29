@@ -70,7 +70,7 @@ async function getCache(cache = {}) {
 		})
 	};
 	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URI, item?.VTTs?.map(VTT => VTT)] }
+	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
 // Function 3

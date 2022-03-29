@@ -96,17 +96,18 @@ async function getCache(cache = {}) {
 	let Indices = { "Index": await getIndex(cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
 	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
-	if (Indices[$.Settings.Language[0]] !== -1) {
-		Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
-			if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION.CHARACTERISTICS) return true;
-		});
-		if (Indices[$.Settings.Language[1]] == -1) {
+	if (type == "Official") {
+		if (Indices[$.Settings.Language[0]] !== -1) {
 			Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
-				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"]) return true;
+				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION.CHARACTERISTICS) return true;
 			});
-		}
-	}
-
+			if (Indices[$.Settings.Language[1]] == -1) {
+				Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
+					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"]) return true;
+				});
+			};
+		};
+	};
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return [Indices, cache[Indices.Index]]
 	/***************** Fuctions *****************/
@@ -118,7 +119,7 @@ async function getCache(cache = {}) {
 		})
 	};
 	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URI, item?.VTTs?.map(VTT => VTT)] }
+	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
 // Function 3

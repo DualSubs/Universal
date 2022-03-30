@@ -27,10 +27,10 @@ async function setENV(url, database) {
 	/***************** Settings *****************/
 	let Settings = BoxJs[Platform]?.Settings || database?.Settings?.[Platform];
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
-	if (typeof Settings.Type == "string") Settings.Type = Settings.Type.split(",") // BoxJs字符串转数组
-	if (!Verify.GoogleCloud.Auth) Settings.Type = Settings.Type.filter(e => e !== "GoogleCloud"); // 移除不可用类型
-	if (!Verify.Azure.Auth) Settings.Type = Settings.Type.filter(e => e !== "Azure");
-	if (!Verify.DeepL.Auth) Settings.Type = Settings.Type.filter(e => e !== "DeepL");
+	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
 	Settings.Offset = parseInt(Settings.Offset, 10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字

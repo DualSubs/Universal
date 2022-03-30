@@ -12,8 +12,13 @@ const DataBase = {
 };
 const type = $request.url.match(/[&\?]dualsubs=(\w+)$/)[1]
 $.log(`🚧 ${$.name}`, `type: ${type}`, "");
+
+const method = $request.method
+if (method == "OPTIONS") $.done();
+
 const url = $request.url.replace(/[&\?]dualsubs=(\w+)$/, "")
 $.log(`🚧 ${$.name}`, `url: ${url}`, "");
+
 let headers = $request.headers
 delete headers["Host"]
 delete headers["Connection"]

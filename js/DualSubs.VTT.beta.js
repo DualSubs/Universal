@@ -239,11 +239,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
-				"Content-type": 'application/json',
-				//"Authorization": `Bearer ${$.Verify.Microsoft?.Auth}`,
-				"Ocp-Apim-Subscription-Key": $.Verify.Microsoft?.Auth,
-				//"Ocp-Apim-Subscription-Region": "Southeast Asia",
-				//"X-ClientTraceId": uuidv4().toString()
+				"Content-type": "application/json; charset=UTF-8",
 			};
 			request.body = [{
 				"text": text
@@ -254,21 +250,22 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			const BaseURL = ($.Verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
 				: ($.Verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
 					: "https://api.cognitive.microsofttranslator.com"
-			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&from=${DataBase.Languages.Microsoft[source]}&to=${DataBase.Languages.Microsoft[target]}`;
+			request.url = `${BaseURL}/translate?api-version=3.0&to=${DataBase.Languages.Microsoft[target]}&from=${DataBase.Languages.Microsoft[source]}`;
 			request.headers = {
-				"Accept": "*/*",
-				"User-Agent": "DualSubs",
-				"Content-type": 'application/json',
+				"Content-Type": "application/json; charset=UTF-8",
+				"Accept": "application/json, text/javascript, */*; q=0.01",
+				"Accept-Language": "zh-hans"
 				//"Authorization": `Bearer ${$.Verify.Azure?.Auth}`,
 				//"Ocp-Apim-Subscription-Key": $.Verify.Azure?.Auth,
-				"Ocp-Apim-Subscription-Region": $.Verify.Azure?.Region ?? "", // chinanorth, chinaeast2
+				//"Ocp-Apim-Subscription-Region": $.Verify.Azure?.Region, // chinanorth, chinaeast2
 				//"X-ClientTraceId": uuidv4().toString()
 			};
-			if ($.Verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = $.Verify.Azure?.Auth;
-			else if  ($.Verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${$.Verify.Azure?.Auth}`,
-			request.body = [{
+			if ($.Verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = $.Verify.Azure.Region;
+			if ($.Verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = $.Verify.Azure.Auth;
+			else if ($.Verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${$.Verify.Azure.Auth}`;
+			request.body = JSON.stringify([{
 				"text": text
-			}];
+			}]);
 		} else if (type == "DeepL") {
 			const BaseURL = ($.Verify.DeepL.Mode == "Free") ? "https://api-free.deepl.com"
 				: ($.Verify.DeepL.Mode == "Pro") ? "https://api.deepl.com"

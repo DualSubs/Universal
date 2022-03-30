@@ -33,7 +33,7 @@ delete headers["Connection"]
 		if (Indices.Index !== -1) {
 			// 创建缓存
 			// 获取VTT字幕地址数组
-			for await (var language of $.Settings.Language) {
+			for await (var language of $.Settings.Languages) {
 				if (type == "Official") {
 					for await (var data of Cache[language]) data.VTTs = await getVTTs($.Platform, data.URI);
 				} else if (Indices[language] !== -1) Cache[language][Indices[language]].VTTs = await getVTTs($.Platform, url);
@@ -63,14 +63,14 @@ async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = { "Index": await getIndex(cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
+	for await (var language of $.Settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return [Indices, cache[Indices.Index]]
 	/***************** Fuctions *****************/
 	async function getIndex(cache) {
 		return cache.findIndex(item => {
 			let URLs = [item?.URL];
-			for (var language of $.Settings.Language) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			for (var language of $.Settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})

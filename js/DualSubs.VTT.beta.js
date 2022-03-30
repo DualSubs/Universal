@@ -48,7 +48,7 @@ delete headers["Connection"]
 			//let request = {};
 			if (type == "Official") {
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
-				let VTTs = Cache[$.Settings.Language[1]][Indices[$.Settings.Language[1]]].VTTs ?? null;
+				let VTTs = Cache[$.Settings.Languages[1]][Indices[$.Settings.Languages[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
 				else if ($.Platform == "Apple_TV" || $.Platform == "Apple_TV_Plus") {
 					let requests = await getOfficialRequest($.Platform, VTTs);
@@ -72,7 +72,7 @@ delete headers["Connection"]
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			DualSub = OriginVTT;
 			DualSub.body = await Promise.all(DualSub.body.map(async item => {
-				let text2 = await Translate(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
+				let text2 = await Translate(type, $.Settings.Languages[1], $.Settings.Languages[0], item.text);
 				item.text = ($.Settings.Position == "Forward") ? text2 + "\n" + item.text
 					: ($.Settings.Position == "Reverse") ? item.text + "\n" + text2
 						: text2 + "\n" + item.text;
@@ -100,15 +100,15 @@ async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = { "Index": await getIndex(cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
+	for await (var language of $.Settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
 	if (type == "Official") {
-		if (Indices[$.Settings.Language[0]] !== -1) {
-			Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
-				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION.CHARACTERISTICS) return true;
+		if (Indices[$.Settings.Languages[0]] !== -1) {
+			Indices[$.Settings.Languages[1]] = cache[Indices.Index][$.Settings.Languages[1]].findIndex(data => {
+				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Languages[0]][Indices[$.Settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Languages[0]][Indices[$.Settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
 			});
-			if (Indices[$.Settings.Language[1]] == -1) {
-				Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
-					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"]) return true;
+			if (Indices[$.Settings.Languages[1]] == -1) {
+				Indices[$.Settings.Languages[1]] = cache[Indices.Index][$.Settings.Languages[1]].findIndex(data => {
+					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Languages[0]][Indices[$.Settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
 				});
 			};
 		};
@@ -119,7 +119,7 @@ async function getCache(cache = {}) {
 	async function getIndex(cache) {
 		return cache.findIndex(item => {
 			let URLs = [item?.URL];
-			for (var language of $.Settings.Language) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			for (var language of $.Settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
 	};

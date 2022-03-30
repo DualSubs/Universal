@@ -21,7 +21,7 @@ let body = $response.body
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body);
-		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
+		$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		// PlayList.m3u8 URL		
 		Cache.URL = url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
@@ -92,12 +92,12 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	let langcodes = await switchLangCode(platform, langCode, DataBase);
 	//查询是否有符合语言的字幕
 	let datas = [];
-	for (var langcode of langcodes) {
+	for await (var langcode of langcodes) {
 		datas = json.body.filter(item => (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
 			break;
-		} else datas = [await setMEDIA({}, langcode)];
+		} else datas = [await setMEDIA({}, langcodes[0])];
 	};
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas

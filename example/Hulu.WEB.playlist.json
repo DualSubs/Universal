@@ -1,0 +1,99 @@
+{
+    "use_manifest_breaks": false,
+    "available_cdns": null,
+    "adstate": "RAYMOND",
+    "breaks": [
+        {
+            "kind": "preroll:mature-warning",
+            "can_display_timeline": false,
+            "url": "https://assetshuluimcom-a.akamaihd.net/prerolls/16x9/ma/TV-MA_kp73.mp4",
+            "pos": 0,
+            "aspect_ratio": "16x9",
+            "can_skipover": false,
+            "duration": 5005,
+            "can_seek": false
+        },
+        {
+            "kind": "preroll:network-promo",
+            "can_display_timeline": false,
+            "url": "https://ads-e-darwin.hulustream.com/published/prerolls/v2/982/2982/sp_bumper_01740a03-8363-b80a-356f-002821c8e20a_1000038256693_H264_1000.mp4",
+            "pos": 0,
+            "duration": 5005,
+            "can_skipover": false,
+            "aspect_ratio": "16x9",
+            "can_seek": false
+        }
+    ],
+    "content_eab_id": "EAB::297a8fed-cf79-480c-b4eb-36df6be00bdc::61700067::173075278",
+    "transcripts_urls": {
+        "smi": {
+            "en": "https://assetshuluimcom-a.akamaihd.net/captions/67/61700067_US_en_en.smi",
+            "es": "https://assetshuluimcom-a.akamaihd.net/captions/67/61700067_US_en_es.smi"
+        },
+        "webvtt": {
+            "en": "https://assetshuluimcom-a.akamaihd.net/captions_webvtt/67/61700067_US_en_en.vtt",
+            "es": "https://assetshuluimcom-a.akamaihd.net/captions_webvtt/67/61700067_US_en_es.vtt"
+        },
+        "ttml": {
+            "en": "https://assetshuluimcom-a.akamaihd.net/captions_ttml/67/61700067_US_en_en.ttml",
+            "es": "https://assetshuluimcom-a.akamaihd.net/captions_ttml/67/61700067_US_en_es.ttml"
+        }
+    },
+    "transcripts_encryption_key": "4878B22E76379B55C962B18DDBC188D82299F8F52E3E698D0FAF29A40ED64B21",
+    "video_metadata": {
+        "aspect_ratio": "16x9",
+        "end_credits_time": "00:40:57;20",
+        "frame_rate": 24,
+        "has_bug": "BR",
+        "has_captions": true,
+        "has_network_pre_roll": false,
+        "interstitials": "[]",
+        "language": "en",
+        "length": 2581954,
+        "segments": "00:05:41;21,00:09:55;15,00:18:13;00,00:25:27;04",
+        "id": 52064674,
+        "asset_id": 61700067,
+        "markers": null,
+        "transcripts_default_on": false,
+        "rating_bug_big": "https://assetshuluimcom-a.akamaihd.net/rating/TV_TV-MA__big.png",
+        "rating_bug_small": "https://assetshuluimcom-a.akamaihd.net/rating/TV_TV-MA__small.png"
+    },
+    "transcripts_encryption_iv": "WA7hap7AGUkevuth",
+    "queried_cdns": null,
+    "breakhash": ".zeJxTUgQAAGcARA",
+    "ad_break_times": [
+        341875,
+        595625,
+        1093000,
+        1527166
+    ],
+    "transcripts_default_on": false,
+    "resume_position": 0,
+    "recording_offset": -1000,
+    "initial_position": 0,
+    "fp_cert": "https://ads-v-darwin.hulustream.com/public/fairplay_cert.der",
+    "fp_server": "https://play.hulu.com/license/v1/fp_license/61700067?deejay_device_id=191&nonce=204430997&signature=1648692992_dc09c74ce788caf264b2b4ae6a4e255ceceadf09",
+    "audio_tracks": [
+        {
+            "language": "en",
+            "role": "primary",
+            "codecs_string": "ec-3",
+            "channels": 6
+        },
+        {
+            "language": "en",
+            "role": "narration",
+            "codecs_string": "mp4a.40.5",
+            "channels": 2
+        }
+    ],
+    "mbr_manifest": null,
+    "stream_url": "https://manifest-dp.hulustream.com/hls/61700067.m3u8?d=191&b=&ad_cdns=de&user_id=204430997&cdn=da&bitrate=1000&profiles=CAISIgogChkIgAoQ0AUYPCIESDI2NCoESElHSDIDNC4yEgNPTkUaFQoTCgUKA0VDMwoFCgNBQUMSA09ORSIRCgoKCEZBSVJQTEFZEgNPTkUqDQoDSExTEAE4AUABUAEyPwoWCgRGTVA0EgwKBENCQ1MSBENFTkMgAQogCgZNUEVHVFMSEgoEQ0JDUxIKU0FNUExFX0FFUxgBIAESA09ORVC_AQ%3D%3D&bundle_package_id=2&auth=1648743392_be400dd2de138aa13d9727c7e907bbc1",
+    "thumbnail_endpoint": "https://ib.hulu.com",
+    "asset_playback_type": "VOD",
+    "sauron_id": "17IUUNudSsU=",
+    "view_ttl_millis": 300000,
+    "sauron_token": "sauron_token",
+    "sauron_token_ttl_ms": 300000,
+    "sauron_token_ttl": 300
+}

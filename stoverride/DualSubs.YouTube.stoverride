@@ -1,0 +1,25 @@
+name: 🍿️ DualSubs for YouTube
+desc: (0.1.0) Dual Subtitiles for YouTube
+
+http:
+  mitm:
+    - "www.youtube.com"
+  script:
+    - match: ^https?:\/\/www\.youtube\.com\/youtubei\/v1\/player(\?.*)
+      name: DualSubs.YouTube.Player
+      type: response
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/www\.youtube\.com\/api\/timedtext(\?.*)
+      name: DualSubs.YouTube.TimedText
+      type: request
+      require-body: false
+      timeout: 10
+
+script-providers:
+  DualSubs.YouTube.Player:
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
+    interval: 86400
+  DualSubs.YouTube.TimedText:
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
+    interval: 86400

@@ -1,0 +1,11 @@
+#!name= 🍿️ DualSubs for YouTube
+#!desc= (0.1.0) Dual Subtitiles for YouTube
+
+#[Script]
+# DualSubs.YouTube.Player
+^https?:\/\/www\.youtube\.com\/youtubei\/v1\/player(\?.*) http-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
+# DualSubs.YouTube.TimedText
+^https?:\/\/www\.youtube\.com\/api\/timedtext(\?.*) url script-request-header https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
+
+#[MITM]
+hostname = www.youtube.com

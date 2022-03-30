@@ -23,36 +23,41 @@ var body = $response.body
 	if ($.Settings.Switch) {
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
+		let data = JSON.parse(body);
 		// 找节点
-		let Captions = body?.captions
+		let Captions = data?.captions
 		if (Captions) { // 有基础字幕
-			$.log(`⚠ ${$.name}, Captions`, `Captions: ${JSON.stringify(Captions)}`,"");
-			Cache.baseURL = Captions?.playerCaptionsRenderer?.baseUrl;
-			Captions.showAutoCaptions = true;
-		};
-		let Tracklist = Captions?.playerCaptionsTracklistRenderer
-		if (Tracklist) { // 有轨道列表
-			$.log(`⚠ ${$.name}, Tracklist`, `Tracklist: ${JSON.stringify(Tracklist)}`,"");
-			// 改翻译可用性
-			if (Tracklist?.captionTracks) {
-				Tracklist.captionTracks = Tracklist.captionTracks.map(caption => caption.isTranslatable = true);
+			$.log(`⚠ ${$.name}, Captions`, "");
+			Cache.baseURL = Captions?.playerCaptionsRenderer?.baseUrl; // 基础字幕URL
+			Captions.playerCaptionsRenderer.showAutoCaptions = true; // 包含自动生成的字幕
+			let Tracklist = Captions?.playerCaptionsTracklistRenderer
+			if (Tracklist) { // 有轨道列表
+				$.log(`⚠ ${$.name}, Tracklist`, "");
+				if (Tracklist?.captionTracks) {
+					// 改翻译可用性
+					Tracklist.captionTracks = Tracklist.captionTracks.map(caption => {
+						caption.isTranslatable = true
+						return caption
+					});
+				};
+				// 加翻译语言
+				const translationLanguages = [{ "languageCode": "sq", "languageName": { "simpleText": "阿尔巴尼亚语" } }, { "languageCode": "ar", "languageName": { "simpleText": "阿拉伯语" } }, { "languageCode": "am", "languageName": { "simpleText": "阿姆哈拉语" } }, { "languageCode": "az", "languageName": { "simpleText": "阿塞拜疆语" } }, { "languageCode": "ga", "languageName": { "simpleText": "爱尔兰语" } }, { "languageCode": "et", "languageName": { "simpleText": "爱沙尼亚语" } }, { "languageCode": "or", "languageName": { "simpleText": "奥里亚语" } }, { "languageCode": "eu", "languageName": { "simpleText": "巴斯克语" } }, { "languageCode": "be", "languageName": { "simpleText": "白俄罗斯语" } }, { "languageCode": "bg", "languageName": { "simpleText": "保加利亚语" } }, { "languageCode": "is", "languageName": { "simpleText": "冰岛语" } }, { "languageCode": "pl", "languageName": { "simpleText": "波兰语" } }, { "languageCode": "bs", "languageName": { "simpleText": "波斯尼亚语" } }, { "languageCode": "fa", "languageName": { "simpleText": "波斯语" } }, { "languageCode": "tt", "languageName": { "simpleText": "鞑靼语" } }, { "languageCode": "da", "languageName": { "simpleText": "丹麦语" } }, { "languageCode": "de", "languageName": { "simpleText": "德语" } }, { "languageCode": "ru", "languageName": { "simpleText": "俄语" } }, { "languageCode": "fr", "languageName": { "simpleText": "法语" } }, { "languageCode": "fil", "languageName": { "simpleText": "菲律宾语" } }, { "languageCode": "fi", "languageName": { "simpleText": "芬兰语" } }, { "languageCode": "km", "languageName": { "simpleText": "高棉语" } }, { "languageCode": "ka", "languageName": { "simpleText": "格鲁吉亚语" } }, { "languageCode": "gu", "languageName": { "simpleText": "古吉拉特语" } }, { "languageCode": "kk", "languageName": { "simpleText": "哈萨克语" } }, { "languageCode": "ht", "languageName": { "simpleText": "海地克里奥尔语" } }, { "languageCode": "ko", "languageName": { "simpleText": "韩语" } }, { "languageCode": "ha", "languageName": { "simpleText": "豪萨语" } }, { "languageCode": "nl", "languageName": { "simpleText": "荷兰语" } }, { "languageCode": "gl", "languageName": { "simpleText": "加利西亚语" } }, { "languageCode": "ca", "languageName": { "simpleText": "加泰罗尼亚语" } }, { "languageCode": "cs", "languageName": { "simpleText": "捷克语" } }, { "languageCode": "kn", "languageName": { "simpleText": "卡纳达语" } }, { "languageCode": "ky", "languageName": { "simpleText": "柯尔克孜语" } }, { "languageCode": "xh", "languageName": { "simpleText": "科萨语" } }, { "languageCode": "co", "languageName": { "simpleText": "科西嘉语" } }, { "languageCode": "hr", "languageName": { "simpleText": "克罗地亚语" } }, { "languageCode": "ku", "languageName": { "simpleText": "库尔德语" } }, { "languageCode": "la", "languageName": { "simpleText": "拉丁语" } }, { "languageCode": "lv", "languageName": { "simpleText": "拉脱维亚语" } }, { "languageCode": "lo", "languageName": { "simpleText": "老挝语" } }, { "languageCode": "lt", "languageName": { "simpleText": "立陶宛语" } }, { "languageCode": "lb", "languageName": { "simpleText": "卢森堡语" } }, { "languageCode": "rw", "languageName": { "simpleText": "卢旺达语" } }, { "languageCode": "ro", "languageName": { "simpleText": "罗马尼亚语" } }, { "languageCode": "mt", "languageName": { "simpleText": "马耳他语" } }, { "languageCode": "mr", "languageName": { "simpleText": "马拉地语" } }, { "languageCode": "mg", "languageName": { "simpleText": "马拉加斯语" } }, { "languageCode": "ml", "languageName": { "simpleText": "马拉雅拉姆语" } }, { "languageCode": "ms", "languageName": { "simpleText": "马来语" } }, { "languageCode": "mk", "languageName": { "simpleText": "马其顿语" } }, { "languageCode": "mi", "languageName": { "simpleText": "毛利语" } }, { "languageCode": "mn", "languageName": { "simpleText": "蒙古语" } }, { "languageCode": "bn", "languageName": { "simpleText": "孟加拉语" } }, { "languageCode": "my", "languageName": { "simpleText": "缅甸语" } }, { "languageCode": "hmn", "languageName": { "simpleText": "苗语" } }, { "languageCode": "af", "languageName": { "simpleText": "南非荷兰语" } }, { "languageCode": "st", "languageName": { "simpleText": "南索托语" } }, { "languageCode": "ne", "languageName": { "simpleText": "尼泊尔语" } }, { "languageCode": "no", "languageName": { "simpleText": "挪威语" } }, { "languageCode": "pa", "languageName": { "simpleText": "旁遮普语" } }, { "languageCode": "pt", "languageName": { "simpleText": "葡萄牙语" } }, { "languageCode": "ps", "languageName": { "simpleText": "普什图语" } }, { "languageCode": "ny", "languageName": { "simpleText": "齐切瓦语" } }, { "languageCode": "ja", "languageName": { "simpleText": "日语" } }, { "languageCode": "sv", "languageName": { "simpleText": "瑞典语" } }, { "languageCode": "sm", "languageName": { "simpleText": "萨摩亚语" } }, { "languageCode": "sr", "languageName": { "simpleText": "塞尔维亚语" } }, { "languageCode": "si", "languageName": { "simpleText": "僧伽罗语" } }, { "languageCode": "sn", "languageName": { "simpleText": "绍纳语" } }, { "languageCode": "eo", "languageName": { "simpleText": "世界语" } }, { "languageCode": "sk", "languageName": { "simpleText": "斯洛伐克语" } }, { "languageCode": "sl", "languageName": { "simpleText": "斯洛文尼亚语" } }, { "languageCode": "sw", "languageName": { "simpleText": "斯瓦希里语" } }, { "languageCode": "gd", "languageName": { "simpleText": "苏格兰盖尔语" } }, { "languageCode": "ceb", "languageName": { "simpleText": "宿务语" } }, { "languageCode": "so", "languageName": { "simpleText": "索马里语" } }, { "languageCode": "tg", "languageName": { "simpleText": "塔吉克语" } }, { "languageCode": "te", "languageName": { "simpleText": "泰卢固语" } }, { "languageCode": "ta", "languageName": { "simpleText": "泰米尔语" } }, { "languageCode": "th", "languageName": { "simpleText": "泰语" } }, { "languageCode": "tr", "languageName": { "simpleText": "土耳其语" } }, { "languageCode": "tk", "languageName": { "simpleText": "土库曼语" } }, { "languageCode": "cy", "languageName": { "simpleText": "威尔士语" } }, { "languageCode": "ug", "languageName": { "simpleText": "维吾尔语" } }, { "languageCode": "ur", "languageName": { "simpleText": "乌尔都语" } }, { "languageCode": "uk", "languageName": { "simpleText": "乌克兰语" } }, { "languageCode": "uz", "languageName": { "simpleText": "乌兹别克语" } }, { "languageCode": "es", "languageName": { "simpleText": "西班牙语" } }, { "languageCode": "fy", "languageName": { "simpleText": "西弗里西亚语" } }, { "languageCode": "iw", "languageName": { "simpleText": "希伯来语" } }, { "languageCode": "el", "languageName": { "simpleText": "希腊语" } }, { "languageCode": "haw", "languageName": { "simpleText": "夏威夷语" } }, { "languageCode": "sd", "languageName": { "simpleText": "信德语" } }, { "languageCode": "hu", "languageName": { "simpleText": "匈牙利语" } }, { "languageCode": "su", "languageName": { "simpleText": "巽他语" } }, { "languageCode": "hy", "languageName": { "simpleText": "亚美尼亚语" } }, { "languageCode": "ig", "languageName": { "simpleText": "伊博语" } }, { "languageCode": "it", "languageName": { "simpleText": "意大利语" } }, { "languageCode": "yi", "languageName": { "simpleText": "意第绪语" } }, { "languageCode": "hi", "languageName": { "simpleText": "印地语" } }, { "languageCode": "id", "languageName": { "simpleText": "印度尼西亚语" } }, { "languageCode": "en", "languageName": { "simpleText": "英语" } }, { "languageCode": "yo", "languageName": { "simpleText": "约鲁巴语" } }, { "languageCode": "vi", "languageName": { "simpleText": "越南语" } }, { "languageCode": "jv", "languageName": { "simpleText": "爪哇语" } }, { "languageCode": "zh-Hant", "languageName": { "simpleText": "中文（繁体）" } }, { "languageCode": "zh-Hans", "languageName": { "simpleText": "中文（简体）" } }, { "languageCode": "zu", "languageName": { "simpleText": "祖鲁语" } }];
+				if (Tracklist?.translationLanguages) {
+					Tracklist.translationLanguages = Object.assign(Tracklist.translationLanguages, translationLanguages);
+				} else Tracklist.translationLanguages = translationLanguages;
+				// 查询字幕选项
+				// 提取数据 用遍历语法可以兼容自定义数量的语言查询
+				for await (var language of $.Settings.Languages) {
+					Cache[language] = await getCaptions($.Platform, Cache, Tracklist, language);
+					$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
+				};
+				$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 			};
-			// 加翻译语言
-			const translationLanguages = [{ "languageCode": "sq", "languageName": { "simpleText": "阿尔巴尼亚语" } }, { "languageCode": "ar", "languageName": { "simpleText": "阿拉伯语" } }, { "languageCode": "am", "languageName": { "simpleText": "阿姆哈拉语" } }, { "languageCode": "az", "languageName": { "simpleText": "阿塞拜疆语" } }, { "languageCode": "ga", "languageName": { "simpleText": "爱尔兰语" } }, { "languageCode": "et", "languageName": { "simpleText": "爱沙尼亚语" } }, { "languageCode": "or", "languageName": { "simpleText": "奥里亚语" } }, { "languageCode": "eu", "languageName": { "simpleText": "巴斯克语" } }, { "languageCode": "be", "languageName": { "simpleText": "白俄罗斯语" } }, { "languageCode": "bg", "languageName": { "simpleText": "保加利亚语" } }, { "languageCode": "is", "languageName": { "simpleText": "冰岛语" } }, { "languageCode": "pl", "languageName": { "simpleText": "波兰语" } }, { "languageCode": "bs", "languageName": { "simpleText": "波斯尼亚语" } }, { "languageCode": "fa", "languageName": { "simpleText": "波斯语" } }, { "languageCode": "tt", "languageName": { "simpleText": "鞑靼语" } }, { "languageCode": "da", "languageName": { "simpleText": "丹麦语" } }, { "languageCode": "de", "languageName": { "simpleText": "德语" } }, { "languageCode": "ru", "languageName": { "simpleText": "俄语" } }, { "languageCode": "fr", "languageName": { "simpleText": "法语" } }, { "languageCode": "fil", "languageName": { "simpleText": "菲律宾语" } }, { "languageCode": "fi", "languageName": { "simpleText": "芬兰语" } }, { "languageCode": "km", "languageName": { "simpleText": "高棉语" } }, { "languageCode": "ka", "languageName": { "simpleText": "格鲁吉亚语" } }, { "languageCode": "gu", "languageName": { "simpleText": "古吉拉特语" } }, { "languageCode": "kk", "languageName": { "simpleText": "哈萨克语" } }, { "languageCode": "ht", "languageName": { "simpleText": "海地克里奥尔语" } }, { "languageCode": "ko", "languageName": { "simpleText": "韩语" } }, { "languageCode": "ha", "languageName": { "simpleText": "豪萨语" } }, { "languageCode": "nl", "languageName": { "simpleText": "荷兰语" } }, { "languageCode": "gl", "languageName": { "simpleText": "加利西亚语" } }, { "languageCode": "ca", "languageName": { "simpleText": "加泰罗尼亚语" } }, { "languageCode": "cs", "languageName": { "simpleText": "捷克语" } }, { "languageCode": "kn", "languageName": { "simpleText": "卡纳达语" } }, { "languageCode": "ky", "languageName": { "simpleText": "柯尔克孜语" } }, { "languageCode": "xh", "languageName": { "simpleText": "科萨语" } }, { "languageCode": "co", "languageName": { "simpleText": "科西嘉语" } }, { "languageCode": "hr", "languageName": { "simpleText": "克罗地亚语" } }, { "languageCode": "ku", "languageName": { "simpleText": "库尔德语" } }, { "languageCode": "la", "languageName": { "simpleText": "拉丁语" } }, { "languageCode": "lv", "languageName": { "simpleText": "拉脱维亚语" } }, { "languageCode": "lo", "languageName": { "simpleText": "老挝语" } }, { "languageCode": "lt", "languageName": { "simpleText": "立陶宛语" } }, { "languageCode": "lb", "languageName": { "simpleText": "卢森堡语" } }, { "languageCode": "rw", "languageName": { "simpleText": "卢旺达语" } }, { "languageCode": "ro", "languageName": { "simpleText": "罗马尼亚语" } }, { "languageCode": "mt", "languageName": { "simpleText": "马耳他语" } }, { "languageCode": "mr", "languageName": { "simpleText": "马拉地语" } }, { "languageCode": "mg", "languageName": { "simpleText": "马拉加斯语" } }, { "languageCode": "ml", "languageName": { "simpleText": "马拉雅拉姆语" } }, { "languageCode": "ms", "languageName": { "simpleText": "马来语" } }, { "languageCode": "mk", "languageName": { "simpleText": "马其顿语" } }, { "languageCode": "mi", "languageName": { "simpleText": "毛利语" } }, { "languageCode": "mn", "languageName": { "simpleText": "蒙古语" } }, { "languageCode": "bn", "languageName": { "simpleText": "孟加拉语" } }, { "languageCode": "my", "languageName": { "simpleText": "缅甸语" } }, { "languageCode": "hmn", "languageName": { "simpleText": "苗语" } }, { "languageCode": "af", "languageName": { "simpleText": "南非荷兰语" } }, { "languageCode": "st", "languageName": { "simpleText": "南索托语" } }, { "languageCode": "ne", "languageName": { "simpleText": "尼泊尔语" } }, { "languageCode": "no", "languageName": { "simpleText": "挪威语" } }, { "languageCode": "pa", "languageName": { "simpleText": "旁遮普语" } }, { "languageCode": "pt", "languageName": { "simpleText": "葡萄牙语" } }, { "languageCode": "ps", "languageName": { "simpleText": "普什图语" } }, { "languageCode": "ny", "languageName": { "simpleText": "齐切瓦语" } }, { "languageCode": "ja", "languageName": { "simpleText": "日语" } }, { "languageCode": "sv", "languageName": { "simpleText": "瑞典语" } }, { "languageCode": "sm", "languageName": { "simpleText": "萨摩亚语" } }, { "languageCode": "sr", "languageName": { "simpleText": "塞尔维亚语" } }, { "languageCode": "si", "languageName": { "simpleText": "僧伽罗语" } }, { "languageCode": "sn", "languageName": { "simpleText": "绍纳语" } }, { "languageCode": "eo", "languageName": { "simpleText": "世界语" } }, { "languageCode": "sk", "languageName": { "simpleText": "斯洛伐克语" } }, { "languageCode": "sl", "languageName": { "simpleText": "斯洛文尼亚语" } }, { "languageCode": "sw", "languageName": { "simpleText": "斯瓦希里语" } }, { "languageCode": "gd", "languageName": { "simpleText": "苏格兰盖尔语" } }, { "languageCode": "ceb", "languageName": { "simpleText": "宿务语" } }, { "languageCode": "so", "languageName": { "simpleText": "索马里语" } }, { "languageCode": "tg", "languageName": { "simpleText": "塔吉克语" } }, { "languageCode": "te", "languageName": { "simpleText": "泰卢固语" } }, { "languageCode": "ta", "languageName": { "simpleText": "泰米尔语" } }, { "languageCode": "th", "languageName": { "simpleText": "泰语" } }, { "languageCode": "tr", "languageName": { "simpleText": "土耳其语" } }, { "languageCode": "tk", "languageName": { "simpleText": "土库曼语" } }, { "languageCode": "cy", "languageName": { "simpleText": "威尔士语" } }, { "languageCode": "ug", "languageName": { "simpleText": "维吾尔语" } }, { "languageCode": "ur", "languageName": { "simpleText": "乌尔都语" } }, { "languageCode": "uk", "languageName": { "simpleText": "乌克兰语" } }, { "languageCode": "uz", "languageName": { "simpleText": "乌兹别克语" } }, { "languageCode": "es", "languageName": { "simpleText": "西班牙语" } }, { "languageCode": "fy", "languageName": { "simpleText": "西弗里西亚语" } }, { "languageCode": "iw", "languageName": { "simpleText": "希伯来语" } }, { "languageCode": "el", "languageName": { "simpleText": "希腊语" } }, { "languageCode": "haw", "languageName": { "simpleText": "夏威夷语" } }, { "languageCode": "sd", "languageName": { "simpleText": "信德语" } }, { "languageCode": "hu", "languageName": { "simpleText": "匈牙利语" } }, { "languageCode": "su", "languageName": { "simpleText": "巽他语" } }, { "languageCode": "hy", "languageName": { "simpleText": "亚美尼亚语" } }, { "languageCode": "ig", "languageName": { "simpleText": "伊博语" } }, { "languageCode": "it", "languageName": { "simpleText": "意大利语" } }, { "languageCode": "yi", "languageName": { "simpleText": "意第绪语" } }, { "languageCode": "hi", "languageName": { "simpleText": "印地语" } }, { "languageCode": "id", "languageName": { "simpleText": "印度尼西亚语" } }, { "languageCode": "en", "languageName": { "simpleText": "英语" } }, { "languageCode": "yo", "languageName": { "simpleText": "约鲁巴语" } }, { "languageCode": "vi", "languageName": { "simpleText": "越南语" } }, { "languageCode": "jv", "languageName": { "simpleText": "爪哇语" } }, { "languageCode": "zh-Hant", "languageName": { "simpleText": "中文（繁体）" } }, { "languageCode": "zh-Hans", "languageName": { "simpleText": "中文（简体）" } }, { "languageCode": "zu", "languageName": { "simpleText": "祖鲁语" } }];
-			if (Tracklist?.translationLanguages) {
-				Tracklist.translationLanguages = Object.assign(Tracklist.translationLanguages, translationLanguages);
-			} else Tracklist.translationLanguages = translationLanguages;
-			// 查询字幕选项
-			// 提取数据 用遍历语法可以兼容自定义数量的语言查询
-			for await (var language of $.Settings.Languages) {
-				Cache[language] = await getCaptions($.Platform, Tracklist, language);
-				$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
-			};
-			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-			// 写入缓存
-			$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
-			$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		};
+		// 写入缓存
+		$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize);
+		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`);
+		body = JSON.stringify(data);
 	};
 })()
 	.catch((e) => $.logErr(e))
@@ -101,21 +106,21 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 
 // Function 4
 // Get Captions Data
-async function getCaptions(platform = "", Tracklist = {}, langCode = "") {
+async function getCaptions(platform = "", cache = {}, tracklist = [], langCode = "") {
 	$.log(`⚠ ${$.name}, Get Captions Data`, "");
 	// 自动语言转换
 	let langcodes = await switchLangCode(platform, langCode, DataBase);
 	//查询是否有符合语言的字幕
-	let Captions = [];
+	let captionTracks = [];
 	for await (var langcode of langcodes) {
-		Captions = Tracklist.captionTracks.filter(item => (item?.languageCode == langcode));
-		if (Captions.length !== 0) {
-			Captions = await Promise.all(Captions.map(async data => await setCaption(data, langcode)));
+		captionTracks = tracklist.captionTracks.filter(item => (item?.languageCode == langcode));
+		if (captionTracks.length !== 0) {
+			captionTracks = await Promise.all(captionTracks.map(async captionTrack => await setCaption(captionTrack, langcode)));
 			break;
-		} else Captions = [await setCaption({}, langcodes[0])];
+		} else captionTracks = [await setCaption(cache, {}, langcodes[0])];
 	};
-	$.log(`🎉 ${$.name}, 调试信息`, "Get Captions Data", `Captions: ${JSON.stringify(Captions)}`, "");
-	return Captions
+	$.log(`🎉 ${$.name}, 调试信息`, "Get Captions Data", `captionTracks: ${JSON.stringify(captionTracks)}`, "");
+	return captionTracks
 
 	/***************** Fuctions *****************/
 	// Function 4.1
@@ -124,30 +129,28 @@ async function getCaptions(platform = "", Tracklist = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
 		// 自动语言转换
 		let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
-			: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
-				: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
-					: [langCode]
+			: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
+				: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
+					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
+						: [langCode]
 		langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[platform]?.[langcode]}\"`)
 		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		return langcodes
 	};
 	// Function 4.2
-	// Get Absolute Path
-	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] + URL };
-	// Function 4.3
 	// Set Captions Data
-	async function setCaption(caption = {}, langCode = "") {
+	async function setCaption(cache = {}, captionTrack = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set captions Data`, "");
 		let Caption = {
-			"baseUrl": caption?.baseUrl ?? null,
+			"baseUrl": captionTrack?.baseUrl ?? `${cache.baseURL}&lang=${langCode}`,
 			"name": {
-				"simpleText": caption?.Name ?? langCode
+				"simpleText": captionTrack?.Name ?? langCode
 			},
-			"vssId": caption?.vssId ?? `.${langCode}`,
+			"vssId": captionTrack?.vssId ?? `.${langCode}`,
 			"languageCode": langCode,
 			"isTranslatable": true
 		};
-		if (caption.kind) Caption.kind = caption?.kind ?? "asr";
+		if (captionTrack.kind) Caption.kind = captionTrack?.kind ?? "asr";
 		/*
 		let Caption = { ...caption };
 		Caption.baseUrl = caption?.baseUrl ?? null;

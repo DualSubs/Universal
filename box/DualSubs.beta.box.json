@@ -57,14 +57,14 @@
 							"label": "中国版"
 						}
 					],
-					"desc": ""
+					"desc": "版本二选一"
 				},
 				{
 					"id": "@DualSubs.Verify.Azure.Region",
 					"name": "Microsoft Azure Translator 区域代码",
-					"val": "",
+					"val": "global",
 					"type": "text",
-					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"placeholder": "global",
 					"desc": "如果开通Azure Translator时没有选择全球global，则需要填写开通的地区代码，如chinanorth, chinaeast2等"
 				},
 				{
@@ -89,7 +89,7 @@
 					"name": "Microsoft Azure Translator 认证密钥",
 					"val": "",
 					"type": "text",
-					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"placeholder": "c3639587ac214f2e917862c80a2b821b",
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
@@ -107,7 +107,7 @@
 							"label": "Pro"
 						}
 					],
-					"desc": "未提供时不会启用此类型字幕"
+					"desc": "模式二选一"
 				},
 				{
 					"id": "@DualSubs.Verify.DeepL.Auth",

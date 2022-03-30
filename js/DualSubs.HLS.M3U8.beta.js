@@ -41,8 +41,10 @@ let body = $response.body
 		// 写入缓存
 		$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
+		// 兼容性判断
+		const standard = await isStandard($.Platform, url, headers);
 		// 写入选项
-		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Languages[0]], Cache[$.Settings.Languages[1]], $.Settings.Types, await isStandard($.Platform, url, headers), $.Settings.Type);
+		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Languages[0]], Cache[$.Settings.Languages[1]], $.Settings.Types, standard, $.Settings.Type);
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");
@@ -177,7 +179,7 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 					$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Options: ${JSON.stringify(Options)}`, "");
 					if (Options.length !== 0) {
 						// 计算位置
-						let Index = await getIndex(platform, json, obj2);
+						let Index = await getIndex(platform, json, obj1);
 						// 插入字幕选项
 						await insertOptions(json, Index, Options, standard);
 					};

@@ -15,6 +15,8 @@ const url = $request.url
 const method = $request.method
 if (method == "OPTIONS") $.done();
 
+const headers = $request.headers
+
 let body = $response.body
 
 /***************** Processing *****************/
@@ -40,7 +42,7 @@ let body = $response.body
 		$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
 		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		// 写入选项
-		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Languages[0]], Cache[$.Settings.Languages[1]], $.Settings.Types);
+		PlayList = await setOptions($.Platform, PlayList, Cache[$.Settings.Languages[0]], Cache[$.Settings.Languages[1]], $.Settings.Types, await isStandard($.Platform, url, headers), $.Settings.Type);
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		//$.log(`🚧 ${$.name}`, "PlayList.stringify", JSON.stringify(PlayList), "");
@@ -139,24 +141,25 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 
 // Function 5
 // Set DualSubs Subtitle Options
-async function setOptions(platform = "", json = {}, languages1 = [], languages2 = [], type = []) {
+async function setOptions(platform = "", json = {}, languages1 = [], languages2 = [], types = [], standard = true, type = "") {
+	// 兼容性设置
+	types = (standard == true) ? types : [type];
 	for await (var obj1 of languages1) {
 		for await (var obj2 of languages2) {
 			// 无首选字幕时
 			if (!obj1?.EXT) {
 				// 无首选语言时删除官方字幕选项
-				type = type.filter(e => e !== "Official");
+				types = types.filter(e => e !== "Official");
 				for await (var obj2 of languages2) {
-					Options = await getOptions(platform, obj1, obj2, type);
+					Options = await getOptions(platform, obj1, obj2, types);
 					if (Options.length !== 0) {
 						// 计算位置
 						let Index = await getIndex(platform, json, obj2);
 						// 插入字幕选项
-						json.body.splice(Index + 1, 0, ...Options);
-					}
-				}
+						await insertOptions(json, Index, Options, standard);
+					};
+				};
 			}
-			
 			else if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
 				//$.log(`🚧 ${$.name}`, "obj2?.OPTION.FORCED", obj2?.OPTION.FORCED, "");
 				if (obj1?.OPTION?.["GROUP-ID"] == obj2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
@@ -166,21 +169,20 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 					let Options = [];
 					if (platform == "Apple_TV" || platform == "Apple_TV_Plus") { // Apple_TV Apple_TV_Plus 兼容
 						if (obj1?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-							Options = await getOptions(platform, obj1, obj2, type);
+							Options = await getOptions(platform, obj1, obj2, types);
 						}
 					} else {
-						Options = await getOptions(platform, obj1, obj2, type);
-					}
+						Options = await getOptions(platform, obj1, obj2, types);
+					};
 					$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Options: ${JSON.stringify(Options)}`, "");
 					if (Options.length !== 0) {
 						// 计算位置
-						let Index = await getIndex(platform, json, obj1);
-						$.log(`🎉 ${$.name}, 调试信息`, "Set DualSubs Subtitle Options", `Index: ${Index}`, "");
+						let Index = await getIndex(platform, json, obj2);
 						// 插入字幕选项
-						json.body.splice(Index + 1, 0, ...Options);
-					}
-				}
-			}
+						await insertOptions(json, Index, Options, standard);
+					};
+				};
+			};
 		}
 	};
 	return json
@@ -234,10 +236,27 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 				}
 			}
 		})
-		$.log(`🎉 ${$.name}, 调试信息`, "Get Same Options Index", `Index: ${Index}`, "");
+		$.log(`🎉 ${$.name}, Get Same Options Index`, `Index: ${Index}`, "");
 		return Index
 	};
+	// Function 5.3
+	// Insert Options
+	async function insertOptions(json, index, options, standard) {
+		$.log(`⚠ ${$.name}, Insert Options`, "");
+		// 插入字幕选项
+		if (standard == true) json.body.splice(index + 1, 0, ...options)
+		else json.body.splice(index, 1, ...options); // 兼容性设置
+	};
 };
+
+// Determine whether Standard Media Player
+async function isStandard(platform, url, headers) {
+    if (platform == "Prime_Video" && headers?.Referer.includes("amazon.com")) return false;
+    else if (platform == "HBO_Max") {
+        if (headers?.Referer.includes("hbomax.com")) return false;
+    } else return true;
+};
+
 
 /***************** Env *****************/
 // prettier-ignore

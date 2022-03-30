@@ -71,14 +71,27 @@ delete headers["Connection"]
 		} else {
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			DualSub = OriginVTT;
-			DualSub.body = await Promise.all(DualSub.body.map(async item => {
-				let text2 = await Translate(type, $.Settings.Languages[1], $.Settings.Languages[0], item.text);
-				item.text = ($.Settings.Position == "Forward") ? text2 + "\n" + item.text
-					: ($.Settings.Position == "Reverse") ? item.text + "\n" + text2
-						: text2 + "\n" + item.text;
-				return item
-			}));
-		}
+			if ($.Verify?.[type]?.Method == "Part") { // 逐段翻译
+				let Full = await Promise.all(DualSub.body.map(async item => item.text));
+				let length = (type == "GoogleCloud") ? 127 : (type == "Azure") ? 99 : (type == "DeepL") ? 49 : 48;
+				let Parts = await chunk(Full, length);
+				Parts = await Promise.all(Parts.map(async Part => {
+					return await Translate(type, $.Settings.Languages[1], $.Settings.Languages[0], Part);
+				})).then(parts => parts.flat(Infinity));
+				//Parts = Parts.flat(Infinity);
+				DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
+					item.text = await combineText(item.text, Parts[i], $.Settings.Position);
+					return item
+				}));
+			} else { // Row //逐行翻译
+				DualSub.body = await Promise.all(DualSub.body.map(async item => {
+					let text2 = await Translate(type, $.Settings.Languages[1], $.Settings.Languages[0], item.text);
+					item.text = await combineText(item.text, text2[0], $.Settings.Position);
+					return item
+				}));
+			};
+			async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+		};
 		DualSub = VTT.stringify(DualSub)
 		$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
 		response.body = DualSub
@@ -263,9 +276,14 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			if ($.Verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = $.Verify.Azure.Region;
 			if ($.Verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = $.Verify.Azure.Auth;
 			else if ($.Verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${$.Verify.Azure.Auth}`;
+			text = (Array.isArray(text)) ? text : [text];
+			let texts = await Promise.all(text?.map(async item => { return { "text": item } }))
+			request.body = JSON.stringify(texts);
+			/*
 			request.body = JSON.stringify([{
 				"text": text
 			}]);
+			*/
 		} else if (type == "DeepL") {
 			const BaseURL = ($.Verify.DeepL.Mode == "Free") ? "https://api-free.deepl.com"
 				: ($.Verify.DeepL.Mode == "Pro") ? "https://api.deepl.com"
@@ -277,7 +295,9 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"Content-Type": "application/x-www-form-urlencoded"
 			};
 			const BaseBody = `auth_key=${$.Verify.DeepL?.Auth}&source_lang=${DataBase.Languages.DeepL[source]}&target_lang=${DataBase.Languages.DeepL[target]}`;
-			request.body = BaseBody + `&text=${encodeURIComponent(text)}`;
+			text = (Array.isArray(text)) ? text : [text];
+			let texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
+			request.body = BaseBody + texts.join("");
 		} else if (type == "BaiduFanyi") {
 			// https://fanyi-api.baidu.com/doc/24
 			request.url = `https://fanyi-api.baidu.com/api/trans/vip/language`;
@@ -318,9 +338,9 @@ async function Translate(type = "", source = "", target = "", text = "") {
 	// Get Translate Data
 	async function GetData(type, request) {
 		$.log(`⚠ ${$.name}, Get Translate Data`, "");
-		let text = ""
+		let texts = [];
 		if (type == "Google") {
-			text = await $.http.get(request).then((response) => {
+			texts = await $.http.get(request).then((response) => {
 				$.log(`headers: ${JSON.stringify(response.headers)}`);
 				$.log(`body: ${JSON.stringify(response.body)}`);
 				let body = JSON.parse(response.body);
@@ -329,22 +349,24 @@ async function Translate(type = "", source = "", target = "", text = "") {
 		} else if (type == "Microsoft" || type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-			text = await $.http.post(request).then((response) => {
+			texts = await $.http.post(request).then(async response => {
 				$.log(`headers: ${JSON.stringify(response.headers)}`);
 				$.log(`body: ${JSON.stringify(response.body)}`);
 				let body = JSON.parse(response.body);
-				return text = body?.[0]?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
-			})
+				//return text = body?.[0]?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
+				return await Promise.all(body?.map(async item => item.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`))
+			});
 		} else if (type == "GoogleCloud" || type == "DeepL") {
-			text = await $.http.post(request).then((response) => {
+			texts = await $.http.post(request).then(async response => {
 				$.log(`headers: ${JSON.stringify(response.headers)}`);
 				$.log(`body: ${JSON.stringify(response.body)}`);
 				let body = JSON.parse(response.body);
-				return text = body?.data?.translations?.[0]?.translatedText ?? body?.data?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
-			})
+				//return text = body?.data?.translations?.[0]?.translatedText ?? body?.data?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
+				return await Promise.all(body?.data?.translations?.map(async item => item.translatedText ?? `翻译失败, 类型: ${type}`))
+			});
 		}
-		$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${text}`, "");
-		return text
+		$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
+		return texts
 	};
 };
 
@@ -395,6 +417,17 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;
 };
+
+// Function 7
+// Chunk Array
+async function chunk(source, length) {
+	$.log(`⚠ ${$.name}, Chunk Array`, "");
+    var index = 0, target = [];
+    while(index < source.length) target.push(source.slice(index, index += length));
+	$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	return target;
+}
+
 
 /***************** Env *****************/
 // prettier-ignore

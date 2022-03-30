@@ -215,7 +215,7 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 			//$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub.OPTION.URI: ${JSON.stringify(newSub.OPTION.URI)}`, "");
 			// 非自动选择
 			newSub.OPTION.AUTOSELECT = "NO"
-			$.log(`🎉 ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `newSub: ${JSON.stringify(newSub)}`, "");
+			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})
 	};
@@ -253,11 +253,14 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 
 // Determine whether Standard Media Player
 async function isStandard(platform, url, headers) {
-    if (platform == "Prime_Video" && headers?.Referer.includes("amazon.com")) return false;
-    else if (platform == "HBO_Max") {
-        if (headers?.Referer.includes("hbomax.com")) return false;
-    } else return true;
+    $.log(`⚠ ${$.name}, is Standard`, "");
+    let standard = (platform == "Prime_Video" && headers?.["User-Agent"].includes("Mozilla/5.0")) ? false
+        : (platform == "HBO_Max" && headers?.["User-Agent"].includes("Mozilla/5.0")) ? false
+            : true;
+    $.log(`🎉 ${$.name}, is Standard`, `standard: ${standard}`, "");
+    return standard
 };
+
 
 
 /***************** Env *****************/

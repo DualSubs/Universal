@@ -17,10 +17,10 @@
 	},
 	"Apple_TV": {
 		"Switch": true, // true, false
-		"Type": [
+		"Types": [
 			"Official" // Official, Google, DeepL, External
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -31,10 +31,10 @@
 	},
 	"Apple_TV_Plus": {
 		"Switch": true, // true, false
-		"Type": [
+		"Types": [
 			"Official" // Official, Google, DeepL, External
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -45,10 +45,10 @@
 	},
 	"Disney_Plus": {
 		"Switch": true, // true, false
-		"Type": [
+		"Types": [
 			"Official" // Official, Google, DeepL, External
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -59,10 +59,11 @@
 	},
 	"Prime_Video": {
 		"Switch": true, // true, false
-		"Type": [
+		"Types": [
 			"Official" // Official, Google, DeepL, External
 		],
-		"Language": [
+		"Type": "Official", // Official, Google, DeepL, External
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -73,10 +74,11 @@
 	},
 	"HBO_Max": {
 		"Switch": true, // true, false
-		"Type": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, DeepL, External
 			"Google"
 		],
-		"Language": [
+		"Type": "Google", // Official, Google, DeepL, External
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -87,10 +89,10 @@
 	},
 	"Hulu": {
 		"Switch": true, // true, false
-		"Type": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, DeepL, External
 			"Google"
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -101,10 +103,10 @@
 	},
 	"Paramount_Plus": {
 		"Switch": true, // true, false
-		"Type": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, DeepL, External
 			"Google"
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -115,10 +117,10 @@
 	},
 	"Peacock_TV": {
 		"Switch": true, // true, false
-		"Type": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, DeepL, External
 			"Google"
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -129,10 +131,10 @@
 	},
 	"Discovery_Plus": {
 		"Switch": true, // true, false
-		"Type": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, DeepL, External
 			"Google"
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -143,12 +145,12 @@
 	},
 	"Netflix": {
 		"Switch": true, // true, false
-		"Type": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, DeepL, External
 			"Official",
 			"Google",
 			"External"
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],
@@ -159,10 +161,10 @@
 	},
 	"YouTube": {
 		"Switch": true, // Enable, Disable
-		"Type": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, DeepL, External
 			"Official"
 		],
-		"Language": [
+		"Languages": [
 			"ZH",
 			"EN"
 		],

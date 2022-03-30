@@ -145,11 +145,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Apple_TV.Settings.Type",
+					"id": "@DualSubs.Apple_TV.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -198,7 +198,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Apple_TV.Settings.Language[0]",
+					"id": "@DualSubs.Apple_TV.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -263,7 +263,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Apple_TV.Settings.Language[1]",
+					"id": "@DualSubs.Apple_TV.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -396,11 +396,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Apple_TV_Plus.Settings.Type",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -449,7 +449,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Apple_TV_Plus.Settings.Language[0]",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -514,7 +514,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Apple_TV_Plus.Settings.Language[1]",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -647,11 +647,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.Type",
+					"id": "@DualSubs.Disney_Plus.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -700,7 +700,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.Language[0]",
+					"id": "@DualSubs.Disney_Plus.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -765,7 +765,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Disney_Plus.Settings.Language[1]",
+					"id": "@DualSubs.Disney_Plus.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -898,11 +898,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.Type",
+					"id": "@DualSubs.Prime_Video.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -951,7 +951,60 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.Language[0]",
+					"id": "@DualSubs.Prime_Video.Settings.Type",
+					"name": "字幕类型（兼容）",
+					"val": "Official",
+					"type": "selects",
+					"desc": "请选择要替换的字幕类型，会为兼容播放器替换为此字幕类型",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Baidu",
+							"label": "百度翻译"
+						},
+						{
+							"key": "BaiduFanyi",
+							"label": "百度 翻译开放平台"
+						},
+						{
+							"key": "Youdao",
+							"label": "有道翻译"
+						},
+						{
+							"key": "YoudaoAI",
+							"label": "有道智云 AI开放平台"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Microsoft",
+							"label": "Microsoft Translator"
+						},
+						{
+							"key": "Azure",
+							"label": "Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外部链接"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Prime_Video.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -1016,7 +1069,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.Language[1]",
+					"id": "@DualSubs.Prime_Video.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -1149,11 +1202,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.Type",
+					"id": "@DualSubs.HBO_Max.Settings.Types",
 					"name": "字幕类型",
 					"val": "Google",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -1202,7 +1255,60 @@
 					]
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.Language[0]",
+					"id": "@DualSubs.Prime_Video.Settings.Type",
+					"name": "字幕类型（兼容）",
+					"val": "Official",
+					"type": "selects",
+					"desc": "请选择要替换的字幕类型，会为兼容播放器替换为此字幕类型",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Baidu",
+							"label": "百度翻译"
+						},
+						{
+							"key": "BaiduFanyi",
+							"label": "百度 翻译开放平台"
+						},
+						{
+							"key": "Youdao",
+							"label": "有道翻译"
+						},
+						{
+							"key": "YoudaoAI",
+							"label": "有道智云 AI开放平台"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Microsoft",
+							"label": "Microsoft Translator"
+						},
+						{
+							"key": "Azure",
+							"label": "Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外部链接"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.HBO_Max.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -1275,7 +1381,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.HBO_Max.Settings.Language[1]",
+					"id": "@DualSubs.HBO_Max.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -1416,11 +1522,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.Type",
+					"id": "@DualSubs.Hulu.Settings.Types",
 					"name": "字幕类型",
 					"val": "Google",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -1469,7 +1575,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.Language[0]",
+					"id": "@DualSubs.Hulu.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -1534,7 +1640,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Hulu.Settings.Language[1]",
+					"id": "@DualSubs.Hulu.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -1667,11 +1773,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Paramount_Plus.Settings.Type",
+					"id": "@DualSubs.Paramount_Plus.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official,Google,DeepL,External",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -1720,7 +1826,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Paramount_Plus.Settings.Language[0]",
+					"id": "@DualSubs.Paramount_Plus.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -1785,7 +1891,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Paramount_Plus.Settings.Language[1]",
+					"id": "@DualSubs.Paramount_Plus.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -1918,11 +2024,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Peacock_TV.Settings.Type",
+					"id": "@DualSubs.Peacock_TV.Settings.Types",
 					"name": "字幕类型",
 					"val": "Google",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -1971,7 +2077,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Peacock_TV.Settings.Language[0]",
+					"id": "@DualSubs.Peacock_TV.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -2036,7 +2142,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Peacock_TV.Settings.Language[1]",
+					"id": "@DualSubs.Peacock_TV.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -2169,11 +2275,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.Type",
+					"id": "@DualSubs.Netflix.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official,Google",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -2222,7 +2328,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.Language[0]",
+					"id": "@DualSubs.Netflix.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -2287,7 +2393,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.Language[1]",
+					"id": "@DualSubs.Netflix.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -2420,11 +2526,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.YouTube.Settings.Type",
+					"id": "@DualSubs.YouTube.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official",
 					"type": "checkboxes",
-					"desc": "请选择要启用的字幕源",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [
 						{
 							"key": "Official",
@@ -2473,7 +2579,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.YouTube.Settings.Language[0]",
+					"id": "@DualSubs.YouTube.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH-HANS",
 					"type": "selects",
@@ -2538,7 +2644,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.YouTube.Settings.Language[1]",
+					"id": "@DualSubs.YouTube.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN-US",
 					"type": "selects",

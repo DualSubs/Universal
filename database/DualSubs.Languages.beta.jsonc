@@ -338,6 +338,7 @@
 		//"FI": "fi", // 芬兰语
 		//"FR": "fr", // 法语
 		"HU": "hu-HU", // 匈牙利语
+		"ID": "id", // 印度尼西亚语
 		"IT": "it", // 意大利语
 		//"JA": "ja", // 日语
 		//"KO": "ko", // 韩语
@@ -354,9 +355,13 @@
 		"SL": "sl-SI", // 斯洛文尼亚语
 		"SV": "sv-SE", // 瑞典语
 		//"IS": "is-IS", // 冰岛语
+		"ZH": "zh", // 中文
 		"ZH-HANS": "zh-Hans", // 中文（简体）
 		"ZH-HK": "zh-Hant-HK", // 中文（香港）
-		"ZH-HANT": "zh-Hant" // 中文（繁体）
+		"ZH-HANT": "zh-Hant", // 中文（繁体）
+		"ZH-TW": "zh-TW", //中文（台湾）
+		"YUE": "yue", //粤语
+		"YUE-HK": "yue-HK" //粤语（香港）
 	},
 	"Google": {
 		//"AUTO": "",

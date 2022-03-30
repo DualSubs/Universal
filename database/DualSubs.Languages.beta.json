@@ -338,6 +338,7 @@
 		"FI": "fi",
 		"FR": "fr",
 		"HU": "hu-HU",
+		"ID": "id",
 		"IT": "it",
 		"JA": "ja",
 		"KO": "ko",
@@ -354,9 +355,13 @@
 		"SL": "sl-SI",
 		"SV": "sv-SE",
 		"IS": "is-IS",
+		"ZH": "zh",
 		"ZH-HANS": "zh-Hans",
 		"ZH-HK": "zh-Hant-HK",
-		"ZH-HANT": "zh-Hant"
+		"ZH-HANT": "zh-Hant",
+		"ZH-TW": "zh-TW",
+		"YUE": "yue",
+		"YUE-HK": "yue-HK"
 	},
 	"Google": {
 		"AUTO": "",

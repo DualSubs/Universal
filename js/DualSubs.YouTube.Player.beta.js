@@ -51,39 +51,63 @@ var body = $response.body
 // Set Environment Variables
 async function setENV(e,t){let a=e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/(?!subscription\/)/i)||e.match(/vod-.*-amt\.tv\.apple\.com/i)?"Apple_TV":e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i)||e.match(/vod-.*-aoc\.tv\.apple\.com/i)?"Apple_TV_Plus":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),o=c?.Verify||t?.Settings?.Verify,i=c[a]?.Settings||t?.Settings?.[a];i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),o.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),o.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.CacheSize=parseInt(i.CacheSize,10),i.Offset=parseInt(i.Offset,10),i.Tolerance=parseInt(i.Tolerance,10);let s=c[a]?.Cache||[];return"string"==typeof s&&(s=JSON.parse(s)),[a,o,i,s]}
 
-// Function 2
-// Get Cache
-async function getCache(cache = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let Indices = { "Index": await getIndex(cache) };
-	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
-	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
-	return [Indices, cache[Indices.Index]]
-	/***************** Fuctions *****************/
-	async function getIndex(cache) {
-		return cache.findIndex(item => {
-			let URLs = [item?.URL];
-			for (var language of $.Settings.Language) URLs.push(item?.[language]?.map(d => getURIs(d)));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
-		})
+
+// Function 4
+// Get EXT-X-MEDIA Data
+async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
+	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
+	// 自动语言转换
+	let langcodes = await switchLangCode(platform, langCode, DataBase);
+	//查询是否有符合语言的字幕
+	let datas = [];
+	for await (var langcode of langcodes) {
+		datas = json.body.filter(item => (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
+		if (datas.length !== 0) {
+			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
+			break;
+		} else datas = [await setMEDIA({}, langcodes[0])];
 	};
-	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URI, item?.VTTs] }
+	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
+	return datas
+
+	/***************** Fuctions *****************/
+	// Function 4.1
+	// Switch Language Code
+	async function switchLangCode(platform = "", langCode = "", database) {
+		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
+		// 自动语言转换
+		let langcodes = (langCode == "ZH") ? ["ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
+			: (langCode == "EN") ? ["EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
+				: (langCode == "ES") ? ["ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
+					: [langCode]
+		langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[platform]?.[langcode]}\"`)
+		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+		return langcodes
+	};
+	// Function 4.2
+	// Get Absolute Path
+	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] + URL };
+	// Function 5.1
+	// Set EXT-X-MEDIA Data
+	async function setMEDIA(data = {}, langCode = "") {
+		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
+		let Data = { ...data };
+		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
+		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
+		Data.URI = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
+		return Data
+	};
 };
 
-// Function 3
-// Set Cache
-async function setCache(index = -1, target = {}, sources = {}, num = 1) {
-	$.log(`⚠ ${$.name}, Set Cache`, "");
-	// 刷新播放记录，所以始终置顶
-	if (index !== -1) delete target[index] // 删除旧记录
-	target.unshift(sources) // 头部插入缓存
-	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
-	return target
-};
+
+// Function 5
+// Set DualSubs Subtitle Options
+async function setOptions(json = {}, languages1 = [], languages2 = [], types = []) {
+	for await (var obj1 of languages1) {
+		for await (var obj2 of languages2) { }
+	}
+}
 
 /***************** Env *****************/
 // prettier-ignore

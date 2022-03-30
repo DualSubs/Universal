@@ -18,8 +18,25 @@
 			],
 			"settings": [
 				{
+					"id": "@DualSubs.Verify.GoogleCloud.Method",
+					"name": "[Google Cloud] Translation API 翻译方式",
+					"val": "Part",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Part",
+							"label": "逐段翻译"
+						},
+						{
+							"key": "Row",
+							"label": "逐句翻译"
+						}
+					],
+					"desc": "逐段翻译：每128句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
+				},
+				{
 					"id": "@DualSubs.Verify.GoogleCloud.Mode",
-					"name": "Google Cloud Translation API 认证方式",
+					"name": "[Google Cloud] Translation API 认证方式",
 					"val": "Key",
 					"type": "radios",
 					"items": [
@@ -36,15 +53,32 @@
 				},
 				{
 					"id": "@DualSubs.Verify.GoogleCloud.Auth",
-					"name": "Google Cloud Translation API 认证密钥",
+					"name": "[Google Cloud] Translation API 认证密钥",
 					"val": "",
 					"type": "text",
 					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
+					"id": "@DualSubs.Verify.Azure.Method",
+					"name": "[Microsoft Azure] Translator 翻译方式",
+					"val": "Part",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Part",
+							"label": "逐段翻译"
+						},
+						{
+							"key": "Row",
+							"label": "逐句翻译"
+						}
+					],
+					"desc": "逐段翻译：每100句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
+				},
+				{
 					"id": "@DualSubs.Verify.Azure.Version",
-					"name": "Microsoft Azure Translator 版本",
+					"name": "[Microsoft Azure] Translator 版本",
 					"val": "Azure",
 					"type": "radios",
 					"items": [
@@ -61,7 +95,7 @@
 				},
 				{
 					"id": "@DualSubs.Verify.Azure.Region",
-					"name": "Microsoft Azure Translator 区域代码",
+					"name": "[Microsoft Azure] Translator 区域代码",
 					"val": "global",
 					"type": "text",
 					"placeholder": "global",
@@ -69,7 +103,7 @@
 				},
 				{
 					"id": "@DualSubs.Verify.Azure.Mode",
-					"name": "Microsoft Azure Translator 认证方式",
+					"name": "[Microsoft Azure] Translator 认证方式",
 					"val": "Key",
 					"type": "radios",
 					"items": [
@@ -86,15 +120,32 @@
 				},
 				{
 					"id": "@DualSubs.Verify.Azure.Auth",
-					"name": "Microsoft Azure Translator 认证密钥",
+					"name": "[Microsoft Azure] Translator 认证密钥",
 					"val": "",
 					"type": "text",
 					"placeholder": "c3639587ac214f2e917862c80a2b821b",
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Verify.DeepL.Mode",
-					"name": "DeepL API 模式",
+					"id": "@DualSubs.Verify.DeepL.Method",
+					"name": "[DeepL] API 翻译方式",
+					"val": "Part",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Part",
+							"label": "逐段翻译"
+						},
+						{
+							"key": "Row",
+							"label": "逐句翻译"
+						}
+					],
+					"desc": "逐段翻译：每50句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
+				},
+				{
+					"id": "@DualSubs.Verify.DeepL.Version",
+					"name": "[DeepL] API 模式",
 					"val": "Free",
 					"type": "radios",
 					"items": [
@@ -111,7 +162,7 @@
 				},
 				{
 					"id": "@DualSubs.Verify.DeepL.Auth",
-					"name": "DeepL API 认证密钥",
+					"name": "[DeepL] API 认证密钥",
 					"val": "",
 					"type": "text",
 					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",

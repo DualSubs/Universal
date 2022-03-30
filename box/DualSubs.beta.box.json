@@ -1002,59 +1002,6 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.Type",
-					"name": "字幕类型（兼容）",
-					"val": "Official",
-					"type": "selects",
-					"desc": "请选择要替换的字幕类型，会为兼容播放器替换为此字幕类型",
-					"items": [
-						{
-							"key": "Official",
-							"label": "官方"
-						},
-						{
-							"key": "Baidu",
-							"label": "百度翻译"
-						},
-						{
-							"key": "BaiduFanyi",
-							"label": "百度 翻译开放平台"
-						},
-						{
-							"key": "Youdao",
-							"label": "有道翻译"
-						},
-						{
-							"key": "YoudaoAI",
-							"label": "有道智云 AI开放平台"
-						},
-						{
-							"key": "Google",
-							"label": "Google Translate"
-						},
-						{
-							"key": "GoogleCloud",
-							"label": "Google Cloud Translate API"
-						},
-						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
-						},
-						{
-							"key": "Azure",
-							"label": "Azure Translator"
-						},
-						{
-							"key": "DeepL",
-							"label": "DeepL API"
-						},
-						{
-							"key": "External",
-							"label": "外部链接"
-						}
-					]
-				},
-				{
 					"id": "@DualSubs.Prime_Video.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
@@ -1306,7 +1253,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Prime_Video.Settings.Type",
+					"id": "@DualSubs.HBO_Max.Settings.Type",
 					"name": "字幕类型（兼容）",
 					"val": "Official",
 					"type": "selects",
@@ -2758,6 +2705,59 @@
 						}
 					],
 					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.Type",
+					"name": "字幕类型（兼容）",
+					"val": "Official",
+					"type": "selects",
+					"desc": "请选择要替换的字幕类型，会为兼容播放器替换为此字幕类型",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Baidu",
+							"label": "百度翻译"
+						},
+						{
+							"key": "BaiduFanyi",
+							"label": "百度 翻译开放平台"
+						},
+						{
+							"key": "Youdao",
+							"label": "有道翻译"
+						},
+						{
+							"key": "YoudaoAI",
+							"label": "有道智云 AI开放平台"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Microsoft",
+							"label": "Microsoft Translator"
+						},
+						{
+							"key": "Azure",
+							"label": "Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外部链接"
+						}
+					]
 				},
 				{
 					"id": "@DualSubs.YouTube.Settings.Position",

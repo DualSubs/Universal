@@ -1,17 +1,20 @@
 {
 	"Verify": {
 		"GoogleCloud": {
+			"Method": "Part",
 			"Mode": "Key",
 			"Auth": null
 		},
 		"Azure": {
+			"Method": "Part",
 			"Version": "Azure",
 			"Region": null,
 			"Mode": "Key",
 			"Auth": null
 		},
 		"DeepL": {
-			"Mode": "Free",
+			"Method": "Part",
+			"Version": "Free",
 			"Auth": null
 		}
 	},
@@ -62,13 +65,12 @@
 		"Types": [
 			"Official"
 		],
-		"Type": "Official",
 		"Languages": [
 			"ZH",
 			"EN"
 		],
 		"Position": "Forward",
-		"CacheSize": 5,
+		"CacheSize": 2,
 		"Offset": 0,
 		"Tolerance": 1000
 	},

@@ -1,17 +1,20 @@
 {
 	"Verify": {
 		"GoogleCloud": {
+			"Method": "Part", // Part, Row
 			"Mode": "Key", // Token, Key
 			"Auth": null
 		},
 		"Azure": {
+			"Method": "Part", // Part, Row
 			"Version": "Azure", // Azure, AzureCN
 			"Region": null,
 			"Mode": "Key", // Token, Key
 			"Auth": null
 		},
 		"DeepL": {
-			"Mode": "Free", // Free, Pro
+			"Method": "Part", // Part, Row
+			"Version": "Free", // Free, Pro
 			"Auth": null // DeepL API Authentication Key
 		}
 	},
@@ -62,7 +65,6 @@
 		"Types": [
 			"Official" // Official, Google, DeepL, External
 		],
-		"Type": "Official", // Official, Google, DeepL, External
 		"Languages": [
 			"ZH",
 			"EN"

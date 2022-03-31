@@ -437,9 +437,9 @@
 		"SV": "sv", // 瑞典语
 		"IS": "is", // 冰岛语
 		"ZH": "zh-Hans", // 中文（简体）
-		"ZH-HANS": "zh-Hans", // 中文（中国）
-		"ZH-HK": "zh-Hant", // 中文（香港）
-		"ZH-HANT": "zh-Hant" // 中文（台湾）
+		"ZH-HANS": "zh-Hans", // 简体中文
+		"ZH-HK": "yue", // 粤语(繁体)
+		"ZH-HANT": "zh-Hant" // 中文(繁体)
 	},
 	"DeepL": {
 		"AUTO": "", // 自动识别

@@ -37,7 +37,7 @@ delete headers["Connection"]
 					for await (var data of Cache[language]) data.VTTs = await getVTTs($.Platform, data.URI);
 				} else if (Indices[language] !== -1) Cache[language][Indices[language]].VTTs = await getVTTs($.Platform, url);
 			}
-			//$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
+			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 			// 写入缓存
 			$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
 			$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)

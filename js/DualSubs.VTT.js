@@ -2,18 +2,23 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.1");
+const $ = new Env("DualSubs v0.5.2");
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
-	Settings: {"Verify":{"GoogleCloud":{"Mode":"Key","Auth":null},"Azure":{"Version":"Azure","Region":null,"Mode":"Key","Auth":null},"DeepL":{"Mode":"Free","Auth":null}},"Apple_TV":{"Switch":true,"Type":["Official"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Apple_TV_Plus":{"Switch":true,"Type":["Official"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Disney_Plus":{"Switch":true,"Type":["Official"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":5,"Offset":0,"Tolerance":1000},"Prime_Video":{"Switch":true,"Type":["Official"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":5,"Offset":0,"Tolerance":1000},"HBO_Max":{"Switch":true,"Type":["Google","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Hulu":{"Switch":true,"Type":["Google","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Paramount_Plus":{"Switch":true,"Type":["Google","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Discovery_Plus":{"Switch":true,"Type":["Google","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Netflix":{"Switch":true,"Type":["Official","Google","External"],"Language":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"YouTube":{"Switch":true,"Type":["Official"],"Language":["ZH","EN"],"Position":"Forward"}},
+	Settings: {"Verify":{"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},"DeepL":{"Method":"Part","Version":"Free","Auth":null}},"Apple_TV":{"Switch":true,"Types":["Official"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Apple_TV_Plus":{"Switch":true,"Types":["Official"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Disney_Plus":{"Switch":true,"Types":["Official"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":5,"Offset":0,"Tolerance":1000},"Prime_Video":{"Switch":true,"Types":["Official"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"HBO_Max":{"Switch":true,"Types":["Google"],"Type":"Google","Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Hulu":{"Switch":true,"Types":["Google"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Paramount_Plus":{"Switch":true,"Types":["Google"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Peacock_TV":{"Switch":true,"Types":["Google"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Discovery_Plus":{"Switch":true,"Types":["Google"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"Netflix":{"Switch":true,"Types":["Official","Google","External"],"Languages":["ZH","EN"],"Position":"Forward","CacheSize":2,"Offset":0,"Tolerance":1000},"YouTube":{"Switch":true,"Types":["Official"],"Languages":["ZH","EN"],"Position":"Forward"}},
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Languages.beta.min.json
-	Languages: {"Apple_TV":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"cmn-Hans","ZH-HK":"yue-Hant","ZH-HANT":"cmn-Hant"},"Apple_TV_Plus":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"cmn-Hans","ZH-HK":"yue-Hant","ZH-HANT":"cmn-Hant"},"Disney_Plus":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"},"Prime_Video":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-HANS":"zh-hans","ZH-HK":"zh-HK","ZH-HANT":"zh-hant"},"HBO_Max":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US","ES-419":"es-419","ES-419 SDH":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"},"Hulu":{"AR":"ar-001","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-HANS":"zho","ZH-HK":"zho","ZH-HANT":"zho"},"Paramount_Plus":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"},"Discovery_Plus":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de","EL":"el","EN-GB":"en","EN-US":"en-US","EN-US SDH":"en-US SDH","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi","FR":"fr","HU":"hu-HU","IT":"it","JA":"ja","KO":"ko","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"},"Netflix":{},"YouTube":{"BG":"bg-BG","CS":"cs","DA":"da-DK","DE":"de","EL":"el","EN-GB":"en","EN-US":"en-US","EN-US SDH":"en-US SDH","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi","FR":"fr","HU":"hu-HU","IT":"it","JA":"ja","KO":"ko","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-HANT":"zh-Hant"},"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-CN","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"},"Microsoft":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"zh-Hant","ZH-HANT":"zh-Hant"},"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}}
+	Languages: {"Apple_TV":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"cmn-Hans","ZH-HK":"yue-Hant","ZH-HANT":"cmn-Hant"},"Apple_TV_Plus":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"cmn-Hans","ZH-HK":"yue-Hant","ZH-HANT":"cmn-Hant"},"Disney_Plus":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"},"Prime_Video":{"AR":"ar-001","BG":"bg-bg","CS":"cs-cz","DA":"da-dk","DE":"de-de","EL":"el-gr","EN-GB":"en-gb","EN-US":"en-us","EN-US SDH":"en-us","ES-419":"es-419","ES-ES":"es-es","ET":"et-ee","FI":"fi-fi","FR":"fr-fr","HU":"hu-hu","ID":"id-id","IT":"it-it","JA":"ja-jp","KO":"ko-kr","LT":"lt-lt","LV":"lv-lv","NL":"nl-nl","NO":"nb-no","PL":"pl-pl","PT-PT":"pt-pt","PT-BR":"pt-br","RO":"ro-ro","RU":"ru-ru","SK":"sk-sk","SL":"sl-si","SV":"sv-se","IS":"is-is","ZH-HANS":"zh-hans","ZH-HK":"zh-HK","ZH-HANT":"zh-hant"},"HBO_Max":{"AR":"ar-001","BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de-DE","EL":"el-GR","EN-GB":"en-UK","EN-US":"en-US","EN-US SDH":"en-US","ES-419":"es-419","ES-419 SDH":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi-FI","FR":"fr-FR","HU":"hu-HU","IT":"it-IT","JA":"ja-JP","KO":"ko-KR","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"},"Hulu":{"AR":"ar-001","BG":"bul","CS":"ces","DA":"dan","DE":"deu","EL":"ell","EN-GB":"eng","EN-US":"eng","EN-US SDH":"eng","ES-419":"spa","ES-ES":"spa","ET":"est","FI":"fin","FR":"fra","HU":"hun","IT":"ita","JA":"jpn","KO":"kor","LT":"lit","LV":"lav","NL":"nld","NO":"nor","PL":"por","PT-PT":"por","PT-BR":"por","RO":"ron","RU":"rus","SK":"slk","SL":"slv","SV":"swe","IS":"isl","ZH-HANS":"zho","ZH-HK":"zho","ZH-HANT":"zho"},"Paramount_Plus":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"},"Peacock_TV":{"AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es-419","ES-ES":"es-ES","ET":"et","FI":"fi","FR":"fr-FR","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"},"Discovery_Plus":{"BG":"bg-BG","CS":"cs-CZ","DA":"da-DK","DE":"de","EL":"el","EN-GB":"en","EN-US":"en-US","EN-US SDH":"en-US SDH","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi","FR":"fr","HU":"hu-HU","IT":"it","JA":"ja","KO":"ko","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"},"Netflix":{},"YouTube":{"BG":"bg-BG","CS":"cs","DA":"da-DK","DE":"de","EL":"el","EN-GB":"en","EN-US":"en-US","EN-US SDH":"en-US SDH","ES-419":"es-419","ES-ES":"es-ES","ET":"et-EE","FI":"fi","FR":"fr","HU":"hu-HU","ID":"id","IT":"it","JA":"ja","KO":"ko","LT":"lt-LT","LV":"lv-LV","NL":"nl-NL","NO":"nb-NO","PL":"pl-PL","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro-RO","RU":"ru-RU","SK":"sk-SK","SL":"sl-SI","SV":"sv-SE","IS":"is-IS","ZH":"zh","ZH-HANS":"zh-Hans","ZH-HK":"zh-Hant-HK","ZH-HANT":"zh-Hant","ZH-TW":"zh-TW","YUE":"yue","YUE-HK":"yue-HK"},"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-CN","ZH-HANS":"zh-CN","ZH-HK":"zh-HK","ZH-HANT":"zh-TW"},"Microsoft":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"zh-Hant","ZH-HANT":"zh-Hant"},"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}}
 };
 const type = $request.url.match(/[&\?]dualsubs=(\w+)$/)[1]
 $.log(`🚧 ${$.name}`, `type: ${type}`, "");
+
 const url = $request.url.replace(/[&\?]dualsubs=(\w+)$/, "")
 $.log(`🚧 ${$.name}`, `url: ${url}`, "");
+
+const method = $request.method
+if (method == "OPTIONS") $.done();
+
 let headers = $request.headers
 delete headers["Host"]
 delete headers["Connection"]
@@ -39,7 +44,7 @@ delete headers["Connection"]
 		else if (type == "Official" || type == "External") {
 			if (type == "Official") {
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
-				let VTTs = Cache[$.Settings.Language[1]][Indices[$.Settings.Language[1]]].VTTs ?? null;
+				let VTTs = Cache[$.Settings.Languages[1]][Indices[$.Settings.Languages[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
 				else if ($.Platform == "Apple_TV" || $.Platform == "Apple_TV_Plus") {
 					let requests = await getOfficialRequest($.Platform, VTTs);
@@ -62,14 +67,27 @@ delete headers["Connection"]
 		} else {
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			DualSub = OriginVTT;
-			DualSub.body = await Promise.all(DualSub.body.map(async item => {
-				let text2 = await Translate(type, $.Settings.Language[1], $.Settings.Language[0], item.text);
-				item.text = ($.Settings.Position == "Forward") ? text2 + "\n" + item.text
-					: ($.Settings.Position == "Reverse") ? item.text + "\n" + text2
-						: text2 + "\n" + item.text;
-				return item
-			}));
-		}
+			if ($.Verify?.[type]?.Method == "Part") { // 逐段翻译
+				let Full = await Promise.all(DualSub.body.map(async item => item.text));
+				let length = (type == "GoogleCloud") ? 127 : (type == "Azure") ? 99 : (type == "DeepL") ? 49 : 48;
+				let Parts = await chunk(Full, length);
+				Parts = await Promise.all(Parts.map(async Part => {
+					return await Translate(type, $.Settings.Languages[1], $.Settings.Languages[0], Part);
+				})).then(parts => parts.flat(Infinity));
+				//Parts = Parts.flat(Infinity);
+				DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
+					item.text = await combineText(item.text, Parts[i], $.Settings.Position);
+					return item
+				}));
+			} else { // Row //逐行翻译
+				DualSub.body = await Promise.all(DualSub.body.map(async item => {
+					let text2 = await Translate(type, $.Settings.Languages[1], $.Settings.Languages[0], item.text);
+					item.text = await combineText(item.text, text2[0], $.Settings.Position);
+					return item
+				}));
+			};
+			async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+		};
 		DualSub = VTT.stringify(DualSub)
 		response.body = DualSub
 		$.done({ response })
@@ -81,7 +99,7 @@ delete headers["Connection"]
 /***************** Fuctions *****************/
 // Function 1
 // Set Environment Variables
-async function setENV(e,t){let a=e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/(?!subscription\/)/i)||e.match(/vod-.*-amt\.tv\.apple\.com/i)?"Apple_TV":e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i)||e.match(/vod-.*-aoc\.tv\.apple\.com/i)?"Apple_TV_Plus":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),o=c?.Verify||t?.Settings?.Verify,i=c[a]?.Settings||t?.Settings?.[a];i.Switch=JSON.parse(i.Switch),"string"==typeof i.Type&&(i.Type=i.Type.split(",")),o.GoogleCloud.Auth||(i.Type=i.Type.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(i.Type=i.Type.filter((e=>"Azure"!==e))),o.DeepL.Auth||(i.Type=i.Type.filter((e=>"DeepL"!==e))),i.CacheSize=parseInt(i.CacheSize,10),i.Offset=parseInt(i.Offset,10),i.Tolerance=parseInt(i.Tolerance,10);let l=c[a]?.Cache||[];return"string"==typeof l&&(l=JSON.parse(l)),[a,o,i,l]}
+async function setENV(e,t){let a=e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/(?!subscription\/)/i)||e.match(/vod-.*-amt\.tv\.apple\.com/i)?"Apple_TV":e.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i)||e.match(/vod-.*-aoc\.tv\.apple\.com/i)?"Apple_TV_Plus":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/\.peacocktv\.com/i)?"Peacock":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/www\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0,c=$.getjson("DualSubs",t),o=c?.Verify||t?.Settings?.Verify,i=c[a]?.Settings||t?.Settings?.[a];i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),o.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),o.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.CacheSize=parseInt(i.CacheSize,10),i.Offset=parseInt(i.Offset,10),i.Tolerance=parseInt(i.Tolerance,10);let s=c[a]?.Cache||[];return"string"==typeof s&&(s=JSON.parse(s)),[a,o,i,s]}
 
 // Function 2
 // Get Cache
@@ -89,15 +107,15 @@ async function getCache(cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = { "Index": await getIndex(cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-	for await (var language of $.Settings.Language) Indices[language] = await getDataIndex(Indices.Index, language)
+	for await (var language of $.Settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
 	if (type == "Official") {
-		if (Indices[$.Settings.Language[0]] !== -1) {
-			Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
-				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION.CHARACTERISTICS) return true;
+		if (Indices[$.Settings.Languages[0]] !== -1) {
+			Indices[$.Settings.Languages[1]] = cache[Indices.Index][$.Settings.Languages[1]].findIndex(data => {
+				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Languages[0]][Indices[$.Settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][$.Settings.Languages[0]][Indices[$.Settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
 			});
-			if (Indices[$.Settings.Language[1]] == -1) {
-				Indices[$.Settings.Language[1]] = cache[Indices.Index][$.Settings.Language[1]].findIndex(data => {
-					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Language[0]][Indices[$.Settings.Language[0]]].OPTION["GROUP-ID"]) return true;
+			if (Indices[$.Settings.Languages[1]] == -1) {
+				Indices[$.Settings.Languages[1]] = cache[Indices.Index][$.Settings.Languages[1]].findIndex(data => {
+					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][$.Settings.Languages[0]][Indices[$.Settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
 				});
 			};
 		};
@@ -108,7 +126,7 @@ async function getCache(cache = {}) {
 	async function getIndex(cache) {
 		return cache.findIndex(item => {
 			let URLs = [item?.URL];
-			for (var language of $.Settings.Language) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			for (var language of $.Settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
 	};
@@ -171,7 +189,8 @@ async function Translate(type = "", source = "", target = "", text = "") {
 	let text2 = await GetData(type, request);
 	//$.log(`🚧 ${$.name}, Translate`, `text2: ${text2}`, "");
 	return text2
-	// Function 6.1
+	/***************** Fuctions *****************/
+	// Function 5.1
 	// Get Translate Request
 	async function GetRequest(type = "", source = "", target = "", text = "") {
 		$.log(`🚧 ${$.name}, Get Translate Request`, "");
@@ -228,11 +247,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			request.headers = {
 				"Accept": "*/*",
 				"User-Agent": "DualSubs",
-				"Content-type": 'application/json',
-				//"Authorization": `Bearer ${$.Verify.Microsoft?.Auth}`,
-				"Ocp-Apim-Subscription-Key": $.Verify.Microsoft?.Auth,
-				//"Ocp-Apim-Subscription-Region": "Southeast Asia",
-				//"X-ClientTraceId": uuidv4().toString()
+				"Content-type": "application/json; charset=UTF-8",
 			};
 			request.body = [{
 				"text": text
@@ -243,21 +258,18 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			const BaseURL = ($.Verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
 				: ($.Verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
 					: "https://api.cognitive.microsofttranslator.com"
-			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&from=${DataBase.Languages.Microsoft[source]}&to=${DataBase.Languages.Microsoft[target]}`;
+			request.url = `${BaseURL}/translate?api-version=3.0&to=${DataBase.Languages.Microsoft[target]}&from=${DataBase.Languages.Microsoft[source]}`;
 			request.headers = {
-				"Accept": "*/*",
-				"User-Agent": "DualSubs",
-				"Content-type": 'application/json',
-				//"Authorization": `Bearer ${$.Verify.Azure?.Auth}`,
-				//"Ocp-Apim-Subscription-Key": $.Verify.Azure?.Auth,
-				"Ocp-Apim-Subscription-Region": $.Verify.Azure?.Region ?? "", // chinanorth, chinaeast2
-				//"X-ClientTraceId": uuidv4().toString()
+				"Content-Type": "application/json; charset=UTF-8",
+				"Accept": "application/json, text/javascript, */*; q=0.01",
+				"Accept-Language": "zh-hans"
 			};
-			if ($.Verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = $.Verify.Azure?.Auth;
-			else if  ($.Verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${$.Verify.Azure?.Auth}`,
-			request.body = [{
-				"text": text
-			}];
+			if ($.Verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = $.Verify.Azure.Region;
+			if ($.Verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = $.Verify.Azure.Auth;
+			else if ($.Verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${$.Verify.Azure.Auth}`;
+			text = (Array.isArray(text)) ? text : [text];
+			let texts = await Promise.all(text?.map(async item => { return { "text": item } }))
+			request.body = JSON.stringify(texts);
 		} else if (type == "DeepL") {
 			const BaseURL = ($.Verify.DeepL.Mode == "Free") ? "https://api-free.deepl.com"
 				: ($.Verify.DeepL.Mode == "Pro") ? "https://api.deepl.com"
@@ -269,7 +281,9 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"Content-Type": "application/x-www-form-urlencoded"
 			};
 			const BaseBody = `auth_key=${$.Verify.DeepL?.Auth}&source_lang=${DataBase.Languages.DeepL[source]}&target_lang=${DataBase.Languages.DeepL[target]}`;
-			request.body = BaseBody + `&text=${encodeURIComponent(text)}`;
+			text = (Array.isArray(text)) ? text : [text];
+			let texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
+			request.body = BaseBody + texts.join("");
 		} else if (type == "BaiduFanyi") {
 			// https://fanyi-api.baidu.com/doc/24
 			request.url = `https://fanyi-api.baidu.com/api/trans/vip/language`;
@@ -306,13 +320,13 @@ async function Translate(type = "", source = "", target = "", text = "") {
 		//$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
-	// Function 5.1
+	// Function 5.2
 	// Get Translate Data
 	async function GetData(type, request) {
 		$.log(`⚠ ${$.name}, Get Translate Data`, "");
-		let text = ""
+		let texts = [];
 		if (type == "Google") {
-			text = await $.http.get(request).then((response) => {
+			texts = await $.http.get(request).then((response) => {
 				$.log(`headers: ${JSON.stringify(response.headers)}`);
 				$.log(`body: ${JSON.stringify(response.body)}`);
 				let body = JSON.parse(response.body);
@@ -321,22 +335,22 @@ async function Translate(type = "", source = "", target = "", text = "") {
 		} else if (type == "Microsoft" || type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-			text = await $.http.post(request).then((response) => {
+			texts = await $.http.post(request).then(async response => {
 				$.log(`headers: ${JSON.stringify(response.headers)}`);
 				$.log(`body: ${JSON.stringify(response.body)}`);
 				let body = JSON.parse(response.body);
-				return text = body?.[0]?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
-			})
+				return await Promise.all(body?.map(async item => item.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`))
+			});
 		} else if (type == "GoogleCloud" || type == "DeepL") {
-			text = await $.http.post(request).then((response) => {
+			texts = await $.http.post(request).then(async response => {
 				$.log(`headers: ${JSON.stringify(response.headers)}`);
 				$.log(`body: ${JSON.stringify(response.body)}`);
 				let body = JSON.parse(response.body);
-				return text = body?.data?.translations?.[0]?.translatedText ?? body?.data?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
-			})
+				return await Promise.all(body?.data?.translations?.map(async item => item.translatedText ?? `翻译失败, 类型: ${type}`))
+			});
 		}
-		//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${text}`, "");
-		return text
+		//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
+		return texts
 	};
 };
 
@@ -364,6 +378,16 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 	}
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;
+};
+
+// Function 7
+// Chunk Array
+async function chunk(source, length) {
+	$.log(`⚠ ${$.name}, Chunk Array`, "");
+    var index = 0, target = [];
+    while(index < source.length) target.push(source.slice(index, index += length));
+	$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	return target;
 };
 
 /***************** Env *****************/

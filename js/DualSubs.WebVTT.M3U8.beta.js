@@ -22,7 +22,6 @@ $.log(`🚧 ${$.name}`, `url: ${url}`, "");
 let headers = $request.headers
 delete headers["Host"]
 delete headers["Connection"]
-//$.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 
 /***************** Processing *****************/
 !(async () => {

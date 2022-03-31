@@ -22,7 +22,6 @@ if (method == "OPTIONS") $.done();
 let headers = $request.headers
 delete headers["Host"]
 delete headers["Connection"]
-//$.log(`🚧 ${$.name}`, "headers.stringify", JSON.stringify(headers), "");
 
 /***************** Processing *****************/
 !(async () => {
@@ -38,14 +37,11 @@ delete headers["Connection"]
 		});
 		// 获取序列化VTT
 		let OriginVTT = VTT.parse(response.body)
-		//$.log(`🚧 ${$.name}`, "OriginVTT.parse", JSON.stringify(OriginVTT), "");
 		// 创建双语字幕JSON
 		let DualSub = {};
 		// 获取类型
 		if (!type) $.done();
 		else if (type == "Official" || type == "External") {
-			//let Offset = new Number;
-			//let request = {};
 			if (type == "Official") {
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
 				let VTTs = Cache[$.Settings.Languages[1]][Indices[$.Settings.Languages[1]]].VTTs ?? null;
@@ -93,9 +89,7 @@ delete headers["Connection"]
 			async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
 		};
 		DualSub = VTT.stringify(DualSub)
-		$.log(`🚧 ${$.name}`, "VTT.stringify", JSON.stringify(DualSub), "");
 		response.body = DualSub
-		$.log(`🚧 ${$.name}`, "response.stringify", JSON.stringify(response), "");
 		$.done({ response })
 	}
 })()
@@ -264,7 +258,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 			const BaseURL = ($.Verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
 				: ($.Verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
 					: "https://api.cognitive.microsofttranslator.com"
-			request.url = `${BaseURL}/translate?api-version=3.0&to=${DataBase.Languages.Microsoft[target]}&from=${DataBase.Languages.Microsoft[source]}`;
+			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Languages.Microsoft[target]}&from=${DataBase.Languages.Microsoft[source]}`;
 			request.headers = {
 				"Content-Type": "application/json; charset=UTF-8",
 				"Accept": "application/json, text/javascript, */*; q=0.01",
@@ -427,8 +421,7 @@ async function chunk(source, length) {
     while(index < source.length) target.push(source.slice(index, index += length));
 	$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
-}
-
+};
 
 /***************** Env *****************/
 // prettier-ignore

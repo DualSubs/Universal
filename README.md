@@ -60,7 +60,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs")
 
 ## How To
-  * [在Apple TV (tvOS) 上添加MitM证书](./wiki/在Apple-TV-(tvOS)-上添加MitM证书)
+  * [在Apple TV (tvOS) 上添加MitM证书](https://github.com/DualSubs/DualSubs/wiki/在Apple-TV-(tvOS)-上添加MitM证书)
 
 ## 支持列表
   * 图例:

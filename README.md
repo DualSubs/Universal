@@ -1,6 +1,9 @@
 # 🍿️ DualSubs
 Dual Subtitles for Streaming Media  
 流媒体自定义多字幕  
+
+<font size=3>**Powered by [Chavy](https://github.com/chavyleung)‘s [Env.js](https://github.com/chavyleung/scripts/blob/master/Env.js) and [BoxJs](https://chavyleung.gitbook.io/boxjs/)**</font>
+
 需要启用`重写`、`脚本`、`MitM`功能  
 有问题请至Issue页面反馈  
 Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries) 

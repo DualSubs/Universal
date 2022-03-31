@@ -25,10 +25,10 @@ let body = $response.body
 	if ($.Settings.Switch) {
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
-		$.log(`🚧 ${$.name}`, "body", body, "");
+		//$.log(`🚧 ${$.name}`, "body", body, "");
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body);
-		$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
+		//$.log(`🚧 ${$.name}`, "M3U8.parse", JSON.stringify(PlayList), "");
 		// PlayList.m3u8 URL		
 		Cache.URL = url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
@@ -254,14 +254,16 @@ async function setOptions(platform = "", json = {}, languages1 = [], languages2 
 // Determine whether Standard Media Player
 async function isStandard(platform, url, headers) {
     $.log(`⚠ ${$.name}, is Standard`, "");
-    let standard = (platform == "Prime_Video" && headers?.["User-Agent"].includes("Mozilla/5.0")) ? false
-        : (platform == "HBO_Max" && headers?.["User-Agent"].includes("Mozilla/5.0")) ? false
-            : true;
+    let standard = true;
+    if (platform == "HBO_Max") {
+		if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
+		else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
+        else if (headers?.["X-Hbo-Device-Name"]?.includes("ios")) standard = false;
+        else if (url?.includes("device-code=iphone")) standard = false;
+    }
     $.log(`🎉 ${$.name}, is Standard`, `standard: ${standard}`, "");
     return standard
 };
-
-
 
 /***************** Env *****************/
 // prettier-ignore

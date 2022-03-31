@@ -11,6 +11,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   - [功能列表](#功能列表)
   - [使用说明](#使用说明)
   - [安装链接](#安装链接)
+  - [How To](#how-to)
   - [支持列表](#支持列表)
 
 ---
@@ -52,13 +53,14 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
     2. 导入本项目订阅:
        * [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
 
-
 ## 安装链接
   * Loon: [DualSubs.plugin](./plugins/DualSubs.plugin?raw=true "🍿️ DualSubs")
   * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs")
   * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodules/DualSubs.sgmodule?raw=true "🍿️ DualSubs")
   * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs")
 
+## How To
+  * [在Apple TV (tvOS) 上添加MitM证书](./wiki/在Apple-TV-(tvOS)-上添加MitM证书)
 
 ## 支持列表
   * 图例:

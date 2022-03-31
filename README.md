@@ -76,11 +76,12 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 | Disney+ |   ✅   |   ✅   |   N/A   |   ❓   |   ✅   |        |
 |Amazon<br>Prime Video| ✅[^5] |   ✅   | 🔜[^3] |   ❓   | 🔜[^3] |        |
 | HBO Max | ☑️[^4] | ✅[^5] |   ❓   |   ❓   | ☑️[^4] |        |
-|  Hulu   |   ✅   |   ✅   |   N/A   |   N/A   |         |        |
+|  Hulu   |   ✅   |   ✅   |   N/A   |   N/A   | 🔜[^6] |        |
 |         |         |         |         |         |         |        |
 
   [^1]: iTunes英文字幕为CC字幕，整合于视频流无法提取，其他语言字幕正常。
   [^2]: Apple TV+ Web版和iTunes资源使用的域名`play.itunes.apple.com`与`App Store`登陆、验证、购买等功能共用域名，MitM可能造成无法访问，故默认未添加此域名,需要iTunes双语的用户请自行添加。
-  [^3]: Amazon Prime Video的macOS版App和Web版采用TTMLv2格式字幕，暂不支持
+  [^3]: 此平台字幕采用TTMLv2格式字幕，暂不支持
   [^4]: 此平台字幕选项为硬编码，需要在BoxJs中对应平台的`字幕类型（兼容）`选项选择一个替换用字幕类型
   [^5]: 采用旧版`AVPlayerViewController`播放器UI界面，自定义字幕名称会被强制显示为固定名称，比如多个名称为`简体中文`的选项，依次为原始字幕选项及BoxJs中开启的字幕选项，除显示的名称固定外，字幕选项功能正常。
+  [^6]: 此平台字幕采用SMI格式字幕，暂不支持

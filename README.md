@@ -58,16 +58,25 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 
 
 ## 支持列表
+  * 图例:
+    * 完全支持: ✅
+    * 兼容: ☑️
+    * 未来会支持: 🔜
+    * 不明/未测试: ❓
+    * 不支持: ❌
+    * 无此类型: N/A
+
 |  供应商  |iOS/iPadOS|  tvOS  |  macOS  | Appx | Web | 备注 |
 |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
 |Apple TV+|   ✅   |   ✅   |   ✅   |   N/A   | ✅[^2] |        |
 |Apple TV | ✅[^2] | ✅[^2] | ✅[^2] |   N/A   |   N/A   |  [^1]  |
-| Disney+ |   ✅   |   ✅   |   N/A   |        |   ✅   |        |
-|Amazon<br>Prime Video|   ✅   |   ✅   | 🔜[^3] |        | 🔜[^3] |        |
-| HBO Max |         |         |         |         |         |
+| Disney+ |   ✅   |   ✅   |   N/A   |   ❓   |   ✅   |        |
+|Amazon<br>Prime Video|   ✅   |   ✅   | 🔜[^3] |   ❓   | 🔜[^3] |        |
+| HBO Max | ☑️[^4] |         |         |         |         |
 |  Hulu   |   ✅   |   ✅   |   N/A   |   N/A   |         |
 |         |         |         |         |         |         |
 
   [^1]: iTunes英文字幕为CC字幕，整合于视频流无法提取，其他语言字幕正常。
   [^2]: Apple TV+ Web版和iTunes资源使用的域名`play.itunes.apple.com`与`App Store`登陆、验证、购买等功能共用域名，MitM可能造成无法访问，故默认未添加此域名,需要iTunes双语的用户请自行添加。
   [^3]: Amazon Prime Video的macOS版App和Web版采用TTMLv2格式字幕，暂不支持
+  [^4]: 客户端字幕选项为硬编码，需要在BoxJs中对应平台的`字幕类型（兼容）`选项选择一个替换用字幕类型

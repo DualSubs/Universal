@@ -231,12 +231,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -482,12 +482,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -733,12 +733,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -984,12 +984,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1235,12 +1235,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1288,12 +1288,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1555,12 +1555,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1806,12 +1806,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -2057,12 +2057,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -2308,12 +2308,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -2559,12 +2559,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -2742,12 +2742,12 @@
 							"label": "Google Cloud Translate API"
 						},
 						{
-							"key": "Microsoft",
-							"label": "Microsoft Translator"
+							"key": "Bing",
+							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",

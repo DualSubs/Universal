@@ -13,7 +13,7 @@ const DataBase = {
 const type = $request.url.match(/[&\?]dualsubs=(\w+)$/)[1]
 $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 
-const url = $request.url.replace(/[&\?]dualsubs=(\w+)$/, "")
+const url = $request.url
 $.log(`🚧 ${$.name}`, `url: ${url}`, "");
 
 const method = $request.method
@@ -23,6 +23,8 @@ let headers = $request.headers
 delete headers["Host"]
 delete headers["Connection"]
 
+let body = $response.body
+
 /***************** Processing *****************/
 !(async () => {
 	[$.Platform, $.Verify, $.Settings, $.Cache] = await setENV(url, DataBase);
@@ -30,13 +32,8 @@ delete headers["Connection"]
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
 		if (Indices.Index == -1) $.done();
-		// 获取response
-		let response = await $.http.get({ "url": url, "headers": headers }).then(response => {
-			$.log("response", `headers: ${JSON.stringify(response.headers)}`);
-			return response
-		});
 		// 获取序列化VTT
-		let OriginVTT = VTT.parse(response.body)
+		let OriginVTT = VTT.parse(body);
 		// 创建双语字幕JSON
 		let DualSub = {};
 		// 获取类型
@@ -89,12 +86,12 @@ delete headers["Connection"]
 			async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
 		};
 		DualSub = VTT.stringify(DualSub)
-		response.body = DualSub
-		$.done({ response })
+		body = DualSub
+		$.done({ body })
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done({ url }))
+	.finally(() => $.done())
 
 /***************** Fuctions *****************/
 // Function 1

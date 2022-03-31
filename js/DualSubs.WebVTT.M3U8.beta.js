@@ -13,15 +13,17 @@ const DataBase = {
 const type = $request.url.match(/[&\?]dualsubs=(\w+)$/)[1]
 $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 
+const url = $request.url
+$.log(`🚧 ${$.name}`, `url: ${url}`, "");
+
 const method = $request.method
 if (method == "OPTIONS") $.done();
-
-const url = $request.url.replace(/[&\?]dualsubs=(\w+)$/, "")
-$.log(`🚧 ${$.name}`, `url: ${url}`, "");
 
 let headers = $request.headers
 delete headers["Host"]
 delete headers["Connection"]
+
+let body = $response.body
 
 /***************** Processing *****************/
 !(async () => {
@@ -42,14 +44,13 @@ delete headers["Connection"]
 			$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
 			$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
 		};
-		// 构建WebVTT.m3u8
-		let response = await getWebVTTm3u8(url, type)
-		$.log(`🚧 ${$.name}`, "response.stringify", JSON.stringify(response), "");
-		$.done({ response })
+		// WebVTT.m3u8加参数
+		body  = await setWebVTTm3u8(body, type)
+		$.done({ body })
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done({ url }))
+	.finally(() => $.done())
 
 /***************** Fuctions *****************/
 // Function 1
@@ -123,14 +124,12 @@ async function getVTTs(platform, url) {
 };
 
 // Function 4
-// Get Subtitle WebVTT *.m3u8
-async function getWebVTTm3u8(url = "", type = "") {
-	$.log(`⚠ ${$.name}, Get Subtitle WebVTT *.m3u8`, "");
-	return await $.http.get({ url: url, headers: headers }).then((response) => {
-		response.body = response.body.replace(/^.+\.(web)?vtt$/gim, `$&?dualsubs=${type}`);
-		$.log(`🎉 ${$.name}, Get Subtitle WebVTT *.m3u8`, `response: ${JSON.stringify(response)}`, "");
-		return response
-	})
+// Set Subtitle WebVTT *.m3u8
+async function setWebVTTm3u8(body = {}, type = "") {
+	$.log(`⚠ ${$.name}, Set Subtitle WebVTT *.m3u8`, "");
+	body = body.replace(/^.+\.(web)?vtt$/gim, `$&?dualsubs=${type}`);
+	$.log(`🎉 ${$.name}, Set Subtitle WebVTT *.m3u8`, `body: ${body}`, "");
+	return body
 };
 
 /***************** Env *****************/

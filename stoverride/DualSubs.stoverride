@@ -41,13 +41,13 @@ http:
       timeout: 10
     - match: ^https?:\/\/vod-(.*)-amt\.tv\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)_subtitles\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/vod-(.*)-amt\.tv\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
@@ -56,13 +56,13 @@ http:
       timeout: 10
     - match: ^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/vod-(.*)-aoc\.tv\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/cbcs-all-(.*)\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
@@ -71,13 +71,13 @@ http:
       timeout: 10
     - match: ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.(hls\.row\.aiv-cdn|akamaihd)\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(\?.*)?$
       name: DualSubs.HLS.m3u8
@@ -86,13 +86,13 @@ http:
       timeout: 10
     - match: ^https?:\/\/(.*)\.cloudfront\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.cloudfront\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/manifests\.v2\.api\.hbo\.com\/hls\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
@@ -101,13 +101,13 @@ http:
       timeout: 10
     - match: ^https?:\/\/manifests\.v2\.api\.hbo\.com\/hlsMedia\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.hbomaxcdn\.com\/videos\/(.*)\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
@@ -116,13 +116,13 @@ http:
       timeout: 10
     - match: ^https?:\/\/manifest-dp\.hulustream\.com\/webvtt(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/master\.m3u8$
       name: DualSubs.HLS.m3u8
@@ -131,18 +131,18 @@ http:
       timeout: 10
     - match: ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/stream_vtt\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.*)\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/master_cmaf\.m3u8$
       name: DualSubs.HLS.m3u8
@@ -151,13 +151,13 @@ http:
       timeout: 10
     - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
     - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.webvtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
-      type: request
-      require-body: false
+      type: response
+      require-body: true
       timeout: 10
 
 script-providers:

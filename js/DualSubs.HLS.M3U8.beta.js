@@ -57,7 +57,7 @@ async function setENV(e,t){let a=e.match(/(play|play-edge)\.itunes\.apple\.com\/
 // Function 2
 // Get Cache
 async function getCache(cache = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache)}`,"");
+	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = { "Index": await getIndex(cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
 	for await (var language of $.Settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)

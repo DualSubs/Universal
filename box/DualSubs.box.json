@@ -99,7 +99,7 @@
 					"val": "global",
 					"type": "text",
 					"placeholder": "global",
-					"desc": "如果开通Azure Translator时没有选择全球global，则需要填写开通的地区代码，如chinanorth, chinaeast2等"
+					"desc": "如果开通Microsoft Azure Translator时没有选择全球global，则需要填写开通的地区代码，如chinanorth, chinaeast2等"
 				},
 				{
 					"id": "@DualSubs.Verify.Azure.Mode",
@@ -216,7 +216,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -447,7 +447,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -678,7 +678,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -909,7 +909,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1140,7 +1140,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1157,7 +1157,7 @@
 					"name": "字幕类型（兼容）",
 					"val": "Official",
 					"type": "selects",
-					"desc": "请选择要替换的字幕类型，会为兼容播放器替换为此字幕类型",
+					"desc": "请选择要替换的字幕类型，会为不兼容的播放器替换为此字幕类型",
 					"items": [
 						{
 							"key": "Official",
@@ -1173,7 +1173,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1420,7 +1420,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1651,7 +1651,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -1882,7 +1882,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -2113,7 +2113,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -2344,7 +2344,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",
@@ -2491,7 +2491,7 @@
 					"name": "字幕类型（兼容）",
 					"val": "Official",
 					"type": "selects",
-					"desc": "请选择要替换的字幕类型，会为兼容播放器替换为此字幕类型",
+					"desc": "请选择要替换的字幕类型，会为不兼容的播放器替换为此字幕类型",
 					"items": [
 						{
 							"key": "Official",
@@ -2507,7 +2507,7 @@
 						},
 						{
 							"key": "Azure",
-							"label": "Azure Translator"
+							"label": "Microsoft Azure Translator"
 						},
 						{
 							"key": "DeepL",

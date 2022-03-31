@@ -10,6 +10,7 @@ http:
     - "d22qjgkvxw22r6.cloudfront.net:80"
     - "d1v5ir2lpwr8os.cloudfront.net:80"
     - "d27xxe7juh1us6.cloudfront.net:80"
+    - "assets.huluim.com"
   mitm:
     - "play-edge.itunes.apple.com"
     - "vod-*.tv.apple.com"

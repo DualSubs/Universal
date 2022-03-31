@@ -150,10 +150,10 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 // Get Official Request
 async function getOfficialRequest(platform, VTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, "");
-	let fileName = (platform == "Apple_TV") ? url.match(/.+_(subtitles-\d+\.webvtt$)/)[1] // Apple TV 片段分型序号不同
-		: (platform == "Apple_TV_Plus") ? url.match(/.+_(subtitles_V\d-\d+\.webvtt$)/)[1] // Apple TV+ 片段分型序号不同
-			: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt$)/)[1] // Disney+ 片段名称相同
-				: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt$)/)[1] // Hulu 片段分型序号相同
+	let fileName = (platform == "Apple_TV") ? url.match(/.+_(subtitles-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple TV 片段分型序号不同
+		: (platform == "Apple_TV_Plus") ? url.match(/.+_(subtitles_V\d-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple TV+ 片段分型序号不同
+			: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Disney+ 片段名称相同
+				: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Hulu 片段分型序号相同
 					: null; // Amazon Prime Video HBO_Max不拆分字幕片段
 	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
 

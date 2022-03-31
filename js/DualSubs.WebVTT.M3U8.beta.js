@@ -99,12 +99,20 @@ async function getVTTs(platform, url) {
 		let VTTs = response.body.match(/^.+\.(web)?vtt$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
 		// 筛选字幕
+		VTTs = VTTs.filter(item => !/\/empty/.test(item))
+		if (platform == "Disney_Plus") {
+			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+		};
+		/*
 		if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
 			VTTs = VTTs.filter(item => !/\/empty-\d+\.webvtt/.test(item))
 		} else if (platform == "Disney_Plus") {
 			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))
 			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+		} else if (platform == "HBO_Max") {
+			VTTs = VTTs.filter(item => !/\/empty\//.test(item))
 		}
+		*/
 		VTTs = VTTs.map(VTT => aPath(url, VTT));
 		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
 		return VTTs

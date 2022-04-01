@@ -323,7 +323,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 					"curtime": Math.floor(+new Date() / 1000)
 				};
 		}
-		$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
+		//$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
 	// Function 5.2
@@ -428,7 +428,7 @@ async function chunk(source, length) {
 	$.log(`⚠ ${$.name}, Chunk Array`, "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
-	$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	//$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
 };
 

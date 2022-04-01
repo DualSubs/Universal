@@ -236,7 +236,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"q": text,
 				"source": DataBase.Languages.Google[source],
 				"target": DataBase.Languages.Google[target],
-				"format": "text",
+				"format": "html",
 				//"key": $.Verify.GoogleCloud?.Key
 			};
 		} else if (type == "Microsoft") {
@@ -328,38 +328,50 @@ async function Translate(type = "", source = "", target = "", text = "") {
 	};
 	// Function 5.2
 	// Get Translate Data
-	async function GetData(type, request) {
+	function GetData(type, request) {
 		$.log(`⚠ ${$.name}, Get Translate Data`, "");
-		let texts = [];
-		if (type == "Google") {
-			texts = await $.http.get(request).then((response) => {
-				$.log(`headers: ${JSON.stringify(response.headers)}`);
-				$.log(`body: ${JSON.stringify(response.body)}`);
-				let body = JSON.parse(response.body);
-				return text = body?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
-			})
-		} else if (type == "Microsoft" || type == "Azure") {
-			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
-			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-			texts = await $.http.post(request).then(async response => {
-				$.log(`headers: ${JSON.stringify(response.headers)}`);
-				$.log(`body: ${JSON.stringify(response.body)}`);
-				let body = JSON.parse(response.body);
-				//return text = body?.[0]?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
-				return await Promise.all(body?.map(async item => item.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`))
-			});
-		} else if (type == "GoogleCloud" || type == "DeepL") {
-			texts = await $.http.post(request).then(async response => {
-				$.log(`headers: ${JSON.stringify(response.headers)}`);
-				$.log(`body: ${JSON.stringify(response.body)}`);
-				let body = JSON.parse(response.body);
-				//return text = body?.data?.translations?.[0]?.translatedText ?? body?.data?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`
-				return await Promise.all(body?.data?.translations?.map(async item => item.translatedText ?? `翻译失败, 类型: ${type}`))
-			});
-		}
-		$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
-		return texts
-	};
+		return new Promise((resolve) => {
+			if (type == "Google") {
+				$.get(request, (error, response, data) => {
+					try {
+						if (error) throw new Error(error)
+						else if (data) {
+							const _data = JSON.parse(data)
+							let text = _data?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
+							//$.log(`🎉 ${$.name}, Get Translate Data`, `text: ${text}`, "");
+							resolve(text);
+						} else throw new Error(response);
+					} catch (e) {
+						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
+					} finally {
+						//$.log(`🚧 ${$.name}, ${GetData.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, '');
+						resolve()
+					}
+				})
+			} else {
+				// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
+				// https://docs.azure.cn/zh-cn/cognitive-services/translator/
+				$.post(request, (error, response, data) => {
+					try {
+						if (error) throw new Error(error)
+						else if (data) {
+							const _data = JSON.parse(data)
+							let texts = [];
+							if (type == "Microsoft" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+							else if (type == "GoogleCloud" || type == "DeepL") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+							//$.log(`🎉 ${$.name}, Get Translate Data`, `texts: ${texts}`, "");
+							resolve(texts);
+						} else throw new Error(response);
+					} catch (e) {
+						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
+					} finally {
+						//$.log(`🚧 ${$.name}, ${GetData.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, '');
+						resolve()
+					}
+				});
+			}
+		});
+	}
 };
 
 // Function 6

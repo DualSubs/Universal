@@ -397,9 +397,9 @@
 		"SL": "sl", // 斯洛文尼亚语
 		"SV": "sv", // 瑞典语
 		"IS": "is", // 冰岛语
-		"ZH": "zh-CN", // 中文（简体）
+		"ZH": "zh", // 中文（简体）
 		"ZH-HANS": "zh-CN", // 中文（中国）
-		"ZH-HK": "zh-HK", // 中文（香港）
+		"ZH-HK": "zh-TW", // 中文（香港）
 		"ZH-HANT": "zh-TW" // 中文（台湾）
 	},
 	"Microsoft": {

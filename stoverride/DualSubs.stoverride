@@ -2,6 +2,15 @@ name: 🍿️ DualSubs
 desc: (0.5.2) Dual Subtitiles for Streaming Media Platform
 
 http:
+  force-http-engine:
+    - "*.hls.row.aiv-cdn.net:80"
+    - "*avodhlss3ww-a.akamaihd.net:80"
+    - "d25xi40x97liuc.cloudfront.net:80"
+    - "dmqdd6hw24ucf.cloudfront.net:80"
+    - "d22qjgkvxw22r6.cloudfront.net:80"
+    - "d1v5ir2lpwr8os.cloudfront.net:80"
+    - "d27xxe7juh1us6.cloudfront.net:80"
+    - "assets.huluim.com"
   mitm:
     - "play-edge.itunes.apple.com"
     - "vod-*.tv.apple.com"

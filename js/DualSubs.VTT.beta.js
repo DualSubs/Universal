@@ -22,6 +22,7 @@ if (method == "OPTIONS") $.done();
 let headers = $request.headers
 delete headers["Host"]
 delete headers["Connection"]
+delete headers["Range"]
 
 let body = $response.body
 

@@ -404,8 +404,9 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 	while (index1 < length1 && index2 < length2) {
 		const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp + Offset;
 		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
-		$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
-		$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+		//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+		//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+		//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
 		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 			index0 = options.includes("Reverse") ? index2 : index1;
 			// 多行字幕交替插入
@@ -425,12 +426,16 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
 			//DualSub.body[index0].timeStamp = options.includes("Reverse") ? timeStamp2 : timeStamp1;
 			//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
+			//index1++;
+			//index2++;
+		}
+		if (timeStamp2 > timeStamp1) {
 			index1++;
+		} else if (timeStamp2 < timeStamp1) {
 			index2++;
-		} else if (timeStamp2 > timeStamp1) {
-			index1++;
 		} else {
-			index2++;
+			index1++
+			index2++
 		}
 	}
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");

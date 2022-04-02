@@ -19,7 +19,7 @@ var body = $response.body
 
 /***************** Processing *****************/
 !(async () => {
-	[$.Platform, $.Verify, $.Settings, $.Cache] = await setENV(url, DataBase);
+	[$.Platform, $.Verify, $.Advanced, $.Settings, $.Cache] = await setENV(url, DataBase);
 	if ($.Settings.Switch) {
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);

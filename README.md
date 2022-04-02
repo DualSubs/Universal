@@ -33,9 +33,9 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
      4. [DeepL Free/Pro](https://www.deepl.com/pro-api)
   5. 双语外挂字幕
   6. 中文，英文，西班牙文自动回退
-     * 中文回退顺序为`中文（简体）`-`中文（繁體）`-`中文（香港）/粤语（廣東話）`
-     * 英文回退顺序为`English (US) [CC]`-`English (US)`-`English (UK)`
-     * 西班牙文回退顺序为`Español (Latinoamérica) [CC]`-`Español (Latinoamérica)`-`Español (España) [CC]`-`Español (España)`
+     * `中文（自动）`回退顺序为`中文（简体）`-`中文（繁體）`-`中文（香港）/粤语（廣東話）`
+     * `英文（自动）`回退顺序为`English (US) [CC]`-`English (US)`-`English (UK)`
+     * `西班牙文（自动）`回退顺序为`Español (Latinoamérica) [CC]`-`Español (Latinoamérica)`-`Español (España) [CC]`-`Español (España)`
   7. 自定义字幕匹配时间戳容差值
   8. 自定义外挂字幕时间戳偏移量
   9.  翻译字幕模式支持`逐段翻译`（默认）和`逐行翻译`
@@ -53,7 +53,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
        * Quantumult X: [boxjs.rewrite.quanx.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf "BoxJs")
        * Surge (Shadowrocket): [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
        * Stash: [boxjs.rewrite.stash.stoverride](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.stoverride "BoxJs")
-    2. 导入本项目订阅:
+    2. 浏览器访问[BoxJs.com](http://boxjs.com)，在`订阅`页面点击`+`添加本项目订阅:
        * [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
 
 ## 安装链接

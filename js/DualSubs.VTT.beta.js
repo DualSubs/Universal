@@ -184,13 +184,14 @@ async function Translate(type = "", source = "", target = "", text = "") {
 	let request = await GetRequest(type, source, target, text);
 	// 发送请求
 	let text2 = await GetData(type, request);
+
 	$.log(`🚧 ${$.name}, Translate`, `text2: ${text2}`, "");
 	return text2
 	/***************** Fuctions *****************/
 	// Function 5.1
 	// Get Translate Request
 	async function GetRequest(type = "", source = "", target = "", text = "") {
-		$.log(`🚧 ${$.name}, Get Translate Request`, "");
+		$.log(`⚠ ${$.name}, Get Translate Request`, "");
 		const UAPool = [
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
@@ -306,72 +307,74 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"sign": "",
 			};
 		} else if (type == "YoudaoAI") {
-				// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
-				request.url = `https://openapi.youdao.com/api`;
-				request.headers = {
-					"User-Agent": "DualSubs",
-					"Content-Type": "application/json; charset=utf-8"
-				};
-				request.body = {
-					"q": text,
-					"from": DataBase.Languages.Youdao[source],
-					"to": DataBase.Languages.Youdao[target],
-					"appKey": $.Verify.YoudaoAI?.Key,
-					"salt": uuidv4().toString(),
-					"signType": "v3",
-					"sign": "",
-					"curtime": Math.floor(+new Date() / 1000)
-				};
+			// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
+			request.url = `https://openapi.youdao.com/api`;
+			request.headers = {
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/json; charset=utf-8"
+			};
+			request.body = {
+				"q": text,
+				"from": DataBase.Languages.Youdao[source],
+				"to": DataBase.Languages.Youdao[target],
+				"appKey": $.Verify.YoudaoAI?.Key,
+				"salt": uuidv4().toString(),
+				"signType": "v3",
+				"sign": "",
+				"curtime": Math.floor(+new Date() / 1000)
+			};
 		}
 		//$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
 	// Function 5.2
 	// Get Translate Data
-	function GetData(type, request) {
+	function GetData(type, request, times = 3) {
 		$.log(`⚠ ${$.name}, Get Translate Data`, "");
-		return new Promise((resolve) => {
-			if (type == "Google") {
-				$.get(request, (error, response, data) => {
+		return new Promise((resolve, reject) => {
+			if (times < 1) throw new Error(`参数错误: 'times'必须大于0, but ${times} was received.`);
+			let time = 0; // attemptCount
+			try {
+				while (time < times) {
+					time++;
 					try {
-						if (error) throw new Error(error)
-						else if (data) {
-							const _data = JSON.parse(data)
-							let text = _data?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
-							//$.log(`🎉 ${$.name}, Get Translate Data`, `text: ${text}`, "");
-							resolve(text);
-						} else throw new Error(response);
+						$.log(`🚧 ${$.name}, ${GetData.name}`, `尝试次数${time}/${times}`, "");
+						if (type == "Google") {
+							$.get(request, (error, response, data) => {
+								if (error) throw new Error(error)
+								else if (data) {
+									const _data = JSON.parse(data)
+									let text = _data?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
+									//$.log(`🎉 ${$.name}, Get Translate Data`, `text: ${text}`, "");
+									resolve(text);
+								} else throw new Error(response);
+							});
+						} else {
+							// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
+							// https://docs.azure.cn/zh-cn/cognitive-services/translator/
+							$.post(request, (error, response, data) => {
+								if (error) throw new Error(error)
+								else if (data) {
+									const _data = JSON.parse(data)
+									let texts = [];
+									if (type == "Microsoft" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+									else if (type == "GoogleCloud" || type == "DeepL") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+									//$.log(`🎉 ${$.name}, Get Translate Data`, `texts: ${texts}`, "");
+									resolve(texts);
+								} else throw new Error(response);
+							});
+						};
 					} catch (e) {
-						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
-					} finally {
-						//$.log(`🚧 ${$.name}, ${GetData.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, '');
-						resolve()
+						if (!e) break;
+						else if (time <= times) $.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `尝试次数${time}/${times}`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
+						else $.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `尝试次数${time}/${times}`, "重试次数已达上限，跳过", "");
 					}
-				})
-			} else {
-				// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
-				// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-				$.post(request, (error, response, data) => {
-					try {
-						if (error) throw new Error(error)
-						else if (data) {
-							const _data = JSON.parse(data)
-							let texts = [];
-							if (type == "Microsoft" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
-							else if (type == "GoogleCloud" || type == "DeepL") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
-							//$.log(`🎉 ${$.name}, Get Translate Data`, `texts: ${texts}`, "");
-							resolve(texts);
-						} else throw new Error(response);
-					} catch (e) {
-						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
-					} finally {
-						//$.log(`🚧 ${$.name}, ${GetData.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, '');
-						resolve()
-					}
-				});
+				};
+			} finally {
+				resolve();
 			}
 		});
-	}
+	};
 };
 
 // Function 6

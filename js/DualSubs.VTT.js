@@ -176,21 +176,28 @@ async function getOfficialRequest(platform, VTTs = []) {
 	}
 };
 
-// Function 5
-// Translate
+/** 
+ * Translate
+ * @param {String} type - type
+ * @param {String} source - source
+ * @param {String} target - target
+ * @param {String} text - text
+ * @param {Array} text - text
+ * @return {Promise<*>}
+ */
 async function Translate(type = "", source = "", target = "", text = "") {
 	$.log(`⚠ ${$.name}, Translate`, `text: ${text}`, "");
 	// 构造请求
 	let request = await GetRequest(type, source, target, text);
 	// 发送请求
-	let text2 = await GetData(type, request);
+	let text2 = await retry(GetData, [type, request], 3, 100, true);
 	//$.log(`🚧 ${$.name}, Translate`, `text2: ${text2}`, "");
 	return text2
 	/***************** Fuctions *****************/
 	// Function 5.1
 	// Get Translate Request
 	async function GetRequest(type = "", source = "", target = "", text = "") {
-		$.log(`🚧 ${$.name}, Get Translate Request`, "");
+		$.log(`⚠ ${$.name}, Get Translate Request`, "");
 		const UAPool = [
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
@@ -236,7 +243,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"q": text,
 				"source": DataBase.Languages.Google[source],
 				"target": DataBase.Languages.Google[target],
-				"format": "text",
+				"format": "html",
 				//"key": $.Verify.GoogleCloud?.Key
 			};
 		} else if (type == "Microsoft") {
@@ -297,63 +304,82 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"sign": "",
 			};
 		} else if (type == "YoudaoAI") {
-				// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
-				request.url = `https://openapi.youdao.com/api`;
-				request.headers = {
-					"User-Agent": "DualSubs",
-					"Content-Type": "application/json; charset=utf-8"
-				};
-				request.body = {
-					"q": text,
-					"from": DataBase.Languages.Youdao[source],
-					"to": DataBase.Languages.Youdao[target],
-					"appKey": $.Verify.YoudaoAI?.Key,
-					"salt": uuidv4().toString(),
-					"signType": "v3",
-					"sign": "",
-					"curtime": Math.floor(+new Date() / 1000)
-				};
+			// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
+			request.url = `https://openapi.youdao.com/api`;
+			request.headers = {
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/json; charset=utf-8"
+			};
+			request.body = {
+				"q": text,
+				"from": DataBase.Languages.Youdao[source],
+				"to": DataBase.Languages.Youdao[target],
+				"appKey": $.Verify.YoudaoAI?.Key,
+				"salt": uuidv4().toString(),
+				"signType": "v3",
+				"sign": "",
+				"curtime": Math.floor(+new Date() / 1000)
+			};
 		}
 		//$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
 	// Function 5.2
 	// Get Translate Data
-	async function GetData(type, request) {
+	function GetData(type, request) {
 		$.log(`⚠ ${$.name}, Get Translate Data`, "");
-		let texts = [];
-		if (type == "Google") {
-			texts = await $.http.get(request).then((response) => {
-				$.log(`headers: ${JSON.stringify(response.headers)}`);
-				$.log(`body: ${JSON.stringify(response.body)}`);
-				let body = JSON.parse(response.body);
-				return text = body?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
-			})
-		} else if (type == "Microsoft" || type == "Azure") {
-			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
-			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-			texts = await $.http.post(request).then(async response => {
-				$.log(`headers: ${JSON.stringify(response.headers)}`);
-				$.log(`body: ${JSON.stringify(response.body)}`);
-				let body = JSON.parse(response.body);
-				return await Promise.all(body?.map(async item => item.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`))
-			});
-		} else if (type == "GoogleCloud" || type == "DeepL") {
-			texts = await $.http.post(request).then(async response => {
-				$.log(`headers: ${JSON.stringify(response.headers)}`);
-				$.log(`body: ${JSON.stringify(response.body)}`);
-				let body = JSON.parse(response.body);
-				return await Promise.all(body?.data?.translations?.map(async item => item.translatedText ?? `翻译失败, 类型: ${type}`))
-			});
-		}
-		//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
-		return texts
+		return new Promise(resolve => {
+			if (type == "Google") {
+				$.get(request, (error, response, data) => {
+					try {
+						if (error) throw new Error(error)
+						else if (data) {
+							const _data = JSON.parse(data)
+							let text = _data?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
+							//$.log(`🎉 ${$.name}, Get Translate Data`, `text: ${text}`, "");
+							resolve(text);
+						} else throw new Error(response);
+					} catch (e) {
+						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
+					} finally {
+						//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
+						resolve();
+					}
+				});
+			} else {
+				$.post(request, (error, response, data) => {
+					try {
+						if (error) throw new Error(error)
+						else if (data) {
+							const _data = JSON.parse(data)
+							let texts = [];
+							if (type == "Microsoft" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+							else if (type == "GoogleCloud" || type == "DeepL") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+							//$.log(`🎉 ${$.name}, Get Translate Data`, `texts: ${texts}`, "");
+							resolve(texts);
+						} else throw new Error(response);
+					} catch (e) {
+						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
+					} finally {
+						//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
+						resolve();
+					}
+				});
+			};
+		});
 	};
 };
 
-// Function 6
-// Combine Dual Subtitles
-async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
+/** 
+ * Combine Dual Subtitles
+ * @param {Object} Sub1 - Sub1
+ * @param {Object} Sub2 - Sub2
+ * @param {Number} Offset - Offset
+ * @param {Number} Tolerance - Tolerance
+ * @param {Array} options - options
+ * @return {Promise<*>}
+ */
+ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
 	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
 	const length1 = Sub1.body.length, length2 = Sub2.body.length;
@@ -367,7 +393,7 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
 			index1++;
 			index2++;
-		} else if (timeStamp2 - timeStamp1 > Tolerance) {
+		} else if (timeStamp2 > timeStamp1) {
 			index1++;
 		} else {
 			index2++;
@@ -377,14 +403,43 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 	return DualSub;
 };
 
-// Function 7
-// Chunk Array
+/** 
+ * Chunk Array
+ * @param {Array} source - source
+ * @param {Number} length - number
+ * @return {Promise<*>}
+ */
 async function chunk(source, length) {
 	$.log(`⚠ ${$.name}, Chunk Array`, "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
-	$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	//$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
+};
+
+/**
+ * Retries the given function until it succeeds given a number of retries and an interval between them. They are set
+ * by default to retry 5 times with 1sec in between. There's also a flag to make the cooldown time exponential
+ * https://gitlab.com/-/snippets/1775781
+ * @author Daniel Iñigo <danielinigobanos@gmail.com>
+ * @param {Function} fn - Returns a promise
+ * @param {Array} argsArray - args Array
+ * @param {Number} retriesLeft - Number of retries. If -1 will keep retrying
+ * @param {Number} interval - Millis between retries. If exponential set to true will be doubled each retry
+ * @param {Boolean} exponential - Flag for exponential back-off mode
+ * @return {Promise<*>}
+ */
+async function retry(fn, argsArray = [], retriesLeft = 5, interval = 1000, exponential = false) {
+	$.log(`${fn.name}`, `剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	try {
+		const val = await fn.apply(this, argsArray);
+		return val;
+	} catch (error) {
+		if (retriesLeft) {
+			await new Promise(r => setTimeout(r, interval));
+			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
+		} else throw new Error("最大重试次数");
+	}
 };
 
 /***************** Env *****************/

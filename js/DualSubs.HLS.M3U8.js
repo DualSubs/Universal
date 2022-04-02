@@ -36,7 +36,7 @@ let body = $response.body
 		};
 		// 写入缓存
 		$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
-		$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
+		$.setjson($.Cache, `@DualSubs.Cache.${$.Platform}`);
 		// 兼容性判断
 		const standard = await isStandard($.Platform, url, headers);
 		// 写入选项

@@ -42,7 +42,7 @@ let body = $response.body
 			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 			// 写入缓存
 			$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize)
-			$.setjson($.Cache, `@DualSubs.${$.Platform}.Cache`)
+			$.setjson($.Cache, `@DualSubs.Cache.${$.Platform}`);
 		};
 		// WebVTT.m3u8加参数
 		body  = await setWebVTTm3u8(body, type)

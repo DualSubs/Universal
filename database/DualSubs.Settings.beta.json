@@ -18,6 +18,13 @@
 			"Auth": null
 		}
 	},
+	"Advanced": {
+		"Translator": {
+			"Times": 3,
+			"Interval": 100,
+			"Exponential": true
+		}
+	},
 	"Apple_TV": {
 		"Switch": true,
 		"Types": [

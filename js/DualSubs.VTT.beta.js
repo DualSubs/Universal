@@ -176,15 +176,22 @@ async function getOfficialRequest(platform, VTTs = []) {
 	}
 };
 
-// Function 5
-// Translate
+/** 
+ * Translate
+ * @param {String} type - type
+ * @param {String} source - source
+ * @param {String} target - target
+ * @param {String} text - text
+ * @param {Array} text - text
+ * @return {Promise<*>}
+ */
 async function Translate(type = "", source = "", target = "", text = "") {
 	$.log(`⚠ ${$.name}, Translate`, `text: ${text}`, "");
 	// 构造请求
 	let request = await GetRequest(type, source, target, text);
 	// 发送请求
-	let text2 = await GetData(type, request);
-
+	//let text2 = await GetData(type, request);
+	let text2 = await retry(GetData, [type, request], 3, 100, true);
 	$.log(`🚧 ${$.name}, Translate`, `text2: ${text2}`, "");
 	return text2
 	/***************** Fuctions *****************/
@@ -329,56 +336,59 @@ async function Translate(type = "", source = "", target = "", text = "") {
 	};
 	// Function 5.2
 	// Get Translate Data
-	function GetData(type, request, times = 3) {
+	function GetData(type, request) {
 		$.log(`⚠ ${$.name}, Get Translate Data`, "");
-		return new Promise((resolve, reject) => {
-			if (times < 1) throw new Error(`参数错误: 'times'必须大于0, but ${times} was received.`);
-			let time = 0; // attemptCount
-			try {
-				while (time < times) {
-					time++;
+		return new Promise(resolve => {
+			if (type == "Google") {
+				$.get(request, (error, response, data) => {
 					try {
-						$.log(`🚧 ${$.name}, ${GetData.name}`, `尝试次数${time}/${times}`, "");
-						if (type == "Google") {
-							$.get(request, (error, response, data) => {
-								if (error) throw new Error(error)
-								else if (data) {
-									const _data = JSON.parse(data)
-									let text = _data?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
-									//$.log(`🎉 ${$.name}, Get Translate Data`, `text: ${text}`, "");
-									resolve(text);
-								} else throw new Error(response);
-							});
-						} else {
-							// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
-							// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-							$.post(request, (error, response, data) => {
-								if (error) throw new Error(error)
-								else if (data) {
-									const _data = JSON.parse(data)
-									let texts = [];
-									if (type == "Microsoft" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
-									else if (type == "GoogleCloud" || type == "DeepL") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
-									//$.log(`🎉 ${$.name}, Get Translate Data`, `texts: ${texts}`, "");
-									resolve(texts);
-								} else throw new Error(response);
-							});
-						};
+						if (error) throw new Error(error)
+						else if (data) {
+							const _data = JSON.parse(data)
+							let text = _data?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
+							//$.log(`🎉 ${$.name}, Get Translate Data`, `text: ${text}`, "");
+							resolve(text);
+						} else throw new Error(response);
 					} catch (e) {
-						if (!e) break;
-						else if (time <= times) $.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `尝试次数${time}/${times}`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
-						else $.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `尝试次数${time}/${times}`, "重试次数已达上限，跳过", "");
+						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
+					} finally {
+						//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
+						resolve();
 					}
-				};
-			} finally {
-				resolve();
-			}
+				});
+			} else {
+				$.post(request, (error, response, data) => {
+					try {
+						if (error) throw new Error(error)
+						else if (data) {
+							const _data = JSON.parse(data)
+							let texts = [];
+							if (type == "Microsoft" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+							else if (type == "GoogleCloud" || type == "DeepL") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+							//$.log(`🎉 ${$.name}, Get Translate Data`, `texts: ${texts}`, "");
+							resolve(texts);
+						} else throw new Error(response);
+					} catch (e) {
+						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
+					} finally {
+						//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
+						resolve();
+					}
+				});
+			};
 		});
 	};
 };
 
-// Function 6
-// Combine Dual Subtitles
+/** 
+ * Combine Dual Subtitles
+ * @param {Object} Sub1 - Sub1
+ * @param {Object} Sub2 - Sub2
+ * @param {Number} Offset - Offset
+ * @param {Number} Tolerance - Tolerance
+ * @param {Array} options - options
+ * @return {Promise<*>}
+ */
 async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
@@ -394,6 +404,8 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 	while (index1 < length1 && index2 < length2) {
 		const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp + Offset;
 		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
+		$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+		$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
 		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 			index0 = options.includes("Reverse") ? index2 : index1;
 			// 多行字幕交替插入
@@ -425,14 +437,43 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 	return DualSub;
 };
 
-// Function 7
-// Chunk Array
+/** 
+ * Chunk Array
+ * @param {Array} source - source
+ * @param {Number} length - number
+ * @return {Promise<*>}
+ */
 async function chunk(source, length) {
 	$.log(`⚠ ${$.name}, Chunk Array`, "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
 	//$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
+};
+
+/**
+ * Retries the given function until it succeeds given a number of retries and an interval between them. They are set
+ * by default to retry 5 times with 1sec in between. There's also a flag to make the cooldown time exponential
+ * https://gitlab.com/-/snippets/1775781
+ * @author Daniel Iñigo <danielinigobanos@gmail.com>
+ * @param {Function} fn - Returns a promise
+ * @param {Array} argsArray - args Array
+ * @param {Number} retriesLeft - Number of retries. If -1 will keep retrying
+ * @param {Number} interval - Millis between retries. If exponential set to true will be doubled each retry
+ * @param {Boolean} exponential - Flag for exponential back-off mode
+ * @return {Promise<*>}
+ */
+async function retry(fn, argsArray = [], retriesLeft = 5, interval = 1000, exponential = false) {
+	$.log(`${fn.name}`, `剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	try {
+		const val = await fn.apply(this, argsArray);
+		return val;
+	} catch (error) {
+		if (retriesLeft) {
+			await new Promise(r => setTimeout(r, interval));
+			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
+		} else throw new Error("最大重试次数");
+	}
 };
 
 /***************** Env *****************/

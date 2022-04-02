@@ -10,7 +10,7 @@
 			"id": "@DualSubs.Verify",
 			"name": "DualSubs.Verify",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -177,10 +177,52 @@
 			]
 		},
 		{
-			"id": "@DualSubs.Apple_TV.beta",
-			"name": "DualSubs.Apple TV β",
+			"id": "@DualSubs.Advanced",
+			"name": "DualSubs.Advanced Options",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Advanced"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Advanced.Translator.Times",
+					"name": "翻译器: 重试次数",
+					"val": "3",
+					"type": "number",
+					"placeholder": "3",
+					"desc": "单位：次，正整数"
+				},
+				{
+					"id": "@DualSubs.Advanced.Translator.Interval",
+					"name": "翻译器: 重试间隔时长",
+					"val": "100",
+					"type": "number",
+					"placeholder": "100",
+					"desc": "单位：毫秒(ms)，正整数"
+				},
+				{
+					"id": "@DualSubs.Advanced.Translator.Exponential",
+					"name": "翻译器: 重试间隔时长递增",
+					"val": true,
+					"type": "boolean",
+					"desc": "例如，第一次重试间隔时长1000ms，第二次重试间隔时长2000ms，第三次重试间隔时长4000ms，以此类推"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Server.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png"
+			]
+		},
+		{
+			"id": "@DualSubs.Apple_TV",
+			"name": "DualSubs.Apple TV",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -411,7 +453,7 @@
 			"id": "@DualSubs.Apple_TV_Plus",
 			"name": "DualSubs.Apple TV+",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -642,7 +684,7 @@
 			"id": "@DualSubs.Disney_Plus",
 			"name": "DualSubs.Disney+",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -873,7 +915,7 @@
 			"id": "@DualSubs.Prime_Video",
 			"name": "DualSubs.Prime Video",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -1104,7 +1146,7 @@
 			"id": "@DualSubs.HBO_Max",
 			"name": "DualSubs.HBO Max",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -1384,7 +1426,7 @@
 			"id": "@DualSubs.Hulu",
 			"name": "DualSubs.Hulu",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -1615,7 +1657,7 @@
 			"id": "@DualSubs.Paramount_Plus",
 			"name": "DualSubs.Paramount+",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -1846,7 +1888,7 @@
 			"id": "@DualSubs.Peacock_TV.beta",
 			"name": "DualSubs.Peacock TV β",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -2077,7 +2119,7 @@
 			"id": "@DualSubs.Netflix",
 			"name": "DualSubs.Netflix",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -2308,7 +2350,7 @@
 			"id": "@DualSubs.YouTube",
 			"name": "DualSubs.YouTube",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSub</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [

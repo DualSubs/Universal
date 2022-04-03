@@ -192,7 +192,7 @@ async function Translate(type = "", source = "", target = "", text = "") {
 	let request = await GetRequest(type, source, target, text);
 	// 发送请求
 	//let text2 = await GetData(type, request);
-	let text2 = await retry(GetData, [type, request], 3, 100, true);
+	let text2 = await retry(GetData, [type, request], $.Advanced.Times, $.Advanced.Interval, $.Advanced.Translator.Exponential); // 3, 100, true
 	$.log(`🚧 ${$.name}, Translate`, `text2: ${text2}`, "");
 	return text2
 	/***************** Fuctions *****************/

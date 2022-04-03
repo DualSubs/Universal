@@ -65,22 +65,24 @@ let body = $response.body
 		} else {
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			DualSub = OriginVTT;
-			if ($.Verify?.[type]?.Method == "Part") { // 逐段翻译
+			if ($.Verify?.[type]?.Method == "Row") {//逐行翻译
+				DualSub.body = await Promise.all(DualSub.body.map(async item => {
+					//let text2 = await Translator(type, $.Settings.Languages[1], $.Settings.Languages[0], item.text);
+					let text2 = await retry(Translator, [type, $.Settings.Languages[1], $.Settings.Languages[0], item.text], $.Advanced.Translator.Times, $.Advanced.Translator.Interval, $.Advanced.Translator.Exponential); // 3, 100, true
+					item.text = await combineText(item.text, text2[0], $.Settings.Position);
+					return item
+				}));
+			} else { // Part 逐段翻译 
 				let Full = await Promise.all(DualSub.body.map(async item => item.text));
-				let length = (type == "GoogleCloud") ? 127 : (type == "Azure") ? 99 : (type == "DeepL") ? 49 : 48;
+				let length = (type == "GoogleCloud") ? 127 : (type == "Azure") ? 99 : (type == "Google") ? 63 : (type == "DeepL") ? 49 : 48;
 				let Parts = await chunk(Full, length);
 				Parts = await Promise.all(Parts.map(async Part => {
-					return await Translate(type, $.Settings.Languages[1], $.Settings.Languages[0], Part);
+					//return await Translator(type, $.Settings.Languages[1], $.Settings.Languages[0], Part);
+					return await retry(Translator, [type, $.Settings.Languages[1], $.Settings.Languages[0], Part], $.Advanced.Translator.Times, $.Advanced.Translator.Interval, $.Advanced.Translator.Exponential); // 3, 100, true
 				})).then(parts => parts.flat(Infinity));
 				//Parts = Parts.flat(Infinity);
 				DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
 					item.text = await combineText(item.text, Parts[i], $.Settings.Position);
-					return item
-				}));
-			} else { // Row //逐行翻译
-				DualSub.body = await Promise.all(DualSub.body.map(async item => {
-					let text2 = await Translate(type, $.Settings.Languages[1], $.Settings.Languages[0], item.text);
-					item.text = await combineText(item.text, text2[0], $.Settings.Position);
 					return item
 				}));
 			};
@@ -178,7 +180,7 @@ async function getOfficialRequest(platform, VTTs = []) {
 };
 
 /** 
- * Translate
+ * Translator
  * @param {String} type - type
  * @param {String} source - source
  * @param {String} target - target
@@ -186,15 +188,16 @@ async function getOfficialRequest(platform, VTTs = []) {
  * @param {Array} text - text
  * @return {Promise<*>}
  */
-async function Translate(type = "", source = "", target = "", text = "") {
-	$.log(`⚠ ${$.name}, Translate`, `text: ${text}`, "");
+async function Translator(type = "", source = "", target = "", text = "") {
+	$.log(`⚠ ${$.name}, Translator`, `orig: ${text}`, "");
 	// 构造请求
-	let request = await GetRequest(type, source, target, text);
+	//let request = await GetRequest(type, source, target, text);
 	// 发送请求
 	//let text2 = await GetData(type, request);
-	let text2 = await retry(GetData, [type, request], $.Advanced.Times, $.Advanced.Interval, $.Advanced.Translator.Exponential); // 3, 100, true
-	$.log(`🚧 ${$.name}, Translate`, `text2: ${text2}`, "");
-	return text2
+	//let text2 = await retry(GetData, [type, request], $.Advanced.Translator.Times, $.Advanced.Translator.Interval, $.Advanced.Translator.Exponential); // 3, 100, true
+	let trans = await GetRequest(type, source, target, text).then(async request => await GetData(type, request));
+	$.log(`🚧 ${$.name}, Translator`, `trans: ${trans}`, "");
+	return trans
 	/***************** Fuctions *****************/
 	// Function 5.1
 	// Get Translate Request
@@ -214,26 +217,39 @@ async function Translate(type = "", source = "", target = "", text = "") {
 		];
 		let request = {};
 		if (type == "Google") {
-			const BaseURL = [
-				//"https://translate.google.cn",
-				"https://translate.google.com",
-				"https://translate.google.com.hk",
-				"https://translate.google.com.tw",
-				"https://translate.google.com.sg",
-				"https://translate.google.co.jp",
-				"https://translate.google.co.kr"
+			const BaseRequest = [
+				{ // Google API
+					"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t",
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
+					}
+				},
+				{ // Google Translate App
+					"url": "https://translate.google.com/translate_a/single?client=it&dt=qca&dt=t&dt=rmt&dt=bd&dt=rms&dt=sos&dt=md&dt=gt&dt=ld&dt=ss&dt=ex&otf=2&dj=1&hl=en&ie=UTF-8&oe=UTF-8",
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
+					}
+				},
+				{ // Google Translate App
+					"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dj=1&source=bubble&dt=t&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at",
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
+					}
+				},
+				{// Google Dictionary Chrome extension https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja
+					"url": "https://clients5.google.com/translate_a/t?client=dict-chrome-ex",
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": ""
+					}
+				}
 			]
-			const Client = [
-				"t",
-				"at",
-				"gtx",
-				"it",
-			]
-			request.url = `${BaseURL[Math.floor(Math.random() * BaseURL.length)]}/translate_a/single?client=at&sl=${DataBase.Languages.Google[source]}&tl=${DataBase.Languages.Google[target]}&dt=t&q=${encodeURIComponent(text)}`;
-			request.headers = {
-				"Accept": "*/*",
-				"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
-			};
+			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 1))] // 随机Request, 排除最后一项
+			text = (Array.isArray(text)) ? text.join("\n\n") : text;
+			request.url = request.url + `&sl=${DataBase.Languages.Google[source]}&tl=${DataBase.Languages.Google[target]}&q=${encodeURIComponent(text)}`;
 		} else if (type == "GoogleCloud") {
 			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${$.Verify.GoogleCloud?.Auth}`;
 			request.headers = {
@@ -248,16 +264,25 @@ async function Translate(type = "", source = "", target = "", text = "") {
 				"format": "html",
 				//"key": $.Verify.GoogleCloud?.Key
 			};
-		} else if (type == "Microsoft") {
-			request.url = `https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&textType=html&from=${DataBase.Languages.Microsoft[source]}&to=${DataBase.Languages.Microsoft[target]}`;
+		} else if (type == "Bing") {
+			// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
+			const BaseURL = ($.Verify.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+				: ($.Verify.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
+					: "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+			request.url = `${BaseURL}`;
 			request.headers = {
 				"Accept": "*/*",
-				"User-Agent": "DualSubs",
-				"Content-type": "application/json; charset=UTF-8",
+				"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)], // 随机UA
+				"Content-type": "application/x-www-form-urlencoded",
+				"Refer": "https://www.bing.com/",
 			};
-			request.body = [{
-				"text": text
-			}];
+			request.body = data = {
+				"fromLang": "auto-detect",
+				//"text": '%s' % trans,
+				"text": text,
+				//"from": DataBase.Languages.Microsoft[source],
+				"to": DataBase.Languages.Microsoft[target]
+			};
 		} else if (type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
@@ -346,14 +371,15 @@ async function Translate(type = "", source = "", target = "", text = "") {
 						if (error) throw new Error(error)
 						else if (data) {
 							const _data = JSON.parse(data)
-							let text = _data?.translations?.[0]?.text ?? body?.[0]?.[0]?.[0] ?? `翻译失败, 类型: ${type}`
-							//$.log(`🎉 ${$.name}, Get Translate Data`, `text: ${text}`, "");
-							resolve(text);
+							let texts = [];
+							if (type = "Google") {
+								if (Array.isArray(_data)) texts = _data?.[0]?.map(item => item?.[0]);
+								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans);
+							}
+							texts = texts.join("").split(/\n\n/);
+							resolve(texts);
 						} else throw new Error(response);
-					} catch (e) {
-						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
 					} finally {
-						//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
 						resolve();
 					}
 				});
@@ -364,15 +390,12 @@ async function Translate(type = "", source = "", target = "", text = "") {
 						else if (data) {
 							const _data = JSON.parse(data)
 							let texts = [];
-							if (type == "Microsoft" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+							if (type = "Google") texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
 							else if (type == "GoogleCloud" || type == "DeepL") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
-							//$.log(`🎉 ${$.name}, Get Translate Data`, `texts: ${texts}`, "");
+							else if (type == "Bing" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
 							resolve(texts);
 						} else throw new Error(response);
-					} catch (e) {
-						$.logErr(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, `error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "");
 					} finally {
-						//$.log(`🎉 ${$.name}, Get Translate Data`, `result: ${texts}`, "");
 						resolve();
 					}
 				});

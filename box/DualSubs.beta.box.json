@@ -41,12 +41,12 @@
 					"type": "radios",
 					"items": [
 						{
-							"key": "Token",
-							"label": "令牌"
-						},
-						{
 							"key": "Key",
 							"label": "密钥"
+						},
+						{
+							"key": "Token",
+							"label": "令牌"
 						}
 					],
 					"desc": "验证方式二选一"
@@ -108,12 +108,12 @@
 					"type": "radios",
 					"items": [
 						{
-							"key": "Token",
-							"label": "令牌"
-						},
-						{
 							"key": "Key",
 							"label": "密钥"
+						},
+						{
+							"key": "Token",
+							"label": "令牌"
 						}
 					],
 					"desc": "验证方式二选一"

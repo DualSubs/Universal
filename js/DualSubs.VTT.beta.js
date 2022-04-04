@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.2");
+const $ = new Env("DualSubs v0.5.3");
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -65,7 +65,7 @@ let body = $response.body
 		} else {
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			DualSub = OriginVTT;
-			if ($.Verify?.[type]?.Method == "Row") {//逐行翻译
+			if ($.Verify?.[type]?.Method == "Row") { //逐行翻译
 				DualSub.body = await Promise.all(DualSub.body.map(async item => {
 					//let text2 = await Translator(type, $.Settings.Languages[1], $.Settings.Languages[0], item.text);
 					let text2 = await retry(Translator, [type, $.Settings.Languages[1], $.Settings.Languages[0], item.text], $.Advanced.Translator.Times, $.Advanced.Translator.Interval, $.Advanced.Translator.Exponential); // 3, 100, true

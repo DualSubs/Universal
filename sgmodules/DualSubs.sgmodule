@@ -1,5 +1,5 @@
 #!name= 🍿️ DualSubs
-#!desc= (0.5.2) Dual Subtitiles for Streaming Media Platform
+#!desc= (0.5.3) Dual Subtitiles for Streaming Media Platform
 
 [General]
 force-http-engine-hosts = %APPEND% *.hls.row.aiv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, assets.huluim.com
@@ -30,9 +30,9 @@ DualSubs.Hulu.HLS.m3u8 = type=http-response, pattern=^https?:\/\/manifest-dp\.hu
 DualSubs.Hulu.WebVTT.m3u8 = type=http-response, pattern=^https?:\/\/manifest-dp\.hulustream\.com\/webvtt(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
 DualSubs.Hulu.vtt = type=http-response, pattern=^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
-# DualSubs.Paramount_Plus.HLS.m3u8 = type=http-response, pattern=^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/master\.m3u8$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
-# DualSubs.Paramount_Plus.WebVTT.m3u8 = type=http-response, pattern=^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/stream_vtt\.m3u8(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
-# DualSubs.Paramount_Plus.vtt = type=http-response, pattern=^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+DualSubs.Paramount_Plus.HLS.m3u8 = type=http-response, pattern=^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/master\.m3u8$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+DualSubs.Paramount_Plus.WebVTT.m3u8 = type=http-response, pattern=^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/stream_vtt\.m3u8(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
+DualSubs.Paramount_Plus.vtt = type=http-response, pattern=^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 # DualSubs.Paramount_Plus.vtt = type=http-response, pattern=^https?:\/\/cc\.cbs\.com\/closedcaption\/(.*)\.vtt(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Peacock.HLS.m3u8 = type=http-response, pattern=^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/master_cmaf\.m3u8$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js

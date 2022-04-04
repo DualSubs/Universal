@@ -1,5 +1,5 @@
 #!name= 🍿️ DualSubs
-#!desc= (0.5.2) Dual Subtitiles for Streaming Media Platform
+#!desc= (0.5.3) Dual Subtitiles for Streaming Media Platform
 
 #[Script]
 # DualSubs.Apple_TV.HLS.m3u8
@@ -47,11 +47,11 @@
 ^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Paramount_Plus.HLS.m3u8
-# ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/master\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/master\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
 # DualSubs.Paramount_Plus.WebVTT.m3u8
-# ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/stream_vtt\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
+^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/stream_vtt\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
 # DualSubs.Paramount_Plus.vtt
-# ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 # ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.*)\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Peacock.HLS.m3u8

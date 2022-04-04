@@ -355,7 +355,7 @@ async function Translator(type = "", source = "", target = "", text = "") {
 						else if (data) {
 							const _data = JSON.parse(data)
 							let texts = [];
-							if (type = "Google") {
+							if (type == "Google") {
 								if (Array.isArray(_data)) texts = _data?.[0]?.map(item => item?.[0]);
 								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans);
 							}
@@ -373,7 +373,7 @@ async function Translator(type = "", source = "", target = "", text = "") {
 						else if (data) {
 							const _data = JSON.parse(data)
 							let texts = [];
-							if (type = "Google") texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
+							if (type == "Google") texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
 							else if (type == "GoogleCloud" || type == "DeepL") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
 							else if (type == "Bing" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
 							resolve(texts);

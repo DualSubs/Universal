@@ -57,7 +57,7 @@ http:
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
     - match: ^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
       type: response
@@ -72,7 +72,7 @@ http:
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
     - match: ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/cbcs-all-(.*)\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
       type: response
@@ -87,7 +87,7 @@ http:
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
     - match: ^https?:\/\/(.*)\.(hls\.row\.aiv-cdn|akamaihd)\.net\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(\?.*)?$
       name: DualSubs.HLS.m3u8
       type: response
@@ -102,7 +102,7 @@ http:
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
     - match: ^https?:\/\/manifests\.v2\.api\.hbo\.com\/hls\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
       type: response
@@ -117,7 +117,7 @@ http:
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
     - match: ^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
       type: response
@@ -132,7 +132,7 @@ http:
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
     - match: ^https?:\/\/(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/master\.m3u8$
       name: DualSubs.HLS.m3u8
       type: response
@@ -147,12 +147,12 @@ http:
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
     - match: ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.*)\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
     - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/master_cmaf\.m3u8$
       name: DualSubs.HLS.m3u8
       type: response
@@ -167,7 +167,7 @@ http:
       name: DualSubs.vtt
       type: response
       require-body: true
-      timeout: 10
+      timeout: 30
 
 script-providers:
   DualSubs.HLS.m3u8:

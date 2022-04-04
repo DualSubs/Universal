@@ -27,7 +27,7 @@ let body = $response.body
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
 		// 序列化M3U8
 		let PlayList = M3U8.parse(body);
-		// PlayList.m3u8 URL		
+		// PlayList.m3u8 URL
 		Cache.URL = url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
 		for await (var language of $.Settings.Languages) {

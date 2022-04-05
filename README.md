@@ -79,6 +79,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
 |Apple TV+|   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   ✅   |   N/A   | [✅](https://tv.apple.com/hk/)[^2] | 指Apple TV app中的订阅内容 |
 |Apple TV | [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2] | [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2] | ✅[^2] |   N/A   |   N/A   | 指Apple TV app中的买断或租借内容[^1] |
+|Apple Fitness| [✅](https://apps.apple.com/cn/app/fitness/id1208224953)[^2] | ✅[^2] |   N/A   |   N/A   |   N/A   | [^1] |
 | Disney+ |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/disney/9nxqxxlfst89)   |   [✅](https://www.disneyplus.com/zh-hans/home)   |        |
 |Prime Video| [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^5] |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   | [🔜](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^3] |   [❓](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)   | [🔜](https://www.primevideo.com)[^3] |        |
 | HBO Max | [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4] | [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422) |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   | [☑️](https://play.hbomax.com)[^4] |        |
@@ -87,7 +88,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 |         |         |         |         |         |         |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。
-  [^2]: Apple TV+ Web版和iTunes资源使用的域名`play.itunes.apple.com`与`App Store`登陆、验证、购买等功能共用域名，MitM可能造成无法访问，故默认未添加此域名,需要iTunes双语的用户请自行添加。
+  [^2]: 此平台资源使用的域名`play.itunes.apple.com`与`App Store`登陆、验证、购买等功能共用域名，MitM可能造成无法访问，故默认未添加此域名，需要此平台双语的用户请自行添加`play.itunes.apple.com`至MitM域名列表。
   [^3]: 此平台字幕采用[TTML2](https://www.w3.org/TR/2018/REC-ttml2-20181108/)格式字幕，暂不支持
   [^4]: 此平台字幕选项为硬编码，需要在BoxJs中对应平台的`字幕类型（兼容）`选项选择一个替换用字幕类型
   [^5]: 采用旧版`AVPlayerViewController`播放器UI界面，自定义字幕名称会被强制显示为固定名称，比如多个名称为`简体中文`的选项，依次为原始字幕选项及BoxJs中开启的字幕选项，除显示的名称固定外，字幕选项功能正常。

@@ -217,7 +217,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 					//$.log(`🚧 ${$.name}`, "obj2?.OPTION[\"GROUP-ID\"]", obj2?.OPTION["GROUP-ID"], "");
 					// 创建字幕选项
 					let Options = [];
-					if (Platform == "Apple_TV" || Platform == "Apple_TV_Plus") { // Apple_TV Apple_TV_Plus 兼容
+					if (Platform == "Apple") { // Apple兼容
 						if (obj1?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
 							Options = await getOptions(Platform, obj1, obj2, Types, Standard);
 						}
@@ -268,7 +268,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 		$.log(`⚠ ${$.name}, Get Same Options Index`, "");
 		// 计算位置
 		let Index = json.body.findIndex(item => {
-			if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
+			if (platform == "Apple") {
 				if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
 					&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
 					&& item?.OPTION?.["STABLE-RENDITION-ID"] == obj?.OPTION?.["STABLE-RENDITION-ID"]) {

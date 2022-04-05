@@ -44,7 +44,7 @@ let body = $response.body
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
 				let VTTs = Cache[$.Settings.Languages[1]][Indices[$.Settings.Languages[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
-				else if ($.Platform == "Apple_TV" || $.Platform == "Apple_TV_Plus") {
+				else if ($.Platform == "Apple") {
 					let requests = await getOfficialRequest($.Platform, VTTs);
 					for await (var request of requests) {
 						let SecondVTT = await getWebVTT(request);
@@ -204,16 +204,15 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 // Get Official Request
 async function getOfficialRequest(platform, VTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, "");
-	let fileName = (platform == "Apple_TV") ? url.match(/.+_(subtitles-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple TV 片段分型序号不同
-		: (platform == "Apple_TV_Plus") ? url.match(/.+_(subtitles_V\d-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple TV+ 片段分型序号不同
-			: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Disney+ 片段名称相同
-				: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Hulu 片段分型序号相同
-					: null; // Amazon Prime Video HBO_Max不拆分字幕片段
+	let fileName = (platform == "Apple") ? url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple 片段分型序号不同
+		: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Disney+ 片段名称相同
+			: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Hulu 片段分型序号相同
+				: null; // Amazon Prime Video HBO_Max不拆分字幕片段
 	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
 
-	if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
+	if (platform == "Apple") {
 		let Index = VTTs.findIndex(item => item.includes(fileName))
-		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_TV_Index: ${Index}`, "")
+		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_Index: ${Index}`, "")
 		nearlyVTTs = VTTs.slice((Index - 5 < 0) ? 0 : Index - 5, Index + 5);
 		let requests = nearlyVTTs.map(VTT => {
 			return {

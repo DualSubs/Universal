@@ -25,6 +25,21 @@
 			"Exponential": true
 		}
 	},
+	"Apple": {
+		"Switch": true, // true, false
+		"Types": [
+			"Official", // Official, Google, DeepL, External
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
 	"Apple_TV": {
 		"Switch": true, // true, false
 		"Types": [

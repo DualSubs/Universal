@@ -3,18 +3,25 @@
 
 #[Script]
 # DualSubs.Apple_TV.HLS.m3u8
-^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
 # DualSubs.Apple_TV.WebVTT.m3u8
 ^https?:\/\/vod-(.*)-amt\.tv\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)_subtitles\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
 # DualSubs.Apple_TV.vtt
 ^https?:\/\/vod-(.*)-amt\.tv\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Apple_TV_Plus.HLS.m3u8
-^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
 # DualSubs.Apple_TV_Plus.WebVTT.m3u8
-^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
+^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
 # DualSubs.Apple_TV_Plus.vtt
 ^https?:\/\/vod-(.*)-aoc\.tv\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+
+# DualSubs.Apple_Fitness.HLS.m3u8
+^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\/playlist\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+# DualSubs.Apple_Fitness.WebVTT.m3u8
+^https?:\/\/hls\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
+# DualSubs.Apple_Fitness.vtt
+^https?:\/\/hls\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Disney_Plus.HLS.m3u8
 ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/cbcs-all-(.*)\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
@@ -68,4 +75,4 @@
 # ^https?:\/\/(.*)\.nflxvideo\.net\/\?o=(\d+)&v=(\d+)&e=(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 #[MITM]
-hostname = play-edge.itunes.apple.com, vod-*.tv.apple.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, *.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, livemanifest-f.hulustream.com, live-sc.hulustream.com, assets.huluim.com, assetshuluimcom-a.akamaihd.net, link.theplatform.com, *.cbsaavideo.com, *.cbsivideo.com, *.stream.peacocktv.com, *.cdn.peacocktv.com, content-discovery.uplynk.com, x-default-stgec.uplynk.com, *-discovery1.uplynk.com, *.nflxvideo.net
+hostname = play-edge.itunes.apple.com, hls.itunes.apple.com, vod-*.tv.apple.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, *.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, livemanifest-f.hulustream.com, live-sc.hulustream.com, assets.huluim.com, assetshuluimcom-a.akamaihd.net, link.theplatform.com, *.cbsaavideo.com, *.cbsivideo.com, *.stream.peacocktv.com, *.cdn.peacocktv.com, content-discovery.uplynk.com, x-default-stgec.uplynk.com, *-discovery1.uplynk.com, *.nflxvideo.net

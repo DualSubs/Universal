@@ -13,6 +13,7 @@ http:
     - "assets.huluim.com"
   mitm:
     - "play-edge.itunes.apple.com"
+    - "hls.itunes.apple.com"
     - "vod-*.tv.apple.com"
     - "*.media.dssott.com"
     - "*.media.starott.com"
@@ -43,7 +44,7 @@ http:
     - "*-discovery1.uplynk.com"
     - "*.nflxvideo.net"
   script:
-    - match: ^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(.\?*)
+    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(.\?*)
       name: DualSubs.HLS.m3u8
       type: response
       require-body: true
@@ -58,17 +59,32 @@ http:
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.*)
+    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.*)
       name: DualSubs.HLS.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
       type: response
       require-body: true
       timeout: 10
     - match: ^https?:\/\/vod-(.*)-aoc\.tv\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$
+      name: DualSubs.vtt
+      type: response
+      require-body: true
+      timeout: 30
+    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\/playlist\.m3u8(\?.*)
+      name: DualSubs.HLS.m3u8
+      type: response
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/hls\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.m3u8(\?.*dualsubs=\w+)$
+      name: DualSubs.WebVTT.m3u8
+      type: response
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/hls\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
       type: response
       require-body: true

@@ -2,20 +2,17 @@
 async function setENV(url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
 	/***************** Platform *****************/
-	const Platform = url.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/(?!subscription\/)/i) ? "Apple_TV"
-		: url.match(/vod-.*-amt\.tv\.apple\.com/i) ? "Apple_TV"
-			: url.match(/(play|play-edge)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i) ? "Apple_TV_Plus"
-				: url.match(/vod-.*-aoc\.tv\.apple\.com/i) ? "Apple_TV_Plus"
-					: url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
-						: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
-							: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-								: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-									: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
-										: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
-											: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-												: url.match(/www\.youtube\.com/i) ? "YouTube"
-													: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-														: undefined
+	const Platform = url.match(/\.apple\.com/i) ? "Apple"
+		: url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
+			: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
+				: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
+					: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
+						: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
+							: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+								: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+									: url.match(/www\.youtube\.com/i) ? "YouTube"
+										: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+											: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
 	/***************** BoxJs *****************/
 	// 包装为局部变量，用完释放内存
@@ -30,7 +27,17 @@ async function setENV(url, database) {
 	Advanced.Translator.Interval = parseInt(Advanced.Translator.Interval, 10) // BoxJs字符串转数字
 	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator.Exponential) //  BoxJs字符串转Boolean
 	/***************** Settings *****************/
-	let Settings = BoxJs?.Settings?.[Platform] || database?.Settings?.[Platform];
+	let Settings = {};
+	if (Platform == "Apple") {
+		let platform = url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i) ? "Apple_TV_Plus"
+			: url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i) ? "Apple_Fitness"
+				: url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i) ? "Apple_TV"
+					: url.match(/vod-.*-aoc\.tv\.apple\.com/i) ? "Apple_TV_Plus"
+						: url.match(/vod-.*-amt\.tv\.apple\.com/i) ? "Apple_TV"
+							: url.match(/hls\.itunes\.apple\.com/i) ? "Apple_Fitness"
+								: "Apple"
+		Settings = BoxJs?.Settings?.[platform] || database?.Settings?.[platform];
+	} else Settings = BoxJs?.Settings?.[Platform] || database?.Settings?.[Platform];
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型

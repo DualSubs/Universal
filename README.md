@@ -64,6 +64,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 
 ## How To
   * [在Apple TV (tvOS) 上添加MitM证书](https://github.com/DualSubs/DualSubs/wiki/在Apple-TV-(tvOS)-上添加MitM证书)
+  * [在BoxJs中清除DualSubs的储存数据](https://github.com/DualSubs/DualSubs/wiki/在BoxJs中清除DualSubs的储存数据)
 
 ## 支持列表
   * 图例:

@@ -53,6 +53,20 @@
 		"Offset": 0,
 		"Tolerance": 1000
 	},
+	"Apple_Fitness": {
+		"Switch": true,
+		"Types": [
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
 	"Disney_Plus": {
 		"Switch": true,
 		"Types": [

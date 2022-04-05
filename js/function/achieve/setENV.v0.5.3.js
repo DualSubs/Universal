@@ -34,7 +34,7 @@ async function setENV(url, database) {
 				: url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i) ? "Apple_TV"
 					: url.match(/vod-.*-aoc\.tv\.apple\.com/i) ? "Apple_TV_Plus"
 						: url.match(/vod-.*-amt\.tv\.apple\.com/i) ? "Apple_TV"
-							: url.match(/hls\.itunes\.apple\.com/i) ? "Apple_Fitness"
+							: url.match(/(hls|hls-svod)\.itunes\.apple\.com/i) ? "Apple_Fitness"
 								: "Apple"
 		Settings = BoxJs?.Settings?.[platform] || database?.Settings?.[platform];
 	};

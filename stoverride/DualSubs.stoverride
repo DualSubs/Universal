@@ -14,6 +14,7 @@ http:
   mitm:
     - "play-edge.itunes.apple.com"
     - "hls.itunes.apple.com"
+    - "hls-svod.itunes.apple.com"
     - "vod-*.tv.apple.com"
     - "*.media.dssott.com"
     - "*.media.starott.com"
@@ -79,12 +80,12 @@ http:
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/hls\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.m3u8(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/hls\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
       type: response
       require-body: true

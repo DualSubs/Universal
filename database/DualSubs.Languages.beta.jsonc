@@ -32,6 +32,7 @@
 		"SL": "sl", // 斯洛文尼亚语
 		"SV": "sv", // 瑞典语
 		"IS": "is", // 冰岛语
+		"ZH": "cmn", // 中文
 		"ZH-HANS": "cmn-Hans", // 中文（简体）
 		"ZH-HK": "yue-Hant", // 中文（香港）
 		"ZH-HANT": "cmn-Hant" // 中文（繁体）
@@ -69,6 +70,7 @@
 		//"SL": "sl", // 斯洛文尼亚语
 		"SV": "sv", // 瑞典语
 		"IS": "is", // 冰岛语
+		"ZH": "zh", // 中文
 		"ZH-HANS": "zh-Hans", // 中文（简体）
 		"ZH-HK": "zh-HK", // 中文（香港）
 		"ZH-HANT": "zh-Hant" // 中文（繁体）
@@ -107,6 +109,7 @@
 		//"SL": "sl-si", // 斯洛文尼亚语
 		"SV": "sv-se", // 瑞典语
 		//"IS": "is-is", // 冰岛语
+		"ZH": "zh", // 中文
 		"ZH-HANS": "zh-hans", // 中文（简体）
 		//"ZH-HK": "zh-HK", // 中文（香港）
 		"ZH-HANT": "zh-hant" // 中文（繁体）
@@ -145,6 +148,7 @@
 		"SL": "sl-SI", // 斯洛文尼亚语
 		"SV": "sv-SE", // 瑞典语
 		//"IS": "is-IS", // 冰岛语
+		"ZH": "zh", // 中文
 		"ZH-HANS": "zh-CN", // 中文（中国）
 		"ZH-HK": "zh-HK", // 中文（香港）
 		"ZH-HANT": "zh-TW" // 中文（台湾）
@@ -182,6 +186,7 @@
 		"SL": "slv", // 斯洛文尼亚语
 		"SV": "swe", // 瑞典语
 		//"IS": "isl", // 冰岛语
+		"ZH": "zho", // 中文
 		"ZH-HANS": "zho", // 中文（中国）
 		"ZH-HK": "zho", // 中文（香港）
 		"ZH-HANT": "zho" // 中文（台湾）
@@ -219,6 +224,7 @@
 		//"SL": "sl", // 斯洛文尼亚语
 		"SV": "sv", // 瑞典语
 		"IS": "is", // 冰岛语
+		"ZH": "zh", // 中文
 		"ZH-HANS": "zh-Hans", // 中文（简体）
 		"ZH-HK": "zh-HK", // 中文（香港）
 		"ZH-HANT": "zh-Hant" // 中文（繁体）
@@ -256,6 +262,7 @@
 		//"SL": "sl", // 斯洛文尼亚语
 		"SV": "sv", // 瑞典语
 		"IS": "is", // 冰岛语
+		"ZH": "zh", // 中文
 		"ZH-HANS": "zh-Hans", // 中文（简体）
 		"ZH-HK": "zh-HK", // 中文（香港）
 		"ZH-HANT": "zh-Hant" // 中文（繁体）
@@ -290,6 +297,7 @@
 		"SK": "sk-SK", // 斯洛伐克语
 		"SL": "sl-SI", // 斯洛文尼亚语
 		"SV": "sv-SE", // 瑞典语
+		"ZH": "zh", // 中文
 		"ZH-HANS": "zh-CN", // 中文（中国）
 		"ZH-HK": "zh-HK", // 中文（香港）
 		"ZH-HANT": "zh-TW" // 中文（台湾）

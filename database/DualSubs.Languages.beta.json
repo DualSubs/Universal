@@ -32,6 +32,7 @@
 		"SL": "sl",
 		"SV": "sv",
 		"IS": "is",
+		"ZH": "cmn",
 		"ZH-HANS": "cmn-Hans",
 		"ZH-HK": "yue-Hant",
 		"ZH-HANT": "cmn-Hant"
@@ -69,6 +70,7 @@
 		"SL": "sl",
 		"SV": "sv",
 		"IS": "is",
+		"ZH": "zh",
 		"ZH-HANS": "zh-Hans",
 		"ZH-HK": "zh-HK",
 		"ZH-HANT": "zh-Hant"
@@ -107,6 +109,7 @@
 		"SL": "sl-si",
 		"SV": "sv-se",
 		"IS": "is-is",
+		"ZH": "zh",
 		"ZH-HANS": "zh-hans",
 		"ZH-HK": "zh-HK",
 		"ZH-HANT": "zh-hant"
@@ -145,6 +148,7 @@
 		"SL": "sl-SI",
 		"SV": "sv-SE",
 		"IS": "is-IS",
+		"ZH": "zh",
 		"ZH-HANS": "zh-CN",
 		"ZH-HK": "zh-HK",
 		"ZH-HANT": "zh-TW"
@@ -182,6 +186,7 @@
 		"SL": "slv",
 		"SV": "swe",
 		"IS": "isl",
+		"ZH": "zh",
 		"ZH-HANS": "zho",
 		"ZH-HK": "zho",
 		"ZH-HANT": "zho"
@@ -219,6 +224,7 @@
 		"SL": "sl",
 		"SV": "sv",
 		"IS": "is",
+		"ZH": "zh",
 		"ZH-HANS": "zh-Hans",
 		"ZH-HK": "zh-HK",
 		"ZH-HANT": "zh-Hant"
@@ -256,6 +262,7 @@
 		"SL": "sl",
 		"SV": "sv",
 		"IS": "is",
+		"ZH": "zh",
 		"ZH-HANS": "zh-Hans",
 		"ZH-HK": "zh-HK",
 		"ZH-HANT": "zh-Hant"
@@ -290,6 +297,7 @@
 		"SK": "sk-SK",
 		"SL": "sl-SI",
 		"SV": "sv-SE",
+		"ZH": "zh",
 		"ZH-HANS": "zh-CN",
 		"ZH-HK": "zh-HK",
 		"ZH-HANT": "zh-TW"

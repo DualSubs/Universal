@@ -154,6 +154,20 @@
 		"Offset": 0,
 		"Tolerance": 1000
 	},
+	"Discovery_Plus_Ph": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Offset": 0,
+		"Tolerance": 1000
+	},
 	"Peacock_TV": {
 		"Switch": true, // true, false
 		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External

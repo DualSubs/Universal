@@ -97,7 +97,7 @@ async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
 	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
-		let VTTs = response.body.match(/^.+\.(web)?vtt$/gim);
+		let VTTs = response.body.match(/^.+\.(web)?vtt(\?.*)?$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
 		// 筛选字幕
 		VTTs = VTTs.filter(item => !/\/empty/.test(item))
@@ -127,6 +127,7 @@ async function getVTTs(platform, url) {
 // Set Subtitle WebVTT *.m3u8
 async function setWebVTTm3u8(body = {}, type = "") {
 	$.log(`⚠ ${$.name}, Set Subtitle WebVTT *.m3u8`, "");
+	body = body.replace(/^.+\.(web)?vtt(\?.*)$/gim, `$&&dualsubs=${type}`);
 	body = body.replace(/^.+\.(web)?vtt$/gim, `$&?dualsubs=${type}`);
 	$.log(`🎉 ${$.name}, Set Subtitle WebVTT *.m3u8`, `body: ${body}`, "");
 	return body

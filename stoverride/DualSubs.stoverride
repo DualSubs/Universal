@@ -21,6 +21,7 @@ http:
     - "atv-ps.amazon.com"
     - "atv-ps-fe.primevideo.com"
     - "*.hls.row.aiv-cdn.net"
+    - "*.dash.row.aiv-cdn.net"
     - "cf-timedtext.aux.pv-cdn.net"
     - "*avodhlss3ww-a.akamaihd.net"
     - "d25xi40x97liuc.cloudfront.net"

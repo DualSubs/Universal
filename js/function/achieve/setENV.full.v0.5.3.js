@@ -8,11 +8,12 @@ async function setENV(url, database) {
 				: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
 					: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
 						: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
-							: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
-								: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-									: url.match(/www\.youtube\.com/i) ? "YouTube"
-										: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-											: undefined
+							: (url.match(/dplus-ph-prod-vod\.akamaized\.net/i)) ? "Discovery_Plus_Ph"
+								: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+									: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
+										: url.match(/www\.youtube\.com/i) ? "YouTube"
+											: url.match(/\.nflxvideo\.net/i) ? "Netflix"
+												: undefined
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
 	/***************** BoxJs *****************/
 	// 包装为局部变量，用完释放内存

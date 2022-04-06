@@ -317,7 +317,13 @@ async function Translator(type = "", source = "", target = "", text = "") {
 				"User-Agent": "DualSubs",
 				"Content-Type": "application/x-www-form-urlencoded"
 			};
-			const BaseBody = `auth_key=${$.Verify.DeepL?.Auth}&source_lang=${DataBase.Languages.DeepL[source]}&target_lang=${DataBase.Languages.DeepL[target]}&tag_handling=html`;
+			const source_lang = (DataBase.Languages.DeepL[source].includes("EN")) ? "EN"
+				: (DataBase.Languages.DeepL[source].includes("PT")) ? "PT"
+					: DataBase.Languages.DeepL[source];
+			const target_lang = (DataBase.Languages.DeepL[target] == "EN") ? "EN-US"
+				: (DataBase.Languages.DeepL[target] == "PT") ? "PT-PT"
+					: DataBase.Languages.DeepL[target];
+			const BaseBody = `auth_key=${$.Verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
 			text = (Array.isArray(text)) ? text : [text];
 			let texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
 			request.body = BaseBody + texts.join("");

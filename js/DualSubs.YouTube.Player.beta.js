@@ -24,6 +24,8 @@ var body = $response.body
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
 		let data = JSON.parse(body);
+		// PlayList.m3u8 URL
+		Cache.URL = url;
 		// 找节点
 		let Captions = data?.captions
 		if (Captions) { // 有基础字幕
@@ -132,7 +134,7 @@ async function getCaptions(platform = "", cache = {}, tracklist = [], langCode =
 				: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
 					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
 						: [langCode]
-		langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[platform]?.[langcode]}\"`)
+		langcodes = langcodes.map(langcode => database?.Languages?.[platform]?.[langcode]);
 		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		return langcodes
 	};

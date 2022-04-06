@@ -85,7 +85,8 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 |Prime Video| [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^5] |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   | [🔜](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^3] |   [❓](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)   | [🔜](https://www.primevideo.com)[^3] |        |
 | HBO Max | [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4] | [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422) |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   | [☑️](https://play.hbomax.com)[^4] |        |
 |  Hulu   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   N/A   |   N/A   | [🔜](https://www.hulu.com/)[^6] |        |
-|Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |         |   N/A   |         |         |        |
+|Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   ❓   |   N/A   |   ❓   |   ❓   |        |
+|Discovery+<br>Philippines|   ❓   |   ❓   |   ❓   |   ❓   |   [✅](https://www.discoveryplus.com/ph/)   |        |
 |         |         |         |         |         |         |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。

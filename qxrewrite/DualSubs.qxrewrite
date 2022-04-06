@@ -24,7 +24,7 @@
 ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.*)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.*)\.webvtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Disney_Plus.HLS.m3u8
-^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/cbcs-all-(.*)\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(cbcs|ctr)-all-(.*)\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
 # DualSubs.Disney_Plus.WebVTT.m3u8
 ^https?:\/\/(.*)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
 # DualSubs.Disney_Plus.vtt

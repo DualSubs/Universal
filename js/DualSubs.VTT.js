@@ -296,8 +296,8 @@ async function Translator(type = "", source = "", target = "", text = "") {
 			let texts = await Promise.all(text?.map(async item => { return { "text": item } }))
 			request.body = JSON.stringify(texts);
 		} else if (type == "DeepL") {
-			const BaseURL = ($.Verify.DeepL.Mode == "Free") ? "https://api-free.deepl.com"
-				: ($.Verify.DeepL.Mode == "Pro") ? "https://api.deepl.com"
+			const BaseURL = ($.Verify.DeepL.Version == "Free") ? "https://api-free.deepl.com"
+				: ($.Verify.DeepL.Version == "Pro") ? "https://api.deepl.com"
 					: "https://api-free.deepl.com"
 			request.url = `${BaseURL}/v2/translate`
 			request.headers = {

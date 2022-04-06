@@ -190,11 +190,9 @@ async function getOfficialRequest(platform, VTTs = []) {
 async function Translator(type = "", source = "", target = "", text = "") {
 	$.log(`⚠ ${$.name}, Translator`, `orig: ${text}`, "");
 	// 构造请求
-	//let request = await GetRequest(type, source, target, text);
+	let request = await GetRequest(type, source, target, text);
 	// 发送请求
-	//let text2 = await GetData(type, request);
-	//let text2 = await retry(GetData, [type, request], $.Advanced.Translator.Times, $.Advanced.Translator.Interval, $.Advanced.Translator.Exponential); // 3, 100, true
-	let trans = await GetRequest(type, source, target, text).then(async request => await GetData(type, request));
+	let trans = await GetData(type, request);
 	$.log(`🚧 ${$.name}, Translator`, `trans: ${trans}`, "");
 	return trans
 	/***************** Fuctions *****************/

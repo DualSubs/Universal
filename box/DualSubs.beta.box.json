@@ -1246,7 +1246,7 @@
 				{
 					"id": "@DualSubs.Settings.Prime_Video.Types",
 					"name": "字幕类型",
-					"val": "Official",
+					"val": "Official,Google",
 					"type": "checkboxes",
 					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
 					"items": [

@@ -27,8 +27,8 @@
 	},
 	"Apple": {
 		"Switch": true, // true, false
-		"Types": [
-			"Official", // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official",
 			"Google"
 		],
 		"Languages": [
@@ -42,8 +42,8 @@
 	},
 	"Apple_TV": {
 		"Switch": true, // true, false
-		"Types": [
-			"Official" // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official"
 		],
 		"Languages": [
 			"ZH",
@@ -56,8 +56,8 @@
 	},
 	"Apple_TV_Plus": {
 		"Switch": true, // true, false
-		"Types": [
-			"Official" // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official"
 		],
 		"Languages": [
 			"ZH",
@@ -70,8 +70,8 @@
 	},
 	"Apple_Fitness": {
 		"Switch": true, // true, false
-		"Types": [
-			"Google" // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
 		],
 		"Languages": [
 			"ZH",
@@ -84,8 +84,8 @@
 	},
 	"Disney_Plus": {
 		"Switch": true, // true, false
-		"Types": [
-			"Official" // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official"
 		],
 		"Languages": [
 			"ZH",
@@ -98,8 +98,9 @@
 	},
 	"Prime_Video": {
 		"Switch": true, // true, false
-		"Types": [
-			"Official" // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official",
+			"Google"
 		],
 		"Languages": [
 			"ZH",
@@ -112,10 +113,10 @@
 	},
 	"HBO_Max": {
 		"Switch": true, // true, false
-		"Types": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
 			"Google"
 		],
-		"Type": "Google", // Official, Google, DeepL, External
+		"Type": "Google", // Official, Google, GoogleCloud, Azure, DeepL, External
 		"Languages": [
 			"ZH",
 			"EN"
@@ -127,7 +128,7 @@
 	},
 	"Hulu": {
 		"Switch": true, // true, false
-		"Types": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
 			"Google"
 		],
 		"Languages": [
@@ -141,7 +142,7 @@
 	},
 	"Paramount_Plus": {
 		"Switch": true, // true, false
-		"Types": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
 			"Google"
 		],
 		"Languages": [
@@ -155,7 +156,7 @@
 	},
 	"Peacock_TV": {
 		"Switch": true, // true, false
-		"Types": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
 			"Google"
 		],
 		"Languages": [
@@ -169,7 +170,7 @@
 	},
 	"Discovery_Plus": {
 		"Switch": true, // true, false
-		"Types": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
 			"Google"
 		],
 		"Languages": [
@@ -183,7 +184,7 @@
 	},
 	"Netflix": {
 		"Switch": true, // true, false
-		"Types": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
 			"Official",
 			"Google",
 			"External"
@@ -199,7 +200,7 @@
 	},
 	"YouTube": {
 		"Switch": true, // Enable, Disable
-		"Types": [ // Official, Google, DeepL, External
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
 			"Official"
 		],
 		"Languages": [

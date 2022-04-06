@@ -99,7 +99,8 @@
 	"Prime_Video": {
 		"Switch": true,
 		"Types": [
-			"Official"
+			"Official",
+			"Google"
 		],
 		"Languages": [
 			"ZH",

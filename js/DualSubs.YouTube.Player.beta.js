@@ -50,16 +50,20 @@ var body = $response.body
 						$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 					};
 					$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
+					// 兼容性判断
+					const standard = await isStandard($.Platform, url, headers);
+					// 写入选项
+					Tracklist = await setOptions($.Platform, Tracklist, Cache[$.Settings.Languages[0]], Cache[$.Settings.Languages[1]], $.Settings.Types, standard, $.Settings.Type);
 				};
 				// 加翻译语言
 				if (Tracklist?.translationLanguages) {
 					Tracklist.translationLanguages = Object.assign(Tracklist.translationLanguages, DataBase.translationLanguages);
 				} else Tracklist.translationLanguages = DataBase.translationLanguages;
 			};
+			// 写入缓存
+			$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize);
+			$.setjson($.Cache, `@DualSubs.Cache.${$.Platform}`);
 		};
-		// 写入缓存
-		$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize);
-		$.setjson($.Cache, `@DualSubs.Cache.${$.Platform}`);
 		body = JSON.stringify(data);
 	};
 })()
@@ -144,6 +148,7 @@ async function getCaptions(platform = "", cache = {}, tracklist = {}, langCode =
 	async function setCaption(cache = {}, captionTrack = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set captions Data`, "");
 		let Caption = {
+			"fake": (captionTrack == {}) ? true : false,
 			"baseUrl": captionTrack?.baseUrl ?? `${cache.baseURL}&lang=${langCode}`,
 			"name": {
 				"simpleText": captionTrack?.Name?.simpleText ?? DataBase?.translationLanguages?.[DataBase.translationLanguages.findIndex(item => (item.languageCode == langCode))].languageName?.simpleText ?? langCode
@@ -158,14 +163,46 @@ async function getCaptions(platform = "", cache = {}, tracklist = {}, langCode =
 	};
 };
 
-
 // Function 5
 // Set DualSubs Subtitle Options
-async function setOptions(json = {}, languages1 = [], languages2 = [], types = []) {
-	for await (var obj1 of languages1) {
-		for await (var obj2 of languages2) { }
-	}
-}
+async function setOptions(Platform = "", Tracklist = {}, Languages1 = [], Languages2 = [], Types = [], Standard = true, Type = "") {
+	// 兼容性设置
+	Types = (Standard == true) ? Types : [Type];
+	$.log(`⚠ ${$.name}, Set DualSubs Subtitle Options`, `Types: ${Types}`, "");
+	for await (var obj1 of Languages1) {
+		for await (var obj2 of Languages2) {
+			Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+			if (Options.length !== 0) {
+				// 插入字幕选项
+				Tracklist.captionTracks = Tracklist.captionTracks.concat(Options);
+			};
+		};
+	};
+	return Tracklist
+
+	/***************** Fuctions *****************/
+	// Function 5.1
+	// Get DualSubs Subtitle Options
+	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
+		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
+		return types.map(type => {
+			// 复制此语言选项
+			let newCaption = (!obj1?.fake) ? JSON.parse(JSON.stringify(obj1))
+				: JSON.parse(JSON.stringify(obj2))
+			// 修改名称
+			newCaption.name.simpleText = `\"${obj1.name.simpleText}/${obj2.name.simpleText} [${type}]\"`
+			// 修改vssId
+			newCaption.vssId = `\"${obj1.vssId} ${obj2.vssId} ${type}\"`
+			// 修改语言代码
+			newCaption.languageCode = `\"${obj1.languageCode} ${obj2.languageCode} ${type}\"`
+			// 修改链接
+			newCaption.baseUrl = (newCaption.baseUrl.includes("?")) ? `\"${newCaption.baseUrl}&dualsubs=${type}\"`
+				: `\"${newCaption.baseUrl}?dualsubs=${type}\"`
+			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newCaption: ${JSON.stringify(newCaption)}`, "");
+			return newCaption
+		})
+	};
+};
 
 /***************** Env *****************/
 // prettier-ignore

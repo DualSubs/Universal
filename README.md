@@ -1,6 +1,6 @@
 # 🍿️ DualSubs
 Dual Subtitles for Streaming Media  
-流媒体自定义多字幕  
+流媒体平台字幕增强及双语模块  
 
 <font size=3>**Powered by [Chavy](https://github.com/chavyleung)‘s [Env.js](https://github.com/chavyleung/scripts/blob/master/Env.js) and [BoxJs](https://chavyleung.gitbook.io/boxjs/)**</font>
 
@@ -40,7 +40,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
      * `西班牙文（自动）`回退顺序为`Español (Latinoamérica) [CC]`-`Español (Latinoamérica)`-`Español (España) [CC]`-`Español (España)`
   7. 自定义字幕匹配时间戳容差值
   8. 自定义外挂字幕时间戳偏移量
-  9.  翻译字幕模式支持`逐段翻译`（默认）和`逐行翻译`
+  9. 翻译字幕模式支持`逐段翻译`（默认）和`逐行翻译`
      * `逐段翻译`对于大分段的字幕文件的平台（如：HBO Max）响应更快，翻译效果更好，利于限制使用频率的翻译API。
 
 ## 使用说明
@@ -96,7 +96,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 | HBO Max | [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4] | [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422) |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   | [☑️](https://play.hbomax.com)[^4] |        |
 |  Hulu   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   N/A   |   N/A   | [🔜](https://www.hulu.com/)[^6] |        |
 |Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   N/A   |   ❓   |   ❓   |        |
-|Discovery+<br>Philippines|   ❓   |   ❓   |   ❓   |   ❓   |   [✅](https://www.discoveryplus.com/ph/)   |        |
+|Discovery+<br>Philippines|   [✅](https://apps.apple.com/ph/app/discovery-stream-tv-shows/id1574345720)   |   ❓   |   ❓   |   ❓   |   [✅](https://www.discoveryplus.com/ph/)   |        |
 |         |         |         |         |         |         |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。

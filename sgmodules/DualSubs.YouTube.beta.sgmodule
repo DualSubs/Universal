@@ -1,5 +1,5 @@
 #!name= 🍿️ DualSubs for YouTube
-#!desc= (BETA) Dual Subtitiles for YouTube
+#!desc= (BETA) YouTube字幕增强及双语模块
 
 [Script]
 DualSubs.YouTube.Player = type=http-response, pattern=^https?:\/\/www\.youtube\.com\/youtubei\/v1\/player(\?.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.Player.beta.js

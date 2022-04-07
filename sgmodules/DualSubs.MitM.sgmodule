@@ -1,5 +1,5 @@
 #!name= 🍿️ DualSubs for Streaming Media Platform
-#!desc= (MitM) Dual Subtitiles for Streaming Media Platform
+#!desc= (MitM) 流媒体平台字幕增强及双语模块
 
 [General]
 force-http-engine-hosts = %APPEND% *.youtube.com:443, *.hls.row.aiv-cdn.net, *-a.akamaihd.net, *.cloudfront.net, assets.huluim.com

@@ -20,6 +20,33 @@ var body = $response.body
 /***************** Processing *****************/
 !(async () => {
 	[$.Platform, $.Verify, $.Advanced, $.Settings, $.Cache] = await setENV(url, DataBase);
+	if ($.Settings.Switch) {
+		// 创建双语字幕JSON
+		let DualSub = {};
+		if (processQuery(url, "tlang")) { // 已选
+			let request = {
+				"url":url.replace(/(&tlang=.*)/, ""), // 原字幕
+				"headers": headers
+			}
+			// 获取序列化字幕
+			let SecondSub = JSON.parse(body);
+			let OriginSub = await $.http.get(request, response => JSON.parse(response.body));
+			DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, $.Settings.Tolerance, [$.Settings.Position]);
+		} else { // 未选
+			let langcode = DataBase?.Languages?.[$.Platform]?.[$.Settings.Language[0]]
+			let request = {
+				"url": processQuery(url, "tlang", langcode), // 翻译字幕
+				"headers": headers
+			}
+			// 获取序列化字幕
+			let OriginSub = JSON.parse(body);
+			let SecondSub = await $.http.get(request, response => JSON.parse(response.body));
+			DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, $.Settings.Tolerance, [$.Settings.Position]);
+		}
+		DualSub = JSON.stringify(DualSub)
+		body = DualSub
+		$.done({ body })
+	}
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => $.done({ body }))
@@ -62,6 +89,114 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
 	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
+};
+
+// process Query URL
+// 查询并替换自身,url为链接,variable为参数,parameter为新值(如果有就替换)
+// https://github.com/VirgilClyne/iRingo/blob/main/js/QueryURL.js
+function processQuery(url, variable, parameter) {
+    //console.log(`processQuery, INPUT: variable: ${variable}, parameter: ${parameter}`, url, ``);
+    if (url.indexOf("?") != -1) {
+        if (parameter == undefined) {
+            //console.log(`getQueryVariable, INPUT: variable: ${variable}`, ``);
+            var query = url.split("?")[1];
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) {
+                    //console.log(`getQueryVariable, OUTPUT: ${variable}=${pair[1]}`, ``);
+                    return pair[1];
+                }
+            }
+            console.log(`getQueryVariable, ERROR: No such variable: ${variable}, Skip`, ``);
+            return false;
+        } else {
+            //console.log(`replaceQueryParamter, INPUT: ${variable}=${parameter}, Start`, ``);
+            var re = new RegExp('(' + variable + '=)([^&]*)', 'gi')
+            var newUrl = url.replace(re, variable + '=' + parameter)
+            //console.log(`replaceQueryParamter, OUTPUT: ${variable}=${parameter}`, newUrl, ``);
+            return newUrl
+        };
+    } else {
+        console.log(`processQuery, ERROR: No such URL ,Skip`, url, ``);
+        return url;
+    }
+};
+
+// Switch Language Code
+async function switchLangCode(platform = "", langCode = "", database) {
+	$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
+	// 自动语言转换
+	let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
+		: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
+			: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
+				: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
+					: [langCode]
+	langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[platform]?.[langcode]}\"`)
+	$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+	return langcodes
+};
+
+/** 
+ * Combine Dual Subtitles
+ * @param {Object} Sub1 - Sub1
+ * @param {Object} Sub2 - Sub2
+ * @param {Number} Offset - Offset
+ * @param {Number} Tolerance - Tolerance
+ * @param {Array} options - options
+ * @return {Promise<*>}
+ */
+ async function CombineDualSubs(Sub1 = { events: [] }, Sub2 = { events: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
+	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
+	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`let DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	// 有序数列 用不着排序
+	//FirstSub.body.sort((x, y) => x - y);
+	//SecondSub.body.sort((x, y) => x - y);
+	const length1 = Sub1.events.length, length2 = Sub2.events.length;
+	let index0 = 0, index1 = 0, index2 = 0;
+	// 双指针法查找两个数组中的相同元素
+	while (index1 < length1 && index2 < length2) {
+		const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs + Offset;
+		const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
+		//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+		//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+		//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+			index0 = options.includes("Reverse") ? index2 : index1;
+			// 多行字幕交替插入
+			/*
+			if (Array.isArray(text1) && Array.isArray(text2)) {
+				let a = options.includes("Reverse") ? text2 : text1;
+				let b = options.includes("Reverse") ? text1 : text2;
+				let c = [];
+				let length = a.length > b.length ? a.length : b.length;
+				for (let j = 0; j < length; j++) {
+					if (a[j]) c.push(a[j]);
+					if (b[j]) c.push(b[j]);
+				}
+				DualSub.body[index0].text = c;
+			} else 
+			*/
+			DualSub.events[index0]?.segs[0].utf8 = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
+			//DualSub.body[index0].tStartMs = options.includes("Reverse") ? timeStamp2 : timeStamp1;
+			//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
+			//index1++;
+			//index2++;
+		}
+		if (timeStamp2 > timeStamp1) {
+			index1++;
+		} else if (timeStamp2 < timeStamp1) {
+			index2++;
+		} else {
+			index1++
+			index2++
+		}
+	}
+	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	return DualSub;
 };
 
 /***************** Env *****************/

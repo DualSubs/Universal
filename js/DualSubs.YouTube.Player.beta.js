@@ -15,6 +15,8 @@ const url = $request.url
 const method = $request.method
 if (method == "OPTIONS") $.done();
 
+const headers = $request.headers
+
 var body = $response.body
 
 /***************** Processing *****************/

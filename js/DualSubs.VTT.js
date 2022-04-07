@@ -57,7 +57,7 @@ let body = $response.body
 				}
 			} else if (type == "External") {
 				$.log(`🚧 ${$.name}`, "外挂字幕", "");
-				request.url = $.Settings.ExternalURL
+				let request = { "url": $.Settings.ExternalURL };
 				let SecondVTT = await getWebVTT(request);
 				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
 			}

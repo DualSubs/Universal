@@ -199,7 +199,7 @@ async function setOptions(Platform = "", Tracklist = {}, Languages1 = [], Langua
 			newCaption.name.simpleText = `${obj1.name.simpleText}`
 			// 修改vssId
 			//newCaption.vssId = `${obj1.vssId} ${obj2.vssId} ${type}`
-			newCaption.vssId = `c${obj1.vssId}`
+			newCaption.vssId = `${obj1.vssId}`
 			// 修改语言代码
 			//newCaption.languageCode = `${obj1.languageCode} ${obj2.languageCode} ${type}`
 			newCaption.languageCode = `${obj1.languageCode}`

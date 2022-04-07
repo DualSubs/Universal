@@ -57,7 +57,13 @@ let body = $response.body
 				}
 			} else if (type == "External") {
 				$.log(`🚧 ${$.name}`, "外挂字幕", "");
-				let request = { "url": $.Settings.ExternalURL };
+				let request = {
+					"url": $.Settings.ExternalURL,
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+					}
+				};
 				let SecondVTT = await getWebVTT(request);
 				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
 			}

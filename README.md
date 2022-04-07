@@ -14,6 +14,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   - [功能列表](#功能列表)
   - [使用说明](#使用说明)
   - [安装链接](#安装链接)
+    - [🍿️ DualSubs for Streaming Media Platform](#️-dualsubs-for-streaming-media-platform)
   - [How To](#how-to)
   - [支持列表](#支持列表)
 
@@ -57,10 +58,11 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
        * [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
 
 ## 安装链接
-  * Loon: [DualSubs.plugin](./plugins/DualSubs.plugin?raw=true "🍿️ DualSubs")
-  * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs")
-  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodules/DualSubs.sgmodule?raw=true "🍿️ DualSubs")
-  * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs")
+### 🍿️ DualSubs for Streaming Media Platform
+  * Loon: [DualSubs.plugin](./plugins/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodules/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
 
 ## How To
   * [在Apple TV (tvOS) 上添加MitM证书](https://github.com/DualSubs/DualSubs/wiki/在Apple-TV-(tvOS)-上添加MitM证书)
@@ -85,7 +87,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 |Prime Video| [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^5] |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   | [🔜](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^3] |   [🔜](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)[^3] | [🔜](https://www.primevideo.com)[^3] |        |
 | HBO Max | [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4] | [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422) |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   | [☑️](https://play.hbomax.com)[^4] |        |
 |  Hulu   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   N/A   |   N/A   | [🔜](https://www.hulu.com/)[^6] |        |
-|Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   ❓   |   N/A   |   ❓   |   ❓   |        |
+|Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   N/A   |   ❓   |   ❓   |        |
 |Discovery+<br>Philippines|   ❓   |   ❓   |   ❓   |   ❓   |   [✅](https://www.discoveryplus.com/ph/)   |        |
 |         |         |         |         |         |         |        |
 

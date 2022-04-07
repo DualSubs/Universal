@@ -15,6 +15,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   - [使用说明](#使用说明)
   - [安装链接](#安装链接)
     - [🍿️ DualSubs for Streaming Media Platform](#️-dualsubs-for-streaming-media-platform)
+    - [🍿️ DualSubs for Youtube](#️-dualsubs-for-youtube)
   - [How To](#how-to)
   - [支持列表](#支持列表)
 
@@ -63,6 +64,13 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodules/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
+
+### 🍿️ DualSubs for Youtube
+  * 当前仅支持Web端有字幕视频的自动翻译及全翻译语言解锁
+  * Loon: [DualSubs.YouTube.plugin](./plugins/DualSubs.YouTube.plugin?raw=true "🍿️ DualSubs for Youtube")
+  * Quantumult X: [DualSubs.YouTube.qxrewrite](./qxrewrite/DualSubs.YouTube.qxrewrite?raw=true "🍿️ DualSubs for Youtube")
+  * Surge (Shadowrocket): [DualSubs.YouTube.sgmodule](./sgmodules/DualSubs.YouTube.sgmodule?raw=true "🍿️ DualSubs for Youtube")
+  * Stash: [DualSubs.YouTube.stoverride](./stoverride/DualSubs.YouTube.stoverride?raw=true "🍿️ DualSubs for Youtube")
 
 ## How To
   * [在Apple TV (tvOS) 上添加MitM证书](https://github.com/DualSubs/DualSubs/wiki/在Apple-TV-(tvOS)-上添加MitM证书)

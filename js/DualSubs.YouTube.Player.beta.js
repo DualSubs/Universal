@@ -151,12 +151,13 @@ async function getCaptions(platform = "", cache = {}, tracklist = {}, langCode =
 			"fake": (captionTrack == {}) ? true : false,
 			"baseUrl": captionTrack?.baseUrl ?? `${cache.baseURL}&lang=${langCode}`,
 			"name": {
-				"simpleText": captionTrack?.Name?.simpleText ?? DataBase?.translationLanguages?.[DataBase.translationLanguages.findIndex(item => (item.languageCode == langCode))].languageName?.simpleText ?? langCode
+				"simpleText": captionTrack?.Name?.simpleText ?? langCode
 			},
 			"vssId": captionTrack?.vssId ?? `.${langCode}`,
 			"languageCode": langCode,
 			"isTranslatable": true
 		};
+		if (DataBase.translationLanguages.findIndex(item => item.languageCode == langCode) !== -1) Caption.name.simpleText = DataBase?.translationLanguages?.[DataBase.translationLanguages.findIndex(item => item.languageCode == langCode)].languageName?.simpleText
 		if (captionTrack.kind) Caption.kind = captionTrack?.kind ?? "asr";
 		$.log(`🎉 ${$.name}, Set Captions Data`, `Caption: ${JSON.stringify(Caption)}`, "");
 		return Caption

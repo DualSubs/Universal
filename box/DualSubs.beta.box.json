@@ -422,6 +422,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Apple_TV.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Apple_TV.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -445,14 +461,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Apple_TV.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Apple_TV.Tolerance",
@@ -674,6 +682,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Apple_TV_Plus.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -697,14 +721,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Apple_TV_Plus.Tolerance",
@@ -925,6 +941,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Apple_Fitness.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Apple_Fitness.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -948,14 +980,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Apple_Fitness.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Apple_Fitness.Tolerance",
@@ -1176,6 +1200,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Disney_Plus.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Disney_Plus.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -1199,14 +1239,6 @@
 					"type": "number",
 					"placeholder": "5",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Disney_Plus.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Disney_Plus.Tolerance",
@@ -1427,6 +1459,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Prime_Video.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Prime_Video.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -1450,14 +1498,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Prime_Video.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Prime_Video.Tolerance",
@@ -1747,6 +1787,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.HBO_Max.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.HBO_Max.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -1770,14 +1826,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.HBO_Max.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.HBO_Max.Tolerance",
@@ -1998,6 +2046,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Hulu.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Hulu.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -2021,14 +2085,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Hulu.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Hulu.Tolerance",
@@ -2249,6 +2305,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Paramount_Plus.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Paramount_Plus.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -2272,14 +2344,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Paramount_Plus.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Paramount_Plus.Tolerance",
@@ -2500,6 +2564,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -2523,14 +2603,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Tolerance",
@@ -2751,6 +2823,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Peacock_TV.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Peacock_TV.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -2774,14 +2862,6 @@
 					"type": "number",
 					"placeholder": "2",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Peacock.Settings.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Peacock.Settings.Tolerance",
@@ -3002,6 +3082,22 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Settings.Netflix.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.Netflix.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -3025,14 +3121,6 @@
 					"type": "number",
 					"placeholder": "3",
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
-				},
-				{
-					"id": "@DualSubs.Settings.Netflix.Offset",
-					"name": "时间偏移量",
-					"val": 0,
-					"type": "number",
-					"placeholder": "0",
-					"desc": "单位：毫秒(ms)，正负整数，时间偏移量仅对外部字幕生效"
 				},
 				{
 					"id": "@DualSubs.Settings.Netflix.Tolerance",
@@ -3306,6 +3394,22 @@
 					]
 				},
 				{
+					"id": "@DualSubs.Settings.YouTube.ExternalURL",
+					"name": "外部字幕文件URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.Offset",
+					"name": "外部字幕时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
 					"id": "@DualSubs.Settings.YouTube.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
@@ -3321,6 +3425,22 @@
 						}
 					],
 					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 3,
+					"type": "number",
+					"placeholder": "3",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
 				}
 			],
 			"author": "@DualSubs",

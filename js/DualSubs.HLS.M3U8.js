@@ -197,7 +197,8 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
 			// 修改语言代码
 			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu") ? `\"${obj1.Language} ${obj2.Language} ${type}\"`
-				: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
+				: (platform == "Discovery_Plus_Ph") ? `\"${obj1.Language} ${type}\"`
+					: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : (!standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language} ${type}\"`
 			// 修改链接

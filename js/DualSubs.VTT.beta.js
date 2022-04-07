@@ -56,7 +56,7 @@ let body = $response.body
 					DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, $.Settings.Tolerance, [$.Settings.Position]);
 				}
 			} else if (type == "External") {
-				$.log(`🚧 ${$.name}`, "外挂字幕", "");
+				$.log(`🚧 ${$.name}, 外挂字幕`, "");
 				let request = {
 					"url": $.Settings.ExternalURL,
 					"headers": {
@@ -65,6 +65,7 @@ let body = $response.body
 					}
 				};
 				let SecondVTT = await getWebVTT(request);
+				$.log(`🚧 ${$.name}, 外挂字幕`, `SecondVTT: ${JSON.stringify(SecondVTT)}`, "");
 				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
 			}
 			async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
@@ -94,8 +95,7 @@ let body = $response.body
 			};
 			async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
 		};
-		DualSub = VTT.stringify(DualSub)
-		body = DualSub
+		body = VTT.stringify(DualSub);
 		$.done({ body })
 	}
 })()
@@ -260,13 +260,13 @@ async function Translator(type = "", source = "", target = "", text = "") {
 				"User-Agent": "DualSubs",
 				"Content-Type": "application/json; charset=utf-8"
 			};
-			request.body = {
+			request.body = JSON.stringify({
 				"q": text,
 				"source": DataBase.Languages.Google[source],
 				"target": DataBase.Languages.Google[target],
 				"format": "html",
 				//"key": $.Verify.GoogleCloud?.Key
-			};
+			});
 		} else if (type == "Bing") {
 			// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
 			const BaseURL = ($.Verify.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
@@ -279,13 +279,13 @@ async function Translator(type = "", source = "", target = "", text = "") {
 				"Content-type": "application/x-www-form-urlencoded",
 				"Refer": "https://www.bing.com/",
 			};
-			request.body = data = {
+			request.body = JSON.stringify({
 				"fromLang": "auto-detect",
 				//"text": '%s' % trans,
 				"text": text,
 				//"from": DataBase.Languages.Microsoft[source],
 				"to": DataBase.Languages.Microsoft[target]
-			};
+			});
 		} else if (type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 			// https://docs.azure.cn/zh-cn/cognitive-services/translator/

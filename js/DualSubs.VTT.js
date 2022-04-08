@@ -24,8 +24,6 @@ delete headers["Host"]
 delete headers["Connection"]
 delete headers["Range"]
 
-let body = $response.body
-
 /***************** Processing *****************/
 !(async () => {
 	[$.Platform, $.Verify, $.Advanced, $.Settings, $.Cache] = await setENV(url, DataBase);
@@ -34,7 +32,7 @@ let body = $response.body
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
 		if (Indices.Index == -1) $.done();
 		// 获取序列化VTT
-		let OriginVTT = VTT.parse(body);
+		let OriginVTT = VTT.parse($response.body);
 		// 创建双语字幕JSON
 		let DualSub = {};
 		// 获取类型
@@ -92,12 +90,17 @@ let body = $response.body
 			};
 			async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
 		};
-		body = VTT.stringify(DualSub);
-		$.done({ body })
+		$response.body = VTT.stringify(DualSub);
+		if ($response.headers["Content-Range"]) {
+			let length = byteLength($response.body);
+			$.log(`🚧 ${$.name}, Content-Range`, `length: ${length}`, "")
+			$response.headers["Content-Range"] = `bytes 0-${length - 1}/${length}`
+		}
+		$.done($response)
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done({ body }))
+	.finally(() => $.done($response))
 
 /***************** Fuctions *****************/
 // Function 1
@@ -483,3 +486,6 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 
 // https://github.com/DualSubs/WebVTT/blob/main/WebVTT.embedded.min.js
 function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","singleLine","\n"]){this.name="WebVTT v1.6.1",this.opts=e,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.vtt=new String,this.txt=new String,this.json={headers:{},CSS:{},body:[]}}parse(e=this.vtt){const t=this.opts.includes("milliseconds")?/^((?<srtNum>\d+)[\r\n])?(?<timeLine>(?<startTime>(\d\d:)?\d\d:\d\d[\.,]\d\d\d) --> (?<endTime>(\d\d:)?\d\d:\d\d[\.,]\d\d\d)) ?(?<options>.+)?[^](?<text>[\s\S]*)$/:/^((?<srtNum>\d+)[\r\n])?(?<timeLine>(?<startTime>(\d\d:)?\d\d:\d\d)[\.,]\d\d\d --> (?<endTime>(?:\d\d:)?\d\d:\d\d)(?:\.|,)\d\d\d) ?(?<options>.+)?[^](?<text>[\s\S]*)$/;let i={headers:e.match(/^(?<fileType>WEBVTT)?[^](?<Xoptions>.+[^])*/)?.groups??null,CSS:e.match(/^(?<Style>STYLE)[^](?<Boxes>.*::cue.*(\(.*\))?((\n|.)*}$)?)/m)?.groups??null,body:e.split(/[\r\n]{2,}/).map((e=>e.match(t)?.groups??""))};return i.body=i.body.filter(Boolean),i.body=i.body.map(((e,t)=>{if(e.index=t,"WEBVTT"!==i.headers?.fileType&&(e.timeLine=e.timeLine.replace(",","."),e.startTime=e.startTime.replace(",","."),e.endTime=e.endTime.replace(",",".")),this.opts.includes("timeStamp")){let t=e.startTime.replace(/(.*)/,"1970-01-01T$1Z");e.timeStamp=this.opts.includes("milliseconds")?Date.parse(t):Date.parse(t)/1e3}return this.opts.includes("singleLine")?e.text=e.text.replace(/[\r\n]/," "):this.opts.includes("multiLine")&&(e.text=e.text.split(/[\r\n]/)),e})),i}stringify(e=this.json){return[e.headers=e.headers?.Xoptions?[e.headers?.fileType??"WEBVTT",e.headers?.Xoptions??null].join(this.newLine):e.headers?.fileType??"WEBVTT",e.CSS=e.CSS?.Style?[e.CSS.Style,e.CSS.Boxes].join(this.newLine):null,e.body=e.body.map((e=>(Array.isArray(e.text)&&(e.text=e.text.join(this.newLine)),e=`${e.timeLine} ${e?.options??""}${this.newLine}${e.text}`))).join(this.newLine+this.newLine)].join(this.newLine+this.newLine)}json2txt(e=this.json){return e.body.map(((e,t)=>[t,e.timeStamp,e.text].join(this.newLine))).join(this.newLine+this.newLine)}txt2json(e=this.txt){const t=/^(?<srtNum>\d+)[^](?<timeStamp>\d+)[^](?<text>.*[^]*)$/;return{headers:null,CSS:null,body:e.split(/[\r\n]{2,}/).map((e=>e.match(t)?.groups??""))}}}(e)}
+
+// https://stackoverflow.com/posts/23329386/revisions
+function byteLength(t){for(var e=t.length,n=t.length-1;n>=0;n--){var r=t.charCodeAt(n);r>127&&r<=2047?e++:r>2047&&r<=65535&&(e+=2),r>=56320&&r<=57343&&n--}return e}

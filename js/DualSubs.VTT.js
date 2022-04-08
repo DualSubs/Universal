@@ -97,7 +97,7 @@ let body = $response.body
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done())
+	.finally(() => $.done({ body }))
 
 /***************** Fuctions *****************/
 // Function 1

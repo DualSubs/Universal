@@ -124,7 +124,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	};
 	// Function 4.2
 	// Get Absolute Path
-	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] + URL };
+	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 	// Function 5.1
 	// Set EXT-X-MEDIA Data
 	async function setMEDIA(data = {}, langCode = "") {

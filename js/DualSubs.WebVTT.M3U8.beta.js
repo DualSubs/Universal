@@ -120,7 +120,7 @@ async function getVTTs(platform, url) {
 	})
 	else return null;
 	/***************** Fuctions *****************/
-	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:.+)\/)/i)?.[0] + URL };
+	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 };
 
 // Function 4

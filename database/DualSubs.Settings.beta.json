@@ -221,6 +221,9 @@
 			"ZH",
 			"EN"
 		],
-		"Position": "Forward"
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Offset": 0,
+		"Tolerance": 1000
 	}
 }

@@ -45,7 +45,9 @@ let body = $response.body
 			$.setjson($.Cache, `@DualSubs.Cache.${$.Platform}`);
 		};
 		// WebVTT.m3u8加参数
-		body  = await setWebVTTm3u8(body, type)
+		body = await setWebVTTm3u8(body, type)
+		// 删除BYTERANGE
+		body = body.replace(/#EXT-X-BYTERANGE:.*/m, "");
 		$.done({ body })
 	}
 })()

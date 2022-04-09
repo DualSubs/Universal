@@ -90,6 +90,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 
 |  供应商  |iOS/iPadOS|  tvOS  |  macOS  | Appx | Web | 备注 |
 |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
+| YouTube |   🔜[^7]   |   ❌[^8]   |   N/A   |   N/A   |   ✅   |        |
 |Apple TV+|   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   ✅   |   N/A   | [✅](https://tv.apple.com/hk/)[^2] | 指Apple TV app中的订阅内容 |
 |Apple TV | [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2] | [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2] | ✅[^2] |   N/A   |   N/A   | 指Apple TV app中的买断或租借内容[^1] |
 |Apple Fitness| [✅](https://apps.apple.com/cn/app/fitness/id1208224953)[^2] | ✅[^2] |   N/A   |   N/A   |   N/A   | [^1] |
@@ -107,3 +108,5 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   [^4]: 此平台字幕选项为硬编码，需要在BoxJs中对应平台的`字幕类型（兼容）`选项选择一个替换用字幕类型
   [^5]: 采用旧版`AVPlayerViewController`播放器UI界面，自定义字幕名称会被强制显示为固定名称，比如多个名称为`简体中文`的选项，依次为原始字幕选项及BoxJs中开启的字幕选项，除显示的名称固定外，字幕选项功能正常。
   [^6]: 此平台字幕采用[SAMI](https://docs.microsoft.com/zh-cn/previous-versions/windows/desktop/dnacc/understanding-sami-1.0?redirectedfrom=MSDN)格式字幕，暂不支持
+  [^7]: 此平台使用protobuf序列化数据，需要等待反序列化完成
+  [^8]: 此平台并非使用HTTPS或HTTPS over TCP传输数据流，暂无MitM修改方法

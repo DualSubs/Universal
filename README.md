@@ -75,8 +75,9 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   * Stash: [DualSubs.YouTube.stoverride](./stoverride/DualSubs.YouTube.stoverride?raw=true "🍿️ DualSubs for Youtube")
 
 ## How To
-  * [在Apple TV (tvOS) 上添加MitM证书](https://github.com/DualSubs/DualSubs/wiki/在Apple-TV-(tvOS)-上添加MitM证书)
-  * [在BoxJs中清除DualSubs的储存数据](https://github.com/DualSubs/DualSubs/wiki/在BoxJs中清除DualSubs的储存数据)
+  * [快速创建拥有代理服务器设置及MitM证书的描述文件](https://github.com/DualSubs/DualSubs/wiki/快速创建拥有代理服务器设置及MitM证书的描述文件)
+  * [在Apple TV (tvOS) 上添加描述文件并信任证书](https://github.com/DualSubs/DualSubs/wiki/在Apple-TV-(tvOS)-上添加MitM证书)
+  * [在BoxJs中清除DualSubs的设置或缓存](https://github.com/DualSubs/DualSubs/wiki/在BoxJs中清除DualSubs的储存数据)
 
 ## 支持列表
   * 图例:

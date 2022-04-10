@@ -2,8 +2,8 @@
 #!desc= (BETA) YouTube字幕增强及双语模块
 
 [Script]
-DualSubs.YouTube.Player = type=http-response, pattern=^https?:\/\/www\.youtube\.com\/youtubei\/v1\/player(\?.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.Player.beta.js
-DualSubs.YouTube.TimedText = type=http-response, pattern=^https?:\/\/www\.youtube\.com\/api\/timedtext(\?.*), requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.TimedText.beta.js
+DualSubs.YouTube.Player = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.Player.beta.js
+DualSubs.YouTube.TimedText = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*), requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.TimedText.beta.js
 
 [MITM]
-hostname = %APPEND% www.youtube.com
+hostname = %APPEND% www.youtube.com, m.youtube.com

@@ -1,16 +1,17 @@
 name: 🍿️ DualSubs for YouTube
-desc: (0.2.0) YouTube字幕增强及双语模块
+desc: (0.2.1) YouTube字幕增强及双语模块
 
 http:
   mitm:
     - "www.youtube.com"
+    - "m.youtube.com"
   script:
-    - match: ^https?:\/\/www\.youtube\.com\/youtubei\/v1\/player(\?.*)
+    - match: ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)
       name: DualSubs.YouTube.Player
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/www\.youtube\.com\/api\/timedtext(\?.*)
+    - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)
       name: DualSubs.YouTube.TimedText
       type: response
       require-body: false

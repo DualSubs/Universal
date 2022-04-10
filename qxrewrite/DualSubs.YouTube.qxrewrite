@@ -1,11 +1,11 @@
 #!name= 🍿️ DualSubs for YouTube
-#!desc= (0.2.0) YouTube字幕增强及双语模块
+#!desc= (0.2.1) YouTube字幕增强及双语模块
 
 #[Script]
 # DualSubs.YouTube.Player
-^https?:\/\/www\.youtube\.com\/youtubei\/v1\/player(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
+^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
 # DualSubs.YouTube.TimedText
-^https?:\/\/www\.youtube\.com\/api\/timedtext(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
+^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
 
 #[MITM]
-hostname = www.youtube.com
+hostname = www.youtube.com, m.youtube.com

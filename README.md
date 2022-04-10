@@ -13,6 +13,8 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 - [🍿️ DualSubs](#️-dualsubs)
   - [功能列表](#功能列表)
   - [使用说明](#使用说明)
+    - [安装说明](#安装说明)
+    - [配置说明](#配置说明)
   - [安装链接](#安装链接)
     - [🍿️ DualSubs for Streaming Media Platform](#️-dualsubs-for-streaming-media-platform)
     - [🍿️ DualSubs for Youtube](#️-dualsubs-for-youtube)
@@ -44,19 +46,34 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
      * `逐段翻译`对于大分段的字幕文件的平台（如：HBO Max）响应更快，翻译效果更好，利于限制使用频率的翻译API。
 
 ## 使用说明
+### 安装说明
   * 直接使用
     * 采用默认配置
       * 默认主语言`中文（自动）`，副语言`英文（自动）`
       * 提供中文的平台仅启用`官方字幕`
       * 未提供中文的平台仅启用`Google翻译`
   * 配合`BoxJs`及订阅使用
-    1. 安装`BoxJs`插件:
+    1. 安装`BoxJs`插件并更新引用资源或脚本:
        * Loon: [boxjs.rewrite.loon.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.plugin "BoxJs")
        * Quantumult X: [boxjs.rewrite.quanx.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf "BoxJs")
        * Surge (Shadowrocket): [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
        * Stash: [boxjs.rewrite.stash.stoverride](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.stoverride "BoxJs")
-    2. 浏览器访问[BoxJs.com](http://boxjs.com)，在`订阅`页面点击`+`添加本项目订阅:
+    2. 浏览器访问[BoxJs.com](http://boxjs.com)，在[`订阅`](http://boxjs.com/#/sub)页面点击`+`添加本项目订阅:
        * [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
+### 配置说明
+  * 配合`BoxJs`及订阅使用
+    1. 浏览器访问[BoxJs.com](http://boxjs.com)
+    2. 在[`应用`](http://boxjs.com/#/app)页面点开`DualSubs`折叠
+    3. 根据需要配置每个流媒体平台的设置
+       1. `字幕类型`为多选框，多选保存后，对应APP中的`字幕`选项也会增加对应的字幕选项
+       2. `首选语言`为主语言，对应第一行字幕语言
+       3. `次选语言`为副语言，对应第二行字幕语言
+       4. 需在`字幕类型`中勾选`外部字幕`,`外部字幕文件URL`中填写的字幕文件才会生效（需要为绝对路径，支持WebVTT, SRT）
+       5. `外部字幕偏移量`为内置字幕时间轴矫正功能，时间单位为毫秒，正负整数，可以用来省略第三方字幕转换器
+       6. `播放记录缓存数量`提供设置数量的复数缓存空间，当你的设备同时为局域网内多个设备提供流媒体平台字幕增强功能时，保证字幕数据不会错乱，同时对于`Disney+`这种自带长期缓存的流媒体平台，提供更好的兼容性
+       7. `时间戳公差`为`官方字幕`或`外部字幕`匹配时，每句字幕匹配时的时间容差，因同平台同视频不同语言字幕往往交付不同翻译人员进行翻译，相同台词的时间戳可能有0.5秒-1.5秒乃至更多的误差，或者一句台词对应另外一种语言多句台词的情况，`时间戳公差`值会将此误差范围的台词视为同一句台词进行合并，且支持一句台词对多句台词合并
+    4. (可选)在`DualSubs: Verify`中配置第三方API验证信息
+    5. (可选)在`DualSubs: Advanced Options`中配置高级设置
 
 ## 安装链接
 ### 🍿️ DualSubs for Streaming Media Platform

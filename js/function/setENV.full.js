@@ -44,8 +44,9 @@ async function setENV(url, database) {
 	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
 	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
 	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	Settings.External.Offset = parseInt(Settings.Offset, 10) // BoxJs字符串转数字
+	Settings.External.ShowOnly = JSON.parse(Settings.External.ShowOnly) //  BoxJs字符串转Boolean
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
-	Settings.Offset = parseInt(Settings.Offset, 10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Cache *****************/

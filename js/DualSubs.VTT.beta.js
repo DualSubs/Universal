@@ -56,7 +56,7 @@ delete headers["Range"]
 			} else if (type == "External") {
 				$.log(`🚧 ${$.name}, 外挂字幕`, "");
 				let request = {
-					"url": $.Settings.ExternalURL,
+					"url": $.Settings.External.URL,
 					"headers": {
 						"Accept": "*/*",
 						"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
@@ -64,7 +64,8 @@ delete headers["Range"]
 				};
 				let SecondVTT = await getWebVTT(request);
 				$.log(`🚧 ${$.name}, 外挂字幕`, `SecondVTT: ${JSON.stringify(SecondVTT)}`, "");
-				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.Offset, $.Settings.Tolerance, [$.Settings.Position]);
+				DualSub = ($.Settings.External.ShowOnly) ? SecondVTT
+					: await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.External.Offset, $.Settings.Tolerance, [$.Settings.Position]);
 			}
 			async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
 		} else {

@@ -79,7 +79,7 @@ delete headers["Range"]
 				}));
 			} else { // Part 逐段翻译 
 				let Full = await Promise.all(DualSub.body.map(async item => item.text));
-				let length = (type == "GoogleCloud") ? 127 : (type == "Azure") ? 99 : (type == "Google") ? 63 : (type == "DeepL") ? 49 : 48;
+				let length = (type == "Google") ? 127 : (type == "GoogleCloud") ? 127 : (type == "Azure") ? 99 : (type == "DeepL") ? 49 : 48;
 				let Parts = await chunk(Full, length);
 				Parts = await Promise.all(Parts.map(async Part => {
 					return await retry(Translator, [type, $.Settings.Languages[1], $.Settings.Languages[0], Part], $.Advanced.Translator.Times, $.Advanced.Translator.Interval, $.Advanced.Translator.Exponential); // 3, 100, true
@@ -379,8 +379,8 @@ async function Translator(type = "", source = "", target = "", text = "") {
 							texts = texts.join("").split(/\n\n/);
 							resolve(texts);
 						} else throw new Error(response);
-					} finally {
-						resolve();
+					} catch (e) {
+						throw e;
 					}
 				});
 			} else {
@@ -396,8 +396,8 @@ async function Translator(type = "", source = "", target = "", text = "") {
 							else if (type == "DeepL") texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
 							resolve(texts);
 						} else throw new Error(response);
-					} finally {
-						resolve();
+					} catch (e) {
+						throw e;
 					}
 				});
 			};

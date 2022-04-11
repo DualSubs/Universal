@@ -422,20 +422,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Apple_TV.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Apple_TV.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Apple_TV.Position",
@@ -547,7 +554,7 @@
 						},
 						{
 							"key": "External",
-							"label": "外部链接"
+							"label": "外挂字幕"
 						}
 					]
 				},
@@ -682,20 +689,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Apple_TV_Plus.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Apple_TV_Plus.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Apple_TV_Plus.Position",
@@ -941,20 +955,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Apple_Fitness.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Apple_Fitness.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Apple_Fitness.Position",
@@ -1200,20 +1221,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Disney_Plus.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Disney_Plus.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Disney_Plus.Position",
@@ -1459,20 +1487,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Prime_Video.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Prime_Video.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Prime_Video.Position",
@@ -1787,20 +1822,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.HBO_Max.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.HBO_Max.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.HBO_Max.Position",
@@ -2046,20 +2088,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Hulu.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Hulu.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Hulu.Position",
@@ -2305,20 +2354,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Paramount_Plus.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Paramount_Plus.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Paramount_Plus.Position",
@@ -2564,20 +2620,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Position",
@@ -2823,20 +2886,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Peacock_TV.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Peacock_TV.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Peacock_TV.Position",
@@ -3082,20 +3152,27 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.Netflix.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.Netflix.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.Netflix.Position",
@@ -3394,20 +3471,27 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.ExternalURL",
-					"name": "外部字幕文件URL",
+					"id": "@DualSubs.Settings.YouTube.External.URL",
+					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
 					"placeholder": "https://www.example.com/subs/123.srt",
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.Offset",
-					"name": "外部字幕时间偏移量",
+					"id": "@DualSubs.Settings.YouTube.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
 					"placeholder": "0",
 					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.Settings.YouTube.Position",

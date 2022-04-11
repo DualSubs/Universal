@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ConsentText</key>
+	<dict>
+		<key>default</key>
+		<string>请确认此配置文件的证书及代理服务器地址及端口与您的Shadowrocket, Loon, Quantumult X, Surge 或 Stash的设置相同后再安装,安装后请在本Apple TV的设置-&gt;通用-&gt;关于-&gt;证书信任设置中,将此描述文件中的证书状态变更为“可信”</string>
+	</dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>AutoJoin</key>
+			<true/>
+			<key>CaptiveBypass</key>
+			<false/>
+			<key>DisableAssociationMACRandomization</key>
+			<false/>
+			<key>EncryptionType</key>
+			<string>Any</string>
+			<key>HIDDEN_NETWORK</key>
+			<false/>
+			<key>IsHotspot</key>
+			<false/>
+			<key>Password</key>
+			<string>替换为您的WiFi网络的密码</string>
+			<key>PayloadDescription</key>
+			<string>配置 Wi-Fi 设置</string>
+			<key>PayloadDisplayName</key>
+			<string>Wi-Fi</string>
+			<key>PayloadIdentifier</key>
+			<string>com.apple.wifi.managed.6A7E9224-E17E-40AC-890A-F3679D5E7FDC</string>
+			<key>PayloadType</key>
+			<string>com.apple.wifi.managed</string>
+			<key>PayloadUUID</key>
+			<string>6A7E9224-E17E-40AC-890A-F3679D5E7FDC</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>ProxyServer</key>
+			<string>替换为您的代理服务器IP地址</string>
+			<key>ProxyServerPort</key>
+			<integer>替换为您的代理服务器HTTP代理端口</integer>
+			<key>ProxyType</key>
+			<string>Manual</string>
+			<key>SSID_STR</key>
+			<string>替换为您的WiFi网络名称</string>
+		</dict>
+		<dict>
+			<key>PayloadCertificateFileName</key>
+			<string>root CA for MitM.crt</string>
+			<key>PayloadContent</key>
+			<data>
+			替换为您的证书的内容
+			</data>
+			<key>PayloadDescription</key>
+			<string>添加 CA 根证书</string>
+			<key>PayloadDisplayName</key>
+			<string>root CA for MitM.cer</string>
+			<key>PayloadIdentifier</key>
+			<string>com.apple.security.root.C46F944B-956E-4301-923D-F52B2D58F046</string>
+			<key>PayloadType</key>
+			<string>com.apple.security.root</string>
+			<key>PayloadUUID</key>
+			<string>C46F944B-956E-4301-923D-F52B2D58F046</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>设置tvOS的代理服务器及MitM证书</string>
+	<key>PayloadDisplayName</key>
+	<string>Proxy &amp; MitM for tvOS</string>
+	<key>PayloadIdentifier</key>
+	<string>DualSubs.Profile</string>
+	<key>PayloadOrganization</key>
+	<string>DualSubs</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>B513D3D1-86A3-4983-9353-F8A11041C92A</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

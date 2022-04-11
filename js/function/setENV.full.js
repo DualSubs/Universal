@@ -9,7 +9,7 @@ async function setENV(url, database) {
 					: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
 						: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
 							: (url.match(/dplus-ph-/i)) ? "Discovery_Plus_Ph"
-								: (url.match(/\.peacocktv\.com/i)) ? "Peacock"
+								: (url.match(/\.peacocktv\.com/i)) ? "Peacock_TV"
 									: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
 										: url.match(/\.youtube\.com/i) ? "YouTube"
 											: url.match(/\.nflxvideo\.net/i) ? "Netflix"

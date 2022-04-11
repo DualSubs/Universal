@@ -31,7 +31,6 @@ delete headers["Range"]
 	if ($.Settings.Switch) {
 		// 找缓存
 		let [Indices = {}, Cache = {}] = await getCache($.Cache);
-		if (Indices.Index == -1) $.done();
 		// 获取序列化VTT
 		let OriginVTT = VTT.parse($response.body);
 		// 创建双语字幕JSON

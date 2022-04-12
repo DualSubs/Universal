@@ -29,7 +29,7 @@ http:
     - "d22qjgkvxw22r6.cloudfront.net"
     - "d1v5ir2lpwr8os.cloudfront.net"
     - "d27xxe7juh1us6.cloudfront.net"
-    - "*.api.hbo.com"
+    - "manifests.v2.api.hbo.com"
     - "*.hbomaxcdn.com"
     - "manifest-dp.hulustream.com"
     - "livemanifest-f.hulustream.com"

@@ -204,7 +204,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language} ${obj2.Language} ${type}\"`
 				: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : (!standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language} ${type}\"`
+			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
 			// 修改链接
 			newSub.OPTION.URI = (newSub.URI.includes("?")) ? `\"${newSub.URI}&dualsubs=${type}\"`
 				: `\"${newSub.URI}?dualsubs=${type}\"`
@@ -220,17 +220,12 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 		$.log(`⚠ ${$.name}, Get Same Options Index`, "");
 		// 计算位置
 		let Index = json.body.findIndex(item => {
-			if (platform == "Apple") {
-				if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
-					&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
-					&& item?.OPTION?.["STABLE-RENDITION-ID"] == obj?.OPTION?.["STABLE-RENDITION-ID"]) {
-					return true
-				}
-			} else {
-				if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
-					&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]) {
-					return true
-				}
+			if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
+				&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
+				&& item?.OPTION?.CHARACTERISTICS == obj?.OPTION?.CHARACTERISTICS) {
+				if (platform == "Apple") {
+					if (item?.OPTION?.["STABLE-RENDITION-ID"] == obj?.OPTION?.["STABLE-RENDITION-ID"]) return true
+				} else return true
 			}
 		})
 		$.log(`🎉 ${$.name}, Get Same Options Index`, `Index: ${Index}`, "");

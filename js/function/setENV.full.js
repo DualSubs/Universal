@@ -24,9 +24,9 @@ async function setENV(url, database) {
 	let Verify = BoxJs?.Settings?.Verify || database?.Settings?.Verify;
 	/***************** Advanced *****************/
 	let Advanced = BoxJs?.Settings?.Advanced || database?.Settings?.Advanced;
-	Advanced.Translator.Times = parseInt(Advanced.Translator.Times, 10) // BoxJs字符串转数字
-	Advanced.Translator.Interval = parseInt(Advanced.Translator.Interval, 10) // BoxJs字符串转数字
-	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator.Exponential) //  BoxJs字符串转Boolean
+	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
+	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
+	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
 	/***************** Settings *****************/
 	let Settings = BoxJs?.Settings?.[Platform] || database?.Settings?.[Platform];
 	if (Platform == "Apple") {
@@ -44,8 +44,8 @@ async function setENV(url, database) {
 	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
 	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
 	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
-	Settings.External.Offset = parseInt(Settings.External.Offset, 10) // BoxJs字符串转数字
-	Settings.External.ShowOnly = JSON.parse(Settings.External.ShowOnly) //  BoxJs字符串转Boolean
+	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
+	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Settings内容: ${JSON.stringify(Settings)}`, "");

@@ -47,7 +47,10 @@ const headers = $request.headers
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done($response))
+	.finally(() => {
+		$.log("$response:", JSON.stringify($response));
+		$.done($response)
+	})
 
 /***************** Fuctions *****************/
 // Function 1

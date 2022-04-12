@@ -35,9 +35,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Apple_TV": {
@@ -49,9 +53,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Apple_TV_Plus": {
@@ -63,9 +71,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Apple_Fitness": {
@@ -77,9 +89,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Disney_Plus": {
@@ -91,9 +107,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 5,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Prime_Video": {
@@ -106,9 +126,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"HBO_Max": {
@@ -121,9 +145,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Hulu": {
@@ -135,9 +163,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Paramount_Plus": {
@@ -149,9 +181,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Discovery_Plus_Ph": {
@@ -163,9 +199,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Peacock_TV": {
@@ -177,9 +217,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Discovery_Plus": {
@@ -191,9 +235,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"Netflix": {
@@ -207,9 +255,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	},
 	"YouTube": {
@@ -221,9 +273,13 @@
 			"ZH",
 			"EN"
 		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
 		"Position": "Forward",
 		"CacheSize": 2,
-		"Offset": 0,
 		"Tolerance": 1000
 	}
 }

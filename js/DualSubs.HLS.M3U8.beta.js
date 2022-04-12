@@ -199,12 +199,12 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			let newSub = (obj1?.EXT) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
-			newSub.OPTION.NAME = (standard) ? `\"${obj1.Name}/${obj2.Name} [${type}]\"` : `\"${obj2.Language}\"`
+			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
 			// 修改语言代码
 			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language} ${obj2.Language} ${type}\"`
 				: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
-			if (standard) newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language}\"`
+			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : (!standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language} ${type}\"`
 			// 修改链接
 			newSub.OPTION.URI = (newSub.URI.includes("?")) ? `\"${newSub.URI}&dualsubs=${type}\"`
 				: `\"${newSub.URI}?dualsubs=${type}\"`

@@ -113,10 +113,19 @@ async function getCache(cache = {}) {
 // Set Cache
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
-	// 刷新播放记录，所以始终置顶
-	if (index !== -1) delete target[index] // 删除旧记录
-	target.unshift(sources) // 头部插入缓存
-	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
+	if (index !== -1) { // 有缓存
+		$.log(`🚧 ${$.name}, Set Cache`, "有匹配结果", "");
+		// 合并缓存
+		Object.assign(target[index], sources)
+		// 刷新播放记录，所以始终置顶
+		if (index !== 0) target.unshift(target.splice(index, 1)[0])
+	} else { // 无缓存
+		$.log(`🚧 ${$.name}, Set Cache`, "无匹配结果", "");
+		// 设置缓存数量
+		target = target.filter(Boolean).slice(0, num) // 设置缓存数量
+		// 头部插入缓存
+		target.unshift(sources)
+	}
 	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
 };

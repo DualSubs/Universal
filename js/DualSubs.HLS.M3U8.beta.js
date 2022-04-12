@@ -49,12 +49,8 @@ if (method == "OPTIONS") $.done();
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		delete $response.statusCode
-		delete $response.sessionIndex
-		delete $response.charset
-		delete $response.bodyBytes
-		$.log("$response:", JSON.stringify($response));
-		$.done($response)
+		const { headers, body } = $response
+		$.done({ headers, body })
 	})
 
 /***************** Fuctions *****************/

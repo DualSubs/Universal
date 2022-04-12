@@ -101,6 +101,10 @@ delete headers["Range"]
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
+		delete $response.statusCode
+		delete $response.sessionIndex
+		delete $response.charset
+		delete $response.bodyBytes
 		$.log("$response:", JSON.stringify($response));
 		$.done($response)
 	})

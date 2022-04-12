@@ -62,8 +62,7 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 				};
 				let SecondVTT = await getWebVTT(request);
 				$.log(`🚧 ${$.name}, 外挂字幕`, `SecondVTT: ${JSON.stringify(SecondVTT)}`, "");
-				DualSub = ($.Settings.External.ShowOnly) ? SecondVTT
-					: await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.External.Offset, $.Settings.Tolerance, [$.Settings.Position]);
+				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.External.Offset, $.Settings.Tolerance, [($.Settings.External.ShowOnly) ? "ShowOnly" : $.Settings.Position]);
 			}
 			async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
 		} else {
@@ -430,10 +429,10 @@ async function Translator(type = "", source = "", target = "", text = "") {
  * @param {Object} Sub2 - Sub2
  * @param {Number} Offset - Offset
  * @param {Number} Tolerance - Tolerance
- * @param {Array} options - options
+ * @param {Array} options - options = ["Forward", "Reverse", "ShowOnly"]
  * @return {Promise<*>}
  */
-async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
+async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) {
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
@@ -467,7 +466,7 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 				DualSub.body[index0].text = c;
 			} else 
 			*/
-			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
+			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
 			//DualSub.body[index0].timeStamp = options.includes("Reverse") ? timeStamp2 : timeStamp1;
 			//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
 			//index1++;

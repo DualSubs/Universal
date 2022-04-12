@@ -62,8 +62,7 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 				};
 				let SecondVTT = await getWebVTT(request);
 				$.log(`🚧 ${$.name}, 外挂字幕`, `SecondVTT: ${JSON.stringify(SecondVTT)}`, "");
-				DualSub = ($.Settings.External.ShowOnly) ? SecondVTT
-					: await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.External.Offset, $.Settings.Tolerance, [$.Settings.Position]);
+				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, $.Settings.External.Offset, $.Settings.Tolerance, [($.Settings.External.ShowOnly) ? "ShowOnly" : $.Settings.Position]);
 			}
 			async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
 		} else {
@@ -412,10 +411,10 @@ async function Translator(type = "", source = "", target = "", text = "") {
  * @param {Object} Sub2 - Sub2
  * @param {Number} Offset - Offset
  * @param {Number} Tolerance - Tolerance
- * @param {Array} options - options
+ * @param {Array} options - options = ["Forward", "Reverse", "ShowOnly"]
  * @return {Promise<*>}
  */
-async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
+ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) {
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
 	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
 	const length1 = Sub1.body.length, length2 = Sub2.body.length;
@@ -426,7 +425,7 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
 		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 			index0 = options.includes("Reverse") ? index2 : index1;
-			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
+			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
 		}
 		if (timeStamp2 > timeStamp1) {
 			index1++;

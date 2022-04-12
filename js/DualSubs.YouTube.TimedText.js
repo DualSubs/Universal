@@ -60,7 +60,10 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 	}
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => $.done($response))
+	.finally(() => {
+		const { headers, body } = $response
+		$.done({ headers, body })
+	})
 
 /***************** Fuctions *****************/
 // Function 1

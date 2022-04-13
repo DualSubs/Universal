@@ -54,11 +54,11 @@
 ^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Paramount_Plus.HLS.m3u8
-^https?:\/\/vod-(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/master\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+^https?:\/\/(vod-.*|(.*)\.airspace-.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/(master|manifest)\.m3u8(\?.*)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
 # DualSubs.Paramount_Plus.WebVTT.m3u8
-^https?:\/\/vod-(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/stream_vtt\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
+^https?:\/\/(vod-.*|(.*)\.airspace-.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/(stream_vtt|manifest_.*)\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
 # DualSubs.Paramount_Plus.vtt
-^https?:\/\/vod-(.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+^https?:\/\/(vod-.*|(.*)\.airspace-.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 # ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.*)\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Discovery_Plus_Ph.HLS.m3u8
@@ -82,4 +82,4 @@
 # ^https?:\/\/(.*)\.nflxvideo\.net\/\?o=(\d+)&v=(\d+)&e=(.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 #[MITM]
-hostname = play-edge.itunes.apple.com, hls.itunes.apple.com, hls-svod.itunes.apple.com, vod-*.tv.apple.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, *.dash.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, manifests.v2.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, livemanifest-f.hulustream.com, live-sc.hulustream.com, assets.huluim.com, assetshuluimcom-a.akamaihd.net, vod-*.cbsaavideo.com, vod-*.cbsivideo.com, dplus-ph-prod-vod.akamaized.net, dplus-ph-google-v2.prod-vod.h264.io, *.stream.peacocktv.com, *.cdn.peacocktv.com, content-discovery.uplynk.com, x-default-stgec.uplynk.com, *-discovery1.uplynk.com, *.nflxvideo.net
+hostname = play-edge.itunes.apple.com, hls.itunes.apple.com, hls-svod.itunes.apple.com, vod-*.tv.apple.com, *.media.dssott.com, *.media.starott.com, atv-ps.amazon.com, atv-ps-fe.primevideo.com, *.hls.row.aiv-cdn.net, *.dash.row.aiv-cdn.net, cf-timedtext.aux.pv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, manifests.v2.api.hbo.com, *.hbomaxcdn.com, manifest-dp.hulustream.com, livemanifest-f.hulustream.com, live-sc.hulustream.com, assets.huluim.com, assetshuluimcom-a.akamaihd.net, vod-*.cbsaavideo.com, vod-*.cbsivideo.com, *.airspace-*.cbsivideo.com, dplus-ph-prod-vod.akamaized.net, dplus-ph-google-v2.prod-vod.h264.io, *.stream.peacocktv.com, *.cdn.peacocktv.com, content-discovery.uplynk.com, x-default-stgec.uplynk.com, *-discovery1.uplynk.com, *.nflxvideo.net

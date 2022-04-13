@@ -50,8 +50,9 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   * 直接使用
     * 采用默认配置
       * 默认主语言`中文（自动）`，副语言`英文（自动）`
-      * 提供中文的平台仅启用`官方字幕`
-      * 未提供中文的平台仅启用`Google翻译`
+      * 提供官方中文的平台的语言选项为`官方字幕`和`Google翻译`
+      * 未提供中文的平台的语言选项为`Google翻译`
+      * 不兼容[^4]平台的替换语言选项为`Google翻译`
   * 配合`BoxJs`及订阅使用
     1. 安装`BoxJs`插件并更新引用资源或脚本:
        * Loon: [boxjs.rewrite.loon.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.plugin "BoxJs")

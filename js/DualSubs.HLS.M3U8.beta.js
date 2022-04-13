@@ -206,10 +206,10 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
 			// 修改链接
-			newSub.OPTION.URI = (newSub.URI.includes("?")) ? `\"${newSub.URI}&dualsubs=${type}\"`
-				: `\"${newSub.URI}?dualsubs=${type}\"`
-			// 非自动选择
-			newSub.OPTION.AUTOSELECT = "NO"
+			newSub.OPTION.URI = (newSub.URI.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
+				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`
+			// 自动选择
+			newSub.OPTION.AUTOSELECT = "YES"
 			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})

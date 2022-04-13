@@ -21,22 +21,24 @@ if (method == "OPTIONS") $.done();
 !(async () => {
 	const { Platform, Settings, Type, Caches } = await setENV(url, DataBase);
 	if (Settings.Switch) {
-		// 找缓存
-		const Indices = await getCache(Type, Settings, Caches);
-		let Cache = Caches?.[Indices.Index] || {};
-		if (Indices.Index !== -1) {
-			// 创建缓存
-			// 获取VTT字幕地址数组
-			for await (var language of Settings.Languages) {
-				if (Type == "Official") {
-					for await (var data of Cache[language]) data.VTTs = await getVTTs(Platform, data.URI);
-				} else if (Indices[language] !== -1) Cache[language][Indices[language]].VTTs = await getVTTs(Platform, url);
-			}
-			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-			// 写入缓存
-			let newCaches = Caches;
-			newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-			$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
+		if (Type == "Official") {
+			// 找缓存
+			const Indices = await getCache(Type, Settings, Caches);
+			let Cache = Caches?.[Indices.Index] || {};
+			if (Indices.Index !== -1) {
+				// 创建缓存
+				// 获取VTT字幕地址数组
+				for await (var language of Settings.Languages) {
+					for await (var data of Cache[language]) {
+						data.VTTs = await getVTTs(Platform, data.URI);
+					}
+				}
+				$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
+				// 写入缓存
+				let newCaches = Caches;
+				newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
+				$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
+			};
 		};
 		// WebVTT.m3u8加参数
 		$response.body = await setWebVTTm3u8($response.body, Type);
@@ -51,8 +53,13 @@ if (method == "OPTIONS") $.done();
 	})
 
 /***************** Fuctions *****************/
-// Function 1
-// Set Environment Variables
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} url - url
+ * @param {Object} database - database
+ * @return {Promise<*>}
+ */
 //async function setENV(e,t){const s=/\.apple\.com/i.test(e)?"Apple":/\.(dssott|starott)\.com/i.test(e)?"Disney_Plus":/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(e)?"Prime_Video":/\.(api\.hbo|hbomaxcdn)\.com/i.test(e)?"HBO_Max":/\.(hulustream|huluim)\.com/i.test(e)?"Hulu":/\.(cbsaavideo|cbsivideo)\.com/i.test(e)?"Paramount_Plus":/dplus-ph-/i.test(e)?"Discovery_Plus_Ph":/\.peacocktv\.com/i.test(e)?"Peacock_TV":/\.uplynk\.com/i.test(e)?"Discovery_Plus":/\.youtube\.com/i.test(e)?"YouTube":/\.nflxvideo\.net/i.test(e)?"Netflix":"Universal";let a=$.getjson("DualSubs",t),l=a?.Settings?.Verify||t?.Settings?.Verify,o=a?.Settings?.Advanced||t?.Settings?.Advanced;o.Translator.Times=parseInt(o.Translator?.Times,10),o.Translator.Interval=parseInt(o.Translator?.Interval,10),o.Translator.Exponential=JSON.parse(o.Translator?.Exponential);let i=a?.Settings?.[s]||t?.Settings?.Default;if("Apple"==s){let s=/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(e)?"Apple_TV_Plus":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(e)?"Apple_Fitness":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(e)?"Apple_TV":/vod-.*-aoc\.tv\.apple\.com/i.test(e)?"Apple_TV_Plus":/vod-.*-amt\.tv\.apple\.com/i.test(e)?"Apple_TV":/(hls|hls-svod)\.itunes\.apple\.com/i.test(e)?"Apple_Fitness":"Apple";i=a?.Settings?.[s]||t?.Settings?.Default}i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),l.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),l.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),l.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.External.Offset=parseInt(i.External?.Offset,10),i.External.ShowOnly=JSON.parse(i.External?.ShowOnly),i.CacheSize=parseInt(i.CacheSize,10),i.Tolerance=parseInt(i.Tolerance,10);const p=e.match(/[&\?]dualsubs=(\w+)$/)[1]||i.Type;let n=a?.Caches?.[s]||[];return"string"==typeof n&&(n=JSON.parse(n)),{Platform:s,Verify:l,Advanced:o,Settings:i,Type:p,Caches:n}}
 // Set Environment Variables
 async function setENV(url, database) {
@@ -116,8 +123,14 @@ async function setENV(url, database) {
 	return { Platform, Verify, Advanced, Settings, Type, Caches };
 };
 
-// Function 2
-// Get Cache
+/**
+ * Get Cache
+ * @author VirgilClyne
+ * @param {String} type - type
+ * @param {Object} settings - settings
+ * @param {Object} cache - cache
+ * @return {Promise<*>}
+ */
 async function getCache(type, settings, cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = { "Index": await getIndex(settings, cache) };
@@ -150,8 +163,15 @@ async function getCache(type, settings, cache = {}) {
 	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
-// Function 3
-// Set Cache
+/**
+ * Set Cache
+ * @author VirgilClyne
+ * @param {Number} index - index
+ * @param {Object} target - target
+ * @param {Object} sources - sources
+ * @param {Number} num - num
+ * @return {Promise<*>}
+ */
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶
@@ -162,8 +182,13 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	return target
 };
 
-// Function 4
-// Get Subtitle *.vtt URLs
+/**
+ * Get Subtitle *.vtt URLs
+ * @author VirgilClyne
+ * @param {String} platform - index
+ * @param {String} url - url
+ * @return {Promise<*>}
+ */
 async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
 	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
@@ -194,8 +219,13 @@ async function getVTTs(platform, url) {
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 };
 
-// Function 4
-// Set Subtitle WebVTT *.m3u8
+/**
+ * Set Subtitle WebVTT *.m3u8
+ * @author VirgilClyne
+ * @param {Object} body - body
+ * @param {String} type - type
+ * @return {Promise<*>}
+ */
 async function setWebVTTm3u8(body = {}, type = "") {
 	$.log(`⚠ ${$.name}, Set Subtitle WebVTT *.m3u8`, "");
 	body = body.replace(/^.+\.(web)?vtt(\?.*)$/gim, `$&&dualsubs=${type}`);

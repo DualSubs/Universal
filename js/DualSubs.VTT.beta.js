@@ -21,51 +21,46 @@ if (method == "OPTIONS") $.done();
 !(async () => {
 	const { Platform, Verify, Advanced, Settings, Type, Caches } = await setENV(url, DataBase);
 	if (Settings.Switch) {
-		// 找缓存
-		const Indices = await getCache(Type, Settings, Caches);
-		let Cache = Caches?.[Indices.Index] || {};
 		// 获取序列化VTT
 		let OriginVTT = VTT.parse($response.body);
 		// 创建双语字幕JSON
 		let DualSub = {};
-		// 获取类型
-		if (!Type) $.done();
-		else if (Type == "Official" || Type == "External") {
-			if (Type == "Official") {
-				$.log(`🚧 ${$.name}`, "官方字幕", "");
-				let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
-				if (!VTTs) $.done();
-				else if (Platform == "Apple") {
-					let requests = await getOfficialRequest(Platform, VTTs);
-					for await (var request of requests) {
-						let SecondVTT = await getWebVTT(request);
-						DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, Settings.Tolerance, [Settings.Position]);
-					};
-				} else {
-					let request = await getOfficialRequest(Platform, VTTs);
+		if (Type == "Official") {
+			$.log(`🚧 ${$.name}`, "官方字幕", "");
+			// 找缓存
+			const Indices = await getCache(Type, Settings, Caches);
+			let Cache = Caches?.[Indices.Index] || {};
+			let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
+			if (!VTTs) $.done();
+			else if (Platform == "Apple") {
+				let requests = await getOfficialRequest(Platform, VTTs);
+				for await (var request of requests) {
 					let SecondVTT = await getWebVTT(request);
 					DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, Settings.Tolerance, [Settings.Position]);
-				}
-			} else if (Type == "External") {
-				$.log(`🚧 ${$.name}, 外挂字幕`, "");
-				let request = {
-					"url": Settings.External.URL,
-					"headers": {
-						"Accept": "*/*",
-						"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
-					}
 				};
+			} else {
+				let request = await getOfficialRequest(Platform, VTTs);
 				let SecondVTT = await getWebVTT(request);
-				$.log(`🚧 ${$.name}, 外挂字幕`, `SecondVTT: ${JSON.stringify(SecondVTT)}`, "");
-				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, Settings.External.Offset, Settings.Tolerance, [(Settings.External.ShowOnly) ? "ShowOnly" : Settings.Position]);
+				DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, Settings.Tolerance, [Settings.Position]);
 			}
-			async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
+		} else if (Type == "External") {
+			$.log(`🚧 ${$.name}, 外挂字幕`, "");
+			let request = {
+				"url": Settings.External.URL,
+				"headers": {
+					"Accept": "*/*",
+					"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+				}
+			};
+			let SecondVTT = await getWebVTT(request);
+			$.log(`🚧 ${$.name}, 外挂字幕`, `SecondVTT: ${JSON.stringify(SecondVTT)}`, "");
+			DualSub = await CombineDualSubs(OriginVTT, SecondVTT, Settings.External.Offset, Settings.Tolerance, [(Settings.External.ShowOnly) ? "ShowOnly" : Settings.Position]);
 		} else {
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			DualSub = OriginVTT;
 			if (Verify?.[Type]?.Method == "Row") { //逐行翻译
 				DualSub.body = await Promise.all(DualSub.body.map(async item => {
-					let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+					let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
 					item.text = await combineText(item.text, text2[0], Settings.Position);
 					return item
 				}));
@@ -74,14 +69,13 @@ if (method == "OPTIONS") $.done();
 				let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
 				let Parts = await chunk(Full, length);
 				Parts = await Promise.all(Parts.map(async Part => {
-					return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+					return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
 				})).then(parts => parts.flat(Infinity));
 				DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
 					item.text = await combineText(item.text, Parts[i], Settings.Position);
 					return item
 				}));
 			};
-			async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
 		};
 		$response.body = VTT.stringify(DualSub);
 		if ($response.headers["Content-Range"]) {
@@ -98,8 +92,13 @@ if (method == "OPTIONS") $.done();
 	})
 
 /***************** Fuctions *****************/
-// Function 1
-// Set Environment Variables
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} url - url
+ * @param {Object} database - database
+ * @return {Promise<*>}
+ */
 //async function setENV(e,t){const s=/\.apple\.com/i.test(e)?"Apple":/\.(dssott|starott)\.com/i.test(e)?"Disney_Plus":/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(e)?"Prime_Video":/\.(api\.hbo|hbomaxcdn)\.com/i.test(e)?"HBO_Max":/\.(hulustream|huluim)\.com/i.test(e)?"Hulu":/\.(cbsaavideo|cbsivideo)\.com/i.test(e)?"Paramount_Plus":/dplus-ph-/i.test(e)?"Discovery_Plus_Ph":/\.peacocktv\.com/i.test(e)?"Peacock_TV":/\.uplynk\.com/i.test(e)?"Discovery_Plus":/\.youtube\.com/i.test(e)?"YouTube":/\.nflxvideo\.net/i.test(e)?"Netflix":"Universal";let a=$.getjson("DualSubs",t),l=a?.Settings?.Verify||t?.Settings?.Verify,o=a?.Settings?.Advanced||t?.Settings?.Advanced;o.Translator.Times=parseInt(o.Translator?.Times,10),o.Translator.Interval=parseInt(o.Translator?.Interval,10),o.Translator.Exponential=JSON.parse(o.Translator?.Exponential);let i=a?.Settings?.[s]||t?.Settings?.Default;if("Apple"==s){let s=/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(e)?"Apple_TV_Plus":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(e)?"Apple_Fitness":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(e)?"Apple_TV":/vod-.*-aoc\.tv\.apple\.com/i.test(e)?"Apple_TV_Plus":/vod-.*-amt\.tv\.apple\.com/i.test(e)?"Apple_TV":/(hls|hls-svod)\.itunes\.apple\.com/i.test(e)?"Apple_Fitness":"Apple";i=a?.Settings?.[s]||t?.Settings?.Default}i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),l.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),l.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),l.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.External.Offset=parseInt(i.External?.Offset,10),i.External.ShowOnly=JSON.parse(i.External?.ShowOnly),i.CacheSize=parseInt(i.CacheSize,10),i.Tolerance=parseInt(i.Tolerance,10);const p=e.match(/[&\?]dualsubs=(\w+)$/)[1]||i.Type;let n=a?.Caches?.[s]||[];return"string"==typeof n&&(n=JSON.parse(n)),{Platform:s,Verify:l,Advanced:o,Settings:i,Type:p,Caches:n}}
 // Set Environment Variables
 async function setENV(url, database) {
@@ -163,8 +162,14 @@ async function setENV(url, database) {
 	return { Platform, Verify, Advanced, Settings, Type, Caches };
 };
 
-// Function 2
-// Get Cache
+/**
+ * Get Cache
+ * @author VirgilClyne
+ * @param {String} type - type
+ * @param {Object} settings - settings
+ * @param {Object} cache - cache
+ * @return {Promise<*>}
+ */
 async function getCache(type, settings, cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = { "Index": await getIndex(settings, cache) };
@@ -197,8 +202,15 @@ async function getCache(type, settings, cache = {}) {
 	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
-// Function 3
-// Set Cache
+/**
+ * Set Cache
+ * @author VirgilClyne
+ * @param {Number} index - index
+ * @param {Object} target - target
+ * @param {Object} sources - sources
+ * @param {Number} num - num
+ * @return {Promise<*>}
+ */
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶
@@ -209,8 +221,13 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	return target
 };
 
-// Function 4
-// Get Official Request
+/**
+ * Get Official Request
+ * @author VirgilClyne
+ * @param {String} platform - platform
+ * @param {Array} VTTs - VTTs
+ * @return {Promise<*>}
+ */
 async function getOfficialRequest(platform, VTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, "");
 	let fileName = (platform == "Apple") ? url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple 片段分型序号不同
@@ -241,16 +258,35 @@ async function getOfficialRequest(platform, VTTs = []) {
 	}
 };
 
-/** 
+/**
+ * getWebVTT
+ * @author VirgilClyne
+ * @param {object} request - request
+ * @return {Promise<*>}
+ */
+async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
+
+/**
+ * combineText
+ * @author VirgilClyne
+ * @param {String} text1 - text1
+ * @param {String} text2 - text2
+ * @param {String} position - position
+ * @return {Promise<*>}
+ */
+async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+
+/**
  * Translator
+ * @author VirgilClyne
  * @param {String} type - type
  * @param {String} source - source
  * @param {String} target - target
  * @param {String} text - text
- * @param {Array} text - text
+ * @param {Object} verify - verify
  * @return {Promise<*>}
  */
-async function Translator(type = "Google", source = "", target = "", text = "") {
+ async function Translator(type = "Google", source = "", target = "", text = "", verify = {}) {
 	$.log(`⚠ ${$.name}, Translator`, `orig: ${text}`, "");
 	// 构造请求
 	let request = await GetRequest(type, source, target, text);
@@ -259,7 +295,6 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 	$.log(`🚧 ${$.name}, Translator`, `trans: ${trans}`, "");
 	return trans
 	/***************** Fuctions *****************/
-	// Function 5.1
 	// Get Translate Request
 	async function GetRequest(type = "", source = "", target = "", text = "") {
 		$.log(`⚠ ${$.name}, Get Translate Request`, "");
@@ -311,9 +346,9 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 			text = (Array.isArray(text)) ? text.join("\n\n") : text;
 			request.url = request.url + `&sl=${DataBase.Languages.Google[source]}&tl=${DataBase.Languages.Google[target]}&q=${encodeURIComponent(text)}`;
 		} else if (type == "GoogleCloud") {
-			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${Verify.GoogleCloud?.Auth}`;
+			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${verify.GoogleCloud?.Auth}`;
 			request.headers = {
-				//"Authorization": `Bearer ${Verify.GoogleCloud?.Auth}`,
+				//"Authorization": `Bearer ${verify.GoogleCloud?.Auth}`,
 				"User-Agent": "DualSubs",
 				"Content-Type": "application/json; charset=utf-8"
 			};
@@ -322,12 +357,12 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 				"source": DataBase.Languages.Google[source],
 				"target": DataBase.Languages.Google[target],
 				"format": "html",
-				//"key": Verify.GoogleCloud?.Key
+				//"key": verify.GoogleCloud?.Key
 			});
 		} else if (type == "Bing") {
 			// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
-			const BaseURL = (Verify.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
-				: (Verify.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
+			const BaseURL = (verify.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+				: (verify.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
 					: "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
 			request.url = `${BaseURL}`;
 			request.headers = {
@@ -346,22 +381,22 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 		} else if (type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-			const BaseURL = (Verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
-				: (Verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
+			const BaseURL = (verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
+				: (verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
 					: "https://api.cognitive.microsofttranslator.com"
 			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Languages.Microsoft[target]}&from=${DataBase.Languages.Microsoft[source]}`;
 			request.headers = {
 				"Content-Type": "application/json; charset=UTF-8",
 				"Accept": "application/json, text/javascript, */*; q=0.01",
 				"Accept-Language": "zh-hans"
-				//"Authorization": `Bearer ${Verify.Azure?.Auth}`,
-				//"Ocp-Apim-Subscription-Key": Verify.Azure?.Auth,
-				//"Ocp-Apim-Subscription-Region": Verify.Azure?.Region, // chinanorth, chinaeast2
+				//"Authorization": `Bearer ${verify.Azure?.Auth}`,
+				//"Ocp-Apim-Subscription-Key": verify.Azure?.Auth,
+				//"Ocp-Apim-Subscription-Region": verify.Azure?.Region, // chinanorth, chinaeast2
 				//"X-ClientTraceId": uuidv4().toString()
 			};
-			if (Verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = Verify.Azure.Region;
-			if (Verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = Verify.Azure.Auth;
-			else if (Verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${Verify.Azure.Auth}`;
+			if (verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = verify.Azure.Region;
+			if (verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = verify.Azure.Auth;
+			else if (verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${verify.Azure.Auth}`;
 			text = (Array.isArray(text)) ? text : [text];
 			let texts = await Promise.all(text?.map(async item => { return { "text": item } }))
 			request.body = JSON.stringify(texts);
@@ -371,8 +406,8 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 			}]);
 			*/
 		} else if (type == "DeepL") {
-			const BaseURL = (Verify.DeepL.Version == "Free") ? "https://api-free.deepl.com"
-				: (Verify.DeepL.Version == "Pro") ? "https://api.deepl.com"
+			const BaseURL = (verify.DeepL.Version == "Free") ? "https://api-free.deepl.com"
+				: (verify.DeepL.Version == "Pro") ? "https://api.deepl.com"
 					: "https://api-free.deepl.com"
 			request.url = `${BaseURL}/v2/translate`
 			request.headers = {
@@ -386,7 +421,7 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 			const target_lang = (DataBase.Languages.DeepL[target] == "EN") ? "EN-US"
 				: (DataBase.Languages.DeepL[target] == "PT") ? "PT-PT"
 					: DataBase.Languages.DeepL[target];
-			const BaseBody = `auth_key=${Verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+			const BaseBody = `auth_key=${verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
 			text = (Array.isArray(text)) ? text : [text];
 			let texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
 			request.body = BaseBody + texts.join("");
@@ -401,7 +436,7 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 				"q": text,
 				"from": DataBase.Languages.Baidu[source],
 				"to": DataBase.Languages.Baidu[target],
-				"appid": Verify.BaiduFanyi?.Key,
+				"appid": verify.BaiduFanyi?.Key,
 				"salt": uuidv4().toString(),
 				"sign": "",
 			};
@@ -416,7 +451,7 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 				"q": text,
 				"from": DataBase.Languages.Youdao[source],
 				"to": DataBase.Languages.Youdao[target],
-				"appKey": Verify.YoudaoAI?.Key,
+				"appKey": verify.YoudaoAI?.Key,
 				"salt": uuidv4().toString(),
 				"signType": "v3",
 				"sign": "",
@@ -426,7 +461,6 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 		//$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
-	// Function 5.2
 	// Get Translate Data
 	function GetData(type, request) {
 		$.log(`⚠ ${$.name}, Get Translate Data`, "");
@@ -473,6 +507,7 @@ async function Translator(type = "Google", source = "", target = "", text = "") 
 
 /** 
  * Combine Dual Subtitles
+ * @author VirgilClyne
  * @param {Object} Sub1 - Sub1
  * @param {Object} Sub2 - Sub2
  * @param {Number} Offset - Offset
@@ -535,6 +570,7 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 
 /** 
  * Chunk Array
+ * @author VirgilClyne
  * @param {Array} source - source
  * @param {Number} length - number
  * @return {Promise<*>}

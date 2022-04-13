@@ -53,8 +53,13 @@ if (method == "OPTIONS") $.done();
 	})
 
 /***************** Fuctions *****************/
-// Function 1
-// Set Environment Variables
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} url - url
+ * @param {Object} database - database
+ * @return {Promise<*>}
+ */
 //async function setENV(e,t){const s=/\.apple\.com/i.test(e)?"Apple":/\.(dssott|starott)\.com/i.test(e)?"Disney_Plus":/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(e)?"Prime_Video":/\.(api\.hbo|hbomaxcdn)\.com/i.test(e)?"HBO_Max":/\.(hulustream|huluim)\.com/i.test(e)?"Hulu":/\.(cbsaavideo|cbsivideo)\.com/i.test(e)?"Paramount_Plus":/dplus-ph-/i.test(e)?"Discovery_Plus_Ph":/\.peacocktv\.com/i.test(e)?"Peacock_TV":/\.uplynk\.com/i.test(e)?"Discovery_Plus":/\.youtube\.com/i.test(e)?"YouTube":/\.nflxvideo\.net/i.test(e)?"Netflix":"Universal";let a=$.getjson("DualSubs",t),l=a?.Settings?.Verify||t?.Settings?.Verify,o=a?.Settings?.Advanced||t?.Settings?.Advanced;o.Translator.Times=parseInt(o.Translator?.Times,10),o.Translator.Interval=parseInt(o.Translator?.Interval,10),o.Translator.Exponential=JSON.parse(o.Translator?.Exponential);let i=a?.Settings?.[s]||t?.Settings?.Default;if("Apple"==s){let s=/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(e)?"Apple_TV_Plus":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(e)?"Apple_Fitness":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(e)?"Apple_TV":/vod-.*-aoc\.tv\.apple\.com/i.test(e)?"Apple_TV_Plus":/vod-.*-amt\.tv\.apple\.com/i.test(e)?"Apple_TV":/(hls|hls-svod)\.itunes\.apple\.com/i.test(e)?"Apple_Fitness":"Apple";i=a?.Settings?.[s]||t?.Settings?.Default}i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),l.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),l.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),l.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.External.Offset=parseInt(i.External?.Offset,10),i.External.ShowOnly=JSON.parse(i.External?.ShowOnly),i.CacheSize=parseInt(i.CacheSize,10),i.Tolerance=parseInt(i.Tolerance,10);const p=e.match(/[&\?]dualsubs=(\w+)$/)[1]||i.Type;let n=a?.Caches?.[s]||[];return"string"==typeof n&&(n=JSON.parse(n)),{Platform:s,Verify:l,Advanced:o,Settings:i,Type:p,Caches:n}}
 // Set Environment Variables
 async function setENV(url, database) {
@@ -118,8 +123,14 @@ async function setENV(url, database) {
 	return { Platform, Verify, Advanced, Settings, Type, Caches };
 };
 
-// Function 2
-// Get Cache
+/**
+ * Get Cache
+ * @author VirgilClyne
+ * @param {String} type - type
+ * @param {Object} settings - settings
+ * @param {Object} cache - cache
+ * @return {Promise<*>}
+ */
 async function getCache(type, settings, cache = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = { "Index": await getIndex(settings, cache) };
@@ -152,8 +163,15 @@ async function getCache(type, settings, cache = {}) {
 	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
-// Function 3
-// Set Cache
+/**
+ * Set Cache
+ * @author VirgilClyne
+ * @param {Number} index - index
+ * @param {Object} target - target
+ * @param {Object} sources - sources
+ * @param {Number} num - num
+ * @return {Promise<*>}
+ */
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶
@@ -164,8 +182,15 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	return target
 };
 
-// Function 4
-// Get EXT-X-MEDIA Data
+/**
+ * Get EXT-X-MEDIA Data
+ * @author VirgilClyne
+ * @param {String} platform - platform
+ * @param {Object} json - json
+ * @param {String} type - type
+ * @param {String} langCode - langCode
+ * @return {Promise<*>}
+ */
 async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
 	// 自动语言转换
@@ -183,7 +208,6 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	return datas
 
 	/***************** Fuctions *****************/
-	// Function 4.1
 	// Switch Language Code
 	async function switchLangCode(platform = "", langCode = "", database) {
 		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
@@ -198,10 +222,8 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		return langcodes
 	};
-	// Function 4.2
 	// Get Absolute Path
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
-	// Function 5.1
 	// Set EXT-X-MEDIA Data
 	async function setMEDIA(data = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
@@ -214,8 +236,18 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	};
 };
 
-// Function 5
-// Set DualSubs Subtitle Options
+/**
+ * Set DualSubs Subtitle Options
+ * @author VirgilClyne
+ * @param {String} Platform - Platform
+ * @param {Object} Json - Json
+ * @param {Array} Languages1 - Languages1
+ * @param {Array} Languages2 - Languages2
+ * @param {Array} Types - Types
+ * @param {String} Standard - Standard
+ * @param {String} Type - Type
+ * @return {Promise<*>}
+ */
 async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 = [], Types = [], Standard = true, Type = "") {
 	// 兼容性设置
 	Types = (Standard == true) ? Types : [Type];
@@ -262,7 +294,6 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 	return Json
 
 	/***************** Fuctions *****************/
-	// Function 5.1
 	// Get DualSubs Subtitle Options
 	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
 		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
@@ -286,7 +317,6 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			return newSub
 		})
 	};
-	// Function 5.2
 	// Get Same Options Index
 	async function getIndex(platform, json, obj) {
 		$.log(`⚠ ${$.name}, Get Same Options Index`, "");
@@ -303,7 +333,6 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 		$.log(`🎉 ${$.name}, Get Same Options Index`, `Index: ${Index}`, "");
 		return Index
 	};
-	// Function 5.3
 	// Insert Options
 	async function insertOptions(json, index, options, standard) {
 		$.log(`⚠ ${$.name}, Insert Options`, "");
@@ -313,7 +342,15 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 	};
 };
 
-// Determine whether Standard Media Player
+/**
+ * is Standard?
+ * Determine whether Standard Media Player
+ * @author VirgilClyne
+ * @param {String} platform - platform
+ * @param {String} url - url
+ * @param {Object} headers - headers
+ * @return {Promise<*>}
+ */
 async function isStandard(platform, url, headers) {
     $.log(`⚠ ${$.name}, is Standard`, "");
     let standard = true;

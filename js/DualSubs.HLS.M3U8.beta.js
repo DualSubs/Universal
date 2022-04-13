@@ -34,8 +34,9 @@ if (method == "OPTIONS") $.done();
 			//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		};
 		// 写入缓存
-		Caches = await setCache(Indices.Index, Caches, Cache, Settings.CacheSize);
-		$.setjson(Caches, `@DualSubs.Cache.${Platform}`);
+		let newCaches = Caches;
+		newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
+		$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
 		// 兼容性判断
 		const standard = await isStandard(Platform, url, headers);
 		// 写入选项

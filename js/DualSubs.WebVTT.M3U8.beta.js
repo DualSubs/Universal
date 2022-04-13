@@ -34,8 +34,9 @@ if (method == "OPTIONS") $.done();
 			}
 			$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 			// 写入缓存
-			Caches = await setCache(Indices.Index, Caches, Cache, Settings.CacheSize);
-			$.setjson(Caches, `@DualSubs.Cache.${Platform}`);
+			let newCaches = Caches;
+			newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
+			$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
 		};
 		// WebVTT.m3u8加参数
 		$response.body = await setWebVTTm3u8($response.body, Type);

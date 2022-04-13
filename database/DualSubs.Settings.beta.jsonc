@@ -213,6 +213,7 @@
 		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
 			"Google"
 		],
+		"Type": "Google", // Official, Google, GoogleCloud, Azure, DeepL, External
 		"Languages": [
 			"ZH",
 			"EN"

@@ -1,5 +1,5 @@
 name: 🍿️ DualSubs for Streaming Media Platform
-desc: (0.5.3) 流媒体平台字幕增强及双语模块
+desc: (0.6.0) 流媒体平台字幕增强及双语模块
 
 http:
   force-http-engine:
@@ -188,17 +188,17 @@ http:
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/master_cmaf\.m3u8$
+    - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/cmaf\/(.*)\/master_cmaf\.m3u8(\?.*)?$
       name: DualSubs.HLS.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.m3u8(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.webvtt(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.webvtt(\?.*dualsubs=\w+)?$
       name: DualSubs.vtt
       type: response
       require-body: true

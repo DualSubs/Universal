@@ -69,11 +69,11 @@
 ^https?:\/\/(dplus-ph-prod-vod\.akamaized\.net|dplus-ph-google-v2\.prod-vod\.h264\.io)\/(.+)\.vtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Peacock.HLS.m3u8
-# ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/master_cmaf\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/master_cmaf\.m3u8$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
 # DualSubs.Peacock.WebVTT.m3u8
-# ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
+^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
 # DualSubs.Peacock.vtt
-# ^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/(pck_\d+)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.webvtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+^https?:\/\/(.*)\.cdn\.peacocktv\.com\/pub\/global\/(.*)\/cmaf\/(.*)\/[^\/]*subtitles[^\/]*\.webvtt(\?.*dualsubs=\w+)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 # DualSubs.Discovery_Plus.HLS.m3u8
 # ^https?:\/\/content-discovery\.uplynk\.com\/(.+)\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js

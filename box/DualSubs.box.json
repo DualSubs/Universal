@@ -227,8 +227,8 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Apple_TV",
-				"@DualSubs.Cache.Apple",
-				"@DualSubs.Cache.Apple_TV"
+				"@DualSubs.Caches.Apple",
+				"@DualSubs.Caches.Apple_TV"
 			],
 			"settings": [
 				{
@@ -474,8 +474,8 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Apple_TV_Plus",
-				"@DualSubs.Cache.Apple",
-				"@DualSubs.Cache.Apple_TV_Plus"
+				"@DualSubs.Caches.Apple",
+				"@DualSubs.Caches.Apple_TV_Plus"
 			],
 			"settings": [
 				{
@@ -721,7 +721,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Apple_Fitness",
-				"@DualSubs.Cache.Apple"
+				"@DualSubs.Caches.Apple"
 			],
 			"settings": [
 				{
@@ -967,7 +967,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Disney_Plus",
-				"@DualSubs.Cache.Disney_Plus"
+				"@DualSubs.Caches.Disney_Plus"
 			],
 			"settings": [
 				{
@@ -1213,7 +1213,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Prime_Video",
-				"@DualSubs.Cache.Prime_Video"
+				"@DualSubs.Caches.Prime_Video"
 			],
 			"settings": [
 				{
@@ -1459,7 +1459,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.HBO_Max",
-				"@DualSubs.Cache.HBO_Max"
+				"@DualSubs.Caches.HBO_Max"
 			],
 			"settings": [
 				{
@@ -1754,7 +1754,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Hulu",
-				"@DualSubs.Cache.Hulu"
+				"@DualSubs.Caches.Hulu"
 			],
 			"settings": [
 				{
@@ -2000,7 +2000,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Paramount_Plus",
-				"@DualSubs.Cache.Paramount_Plus"
+				"@DualSubs.Caches.Paramount_Plus"
 			],
 			"settings": [
 				{
@@ -2246,7 +2246,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Discovery_Plus_Ph",
-				"@DualSubs.Cache.Discovery_Plus_Ph"
+				"@DualSubs.Caches.Discovery_Plus_Ph"
 			],
 			"settings": [
 				{
@@ -2484,7 +2484,7 @@
 			]
 		},
 		{
-			"id": "DualSubs.Peacock_TV.beta",
+			"id": "DualSubs.Peacock_TV",
 			"name": "DualSubs: Peacock TV",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
@@ -2492,7 +2492,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Peacock_TV",
-				"@DualSubs.Cache.Peacock_TV"
+				"@DualSubs.Caches.Peacock_TV"
 			],
 			"settings": [
 				{
@@ -2771,7 +2771,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.Netflix",
-				"@DualSubs.Cache.Netflix"
+				"@DualSubs.Caches.Netflix"
 			],
 			"settings": [
 				{
@@ -3017,7 +3017,7 @@
 			],
 			"keys": [
 				"@DualSubs.Settings.YouTube",
-				"@DualSubs.Cache.YouTube"
+				"@DualSubs.Caches.YouTube"
 			],
 			"settings": [
 				{

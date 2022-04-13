@@ -1,0 +1,286 @@
+{
+	"Verify": {
+		"GoogleCloud": {
+			"Method": "Part",
+			"Mode": "Key",
+			"Auth": null
+		},
+		"Azure": {
+			"Method": "Part",
+			"Version": "Azure",
+			"Region": null,
+			"Mode": "Key",
+			"Auth": null
+		},
+		"DeepL": {
+			"Method": "Part",
+			"Version": "Free",
+			"Auth": null
+		}
+	},
+	"Advanced": {
+		"Translator": {
+			"Times": 3,
+			"Interval": 100,
+			"Exponential": true
+		}
+	},
+	"Apple": {
+		"Switch": true,
+		"Types": [
+			"Official",
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Apple_TV": {
+		"Switch": true,
+		"Types": [
+			"Official"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Apple_TV_Plus": {
+		"Switch": true,
+		"Types": [
+			"Official"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Apple_Fitness": {
+		"Switch": true,
+		"Types": [
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Disney_Plus": {
+		"Switch": true,
+		"Types": [
+			"Official"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 5,
+		"Tolerance": 1000
+	},
+	"Prime_Video": {
+		"Switch": true,
+		"Types": [
+			"Official",
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"HBO_Max": {
+		"Switch": true,
+		"Types": [
+			"Google"
+		],
+		"Type": "Google",
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Hulu": {
+		"Switch": true,
+		"Types": [
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Paramount_Plus": {
+		"Switch": true,
+		"Types": [
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Discovery_Plus_Ph": {
+		"Switch": true,
+		"Types": [
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Peacock_TV": {
+		"Switch": true,
+		"Types": [
+			"Google"
+		],
+		"Type": "Google",
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Discovery_Plus": {
+		"Switch": true,
+		"Types": [
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Netflix": {
+		"Switch": true,
+		"Types": [
+			"Official",
+			"Google",
+			"External"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"YouTube": {
+		"Switch": true,
+		"Types": [
+			"Official"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 2,
+		"Tolerance": 1000
+	}
+}

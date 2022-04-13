@@ -1,0 +1,286 @@
+{
+	"Verify": {
+		"GoogleCloud": {
+			"Method": "Part", // Part, Row
+			"Mode": "Key", // Token, Key
+			"Auth": null
+		},
+		"Azure": {
+			"Method": "Part", // Part, Row
+			"Version": "Azure", // Azure, AzureCN
+			"Region": null,
+			"Mode": "Key", // Token, Key
+			"Auth": null
+		},
+		"DeepL": {
+			"Method": "Part", // Part, Row
+			"Version": "Free", // Free, Pro
+			"Auth": null // DeepL API Authentication Key
+		}
+	},
+	"Advanced": {
+		"Translator": {
+			"Times": 3,
+			"Interval": 100,
+			"Exponential": true
+		}
+	},
+	"Apple": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official",
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Apple_TV": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Apple_TV_Plus": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Apple_Fitness": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Disney_Plus": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 5,
+		"Tolerance": 1000
+	},
+	"Prime_Video": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official",
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"HBO_Max": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
+		],
+		"Type": "Google", // Official, Google, GoogleCloud, Azure, DeepL, External
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Hulu": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Paramount_Plus": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Discovery_Plus_Ph": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Peacock_TV": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
+		],
+		"Type": "Google", // Official, Google, GoogleCloud, Azure, DeepL, External
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Discovery_Plus": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Google"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"Netflix": {
+		"Switch": true, // true, false
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official",
+			"Google",
+			"External"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	},
+	"YouTube": {
+		"Switch": true, // Enable, Disable
+		"Types": [ // Official, Google, GoogleCloud, Azure, DeepL, External
+			"Official"
+		],
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward", // Forward, Reverse
+		"CacheSize": 2,
+		"Tolerance": 1000
+	}
+}

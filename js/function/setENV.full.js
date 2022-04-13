@@ -28,7 +28,7 @@ async function setENV(url, database) {
 	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
 	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
 	/***************** Settings *****************/
-	let Settings = BoxJs?.Settings?.[Platform] || database?.Settings?.[Platform];
+	let Settings = BoxJs?.Settings?.[Platform] || database?.Settings?.Default;
 	if (Platform == "Apple") {
 		let platform = url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i) ? "Apple_TV_Plus"
 			: url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i) ? "Apple_Fitness"
@@ -36,7 +36,7 @@ async function setENV(url, database) {
 					: url.match(/vod-.*-aoc\.tv\.apple\.com/i) ? "Apple_TV_Plus"
 						: url.match(/vod-.*-amt\.tv\.apple\.com/i) ? "Apple_TV"
 							: url.match(/(hls|hls-svod)\.itunes\.apple\.com/i) ? "Apple_Fitness"
-								: "Apple"
+								: "Default"
 		Settings = BoxJs?.Settings?.[platform] || database?.Settings?.[platform];
 	};
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean

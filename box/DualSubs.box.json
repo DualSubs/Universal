@@ -2536,6 +2536,39 @@
 					]
 				},
 				{
+					"id": "@DualSubs.Settings.Peacock_TV.Type",
+					"name": "字幕类型（兼容）",
+					"val": "Google",
+					"type": "selects",
+					"desc": "请选择要替换的字幕类型，会为不兼容的播放器替换为此字幕类型",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外部链接"
+						}
+					]
+				},
+				{
 					"id": "@DualSubs.Settings.Peacock_TV.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",

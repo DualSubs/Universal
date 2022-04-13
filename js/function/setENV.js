@@ -2,18 +2,18 @@
 async function setENV(url, database) {
 	//$.log(`⚠ ${$.name}, Set Environment Variables`, "");
 	/***************** Platform *****************/
-	const Platform = url.match(/\.apple\.com/i) ? "Apple"
-		: url.match(/\.(dssott|starott)\.com/i) ? "Disney_Plus"
-			: url.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i) ? "Prime_Video"
-				: url.match(/\.(api\.hbo|hbomaxcdn)\.com/i) ? "HBO_Max"
-					: url.match(/\.(hulustream|huluim)\.com/i) ? "Hulu"
-						: (url.match(/\.(cbsaavideo|cbsivideo)\.com/i)) ? "Paramount_Plus"
-							: (url.match(/dplus-ph-/i)) ? "Discovery_Plus_Ph"
-								: (url.match(/\.peacocktv\.com/i)) ? "Peacock_TV"
-									: url.match(/\.uplynk\.com/i) ? "Discovery_Plus"
-										: url.match(/\.youtube\.com/i) ? "YouTube"
-											: url.match(/\.nflxvideo\.net/i) ? "Netflix"
-												: undefined
+	const Platform = /\.apple\.com/i.test(url) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(url) ? "Disney_Plus"
+			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(url) ? "Prime_Video"
+				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBO_Max"
+					: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+						: /\.(cbsaavideo|cbsivideo)\.com/i.test(url) ? "Paramount_Plus"
+							: /dplus-ph-/i.test(url) ? "Discovery_Plus_Ph"
+								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
+									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
+										: /\.youtube\.com/i.test(url) ? "YouTube"
+											: /\.nflxvideo\.net/i.test(url) ? "Netflix"
+												: "Universal"
 	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
 	/***************** BoxJs *****************/
 	// 包装为局部变量，用完释放内存
@@ -30,14 +30,14 @@ async function setENV(url, database) {
 	/***************** Settings *****************/
 	let Settings = BoxJs?.Settings?.[Platform] || database?.Settings?.Default;
 	if (Platform == "Apple") {
-		let platform = url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i) ? "Apple_TV_Plus"
-			: url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i) ? "Apple_Fitness"
-				: url.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i) ? "Apple_TV"
-					: url.match(/vod-.*-aoc\.tv\.apple\.com/i) ? "Apple_TV_Plus"
-						: url.match(/vod-.*-amt\.tv\.apple\.com/i) ? "Apple_TV"
-							: url.match(/(hls|hls-svod)\.itunes\.apple\.com/i) ? "Apple_Fitness"
-								: "Default"
-		Settings = BoxJs?.Settings?.[platform] || database?.Settings?.[platform];
+		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
+			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
+				: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(url) ? "Apple_TV"
+					: /vod-.*-aoc\.tv\.apple\.com/i.test(url) ? "Apple_TV_Plus"
+						: /vod-.*-amt\.tv\.apple\.com/i.test(url) ? "Apple_TV"
+							: /(hls|hls-svod)\.itunes\.apple\.com/i.test(url) ? "Apple_Fitness"
+								: "Apple"
+		Settings = BoxJs?.Settings?.[platform] || database?.Settings?.Default;
 	};
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
@@ -49,10 +49,13 @@ async function setENV(url, database) {
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	/***************** Type *****************/
+	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
+	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
 	/***************** Cache *****************/
-	let Cache = BoxJs?.Cache?.[Platform] || [];
-	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `$.Cache内容: ${Cache}`, "");
-	if (typeof Cache == "string") Cache = JSON.parse(Cache)
-	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Cache类型: ${typeof Cache}`, `Cache内容: ${JSON.stringify(Cache)}`, "");
-	return [Platform, Verify, Advanced, Settings, Cache];
+	let Caches = BoxJs?.Caches?.[Platform] || [];
+	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
+	if (typeof Caches == "string") Caches = JSON.parse(Caches)
+	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	return { Platform, Verify, Advanced, Settings, Type, Caches };
 };

@@ -1,5 +1,12 @@
-// Set Environment Variables
-async function setENV(url, database) {
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} url - Request URL
+ * @param {Object} database - Default DataBase
+ * @return {Promise<*>}
+ */
+async function setENV(name, url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
 	/***************** Platform *****************/
 	const Platform = /\.apple\.com/i.test(url) ? "Apple"
@@ -18,7 +25,7 @@ async function setENV(url, database) {
 	/***************** BoxJs *****************/
 	// 包装为局部变量，用完释放内存
 	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	let BoxJs = $.getjson("DualSubs", database) // BoxJs
+	let BoxJs = $.getjson(name, database) // BoxJs
 	//$.log(`🚧 ${$.name}, Set Environment Variables`, `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
 	/***************** Verify *****************/
 	let Verify = BoxJs?.Settings?.Verify || database?.Settings?.Verify;

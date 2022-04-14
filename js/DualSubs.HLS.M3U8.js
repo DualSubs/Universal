@@ -246,7 +246,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language} ${obj2.Language} ${type}\"`
 				: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
+			newSub.OPTION["ASSOC-LANGUAGE"] = (platform == "Paramount_Plus") ? `\"${obj2.Language} ${type}\"` : (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
 			// 修改链接
 			newSub.OPTION.URI = (newSub.URI.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
 				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`

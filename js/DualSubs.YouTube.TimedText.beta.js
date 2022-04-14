@@ -25,7 +25,7 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 
 /***************** Processing *****************/
 !(async () => {
-	[$.Platform, $.Verify, $.Advanced, $.Settings, $.Cache] = await setENV(url, DataBase);
+	[$.Platform, $.Verify, $.Advanced, $.Settings, $.Cache] = await setENV("DualSubs", url, DataBase);
 	if ($.Settings.Switch) {
 		if (type == "json3") {
 			// 创建双语字幕JSON
@@ -66,9 +66,15 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 	})
 
 /***************** Fuctions *****************/
-// Function 1
-// Set Environment Variables
-async function setENV(e,t){const a=e.match(/\.apple\.com/i)?"Apple":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/dplus-ph-/i)?"Discovery_Plus_Ph":e.match(/\.peacocktv\.com/i)?"Peacock_TV":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0;let s=$.getjson("DualSubs",t),l=s?.Settings?.Verify||t?.Settings?.Verify,o=s?.Settings?.Advanced||t?.Settings?.Advanced;o.Translator.Times=parseInt(o.Translator?.Times,10),o.Translator.Interval=parseInt(o.Translator?.Interval,10),o.Translator.Exponential=JSON.parse(o.Translator?.Exponential);let i=s?.Settings?.[a]||t?.Settings?.Default;if("Apple"==a){let a=e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i)?"Apple_TV_Plus":e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i)?"Apple_Fitness":e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i)?"Apple_TV":e.match(/vod-.*-aoc\.tv\.apple\.com/i)?"Apple_TV_Plus":e.match(/vod-.*-amt\.tv\.apple\.com/i)?"Apple_TV":e.match(/(hls|hls-svod)\.itunes\.apple\.com/i)?"Apple_Fitness":"Default";i=s?.Settings?.[a]||t?.Settings?.[a]}i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),l.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),l.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),l.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.External.Offset=parseInt(i.External?.Offset,10),i.External.ShowOnly=JSON.parse(i.External?.ShowOnly),i.CacheSize=parseInt(i.CacheSize,10),i.Tolerance=parseInt(i.Tolerance,10);let c=s?.Cache?.[a]||[];return"string"==typeof c&&(c=JSON.parse(c)),[a,l,o,i,c]}
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} e - Persistent Store Key
+ * @param {String} t - Request URL
+ * @param {Object} s - Default DataBase
+ * @return {Promise<*>}
+ */
+ async function setENV(e,t,s){const a=/\.apple\.com/i.test(t)?"Apple":/\.(dssott|starott)\.com/i.test(t)?"Disney_Plus":/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(t)?"Prime_Video":/\.(api\.hbo|hbomaxcdn)\.com/i.test(t)?"HBO_Max":/\.(hulustream|huluim)\.com/i.test(t)?"Hulu":/\.(cbsaavideo|cbsivideo)\.com/i.test(t)?"Paramount_Plus":/dplus-ph-/i.test(t)?"Discovery_Plus_Ph":/\.peacocktv\.com/i.test(t)?"Peacock_TV":/\.uplynk\.com/i.test(t)?"Discovery_Plus":/\.youtube\.com/i.test(t)?"YouTube":/\.nflxvideo\.net/i.test(t)?"Netflix":"Universal";let l=$.getjson(e,s),o=l?.Settings?.Verify||s?.Settings?.Verify,i=l?.Settings?.Advanced||s?.Settings?.Advanced;i.Translator.Times=parseInt(i.Translator?.Times,10),i.Translator.Interval=parseInt(i.Translator?.Interval,10),i.Translator.Exponential=JSON.parse(i.Translator?.Exponential);let p=l?.Settings?.[a]||s?.Settings?.Default;if("Apple"==a){let e=/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(t)?"Apple_TV_Plus":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(t)?"Apple_Fitness":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(t)?"Apple_TV":/vod-.*-aoc\.tv\.apple\.com/i.test(t)?"Apple_TV_Plus":/vod-.*-amt\.tv\.apple\.com/i.test(t)?"Apple_TV":/(hls|hls-svod)\.itunes\.apple\.com/i.test(t)?"Apple_Fitness":"Apple";p=l?.Settings?.[e]||s?.Settings?.Default}p.Switch=JSON.parse(p.Switch),"string"==typeof p.Types&&(p.Types=p.Types.split(",")),o.GoogleCloud.Auth||(p.Types=p.Types.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(p.Types=p.Types.filter((e=>"Azure"!==e))),o.DeepL.Auth||(p.Types=p.Types.filter((e=>"DeepL"!==e))),p.External.Offset=parseInt(p.External?.Offset,10),p.External.ShowOnly=JSON.parse(p.External?.ShowOnly),p.CacheSize=parseInt(p.CacheSize,10),p.Tolerance=parseInt(p.Tolerance,10);const n=t.match(/[&\?]dualsubs=(\w+)$/)?.[1]||p.Type;let r=l?.Caches?.[a]||[];return"string"==typeof r&&(r=JSON.parse(r)),{Platform:a,Verify:o,Advanced:i,Settings:p,Type:n,Caches:r}}
 
 // Function 2
 // Get Cache

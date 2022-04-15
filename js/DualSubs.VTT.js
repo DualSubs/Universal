@@ -459,9 +459,9 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
 		}
 		if (timeStamp2 > timeStamp1) {
-			index1++;
+			index1++
 		} else if (timeStamp2 < timeStamp1) {
-			index2++;
+			index2++
 		} else {
 			index1++
 			index2++

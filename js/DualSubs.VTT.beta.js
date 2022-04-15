@@ -455,11 +455,11 @@ async function combineText(text1, text2, position) { return (position == "Forwar
  * @param {Array} options - options = ["Forward", "Reverse", "ShowOnly"]
  * @return {Promise<*>}
  */
-async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) {
-	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
+async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, Options = ["Forward"]) {
+	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Options:${Options}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
-	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
+	let DualSub = Options.includes("Reverse") ? Sub2 : Sub1
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`let DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	// 有序数列 用不着排序
 	//FirstSub.body.sort((x, y) => x - y);
@@ -474,12 +474,12 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 		//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
 		//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
 		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
-			index0 = options.includes("Reverse") ? index2 : index1;
+			index0 = Options.includes("Reverse") ? index2 : index1;
 			// 多行字幕交替插入
 			/*
 			if (Array.isArray(text1) && Array.isArray(text2)) {
-				let a = options.includes("Reverse") ? text2 : text1;
-				let b = options.includes("Reverse") ? text1 : text2;
+				let a = Options.includes("Reverse") ? text2 : text1;
+				let b = Options.includes("Reverse") ? text1 : text2;
 				let c = [];
 				let length = a.length > b.length ? a.length : b.length;
 				for (let j = 0; j < length; j++) {
@@ -489,16 +489,15 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 				DualSub.body[index0].text = c;
 			} else 
 			*/
-			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
-			//DualSub.body[index0].timeStamp = options.includes("Reverse") ? timeStamp2 : timeStamp1;
-			//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
-			//index1++;
-			//index2++;
+			DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}` : Options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
+			//$.log(`🚧`, `index0: ${index0}`, `text: ${DualSub.body[index0].text}`, "");
+			//DualSub.body[index0].timeStamp = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
+			//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
 		}
 		if (timeStamp2 > timeStamp1) {
-			index1++;
+			index1++
 		} else if (timeStamp2 < timeStamp1) {
-			index2++;
+			index2++
 		} else {
 			index1++
 			index2++

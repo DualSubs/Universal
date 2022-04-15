@@ -2747,7 +2747,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Peacock.Settings.Tolerance",
+					"id": "@DualSubs.Settings.Peacock_TV.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",

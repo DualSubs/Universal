@@ -20,14 +20,14 @@ $.log(`🚧 ${$.name}`, `url: ${url}`, "");
 
 if (method == "OPTIONS") $.done();
 
-const type = url.match(/[&\?](format|fmt)=([^&]+)/)[2]
-$.log(`🚧 ${$.name}`, `type: ${type}`, "");
+const Type = url.match(/[&\?](format|fmt)=([^&]+)/)[2]
+$.log(`🚧 ${$.name}`, `Type: ${Type}`, "");
 
 /***************** Processing *****************/
 !(async () => {
-	[$.Platform, $.Verify, $.Advanced, $.Settings, $.Cache] = await setENV("DualSubs", url, DataBase);
-	if ($.Settings.Switch) {
-		if (type == "json3") {
+	const { Platform, Settings, Caches } = await setENV("DualSubs", url, DataBase);
+	if (Settings.Switch) {
+		if (Type == "json3") {
 			// 创建双语字幕JSON
 			let DualSub = {};
 			if (processQuery(url, "tlang")) { // 已选
@@ -39,9 +39,9 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 				// 获取序列化字幕
 				let SecondSub = JSON.parse($response.body);
 				let OriginSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, $.Settings.Tolerance, [$.Settings.Position]);
+				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 			} else { // 未选
-				let langcode = DataBase?.Languages?.[$.Platform]?.[$.Settings.Languages[0]]
+				let langcode = DataBase?.Languages?.[Platform]?.[Settings.Languages[0]]
 				$.log(`🚧 ${$.name}`, `langcode: ${langcode}`, "");
 				let request = {
 					"url": url+ `&tlang=${langcode}`, // 翻译字幕
@@ -51,10 +51,10 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 				// 获取序列化字幕
 				let OriginSub = JSON.parse($response.body);
 				let SecondSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, $.Settings.Tolerance, [$.Settings.Position]);
+				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 			}
 			$response.body = JSON.stringify(DualSub);
-		} else if (type == "svr3") {
+		} else if (Type == "svr3") {
 			$.done()
 		}
 	}
@@ -76,20 +76,38 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
  */
  async function setENV(e,t,s){const a=/\.apple\.com/i.test(t)?"Apple":/\.(dssott|starott)\.com/i.test(t)?"Disney_Plus":/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(t)?"Prime_Video":/\.(api\.hbo|hbomaxcdn)\.com/i.test(t)?"HBO_Max":/\.(hulustream|huluim)\.com/i.test(t)?"Hulu":/\.(cbsaavideo|cbsivideo)\.com/i.test(t)?"Paramount_Plus":/dplus-ph-/i.test(t)?"Discovery_Plus_Ph":/\.peacocktv\.com/i.test(t)?"Peacock_TV":/\.uplynk\.com/i.test(t)?"Discovery_Plus":/\.youtube\.com/i.test(t)?"YouTube":/\.nflxvideo\.net/i.test(t)?"Netflix":"Universal";let l=$.getjson(e,s),o=l?.Settings?.Verify||s?.Settings?.Verify,i=l?.Settings?.Advanced||s?.Settings?.Advanced;i.Translator.Times=parseInt(i.Translator?.Times,10),i.Translator.Interval=parseInt(i.Translator?.Interval,10),i.Translator.Exponential=JSON.parse(i.Translator?.Exponential);let p=l?.Settings?.[a]||s?.Settings?.Default;if("Apple"==a){let e=/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(t)?"Apple_TV_Plus":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(t)?"Apple_Fitness":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(t)?"Apple_TV":/vod-.*-aoc\.tv\.apple\.com/i.test(t)?"Apple_TV_Plus":/vod-.*-amt\.tv\.apple\.com/i.test(t)?"Apple_TV":/(hls|hls-svod)\.itunes\.apple\.com/i.test(t)?"Apple_Fitness":"Apple";p=l?.Settings?.[e]||s?.Settings?.Default}p.Switch=JSON.parse(p.Switch),"string"==typeof p.Types&&(p.Types=p.Types.split(",")),o.GoogleCloud.Auth||(p.Types=p.Types.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(p.Types=p.Types.filter((e=>"Azure"!==e))),o.DeepL.Auth||(p.Types=p.Types.filter((e=>"DeepL"!==e))),p.External.Offset=parseInt(p.External?.Offset,10),p.External.ShowOnly=JSON.parse(p.External?.ShowOnly),p.CacheSize=parseInt(p.CacheSize,10),p.Tolerance=parseInt(p.Tolerance,10);const n=t.match(/[&\?]dualsubs=(\w+)$/)?.[1]||p.Type;let r=l?.Caches?.[a]||[];return"string"==typeof r&&(r=JSON.parse(r)),{Platform:a,Verify:o,Advanced:i,Settings:p,Type:n,Caches:r}}
 
-// Function 2
-// Get Cache
-async function getCache(cache = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache)}`,"");
-	let Indices = { "Index": await getIndex(cache) };
+/**
+ * Get Cache
+ * @author VirgilClyne
+ * @param {String} type - type
+ * @param {Object} settings - settings
+ * @param {Object} cache - cache
+ * @return {Promise<*>}
+ */
+ async function getCache(type, settings, cache = {}) {
+	$.log(`⚠ ${$.name}, Get Cache`, "");
+	let Indices = { "Index": await getIndex(settings, cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-	for await (var language of $.Settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+	for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+	if (type == "Official") {
+		if (Indices[settings.Languages[0]] !== -1) {
+			Indices[settings.Languages[1]] = cache[Indices.Index][settings.Languages[1]].findIndex(data => {
+				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
+			});
+			if (Indices[settings.Languages[1]] == -1) {
+				Indices[settings.Languages[1]] = cache[Indices.Index][settings.Languages[1]].findIndex(data => {
+					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+				});
+			};
+		};
+	};
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
-	return [Indices, cache[Indices.Index]]
+	return Indices
 	/***************** Fuctions *****************/
-	async function getIndex(cache) {
+	async function getIndex(settings, cache) {
 		return cache.findIndex(item => {
-			let URLs = [item?.URL, item?.baseURL];
-			for (var language of $.Settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			let URLs = [item?.URL];
+			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
@@ -98,8 +116,15 @@ async function getCache(cache = {}) {
 	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
-// Function 3
-// Set Cache
+/**
+ * Set Cache
+ * @author VirgilClyne
+ * @param {Number} index - index
+ * @param {Object} target - target
+ * @param {Object} sources - sources
+ * @param {Number} num - num
+ * @return {Promise<*>}
+ */
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶

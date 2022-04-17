@@ -19,7 +19,7 @@ if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Verify, Advanced, Settings, Type, Caches } = await setENV(url, DataBase);
+	const { Platform, Verify, Advanced, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
 		// 获取序列化VTT
 		let OriginVTT = VTT.parse($response.body);
@@ -95,11 +95,12 @@ if (method == "OPTIONS") $.done();
 /**
  * Set Environment Variables
  * @author VirgilClyne
- * @param {String} url - url
- * @param {Object} database - database
+ * @param {String} e - Persistent Store Key
+ * @param {String} t - Request URL
+ * @param {Object} s - Default DataBase
  * @return {Promise<*>}
  */
-async function setENV(e,t){const s=/\.apple\.com/i.test(e)?"Apple":/\.(dssott|starott)\.com/i.test(e)?"Disney_Plus":/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(e)?"Prime_Video":/\.(api\.hbo|hbomaxcdn)\.com/i.test(e)?"HBO_Max":/\.(hulustream|huluim)\.com/i.test(e)?"Hulu":/\.(cbsaavideo|cbsivideo)\.com/i.test(e)?"Paramount_Plus":/dplus-ph-/i.test(e)?"Discovery_Plus_Ph":/\.peacocktv\.com/i.test(e)?"Peacock_TV":/\.uplynk\.com/i.test(e)?"Discovery_Plus":/\.youtube\.com/i.test(e)?"YouTube":/\.nflxvideo\.net/i.test(e)?"Netflix":"Universal";let a=$.getjson("DualSubs",t),l=a?.Settings?.Verify||t?.Settings?.Verify,o=a?.Settings?.Advanced||t?.Settings?.Advanced;o.Translator.Times=parseInt(o.Translator?.Times,10),o.Translator.Interval=parseInt(o.Translator?.Interval,10),o.Translator.Exponential=JSON.parse(o.Translator?.Exponential);let i=a?.Settings?.[s]||t?.Settings?.Default;if("Apple"==s){let s=/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(e)?"Apple_TV_Plus":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(e)?"Apple_Fitness":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(e)?"Apple_TV":/vod-.*-aoc\.tv\.apple\.com/i.test(e)?"Apple_TV_Plus":/vod-.*-amt\.tv\.apple\.com/i.test(e)?"Apple_TV":/(hls|hls-svod)\.itunes\.apple\.com/i.test(e)?"Apple_Fitness":"Apple";i=a?.Settings?.[s]||t?.Settings?.Default}i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),l.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),l.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),l.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.External.Offset=parseInt(i.External?.Offset,10),i.External.ShowOnly=JSON.parse(i.External?.ShowOnly),i.CacheSize=parseInt(i.CacheSize,10),i.Tolerance=parseInt(i.Tolerance,10);const p=e.match(/[&\?]dualsubs=(\w+)$/)?.[1]||i.Type;let n=a?.Caches?.[s]||[];return"string"==typeof n&&(n=JSON.parse(n)),{Platform:s,Verify:l,Advanced:o,Settings:i,Type:p,Caches:n}}
+ async function setENV(e,t,s){const a=/\.apple\.com/i.test(t)?"Apple":/\.(dssott|starott)\.com/i.test(t)?"Disney_Plus":/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(t)?"Prime_Video":/\.(api\.hbo|hbomaxcdn)\.com/i.test(t)?"HBO_Max":/\.(hulustream|huluim)\.com/i.test(t)?"Hulu":/\.(cbsaavideo|cbsivideo)\.com/i.test(t)?"Paramount_Plus":/dplus-ph-/i.test(t)?"Discovery_Plus_Ph":/\.peacocktv\.com/i.test(t)?"Peacock_TV":/\.uplynk\.com/i.test(t)?"Discovery_Plus":/\.youtube\.com/i.test(t)?"YouTube":/\.nflxvideo\.net/i.test(t)?"Netflix":"Universal";let l=$.getjson(e,s),o=l?.Settings?.Verify||s?.Settings?.Verify,i=l?.Settings?.Advanced||s?.Settings?.Advanced;i.Translator.Times=parseInt(i.Translator?.Times,10),i.Translator.Interval=parseInt(i.Translator?.Interval,10),i.Translator.Exponential=JSON.parse(i.Translator?.Exponential);let p=l?.Settings?.[a]||s?.Settings?.Default;if("Apple"==a){let e=/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(t)?"Apple_TV_Plus":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(t)?"Apple_Fitness":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(t)?"Apple_TV":/vod-.*-aoc\.tv\.apple\.com/i.test(t)?"Apple_TV_Plus":/vod-.*-amt\.tv\.apple\.com/i.test(t)?"Apple_TV":/(hls|hls-svod)\.itunes\.apple\.com/i.test(t)?"Apple_Fitness":"Apple";p=l?.Settings?.[e]||s?.Settings?.Default}p.Switch=JSON.parse(p.Switch),"string"==typeof p.Types&&(p.Types=p.Types.split(",")),o.GoogleCloud.Auth||(p.Types=p.Types.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(p.Types=p.Types.filter((e=>"Azure"!==e))),o.DeepL.Auth||(p.Types=p.Types.filter((e=>"DeepL"!==e))),p.External.Offset=parseInt(p.External?.Offset,10),p.External.ShowOnly=JSON.parse(p.External?.ShowOnly),p.CacheSize=parseInt(p.CacheSize,10),p.Tolerance=parseInt(p.Tolerance,10);const n=t.match(/[&\?]dualsubs=(\w+)$/)?.[1]||p.Type;let r=l?.Caches?.[a]||[];return"string"==typeof r&&(r=JSON.parse(r)),{Platform:a,Verify:o,Advanced:i,Settings:p,Type:n,Caches:r}}
 
 /**
  * Get Cache
@@ -445,9 +446,9 @@ async function getOfficialRequest(platform, VTTs = []) {
  * @param {Array} options - options = ["Forward", "Reverse", "ShowOnly"]
  * @return {Promise<*>}
  */
-async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) {
-	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
-	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
+async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, Options = ["Forward"]) {
+	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Options:${Options}`, "");
+	let DualSub = Options.includes("Reverse") ? Sub2 : Sub1
 	const length1 = Sub1.body.length, length2 = Sub2.body.length;
 	let index0 = 0, index1 = 0, index2 = 0;
 	// 双指针法查找两个数组中的相同元素
@@ -455,8 +456,8 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 		const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp + Offset;
 		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
 		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
-			index0 = options.includes("Reverse") ? index2 : index1;
-			DualSub.body[index0].text = options.includes("Reverse") ? `${text2}\n${text1}` : options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
+			index0 = Options.includes("Reverse") ? index2 : index1;
+			DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}` : Options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
 		}
 		if (timeStamp2 > timeStamp1) {
 			index1++

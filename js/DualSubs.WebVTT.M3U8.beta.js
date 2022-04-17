@@ -71,35 +71,38 @@ if (method == "OPTIONS") $.done();
  * @param {Object} cache - cache
  * @return {Promise<*>}
  */
-async function getCache(type, settings, cache = {}) {
+async function getCache(type, settings, caches = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let Indices = { "Index": await getIndex(settings, cache) };
-	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-	for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
-	if (type == "Official") {
-		if (Indices[settings.Languages[0]] !== -1) {
-			Indices[settings.Languages[1]] = cache[Indices.Index][settings.Languages[1]].findIndex(data => {
-				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
-			});
-			if (Indices[settings.Languages[1]] == -1) {
-				Indices[settings.Languages[1]] = cache[Indices.Index][settings.Languages[1]].findIndex(data => {
-					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+	let Indices = {};
+	Indices.Index = await getIndex(settings, caches);
+	if (Indices.Index !== -1) {
+		for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+		if (type == "Official") {
+			// 修正缓存
+			if (Indices[settings.Languages[0]] !== -1) {
+				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
+					if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
 				});
+				if (Indices[settings.Languages[1]] == -1) {
+					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
+						if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+					});
+				};
 			};
 		};
-	};
+	}
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return Indices
 	/***************** Fuctions *****************/
-	async function getIndex(settings, cache) {
-		return cache.findIndex(item => {
+	async function getIndex(settings, caches) {
+		return caches.findIndex(item => {
 			let URLs = [item?.URL];
 			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
-			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
+			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
 	};
-	async function getDataIndex(index, lang) { return cache?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
+	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
 	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 

@@ -24,13 +24,13 @@ if (method == "OPTIONS") $.done();
 		// 找缓存
 		const Indices = await getCache(Type, Settings, Caches);
 		let Cache = Caches?.[Indices.Index] || {};
-		// 序列化JSON
-		let data = JSON.parse($response.body);
-		// PlayList.m3u8 URL
-		Cache.URL = url;
+		// 序列化JSON or 序列化M3U8
+		let PlayList = (Platform == "Netflix") ? JSON.parse($response.body) : M3U8.parse($response.body);
+		// PlayList.m3u8 URL or Netflix movieId
+		Cache.ID = (Platform == "Netflix") ? data.result?.movieId ?? data.result?.[0]?.movieId : url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
 		for await (var language of Settings.Languages) {
-			Cache[language] = await getMEDIA(Platform, PlayList, "SUBTITLES", language);
+			Cache[language] = await getMEDIA(Platform, PlayList, "subtitles", language);
 			//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		};
 		// 写入缓存
@@ -71,7 +71,7 @@ if (method == "OPTIONS") $.done();
  * @param {Object} cache - cache
  * @return {Promise<*>}
  */
-async function getCache(type, settings, caches = {}) {
+async function getCache(platform, type, settings, caches = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = {};
 	Indices.Index = await getIndex(settings, caches);
@@ -80,13 +80,19 @@ async function getCache(type, settings, caches = {}) {
 		if (type == "Official") {
 			// 修正缓存
 			if (Indices[settings.Languages[0]] !== -1) {
-				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-					if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
-				});
-				if (Indices[settings.Languages[1]] == -1) {
+				if (platform == "Netflix") {
 					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-						if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
-					});
+						if (data.isForcedNarrative !== true && data.new_track_id == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].new_track_id) return true
+					})
+				} else {
+					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
+						if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true
+					})
+					if (Indices[settings.Languages[1]] == -1) {
+						Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
+							if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+						})
+					};
 				};
 			};
 		};
@@ -94,16 +100,21 @@ async function getCache(type, settings, caches = {}) {
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return Indices
 	/***************** Fuctions *****************/
-	async function getIndex(settings, caches) {
+	async function getIndex(platform, settings, caches) {
 		return caches.findIndex(item => {
 			let URLs = [item?.URL];
-			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(platform, d)));
 			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
 	};
-	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URI, item?.VTTs] }
+	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(platform, item).flat(Infinity).some(URL => url.includes(URL || null))); };
+	function getURIs(platform, item) {
+		if (platform == "Netflix") {
+			let TT = item?.ttDownloadables;
+			return [Object.values(TT?.["imsc1.1"].downloadUrls), Object.values(TT?.["webvtt-lssdh-ios8"].downloadUrls), Object.values(TT?.["simplesdh"].downloadUrls), Object.values(TT?.["dfxp-ls-sdh"].downloadUrls)]
+		} else return [item?.URI, item?.VTTs]
+	}
 };
 
 /**
@@ -135,19 +146,20 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
  * @return {Promise<*>}
  */
 async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
-	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
+	$.log(`⚠ ${$.name}, Get MEDIA Data`, "");
 	// 自动语言转换
 	let langcodes = await switchLangCode(platform, langCode, DataBase);
 	//查询是否有符合语言的字幕
+	let timedtexttracks = json.result?.timedtexttracks ?? json.result?.[0].timedtexttracks
 	let datas = [];
 	for await (var langcode of langcodes) {
-		datas = json.body.filter(item => (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
+		datas = timedtexttracks.filter(item => (item?.rawTrackType == type && item?.language == langcode));
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
 			break;
 		} else datas = [await setMEDIA({}, langcodes[0])];
 	};
-	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
+	$.log(`🎉 ${$.name}, 调试信息`, "Get MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
 
 	/***************** Fuctions *****************/
@@ -171,9 +183,8 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	async function setMEDIA(data = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
 		let Data = { ...data };
-		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
-		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
-		Data.URI = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		Data.languageDescription = (data?.languageDescription ?? langCode);
+		Data.language = (data?.language ?? langCode);
 		$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
 		return Data
 	};

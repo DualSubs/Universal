@@ -1,0 +1,10 @@
+#!name= 🍿️ DualSubs for Netflix
+#!desc= (BETA) Netflix字幕增强及双语模块
+
+[Script]
+DualSubs.Netflix.Manifest.json = type=http-response, pattern=^https?:\/\/www\.netflix\.com\/playapi\/cadmium\/manifest\/(.*)(\?.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Netflix.Manifest.beta.js
+DualSubs.Netflix.PBO_Manifest.json = type=http-response, pattern=^https?:\/\/ios\.prod\.ftl\.netflix\.com\/nq\/cadmium\/iosplatform\/pbo_manifest\/~1.0.0\/router, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Netflix.Manifest.beta.js
+DualSubs.Netflix.vtt = type=http-response, pattern=https?:\/\/.+\.nflxvideo.net\/(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.VTT.beta.js
+
+[MITM]
+hostname = %APPEND% www.netflix.com, ios.prod.ftl.netflix.com, *.nflxvideo.net

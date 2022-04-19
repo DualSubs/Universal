@@ -245,10 +245,10 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			let newSub = (obj1?.EXT) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
-			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
+			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
 			// 修改语言代码
-			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language}/${obj2.Language}[${type}]\"`
-				: (platform == "Apple") ? `\"${obj1.Language} [${type}]\"` : (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
+			newSub.OPTION.LANGUAGE = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language}/${obj2.Language}[${type}]\"`
+			: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
 			// 修改链接

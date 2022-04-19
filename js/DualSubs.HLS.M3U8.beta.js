@@ -81,11 +81,11 @@ async function getCache(type, settings, caches = {}) {
 			// 修正缓存
 			if (Indices[settings.Languages[0]] !== -1) {
 				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-					if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
+					if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
 				});
 				if (Indices[settings.Languages[1]] == -1) {
 					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-						if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+						if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
 					});
 				};
 			};
@@ -141,7 +141,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	//查询是否有符合语言的字幕
 	let datas = [];
 	for await (var langcode of langcodes) {
-		datas = json.body.filter(item => (item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
+		datas = json.body.filter(item => (data.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
 			break;

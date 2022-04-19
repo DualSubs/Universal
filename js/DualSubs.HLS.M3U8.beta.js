@@ -245,10 +245,10 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			let newSub = (obj1?.EXT) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
-			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
+			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
 			// 修改语言代码
-			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language} ${obj2.Language} ${type}\"`
-				: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
+			newSub.OPTION.LANGUAGE = (platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language}/${obj2.Language}[${type}]\"`
+				: (platform == "Apple") ? `\"${obj1.Language} [${type}]\"` : (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
 			// 修改链接
@@ -303,7 +303,7 @@ async function isStandard(platform, url, headers) {
 		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
         else if (headers?.["X-Hbo-Device-Name"]?.includes("ios")) standard = false;
         else if (url?.includes("device-code=iphone")) standard = false;
-    } else if (platform == "Peacock_TV") {
+	} else if (platform == "Peacock_TV") {
 		if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
 		else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
 		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;

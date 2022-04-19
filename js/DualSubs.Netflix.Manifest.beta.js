@@ -24,8 +24,8 @@ if (method == "OPTIONS") $.done();
 		// 找缓存
 		const Indices = await getCache(Type, Settings, Caches);
 		let Cache = Caches?.[Indices.Index] || {};
-		// 序列化M3U8
-		let PlayList = M3U8.parse($response.body);
+		// 序列化JSON
+		let data = JSON.parse($response.body);
 		// PlayList.m3u8 URL
 		Cache.URL = url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询

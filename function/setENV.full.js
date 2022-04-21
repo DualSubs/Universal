@@ -19,7 +19,7 @@ async function setENV(name, url, database) {
 								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
 									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
 										: /\.youtube\.com/i.test(url) ? "YouTube"
-											: /\.nflxvideo\.net/i.test(url) ? "Netflix"
+											: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
 												: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
 	/***************** BoxJs *****************/

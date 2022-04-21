@@ -161,8 +161,8 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	let MEDIAs = json.body ?? json.result?.timedtexttracks ?? json.result?.[0].timedtexttracks
 	let datas = [];
 	for await (var langcode of langcodes) {
-		datas = (platform == "Netflix") ? MEDIAs.filter(item => (data.isForcedNarrative !== true && item?.rawTrackType == type && item?.language == langcode)) 
-		: MEDIAs.filter(item => (data.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
+		datas = (platform == "Netflix") ? MEDIAs.filter(item => (item?.isForcedNarrative !== true && item?.rawTrackType == type && item?.language == langcode)) 
+		: MEDIAs.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
 			break;

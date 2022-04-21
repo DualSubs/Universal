@@ -102,6 +102,7 @@ async function getCache(platform, type, settings, caches = {}) {
 	return Indices
 	/***************** Fuctions *****************/
 	async function getIndex(platform, settings, caches) {
+		$.log(`🚧 ${$.name}, getIndex`, "");
 		return caches.findIndex(item => {
 			$.log(`🚧 ${$.name}`, "caches.findIndex", "");
 			let URLs = [item?.ID];
@@ -114,13 +115,12 @@ async function getCache(platform, type, settings, caches = {}) {
 	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(platform, item).flat(Infinity).some(URL => url.includes(URL || null))); };
 	function getURIs(platform, item) {
 		if (platform == "Netflix") {
-			$.log(`🚧 ${$.name}`, "Netflix", "");
+			$.log(`🚧 ${$.name}, Netflix`, "");
 			let Ids = Object.keys(item?.downloadableIds);
-			$.log(`🚧 ${$.name}`, `Ids = ${JSON.stringify(Ids)}`, "");
+			$.log(`🚧 ${$.name}`, `Ids = ${Ids}`, "");
 			let TT = item?.ttDownloadables;
 			$.log(`🚧 ${$.name}`, `TT = ${JSON.stringify(TT)}`, "");
 			return [Ids.map(Id => Object.values(TT?.[`${Id}`].downloadUrls))];
-			//return [Object.values(TT?.["imsc1.1"]?.downloadUrls), Object.values(TT?.["webvtt-lssdh-ios8"]?.downloadUrls), Object.values(TT?.["simplesdh"]?.downloadUrls), Object.values(TT?.["dfxp-ls-sdh"]?.downloadUrls)]
 		} else return [item?.URI, item?.VTTs]
 	}
 };

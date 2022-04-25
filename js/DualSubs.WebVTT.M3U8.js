@@ -139,7 +139,7 @@ async function getVTTs(platform, url) {
 		let VTTs = response.body.match(/^.+\.(web)?vtt(\?.*)?$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
 		// 筛选字幕
-		VTTs = VTTs.filter(item => !/\/empty/.test(item))
+		VTTs = VTTs.filter(item => !/empty/.test(item))
 		if (platform == "Disney_Plus") {
 			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
 		};
@@ -161,8 +161,8 @@ async function getVTTs(platform, url) {
  */
 async function setWebVTTm3u8(body = {}, type = "") {
 	$.log(`⚠ ${$.name}, Set Subtitle WebVTT *.m3u8`, "");
-	body = body.replace(/^.+\.(web)?vtt(\?.*)$/gim, `$&&dualsubs=${type}`);
-	body = body.replace(/^.+\.(web)?vtt$/gim, `$&?dualsubs=${type}`);
+	body = body.replace(/^(?!.*empty).+\.(web)?vtt(\?.*)$/gim, `$&&dualsubs=${type}`);
+	body = body.replace(/^(?!.*empty).+\.(web)?vtt$/gim, `$&?dualsubs=${type}`);
 	$.log(`🎉 ${$.name}, Set Subtitle WebVTT *.m3u8`, `body: ${body}`, "");
 	return body
 };

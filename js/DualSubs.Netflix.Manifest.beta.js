@@ -27,7 +27,7 @@ if (method == "OPTIONS") $.done();
 		// 序列化JSON or 序列化M3U8
 		let PlayList = (Platform == "Netflix") ? JSON.parse($response.body) : M3U8.parse($response.body);
 		// PlayList.m3u8 URL or Netflix movieId
-		Cache.ID = (Platform == "Netflix") ? data.result?.movieId ?? data.result?.[0]?.movieId : url;
+		Cache.ID = (Platform == "Netflix") ? PlayList.result?.movieId ?? PlayList.result?.[0]?.movieId : url;
 		$.log(`🚧 ${$.name}`, `Cache.ID = ${Cache.ID}`, "");
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
 		for await (var language of Settings.Languages) {
@@ -115,8 +115,8 @@ async function getCache(platform, type, settings, caches = {}) {
 	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(platform, item).flat(Infinity).some(URL => url.includes(URL || null))); };
 	function getURIs(platform, item) {
 		if (platform == "Netflix") {
-			$.log(`🚧 ${$.name}, Netflix`, "");
-			let Ids = Object.keys(item?.downloadableIds);
+			$.log(`🚧 ${$.name}, Netflix`, `item: ${JSON.stringify(item)}`);
+			let Ids = (item?.downloadableIds) ? Object.keys(item?.downloadableIds) : null;
 			$.log(`🚧 ${$.name}`, `Ids = ${Ids}`, "");
 			let TT = item?.ttDownloadables;
 			$.log(`🚧 ${$.name}`, `TT = ${JSON.stringify(TT)}`, "");
@@ -140,7 +140,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	if (index !== -1) delete target[index] // 删除旧记录
 	target.unshift(sources) // 头部插入缓存
 	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
+	$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
 };
 
@@ -159,6 +159,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 	let langcodes = await switchLangCode(platform, langCode, DataBase);
 	//查询是否有符合语言的字幕
 	let MEDIAs = json.body ?? json.result?.timedtexttracks ?? json.result?.[0].timedtexttracks
+	$.log(`🎉 ${$.name}, 调试信息`, "Get MEDIA Data", `MEDIAs: ${JSON.stringify(MEDIAs)}`, "");
 	let datas = [];
 	for await (var langcode of langcodes) {
 		datas = (platform == "Netflix") ? MEDIAs.filter(item => (item?.isForcedNarrative !== true && item?.rawTrackType == type && item?.language == langcode)) 
@@ -309,6 +310,34 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 		if (standard == true) json.body.splice(index + 1, 0, ...options)
 		else json.body.splice(index, 1, ...options); // 兼容性设置
 	};
+};
+
+/**
+ * is Standard?
+ * Determine whether Standard Media Player
+ * @author VirgilClyne
+ * @param {String} platform - platform
+ * @param {String} url - url
+ * @param {Object} headers - headers
+ * @return {Promise<*>}
+ */
+async function isStandard(platform, url, headers) {
+    $.log(`⚠ ${$.name}, is Standard`, "");
+    let standard = true;
+    if (platform == "HBO_Max") {
+		if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
+		else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
+		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
+        else if (headers?.["X-Hbo-Device-Name"]?.includes("ios")) standard = false;
+        else if (url?.includes("device-code=iphone")) standard = false;
+	} else if (platform == "Peacock_TV") {
+		if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
+		else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
+		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
+		else if (headers?.["User-Agent"]?.includes("PeacockMobile")) standard = false;
+    }
+    $.log(`🎉 ${$.name}, is Standard`, `standard: ${standard}`, "");
+    return standard
 };
 
 /***************** Env *****************/

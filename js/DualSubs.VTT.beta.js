@@ -33,7 +33,8 @@ if (method == "OPTIONS") $.done();
 			let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
 			if (!VTTs) $.done();
 			else if (Platform == "Apple") {
-				let requests = await getOfficialRequest(Platform, VTTs);
+				let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
+				let requests = await getOfficialRequest(Platform, VTTs, oVTTs);
 				for await (var request of requests) {
 					let SecondVTT = await getWebVTT(request);
 					DualSub = await CombineDualSubs(OriginVTT, SecondVTT, 0, Settings.Tolerance, [Settings.Position]);
@@ -171,7 +172,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
  * @param {Array} VTTs - VTTs
  * @return {Promise<*>}
  */
-async function getOfficialRequest(platform, VTTs = []) {
+async function getOfficialRequest(platform, VTTs = [], oVTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, `VTTs: ${VTTs}`, "");
 	let fileName = (platform == "Apple") ? url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple 片段分型序号不同
 		: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Disney+ 片段名称相同
@@ -180,9 +181,14 @@ async function getOfficialRequest(platform, VTTs = []) {
 	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
 
 	if (platform == "Apple") {
-		let Index = VTTs.findIndex(item => item.includes(fileName))
+		let oIndex = oVTTs.findIndex(item => item.includes(fileName));
+		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_oIndex: ${oIndex}`, "")
+		let oPosition = oIndex / oVTTs.length;
+		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_oPosition: ${oPosition}`, "")
+		//let Index = VTTs.findIndex(item => item.includes(fileName));
+		let Index = Math.round(oPosition * VTTs.length);
 		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_Index: ${Index}`, "")
-		nearlyVTTs = VTTs.slice((Index - 5 < 0) ? 0 : Index - 5, Index + 5);
+		nearlyVTTs = VTTs.slice((Index - 2 < 0) ? 0 : Index - 2, Index + 2);
 		let requests = nearlyVTTs.map(VTT => {
 			return {
 				"url": VTT,

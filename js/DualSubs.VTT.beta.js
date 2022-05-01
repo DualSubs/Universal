@@ -291,7 +291,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 					}
 				}
 			]
-			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 1))] // 随机Request, 排除最后一项
+			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
 			text = (Array.isArray(text)) ? text.join("\n\n") : text;
 			request.url = request.url + `&sl=${DataBase.Languages.Google[source]}&tl=${DataBase.Languages.Google[target]}&q=${encodeURIComponent(text)}`;
 		} else if (type == "GoogleCloud") {

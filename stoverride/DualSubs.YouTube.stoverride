@@ -1,5 +1,5 @@
 name: 🍿️ DualSubs for YouTube
-desc: (0.2.1) YouTube字幕增强及双语模块
+desc: (0.2.x) YouTube字幕增强及双语模块
 
 http:
   mitm:

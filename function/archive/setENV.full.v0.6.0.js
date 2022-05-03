@@ -9,7 +9,7 @@
 async function setENV(name, url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
 	/***************** Platform *****************/
-	let Platform = /\.apple\.com/i.test(url) ? "Apple"
+	const Platform = /\.apple\.com/i.test(url) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(url) ? "Disney_Plus"
 			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(url) ? "Prime_Video"
 				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBO_Max"
@@ -22,17 +22,30 @@ async function setENV(name, url, database) {
 											: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
 												: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
+	/***************** BoxJs *****************/
+	// 包装为局部变量，用完释放内存
+	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
+	let BoxJs = $.getjson(name, database) // BoxJs
+	//$.log(`🚧 ${$.name}, Set Environment Variables`, `$.BoxJs类型: ${typeof $.BoxJs}`, `$.BoxJs内容: ${JSON.stringify($.BoxJs)}`, "");
+	/***************** Verify *****************/
+	let Verify = BoxJs?.Settings?.Verify || database?.Settings?.Verify;
+	/***************** Advanced *****************/
+	let Advanced = BoxJs?.Settings?.Advanced || database?.Settings?.Advanced;
+	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
+	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
+	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
+	/***************** Settings *****************/
+	let Settings = BoxJs?.Settings?.[Platform] || database?.Settings?.Default;
 	if (Platform == "Apple") {
-		Platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
+		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
 			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
 				: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(url) ? "Apple_TV"
 					: /vod-.*-aoc\.tv\.apple\.com/i.test(url) ? "Apple_TV_Plus"
 						: /vod-.*-amt\.tv\.apple\.com/i.test(url) ? "Apple_TV"
 							: /(hls|hls-svod)\.itunes\.apple\.com/i.test(url) ? "Apple_Fitness"
 								: "Apple"
+		Settings = BoxJs?.Settings?.[platform] || database?.Settings?.Default;
 	};
-	/***************** Settings *****************/
-	let Settings = await getENV(name, Platform, database);
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
@@ -42,31 +55,14 @@ async function setENV(name, url, database) {
 	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
-	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	$.log(`🚧 ${$.name}, Set Environment Variables`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Type *****************/
 	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
-	/***************** Verify *****************/
-	let Verify = await getENV(name, Verify, database);
-	/***************** Advanced *****************/
-	let Advanced = await getENV(name, Advanced, database);
-	/***************** Prase *****************/
-	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
-	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
-	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
 	/***************** Cache *****************/
 	let Caches = BoxJs?.Caches?.[Platform] || [];
 	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
 	if (typeof Caches == "string") Caches = JSON.parse(Caches)
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	return { Platform, Verify, Advanced, Settings, Type, Caches };
-	/**
-	 * Get Environment Variables
-	 * @author VirgilClyne
-	 * @param {String} t - Persistent Store Key
-	 * @param {String} e - Platform Name
-	 * @param {Object} n - Default DataBase
-	 * @return {Promise<*>}
-	 */
-	async function getENV(t,e,n){let i=$.getjson(t,n),r=i?.[e]||i?.Settings?.[e]||n[e];if("undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var s in t)f(e,s,t[s]);Object.assign(r,e)}function f(t,e,n){e.split(".").reduce(((t,i,r)=>t[i]=e.split(".").length===++r?n:t[i]||{}),t)}}return r}
 };

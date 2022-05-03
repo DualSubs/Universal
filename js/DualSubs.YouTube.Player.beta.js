@@ -17,16 +17,16 @@ const { url, method, headers } = $request
 $.log(`🚧 ${$.name}`, `url: ${url}`, "");
 if (method == "OPTIONS") $.done();
 
-const Type = headers["Content-Type"].match(/([^\/;]+)/g)[2]
-$.log(`🚧 ${$.name}`, `Type: ${Type}`, "");
+const Format = headers["Content-Type"].match(/([^\/;]+)/g)[2]
+$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Caches } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
 		// 找缓存
 		const Indices = await getCache(Type, Settings, Caches);
-		if (Type == "json") {
+		if (Format == "json") {
 			let data = JSON.parse($response.body);
 			// PlayList.m3u8 URL
 			Cache.URL = url;

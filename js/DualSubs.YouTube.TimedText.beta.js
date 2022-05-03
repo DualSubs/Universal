@@ -17,49 +17,53 @@ const { url, method, headers } = $request
 $.log(`🚧 ${$.name}`, `url: ${url}`, "");
 if (method == "OPTIONS") $.done();
 
-const Type = url.match(/[&\?](format|fmt)=([^&]+)/)[2]
-$.log(`🚧 ${$.name}`, `Type: ${Type}`, "");
+const Format = url.match(/[&\?](format|fmt)=(\w+)/)[2]
+$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Caches } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
-		if (Type == "json3") {
-			// 创建双语字幕JSON
+		if (Format == "json3") {
+			// 创建字幕JSON
+			let OriginSub = {};
+			let SecondSub = {};
 			let DualSub = {};
+			// 创建链接请求
+			let request = {
+				"url": url,
+				"headers": headers
+			};
 			if (processQuery(url, "tlang")) { // 已选
-				let request = {
-					"url": url.replace(/(&tlang=.*)/, ""), // 原字幕
-					"headers": headers
-				}
+				request.url = url.replace(/(&tlang=.*)/, ""); // 原字幕
 				$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
 				// 获取序列化字幕
-				let SecondSub = JSON.parse($response.body);
-				let OriginSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				OriginSub = await $.http.get(request).then(response => JSON.parse(response.body));
+				SecondSub = JSON.parse($response.body);
 			} else { // 未选
 				let langcode = DataBase?.Languages?.[Platform]?.[Settings.Languages[0]]
 				$.log(`🚧 ${$.name}`, `langcode: ${langcode}`, "");
-				let request = {
-					"url": url+ `&tlang=${langcode}`, // 翻译字幕
-					"headers": headers
-				}
+				request.url = url + `&tlang=${langcode}`; // 翻译字幕
 				$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
 				// 获取序列化字幕
-				let OriginSub = JSON.parse($response.body);
-				let SecondSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-			}
+				OriginSub = JSON.parse($response.body);
+				SecondSub = await $.http.get(request).then(response => JSON.parse(response.body));
+			};
+			DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 			$response.body = JSON.stringify(DualSub);
-		} else if (Type == "svr3") {
+		} else if (Format == "svr3") {
+			$.done()
+		} else if (Format == "vtt") {
 			$.done()
 		}
 	}
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		const { headers, body } = $response
-		$.done({ headers, body })
+		if ($.isQuanX) {
+			const { headers, body } = $response
+			$.done({ headers, body })
+		} else $.done($response)
 	})
 
 /***************** Async Function *****************/

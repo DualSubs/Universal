@@ -1,18 +1,23 @@
 name: 🍿️ DualSubs for YouTube
-desc: (0.2.x) YouTube字幕增强及双语模块
+desc: (0.3.x) YouTube字幕增强及双语模块
 
 http:
   mitm:
     - "www.youtube.com"
     - "m.youtube.com"
   script:
-    - match: ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)
+    - match: ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$
       name: DualSubs.YouTube.Player
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)
+    - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(?!vtt).*)$
       name: DualSubs.YouTube.TimedText
+      type: response
+      require-body: false
+      timeout: 10
+    - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(vtt).*)$
+      name: DualSubs.vtt
       type: response
       require-body: false
       timeout: 10
@@ -23,4 +28,7 @@ script-providers:
     interval: 86400
   DualSubs.YouTube.TimedText:
     url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
+    interval: 86400
+  DualSubs.vtt:
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
     interval: 86400

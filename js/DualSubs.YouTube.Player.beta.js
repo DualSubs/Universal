@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs for YouTube v0.1.0");
+const $ = new Env("DualSubs for YouTube v0.3.0-player-beta");
 
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -68,8 +68,9 @@ $.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
 					} else Tracklist.translationLanguages = DataBase.translationLanguages;
 				};
 				// 写入缓存
-				$.Cache = await setCache(Indices.Index, $.Cache, Cache, Settings.CacheSize);
-				$.setjson($.Cache, `@DualSubs.Cache.${Platform}`);
+				let newCaches = Caches;
+				newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
+				$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
 			};
 			$response.body = JSON.stringify(data);
 		}

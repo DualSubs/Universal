@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs for YouTube v0.2.0");
+const $ = new Env("DualSubs for YouTube v0.3.0-timedtext-beta");
 const URL = new URLs();
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -204,38 +204,6 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
 	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
-};
-
-// process Query URL
-// 查询并替换自身,url为链接,variable为参数,parameter为新值(如果有就替换)
-// https://github.com/VirgilClyne/iRingo/blob/main/js/QueryURL.js
-function processQuery(url, variable, parameter) {
-    //console.log(`processQuery, INPUT: variable: ${variable}, parameter: ${parameter}`, url, ``);
-    if (url.indexOf("?") != -1) {
-        if (parameter == undefined) {
-            //console.log(`getQueryVariable, INPUT: variable: ${variable}`, ``);
-            var query = url.split("?")[1];
-            var vars = query.split("&");
-            for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split("=");
-                if (pair[0] == variable) {
-                    //console.log(`getQueryVariable, OUTPUT: ${variable}=${pair[1]}`, ``);
-                    return pair[1];
-                }
-            }
-            console.log(`getQueryVariable, ERROR: No such variable: ${variable}, Skip`, ``);
-            return false;
-        } else {
-            //console.log(`replaceQueryParamter, INPUT: ${variable}=${parameter}, Start`, ``);
-            var re = new RegExp('(' + variable + '=)([^&]*)', 'gi')
-            var newUrl = url.replace(re, variable + '=' + parameter)
-            //console.log(`replaceQueryParamter, OUTPUT: ${variable}=${parameter}`, newUrl, ``);
-            return newUrl
-        };
-    } else {
-        console.log(`processQuery, ERROR: No such URL ,Skip`, url, ``);
-        return url;
-    }
 };
 
 // Switch Language Code

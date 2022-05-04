@@ -39,6 +39,7 @@ if (method == "OPTIONS") $.done();
 				OriginSub = await $.http.get(request).then(response => JSON.parse(response.body));
 				SecondSub = JSON.parse($response.body);
 				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				$response.body = JSON.stringify(DualSub);
 			} else if (Format == "svr3") {
 				$.done()
 			} else if (Format == "vtt") {
@@ -55,13 +56,13 @@ if (method == "OPTIONS") $.done();
 				OriginSub = JSON.parse($response.body);
 				SecondSub = await $.http.get(request).then(response => JSON.parse(response.body));
 				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				$response.body = JSON.stringify(DualSub);
 			} else if (Format == "svr3") {
 				$.done()
 			} else if (Format == "vtt") {
 				$.done()
 			};
 		};
-		$response.body = JSON.stringify(DualSub);
 	};
 })()
 	.catch((e) => $.logErr(e))

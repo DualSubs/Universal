@@ -2,8 +2,8 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs for YouTube v0.1.0");
-
+const $ = new Env("DualSubs for YouTube v0.3.0-timedtext");
+const URL = new URLs();
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
 	Settings: {"Verify":{"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},"DeepL":{"Method":"Part","Version":"Free","Auth":null}},"Advanced":{"Translator":{"Times":3,"Interval":100,"Exponential":true}},"Default":{"Switch":true,"Types":["Official","Google"],"Type":"Google","Languages":["ZH","EN"],"External":{"URL":null,"Offset":0,"ShowOnly":false},"Position":"Forward","CacheSize":6,"Tolerance":1000}},
@@ -17,70 +17,168 @@ const { url, method, headers } = $request
 $.log(`🚧 ${$.name}`, `url: ${url}`, "");
 if (method == "OPTIONS") $.done();
 
-const type = url.match(/[&\?](format|fmt)=([^&]+)/)[2]
-$.log(`🚧 ${$.name}`, `type: ${type}`, "");
-
 /***************** Processing *****************/
 !(async () => {
-	[$.Platform, $.Verify, $.Advanced, $.Settings, $.Cache] = await setENV(url, DataBase);
-	if ($.Settings.Switch) {
-		if (type == "json3") {
-			// 创建双语字幕JSON
-			let DualSub = {};
-			if (processQuery(url, "tlang")) { // 已选
-				let request = {
-					"url": url.replace(/(&tlang=.*)/, ""), // 原字幕
-					"headers": headers
-				}
-				$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
+	const { Platform, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
+	if (Settings.Switch) {
+		// 创建字幕JSON
+		let OriginSub = {};
+		let SecondSub = {};
+		let DualSub = {};
+		// 创建链接请求
+		let request = { "url": url, "headers": headers };
+		request.url = URL.parse(request.url);
+		const Format = request.url.params?.format || request.url.params?.fmt
+		$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
+		if (request.url.params?.tlang) { // 已选
+			delete request.url.params?.tlang // 原字幕
+			request.url = URL.stringify(request.url);
+			$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
+			if (Format == "json3") {
 				// 获取序列化字幕
-				let SecondSub = JSON.parse($response.body);
-				let OriginSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, $.Settings.Tolerance, [$.Settings.Position]);
-			} else { // 未选
-				let langcode = DataBase?.Languages?.[$.Platform]?.[$.Settings.Languages[0]]
-				$.log(`🚧 ${$.name}`, `langcode: ${langcode}`, "");
-				let request = {
-					"url": url+ `&tlang=${langcode}`, // 翻译字幕
-					"headers": headers
-				}
-				$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
+				OriginSub = await $.http.get(request).then(response => JSON.parse(response.body));
+				SecondSub = JSON.parse($response.body);
+				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+			} else if (Format == "svr3") {
+				$.done()
+			} else if (Format == "vtt") {
+				$.done()
+			};
+		} else { // 未选
+			let langcode = DataBase?.Languages?.[Platform]?.[Settings.Languages[0]]
+			$.log(`🚧 ${$.name}`, `langcode: ${langcode}`, "");
+			request.url.params.tlang = langcode; // 翻译字幕
+			request.url = URL.stringify(request.url);
+			$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
+			if (Format == "json3") {
 				// 获取序列化字幕
-				let OriginSub = JSON.parse($response.body);
-				let SecondSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, $.Settings.Tolerance, [$.Settings.Position]);
-			}
-			$response.body = JSON.stringify(DualSub);
-		} else if (type == "svr3") {
-			$.done()
-		}
-	}
+				OriginSub = JSON.parse($response.body);
+				SecondSub = await $.http.get(request).then(response => JSON.parse(response.body));
+				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+			} else if (Format == "svr3") {
+				$.done()
+			} else if (Format == "vtt") {
+				$.done()
+			};
+		};
+		$response.body = JSON.stringify(DualSub);
+	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		const { headers, body } = $response
-		$.done({ headers, body })
+		if ($.isQuanX) {
+			const { headers, body } = $response
+			$.done({ headers, body })
+		} else $.done($response)
 	})
 
-/***************** Fuctions *****************/
-// Function 1
-// Set Environment Variables
-async function setENV(e,t){const a=e.match(/\.apple\.com/i)?"Apple":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/dplus-ph-/i)?"Discovery_Plus_Ph":e.match(/\.peacocktv\.com/i)?"Peacock_TV":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0;let s=$.getjson("DualSubs",t),l=s?.Settings?.Verify||t?.Settings?.Verify,o=s?.Settings?.Advanced||t?.Settings?.Advanced;o.Translator.Times=parseInt(o.Translator?.Times,10),o.Translator.Interval=parseInt(o.Translator?.Interval,10),o.Translator.Exponential=JSON.parse(o.Translator?.Exponential);let i=s?.Settings?.[a]||t?.Settings?.Default;if("Apple"==a){let a=e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i)?"Apple_TV_Plus":e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i)?"Apple_Fitness":e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i)?"Apple_TV":e.match(/vod-.*-aoc\.tv\.apple\.com/i)?"Apple_TV_Plus":e.match(/vod-.*-amt\.tv\.apple\.com/i)?"Apple_TV":e.match(/(hls|hls-svod)\.itunes\.apple\.com/i)?"Apple_Fitness":"Default";i=s?.Settings?.[a]||t?.Settings?.[a]}i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),l.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),l.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),l.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.External.Offset=parseInt(i.External?.Offset,10),i.External.ShowOnly=JSON.parse(i.External?.ShowOnly),i.CacheSize=parseInt(i.CacheSize,10),i.Tolerance=parseInt(i.Tolerance,10);let c=s?.Cache?.[a]||[];return"string"==typeof c&&(c=JSON.parse(c)),[a,l,o,i,c]}
+/***************** Async Function *****************/
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} url - Request URL
+ * @param {Object} database - Default DataBase
+ * @return {Promise<*>}
+ */
+async function setENV(name, url, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Platform *****************/
+	const Platform = /\.apple\.com/i.test(url) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(url) ? "Disney_Plus"
+			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(url) ? "Prime_Video"
+				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBO_Max"
+					: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+						: /\.(cbsaavideo|cbsivideo)\.com/i.test(url) ? "Paramount_Plus"
+							: /dplus-ph-/i.test(url) ? "Discovery_Plus_Ph"
+								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
+									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
+										: /\.youtube\.com/i.test(url) ? "YouTube"
+											: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+												: "Universal"
+	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
+	/***************** Verify *****************/
+	let Verify = await getENV(name, "Verify", database);
+	/***************** Settings *****************/
+	let Settings = await getENV(name, Platform, database);
+	if (Platform == "Apple") {
+		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
+			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
+				: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(url) ? "Apple_TV"
+					: /vod-.*-aoc\.tv\.apple\.com/i.test(url) ? "Apple_TV_Plus"
+						: /vod-.*-amt\.tv\.apple\.com/i.test(url) ? "Apple_TV"
+							: /(hls|hls-svod)\.itunes\.apple\.com/i.test(url) ? "Apple_Fitness"
+								: "Apple"
+		Settings = await getENV(name, platform, database);
+	};
+	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
+	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
+	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
+	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	/***************** Type *****************/
+	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
+	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
+	/***************** Advanced *****************/
+	let Advanced = await getENV(name, "Advanced", database);
+	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
+	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
+	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
+	/***************** Cache *****************/
+	let Caches = await getENV(name, "Caches", database);
+	Caches = Caches?.[Platform] || [];
+	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
+	if (typeof Caches == "string") Caches = JSON.parse(Caches)
+	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	return { Platform, Verify, Advanced, Settings, Type, Caches };
+	/**
+	 * Get Environment Variables
+	 * @author VirgilClyne
+	 * @param {String} t - Persistent Store Key
+	 * @param {String} e - Platform Name
+	 * @param {Object} n - Default DataBase
+	 * @return {Promise<*>}
+	 */
+	async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.[e]||i?.Settings?.[e]||n?.[e]||n?.Settings?.[e]||n?.Settings?.Default;if("undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var g in t)r(e,g,t[g]);Object.assign(s,e)}function r(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return s}
+};
 
-// Function 2
-// Get Cache
-async function getCache(cache = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache)}`,"");
-	let Indices = { "Index": await getIndex(cache) };
+/**
+ * Get Cache
+ * @author VirgilClyne
+ * @param {String} type - type
+ * @param {Object} settings - settings
+ * @param {Object} cache - cache
+ * @return {Promise<*>}
+ */
+ async function getCache(type, settings, cache = {}) {
+	$.log(`⚠ ${$.name}, Get Cache`, "");
+	let Indices = { "Index": await getIndex(settings, cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-	for await (var language of $.Settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+	for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+	if (type == "Official") {
+		if (Indices[settings.Languages[0]] !== -1) {
+			Indices[settings.Languages[1]] = cache[Indices.Index][settings.Languages[1]].findIndex(data => {
+				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
+			});
+			if (Indices[settings.Languages[1]] == -1) {
+				Indices[settings.Languages[1]] = cache[Indices.Index][settings.Languages[1]].findIndex(data => {
+					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+				});
+			};
+		};
+	};
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
-	return [Indices, cache[Indices.Index]]
+	return Indices
 	/***************** Fuctions *****************/
-	async function getIndex(cache) {
+	async function getIndex(settings, cache) {
 		return cache.findIndex(item => {
-			let URLs = [item?.URL, item?.baseURL];
-			for (var language of $.Settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			let URLs = [item?.URL];
+			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
@@ -89,9 +187,15 @@ async function getCache(cache = {}) {
 	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
-
-// Function 3
-// Set Cache
+/**
+ * Set Cache
+ * @author VirgilClyne
+ * @param {Number} index - index
+ * @param {Object} target - target
+ * @param {Object} sources - sources
+ * @param {Number} num - num
+ * @return {Promise<*>}
+ */
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶
@@ -100,37 +204,6 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
 	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
-};
-// process Query URL
-// 查询并替换自身,url为链接,variable为参数,parameter为新值(如果有就替换)
-// https://github.com/VirgilClyne/iRingo/blob/main/js/QueryURL.js
-function processQuery(url, variable, parameter) {
-    //console.log(`processQuery, INPUT: variable: ${variable}, parameter: ${parameter}`, url, ``);
-    if (url.indexOf("?") != -1) {
-        if (parameter == undefined) {
-            //console.log(`getQueryVariable, INPUT: variable: ${variable}`, ``);
-            var query = url.split("?")[1];
-            var vars = query.split("&");
-            for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split("=");
-                if (pair[0] == variable) {
-                    //console.log(`getQueryVariable, OUTPUT: ${variable}=${pair[1]}`, ``);
-                    return pair[1];
-                }
-            }
-            console.log(`getQueryVariable, ERROR: No such variable: ${variable}, Skip`, ``);
-            return false;
-        } else {
-            //console.log(`replaceQueryParamter, INPUT: ${variable}=${parameter}, Start`, ``);
-            var re = new RegExp('(' + variable + '=)([^&]*)', 'gi')
-            var newUrl = url.replace(re, variable + '=' + parameter)
-            //console.log(`replaceQueryParamter, OUTPUT: ${variable}=${parameter}`, newUrl, ``);
-            return newUrl
-        };
-    } else {
-        console.log(`processQuery, ERROR: No such URL ,Skip`, url, ``);
-        return url;
-    }
 };
 
 // Switch Language Code
@@ -190,3 +263,5 @@ async function switchLangCode(platform = "", langCode = "", database) {
 // https://github.com/chavyleung/scripts/blob/master/Env.min.js
 function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==typeof t?{url:t}:t;let s=this.get;return"POST"===e&&(s=this.post),new Promise((e,i)=>{s.call(this,t,(t,s,r)=>{t?i(t):e(s)})})}get(t){return this.send.call(this.env,t)}post(t){return this.send.call(this.env,t,"POST")}}return new class{constructor(t,e){this.name=t,this.http=new s(this),this.data=null,this.dataFile="box.dat",this.logs=[],this.isMute=!1,this.isNeedRewrite=!1,this.logSeparator="\n",this.encoding="utf-8",this.startTime=(new Date).getTime(),Object.assign(this,e),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient&&"undefined"==typeof $loon}isLoon(){return"undefined"!=typeof $loon}isShadowrocket(){return"undefined"!=typeof $rocket}isStash(){return"undefined"!=typeof $environment&&$environment["stash-version"]}toObj(t,e=null){try{return JSON.parse(t)}catch{return e}}toStr(t,e=null){try{return JSON.stringify(t)}catch{return e}}getjson(t,e){let s=e;const i=this.getdata(t);if(i)try{s=JSON.parse(this.getdata(t))}catch{}return s}setjson(t,e){try{return this.setdata(JSON.stringify(t),e)}catch{return!1}}getScript(t){return new Promise(e=>{this.get({url:t},(t,s,i)=>e(i))})}runScript(t,e){return new Promise(s=>{let i=this.getdata("@chavy_boxjs_userCfgs.httpapi");i=i?i.replace(/\n/g,"").trim():i;let r=this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");r=r?1*r:20,r=e&&e.timeout?e.timeout:r;const[o,h]=i.split("@"),n={url:`http://${h}/v1/scripting/evaluate`,body:{script_text:t,mock_type:"cron",timeout:r},headers:{"X-Key":o,Accept:"*/*"}};this.post(n,(t,e,i)=>s(i))}).catch(t=>this.logErr(t))}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e);if(!s&&!i)return{};{const i=s?t:e;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e),r=JSON.stringify(this.data);s?this.fs.writeFileSync(t,r):i?this.fs.writeFileSync(e,r):this.fs.writeFileSync(t,r)}}lodash_get(t,e,s){const i=e.replace(/\[(\d+)\]/g,".$1").split(".");let r=t;for(const t of i)if(r=Object(r)[t],void 0===r)return s;return r}lodash_set(t,e,s){return Object(t)!==t?t:(Array.isArray(e)||(e=e.toString().match(/[^.[\]]+/g)||[]),e.slice(0,-1).reduce((t,s,i)=>Object(t[s])===t[s]?t[s]:t[s]=Math.abs(e[i+1])>>0==+e[i+1]?[]:{},t)[e[e.length-1]]=s,t)}getdata(t){let e=this.getval(t);if(/^@/.test(t)){const[,s,i]=/^@(.*?)\.(.*?)$/.exec(t),r=s?this.getval(s):"";if(r)try{const t=JSON.parse(r);e=t?this.lodash_get(t,i,""):e}catch(t){e=""}}return e}setdata(t,e){let s=!1;if(/^@/.test(e)){const[,i,r]=/^@(.*?)\.(.*?)$/.exec(e),o=this.getval(i),h=i?"null"===o?null:o||"{}":"{}";try{const e=JSON.parse(h);this.lodash_set(e,r,t),s=this.setval(JSON.stringify(e),i)}catch(e){const o={};this.lodash_set(o,r,t),s=this.setval(JSON.stringify(o),i)}}else s=this.setval(t,e);return s}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,e){return this.isSurge()||this.isLoon()?$persistentStore.write(t,e):this.isQuanX()?$prefs.setValueForKey(t,e):this.isNode()?(this.data=this.loaddata(),this.data[e]=t,this.writedata(),!0):this.data&&this.data[e]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,e=(()=>{})){if(t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.get(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)});else if(this.isQuanX())this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t));else if(this.isNode()){let s=require("iconv-lite");this.initGotEnv(t),this.got(t).on("redirect",(t,e)=>{try{if(t.headers["set-cookie"]){const s=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();s&&this.ckjar.setCookieSync(s,null),e.cookieJar=this.ckjar}}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:i,statusCode:r,headers:o,rawBody:h}=t;e(null,{status:i,statusCode:r,headers:o,rawBody:h},s.decode(h,this.encoding))},t=>{const{message:i,response:r}=t;e(i,r,r&&s.decode(r.rawBody,this.encoding))})}}post(t,e=(()=>{})){const s=t.method?t.method.toLocaleLowerCase():"post";if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),t.headers&&delete t.headers["Content-Length"],this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient[s](t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)});else if(this.isQuanX())t.method=s,this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t));else if(this.isNode()){let i=require("iconv-lite");this.initGotEnv(t);const{url:r,...o}=t;this.got[s](r,o).then(t=>{const{statusCode:s,statusCode:r,headers:o,rawBody:h}=t;e(null,{status:s,statusCode:r,headers:o,rawBody:h},i.decode(h,this.encoding))},t=>{const{message:s,response:r}=t;e(s,r,r&&i.decode(r.rawBody,this.encoding))})}}time(t,e=null){const s=e?new Date(e):new Date;let i={"M+":s.getMonth()+1,"d+":s.getDate(),"H+":s.getHours(),"m+":s.getMinutes(),"s+":s.getSeconds(),"q+":Math.floor((s.getMonth()+3)/3),S:s.getMilliseconds()};/(y+)/.test(t)&&(t=t.replace(RegExp.$1,(s.getFullYear()+"").substr(4-RegExp.$1.length)));for(let e in i)new RegExp("("+e+")").test(t)&&(t=t.replace(RegExp.$1,1==RegExp.$1.length?i[e]:("00"+i[e]).substr((""+i[e]).length)));return t}msg(e=t,s="",i="",r){const o=t=>{if(!t)return t;if("string"==typeof t)return this.isLoon()?t:this.isQuanX()?{"open-url":t}:this.isSurge()?{url:t}:void 0;if("object"==typeof t){if(this.isLoon()){let e=t.openUrl||t.url||t["open-url"],s=t.mediaUrl||t["media-url"];return{openUrl:e,mediaUrl:s}}if(this.isQuanX()){let e=t["open-url"]||t.url||t.openUrl,s=t["media-url"]||t.mediaUrl,i=t["update-pasteboard"]||t.updatePasteboard;return{"open-url":e,"media-url":s,"update-pasteboard":i}}if(this.isSurge()){let e=t.url||t.openUrl||t["open-url"];return{url:e}}}};if(this.isMute||(this.isSurge()||this.isLoon()?$notification.post(e,s,i,o(r)):this.isQuanX()&&$notify(e,s,i,o(r))),!this.isMuteLog){let t=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];t.push(e),s&&t.push(s),i&&t.push(i),console.log(t.join("\n")),this.logs=this.logs.concat(t)}}log(...t){t.length>0&&(this.logs=[...this.logs,...t]),console.log(t.join(this.logSeparator))}logErr(t,e){const s=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();s?this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t)}wait(t){return new Promise(e=>setTimeout(e,t))}done(t={}){const e=(new Date).getTime(),s=(e-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${s} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,e)}
 
+// https://github.com/DualSubs/URL/blob/main/URL.embedded.min.js
+function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}

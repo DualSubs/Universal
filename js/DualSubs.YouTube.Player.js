@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs for YouTube v0.1.0");
+const $ = new Env("DualSubs for YouTube v0.3.0-player");
 
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -17,16 +17,16 @@ const { url, method, headers } = $request
 $.log(`🚧 ${$.name}`, `url: ${url}`, "");
 if (method == "OPTIONS") $.done();
 
-const type = headers["Content-Type"].match(/([^\/;]+)/g)[2]
-$.log(`🚧 ${$.name}`, `type: ${type}`, "");
+const Format = headers["Content-Type"].match(/([^\/;]+)/g)[2]
+$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
 
 /***************** Processing *****************/
 !(async () => {
-	[$.Platform, $.Verify, $.Advanced, $.Settings, $.Cache] = await setENV(url, DataBase);
-	if ($.Settings.Switch) {
+	const { Platform, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
+	if (Settings.Switch) {
 		// 找缓存
-		let [Indices = {}, Cache = {}] = await getCache($.Cache);
-		if (type == "json") {
+		const Indices = await getCache(Type, Settings, Caches);
+		if (Format == "json") {
 			let data = JSON.parse($response.body);
 			// PlayList.m3u8 URL
 			Cache.URL = url;
@@ -53,15 +53,15 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 						/*
 						// 查询字幕选项
 						// 提取数据 用遍历语法可以兼容自定义数量的语言查询
-						for await (var language of $.Settings.Languages) {
-							Cache[language] = await getCaptions($.Platform, Cache, Tracklist, language);
+						for await (var language of Settings.Languages) {
+							Cache[language] = await getCaptions(Platform, Cache, Tracklist, language);
 							$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 						};
 						$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
 						// 兼容性判断
-						const standard = await isStandard($.Platform, url, headers);
+						const standard = await isStandard(Platform, url, headers);
 						// 写入选项
-						Tracklist = await setOptions($.Platform, Tracklist, Cache[$.Settings.Languages[0]], Cache[$.Settings.Languages[1]], $.Settings.Types, standard, $.Settings.Type);
+						Tracklist = await setOptions(Platform, Tracklist, Cache[Settings.Languages[0]], Cache[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
 						*/
 					};
 					// 加翻译语言
@@ -70,8 +70,9 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 					} else Tracklist.translationLanguages = DataBase.translationLanguages;
 				};
 				// 写入缓存
-				$.Cache = await setCache(Indices.Index, $.Cache, Cache, $.Settings.CacheSize);
-				$.setjson($.Cache, `@DualSubs.Cache.${$.Platform}`);
+				let newCaches = Caches;
+				newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
+				$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
 			};
 			$response.body = JSON.stringify(data);
 		}
@@ -79,29 +80,119 @@ $.log(`🚧 ${$.name}`, `type: ${type}`, "");
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		const { headers, body } = $response
-		$.done({ headers, body })
+		if ($.isQuanX) {
+			const { headers, body } = $response
+			$.done({ headers, body })
+		} else $.done($response)
 	})
 
-/***************** Fuctions *****************/
-// Function 1
-// Set Environment Variables
-async function setENV(e,t){const a=e.match(/\.apple\.com/i)?"Apple":e.match(/\.(dssott|starott)\.com/i)?"Disney_Plus":e.match(/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i)?"Prime_Video":e.match(/\.(api\.hbo|hbomaxcdn)\.com/i)?"HBO_Max":e.match(/\.(hulustream|huluim)\.com/i)?"Hulu":e.match(/\.(cbsaavideo|cbsivideo)\.com/i)?"Paramount_Plus":e.match(/dplus-ph-/i)?"Discovery_Plus_Ph":e.match(/\.peacocktv\.com/i)?"Peacock_TV":e.match(/\.uplynk\.com/i)?"Discovery_Plus":e.match(/\.youtube\.com/i)?"YouTube":e.match(/\.nflxvideo\.net/i)?"Netflix":void 0;let s=$.getjson("DualSubs",t),l=s?.Settings?.Verify||t?.Settings?.Verify,o=s?.Settings?.Advanced||t?.Settings?.Advanced;o.Translator.Times=parseInt(o.Translator?.Times,10),o.Translator.Interval=parseInt(o.Translator?.Interval,10),o.Translator.Exponential=JSON.parse(o.Translator?.Exponential);let i=s?.Settings?.[a]||t?.Settings?.Default;if("Apple"==a){let a=e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i)?"Apple_TV_Plus":e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i)?"Apple_Fitness":e.match(/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i)?"Apple_TV":e.match(/vod-.*-aoc\.tv\.apple\.com/i)?"Apple_TV_Plus":e.match(/vod-.*-amt\.tv\.apple\.com/i)?"Apple_TV":e.match(/(hls|hls-svod)\.itunes\.apple\.com/i)?"Apple_Fitness":"Default";i=s?.Settings?.[a]||t?.Settings?.[a]}i.Switch=JSON.parse(i.Switch),"string"==typeof i.Types&&(i.Types=i.Types.split(",")),l.GoogleCloud.Auth||(i.Types=i.Types.filter((e=>"GoogleCloud"!==e))),l.Azure.Auth||(i.Types=i.Types.filter((e=>"Azure"!==e))),l.DeepL.Auth||(i.Types=i.Types.filter((e=>"DeepL"!==e))),i.External.Offset=parseInt(i.External?.Offset,10),i.External.ShowOnly=JSON.parse(i.External?.ShowOnly),i.CacheSize=parseInt(i.CacheSize,10),i.Tolerance=parseInt(i.Tolerance,10);let c=s?.Cache?.[a]||[];return"string"==typeof c&&(c=JSON.parse(c)),[a,l,o,i,c]}
+/***************** Async Function *****************/
+/**
+ * Set Environment Variables
+ * @author VirgilClyne
+ * @param {String} name - Persistent Store Key
+ * @param {String} url - Request URL
+ * @param {Object} database - Default DataBase
+ * @return {Promise<*>}
+ */
+async function setENV(name, url, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Platform *****************/
+	const Platform = /\.apple\.com/i.test(url) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(url) ? "Disney_Plus"
+			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(url) ? "Prime_Video"
+				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBO_Max"
+					: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+						: /\.(cbsaavideo|cbsivideo)\.com/i.test(url) ? "Paramount_Plus"
+							: /dplus-ph-/i.test(url) ? "Discovery_Plus_Ph"
+								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
+									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
+										: /\.youtube\.com/i.test(url) ? "YouTube"
+											: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+												: "Universal"
+	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
+	/***************** Verify *****************/
+	let Verify = await getENV(name, "Verify", database);
+	/***************** Settings *****************/
+	let Settings = await getENV(name, Platform, database);
+	if (Platform == "Apple") {
+		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
+			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
+				: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(url) ? "Apple_TV"
+					: /vod-.*-aoc\.tv\.apple\.com/i.test(url) ? "Apple_TV_Plus"
+						: /vod-.*-amt\.tv\.apple\.com/i.test(url) ? "Apple_TV"
+							: /(hls|hls-svod)\.itunes\.apple\.com/i.test(url) ? "Apple_Fitness"
+								: "Apple"
+		Settings = await getENV(name, platform, database);
+	};
+	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
+	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
+	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
+	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	/***************** Type *****************/
+	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
+	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
+	/***************** Advanced *****************/
+	let Advanced = await getENV(name, "Advanced", database);
+	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
+	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
+	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
+	/***************** Cache *****************/
+	let Caches = await getENV(name, "Caches", database);
+	Caches = Caches?.[Platform] || [];
+	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
+	if (typeof Caches == "string") Caches = JSON.parse(Caches)
+	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	return { Platform, Verify, Advanced, Settings, Type, Caches };
+	/**
+	 * Get Environment Variables
+	 * @author VirgilClyne
+	 * @param {String} t - Persistent Store Key
+	 * @param {String} e - Platform Name
+	 * @param {Object} n - Default DataBase
+	 * @return {Promise<*>}
+	 */
+	async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.[e]||i?.Settings?.[e]||n?.[e]||n?.Settings?.[e]||n?.Settings?.Default;if("undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var g in t)r(e,g,t[g]);Object.assign(s,e)}function r(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return s}
+};
 
-// Function 2
-// Get Cache
-async function getCache(cache = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, `cache: ${JSON.stringify(cache)}`,"");
-	let Indices = { "Index": await getIndex(cache) };
+/**
+ * Get Cache
+ * @author VirgilClyne
+ * @param {String} type - type
+ * @param {Object} settings - settings
+ * @param {Object} cache - cache
+ * @return {Promise<*>}
+ */
+ async function getCache(type, settings, cache = {}) {
+	$.log(`⚠ ${$.name}, Get Cache`, "");
+	let Indices = { "Index": await getIndex(settings, cache) };
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices.Index: ${Indices.Index}`, "");
-	for await (var language of $.Settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+	for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+	if (type == "Official") {
+		if (Indices[settings.Languages[0]] !== -1) {
+			Indices[settings.Languages[1]] = cache[Indices.Index][settings.Languages[1]].findIndex(data => {
+				if (data.OPTION["GROUP-ID"] == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
+			});
+			if (Indices[settings.Languages[1]] == -1) {
+				Indices[settings.Languages[1]] = cache[Indices.Index][settings.Languages[1]].findIndex(data => {
+					if (data.OPTION["GROUP-ID"] == cache[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+				});
+			};
+		};
+	};
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
-	return [Indices, cache[Indices.Index]]
+	return Indices
 	/***************** Fuctions *****************/
-	async function getIndex(cache) {
+	async function getIndex(settings, cache) {
 		return cache.findIndex(item => {
-			let URLs = [item?.URL, item?.baseURL];
-			for (var language of $.Settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			let URLs = [item?.URL];
+			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
 			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
@@ -110,8 +201,15 @@ async function getCache(cache = {}) {
 	function getURIs(item) { return [item?.URI, item?.VTTs] }
 };
 
-// Function 3
-// Set Cache
+/**
+ * Set Cache
+ * @author VirgilClyne
+ * @param {Number} index - index
+ * @param {Object} target - target
+ * @param {Object} sources - sources
+ * @param {Number} num - num
+ * @return {Promise<*>}
+ */
 async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	$.log(`⚠ ${$.name}, Set Cache`, "");
 	// 刷新播放记录，所以始终置顶

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs for YouTube v0.3.0-timedtext-beta");
+const $ = new Env("DualSubs for YouTube v0.3.1-timedtext-beta");
 const URL = new URLs();
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -46,9 +46,11 @@ if (method == "OPTIONS") $.done();
 				$.done()
 			};
 		} else { // 未选
-			let langcode = DataBase?.Languages?.[Platform]?.[Settings.Languages[0]]
+			let langcode = Settings.Languages[0]
 			$.log(`🚧 ${$.name}`, `langcode: ${langcode}`, "");
-			request.url.params.tlang = langcode; // 翻译字幕
+			let langcodes = await switchLangCode(Platform, langcode, DataBase);
+			$.log(`🚧 ${$.name}`, `langcodes: ${langcodes}`, "");
+			request.url.params.tlang = langcodes?.[1] || langcodes?.[0]; // 翻译字幕
 			request.url = URL.stringify(request.url);
 			$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
 			if (Format == "json3") {
@@ -210,14 +212,14 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 // Switch Language Code
 async function switchLangCode(platform = "", langCode = "", database) {
 	$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
-		// 自动语言转换
-		let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
-			: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
-				: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
-					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
-						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
-							: [langCode]
-	langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[platform]?.[langcode]}\"`)
+	// 自动语言转换
+	let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
+		: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
+			: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
+				: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
+					: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
+						: [langCode]
+	langcodes = langcodes.map(langcode => database?.Languages?.[platform]?.[langcode])
 	$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 	return langcodes
 };

@@ -25,45 +25,17 @@ if (method == "OPTIONS") $.done();
 		let OriginSub = {};
 		let SecondSub = {};
 		let DualSub = {};
-		// 创建链接请求
-		let request = { "url": url, "headers": headers };
-		request.url = URL.parse(request.url);
-		const Format = request.url.params?.format || request.url.params?.fmt
-		$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
-		if (request.url.params?.tlang) { // 已选
-			delete request.url.params?.tlang // 原字幕
-			request.url = URL.stringify(request.url);
-			$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
-			if (Format == "json3") {
-				// 获取序列化字幕
-				OriginSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				SecondSub = JSON.parse($response.body);
-				DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-				$response.body = JSON.stringify(DualSub);
-			} else if (Format == "svr3") {
-				$.done()
-			} else if (Format == "vtt") {
-				$.done()
-			};
-		} else { // 未选
-			let langcode = Settings.Languages[0]
-			$.log(`🚧 ${$.name}`, `langcode: ${langcode}`, "");
-			let langcodes = await switchLangCode(Platform, langcode, DataBase);
-			$.log(`🚧 ${$.name}`, `langcodes: ${langcodes}`, "");
-			request.url.params.tlang = langcodes?.[1] || langcodes?.[0]; // 翻译字幕
-			request.url = URL.stringify(request.url);
-			$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
-			if (Format == "json3") {
-				// 获取序列化字幕
-				OriginSub = JSON.parse($response.body);
-				SecondSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-				$response.body = JSON.stringify(DualSub);
-			} else if (Format == "svr3") {
-				$.done()
-			} else if (Format == "vtt") {
-				$.done()
-			};
+		const { Format, Orig_Request, Tran_Request } = await getTimedTextRequest(url, Settings.Language);
+		if (Format == "json3") {
+			// 获取序列化字幕
+			OriginSub = await $.http.get(Orig_Request).then(response => JSON.parse(response.body));
+			SecondSub = await $.http.get(Tran_Request).then(response => JSON.parse(response.body));
+			DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+			$response.body = JSON.stringify(DualSub);
+		} else if (Format == "svr3") {
+			$.done()
+		} else if (Format == "vtt") {
+			$.done()
 		};
 	};
 })()
@@ -209,19 +181,32 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	return target
 };
 
-// Switch Language Code
-async function switchLangCode(platform = "", langCode = "", database) {
-	$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
-	// 自动语言转换
-	let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
-		: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
-			: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
-				: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
-					: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
-						: [langCode]
-	langcodes = langcodes.map(langcode => database?.Languages?.[platform]?.[langcode])
-	$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
-	return langcodes
+/**
+ * Get TimedText Request
+ * @author VirgilClyne
+ * @param {String} url - url
+ * @param {String} langcode - langcode
+ * @return {Promise<*>}
+ */
+async function getTimedTextRequest(url, langcode) {
+	$.log(`⚠ ${$.name}, Get TimedText Request`, `url: ${url}`, `langcode: ${langcode}`, "");
+	// 创建链接请求
+	let request = { "url": url, "headers": headers };
+	request.url = URL.parse(request.url);
+	const Format = request.url.params?.format || request.url.params?.fmt
+	$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
+	if (request.url.params?.tlang) { // 已选
+		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
+		delete request.url.params?.tlang // 原字幕
+		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
+	} else { // 未选
+		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
+		request.url.params.tlang = langcode; // 翻译字幕
+		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
+	};
+	$.log(`🚧 ${$.name}, Get TimedText Request`, `Orig_Request: ${JSON.stringify(Orig_Request)}`, "");
+	$.log(`🚧 ${$.name}, Get TimedText Request`, `Tran_Request: ${JSON.stringify(Tran_Request)}`, "");
+	return { Format, Orig_Request, Tran_Request }
 };
 
 /** 

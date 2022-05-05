@@ -6,7 +6,7 @@
 ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
 # DualSubs.YouTube.TimedText
 ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(?!vtt).*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
-# DualSubs.YouTube.vtt
+# DualSubs.YouTube.TimedText.vtt
 ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(vtt).*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
 
 #[MITM]

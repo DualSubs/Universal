@@ -17,7 +17,7 @@ http:
       require-body: false
       timeout: 10
     - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(vtt).*)$
-      name: DualSubs.vtt
+      name: DualSubs.YouTube.TimedText.vtt
       type: response
       require-body: false
       timeout: 10
@@ -29,6 +29,6 @@ script-providers:
   DualSubs.YouTube.TimedText:
     url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
     interval: 86400
-  DualSubs.vtt:
+  DualSubs.YouTube.TimedText.vtt:
     url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
     interval: 86400

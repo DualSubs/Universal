@@ -39,13 +39,14 @@ if (method == "OPTIONS") $.done();
 				let requests = await getOfficialRequest(Platform, VTTs, oVTTs);
 				for await (var request of requests) {
 					SecondSub = await getWebVTT(request);
-					DualSub = await CombineDualSubs("VTT", OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+					DualSub = await CombineDualSubs("vtt", OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 				};
 			} else {
 				let request = await getOfficialRequest(Platform, VTTs);
 				SecondSub = await getWebVTT(request);
-				DualSub = await CombineDualSubs("VTT", OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				DualSub = await CombineDualSubs("vtt", OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 			}
+			$response.body = VTT.stringify(DualSub);
 		} else if (Type == "External") {
 			$.log(`🚧 ${$.name}, 外挂字幕`, "");
 			let request = {
@@ -57,15 +58,22 @@ if (method == "OPTIONS") $.done();
 			};
 			SecondSub = await getWebVTT(request);
 			$.log(`🚧 ${$.name}, 外挂字幕`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-			DualSub = await CombineDualSubs("VTT", OriginSub, SecondSub, Settings.External.Offset, Settings.Tolerance, [(Settings.External.ShowOnly) ? "ShowOnly" : Settings.Position]);
+			DualSub = await CombineDualSubs("vtt", OriginSub, SecondSub, Settings.External.Offset, Settings.Tolerance, [(Settings.External.ShowOnly) ? "ShowOnly" : Settings.Position]);
+			$response.body = VTT.stringify(DualSub);
 		} else {
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			if (Platform == "YouTube") {
 				const { Format, Orig_Request, Tran_Request } = await getTimedTextRequest(url, Settings.Languages[0]);
 				// 获取序列化字幕
-				OriginSub = await getWebVTT(Orig_Request);
-				SecondSub = await getWebVTT(Tran_Request);
+				if (Format == "json3") {
+					OriginSub = await $.http.get(Orig_Request).then(response => JSON.parse(response.body));
+					SecondSub = await $.http.get(Tran_Request).then(response => JSON.parse(response.body));
+				} else if (Format == "vtt") {
+					OriginSub = await getWebVTT(Orig_Request);
+					SecondSub = await getWebVTT(Tran_Request);
+				}
 				DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				$response.body = (Format == "json3") ? JSON.stringify(DualSub) : VTT.stringify(DualSub);
 			} else {
 				DualSub = OriginSub;
 				if (Verify?.[Type]?.Method == "Row") { //逐行翻译
@@ -86,9 +94,9 @@ if (method == "OPTIONS") $.done();
 						return item
 					}));
 				};
+				$response.body = VTT.stringify(DualSub);
 			};
 		};
-		$response.body = VTT.stringify(DualSub);
 		if ($response.headers["Content-Range"]) {
 			let length = byteLength($response.body);
 			$.log(`🚧 ${$.name}, Content-Range`, `length: ${length}`, "")
@@ -561,6 +569,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 /** 
  * Combine Dual Subtitles
  * @author VirgilClyne
+ * @param {Object} Format - Format
  * @param {Object} Sub1 - Sub1
  * @param {Object} Sub2 - Sub2
  * @param {Number} Offset - Offset
@@ -568,7 +577,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
  * @param {Array} options - options = ["Forward", "Reverse", "ShowOnly"]
  * @return {Promise<*>}
  */
-async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, Options = ["Forward"]) {
+async function CombineDualSubs(Format = "vtt", Sub1 = { headers: {}, CSS: {}, body: [], events: [] }, Sub2 = { headers: {}, CSS: {}, body: [], events: [] }, Offset = 0, Tolerance = 1000, Options = ["Forward"]) {
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Options:${Options}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
@@ -577,39 +586,62 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 	// 有序数列 用不着排序
 	//FirstSub.body.sort((x, y) => x - y);
 	//SecondSub.body.sort((x, y) => x - y);
-	const length1 = Sub1.body.length, length2 = Sub2.body.length;
 	let index0 = 0, index1 = 0, index2 = 0;
-	// 双指针法查找两个数组中的相同元素
-	while (index1 < length1 && index2 < length2) {
-		const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp + Offset;
-		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
-		//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
-		//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
-		//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
-		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
-			index0 = Options.includes("Reverse") ? index2 : index1;
-			// 多行字幕交替插入
-			/*
-			if (Array.isArray(text1) && Array.isArray(text2)) {
-				let a = Options.includes("Reverse") ? text2 : text1;
-				let b = Options.includes("Reverse") ? text1 : text2;
-				let c = [];
-				let length = a.length > b.length ? a.length : b.length;
-				for (let j = 0; j < length; j++) {
-					if (a[j]) c.push(a[j]);
-					if (b[j]) c.push(b[j]);
-				}
-				DualSub.body[index0].text = c;
-			} else 
-			*/
-			DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}` : Options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
-			//$.log(`🚧`, `index0: ${index0}`, `text: ${DualSub.body[index0].text}`, "");
-			//DualSub.body[index0].timeStamp = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
-			//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
+	if (Format == "vtt") {
+		const length1 = Sub1.body.length, length2 = Sub2.body.length;
+		// 双指针法查找两个数组中的相同元素
+		while (index1 < length1 && index2 < length2) {
+			const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp + Offset;
+			const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
+			//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+			//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+			//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+			if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+				index0 = Options.includes("Reverse") ? index2 : index1;
+				// 多行字幕交替插入
+				/*
+				if (Array.isArray(text1) && Array.isArray(text2)) {
+					let a = Options.includes("Reverse") ? text2 : text1;
+					let b = Options.includes("Reverse") ? text1 : text2;
+					let c = [];
+					let length = a.length > b.length ? a.length : b.length;
+					for (let j = 0; j < length; j++) {
+						if (a[j]) c.push(a[j]);
+						if (b[j]) c.push(b[j]);
+					}
+					DualSub.body[index0].text = c;
+				} else 
+				*/
+				DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}` : Options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
+				//$.log(`🚧`, `index0: ${index0}`, `text: ${DualSub.body[index0].text}`, "");
+				//DualSub.body[index0].timeStamp = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
+				//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
+			}
+			if (timeStamp2 > timeStamp1) index1++
+			else if (timeStamp2 < timeStamp1) index2++
+			else index1++; index2++
 		}
-		if (timeStamp2 > timeStamp1) index1++
-		else if (timeStamp2 < timeStamp1) index2++
-		else index1++; index2++
+	} else if (Format == "json3") {
+		const length1 = Sub1.events.length, length2 = Sub2.events.length;
+		// 双指针法查找两个数组中的相同元素
+		while (index1 < length1 && index2 < length2) {
+			const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs + Offset;
+			const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
+			$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+			$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+			$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+			if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+				index0 = Options.includes("Reverse") ? index2 : index1;
+				DualSub.events[index0].segs[0].utf8 = Options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
+				$.log(`🚧`, `DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
+				//DualSub.body[index0].tStartMs = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
+				//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
+			}
+			if (timeStamp2 > timeStamp1) index1++
+			else if (timeStamp2 < timeStamp1) index2++
+			else index1++; index2++
+		};
+	} else if (Format == "svr3") {
 	}
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;

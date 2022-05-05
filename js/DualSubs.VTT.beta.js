@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.6.0");
+const $ = new Env("DualSubs v0.6.4-beta");
 const URL = new URLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
@@ -25,6 +25,7 @@ if (method == "OPTIONS") $.done();
 		// 创建字幕JSON
 		let OriginSub = VTT.parse($response.body);
 		let SecondSub = {};
+		// 创建双语字幕JSON
 		let DualSub = {};
 		if (Type == "Official") {
 			$.log(`🚧 ${$.name}`, "官方字幕", "");
@@ -85,25 +86,25 @@ if (method == "OPTIONS") $.done();
 				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 			} else {
 				DualSub = OriginSub;
-				if(Verify?.[Type]?.Method == "Row") { //逐行翻译
-				DualSub.body = await Promise.all(DualSub.body.map(async item => {
-					let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
-					item.text = await combineText(item.text, text2[0], Settings.Position);
-					return item
-				}));
-				} else { // Part 逐段翻译 
-				let Full = await Promise.all(DualSub.body.map(async item => item.text));
-				let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
-				let Parts = await chunk(Full, length);
-				Parts = await Promise.all(Parts.map(async Part => {
-					return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
-				})).then(parts => parts.flat(Infinity));
-				DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
-					item.text = await combineText(item.text, Parts[i], Settings.Position);
-					return item
-				}));
+				if (Verify?.[Type]?.Method == "Row") { //逐行翻译
+					DualSub.body = await Promise.all(DualSub.body.map(async item => {
+						let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+						item.text = await combineText(item.text, text2[0], Settings.Position);
+						return item
+					}));
+				} else { // Part 逐段翻译
+					let Full = await Promise.all(DualSub.body.map(async item => item.text));
+					let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
+					let Parts = await chunk(Full, length);
+					Parts = await Promise.all(Parts.map(async Part => {
+						return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+					})).then(parts => parts.flat(Infinity));
+					DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
+						item.text = await combineText(item.text, Parts[i], Settings.Position);
+						return item
+					}));
 				};
-		}
+			};
 		};
 		$response.body = VTT.stringify(DualSub);
 		if ($response.headers["Content-Range"]) {
@@ -596,14 +597,9 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 			//DualSub.body[index0].timeStamp = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
 			//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
 		}
-		if (timeStamp2 > timeStamp1) {
-			index1++
-		} else if (timeStamp2 < timeStamp1) {
-			index2++
-		} else {
-			index1++
-			index2++
-		}
+		if (timeStamp2 > timeStamp1) index1++
+		else if (timeStamp2 < timeStamp1) index2++
+		else index1++; index2++
 	}
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;

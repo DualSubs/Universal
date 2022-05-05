@@ -259,15 +259,10 @@ async function CombineDualSubs(Format = "VTT", Sub1 = { events: [] }, Sub2 = { e
 				//DualSub.body[index0].tStartMs = options.includes("Reverse") ? timeStamp2 : timeStamp1;
 				//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
 			}
-			if (timeStamp2 > timeStamp1) {
-				index1++;
-			} else if (timeStamp2 < timeStamp1) {
-				index2++;
-			} else {
-				index1++
-				index2++
-			}
-		}
+			if (timeStamp2 > timeStamp1) index1++
+			else if (timeStamp2 < timeStamp1) index2++
+			else index1++; index2++
+		};
 	}
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;

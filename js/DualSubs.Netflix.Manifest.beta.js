@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs for Netflix v0.1.0");
+const $ = new Env("DualSubs for Netflix v0.1.1-manifest-beta");
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -49,8 +49,10 @@ if (method == "OPTIONS") $.done();
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		const { headers, body } = $response
-		$.done({ headers, body })
+		if ($.isQuanX) {
+			const { headers, body } = $response
+			$.done({ headers, body })
+		} else $.done($response)
 	})
 
 /***************** Async Function *****************/

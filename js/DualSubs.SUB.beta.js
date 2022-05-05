@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.0-SUB-beta");
+const $ = new Env("DualSubs v0.7.0-sub-beta");
 const URL = new URLs();
 const XML = new XMLParser();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"

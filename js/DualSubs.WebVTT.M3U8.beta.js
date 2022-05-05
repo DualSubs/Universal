@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.6.0");
+const $ = new Env("DualSubs v0.6.0-webvtt-beta");
 
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -48,8 +48,10 @@ if (method == "OPTIONS") $.done();
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		const { headers, body } = $response
-		$.done({ headers, body })
+		if ($.isQuanX) {
+			const { headers, body } = $response
+			$.done({ headers, body })
+		} else $.done($response)
 	})
 
 /***************** Async Function *****************/

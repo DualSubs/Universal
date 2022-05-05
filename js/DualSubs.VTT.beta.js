@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.6.5-beta");
+const $ = new Env("DualSubs v0.6.5-vtt-beta");
 const URL = new URLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
@@ -279,6 +279,7 @@ async function getTimedTextRequest(url, langcode) {
  * @return {Promise<*>}
  */
 async function getOfficialRequest(platform, VTTs = [], oVTTs = []) {
+	$.log(`⚠ ${$.name}, Get Official Request`, "");
 	$.log(`⚠ ${$.name}, Get Official Request`, `VTTs: ${VTTs}`, "");
 	let fileName = (platform == "Apple") ? url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple 片段分型序号不同
 		: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Disney+ 片段名称相同

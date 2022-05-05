@@ -570,7 +570,7 @@ async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 =
 		}
 		if (timeStamp2 > timeStamp1) index1++
 		else if (timeStamp2 < timeStamp1) index2++
-		else index1++; index2++
+		else { index1++; index2++ }
 	}
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;

@@ -54,16 +54,80 @@ if (method == "OPTIONS") $.done();
 		} else $.done($response)
 	})
 
-/***************** Fuctions *****************/
+/***************** Async Function *****************/
 /**
  * Set Environment Variables
  * @author VirgilClyne
- * @param {String} e - Persistent Store Key
- * @param {String} t - Request URL
- * @param {Object} s - Default DataBase
+ * @param {String} name - Persistent Store Key
+ * @param {String} url - Request URL
+ * @param {Object} database - Default DataBase
  * @return {Promise<*>}
  */
- async function setENV(e,t,s){const a=/\.apple\.com/i.test(t)?"Apple":/\.(dssott|starott)\.com/i.test(t)?"Disney_Plus":/\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(t)?"Prime_Video":/\.(api\.hbo|hbomaxcdn)\.com/i.test(t)?"HBO_Max":/\.(hulustream|huluim)\.com/i.test(t)?"Hulu":/\.(cbsaavideo|cbsivideo)\.com/i.test(t)?"Paramount_Plus":/dplus-ph-/i.test(t)?"Discovery_Plus_Ph":/\.peacocktv\.com/i.test(t)?"Peacock_TV":/\.uplynk\.com/i.test(t)?"Discovery_Plus":/\.youtube\.com/i.test(t)?"YouTube":/\.nflxvideo\.net/i.test(t)?"Netflix":"Universal";let l=$.getjson(e,s),o=l?.Settings?.Verify||s?.Settings?.Verify,i=l?.Settings?.Advanced||s?.Settings?.Advanced;i.Translator.Times=parseInt(i.Translator?.Times,10),i.Translator.Interval=parseInt(i.Translator?.Interval,10),i.Translator.Exponential=JSON.parse(i.Translator?.Exponential);let p=l?.Settings?.[a]||s?.Settings?.Default;if("Apple"==a){let e=/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(t)?"Apple_TV_Plus":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(t)?"Apple_Fitness":/\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(t)?"Apple_TV":/vod-.*-aoc\.tv\.apple\.com/i.test(t)?"Apple_TV_Plus":/vod-.*-amt\.tv\.apple\.com/i.test(t)?"Apple_TV":/(hls|hls-svod)\.itunes\.apple\.com/i.test(t)?"Apple_Fitness":"Apple";p=l?.Settings?.[e]||s?.Settings?.Default}p.Switch=JSON.parse(p.Switch),"string"==typeof p.Types&&(p.Types=p.Types.split(",")),o.GoogleCloud.Auth||(p.Types=p.Types.filter((e=>"GoogleCloud"!==e))),o.Azure.Auth||(p.Types=p.Types.filter((e=>"Azure"!==e))),o.DeepL.Auth||(p.Types=p.Types.filter((e=>"DeepL"!==e))),p.External.Offset=parseInt(p.External?.Offset,10),p.External.ShowOnly=JSON.parse(p.External?.ShowOnly),p.CacheSize=parseInt(p.CacheSize,10),p.Tolerance=parseInt(p.Tolerance,10);const n=t.match(/[&\?]dualsubs=(\w+)$/)?.[1]||p.Type;let r=l?.Caches?.[a]||[];return"string"==typeof r&&(r=JSON.parse(r)),{Platform:a,Verify:o,Advanced:i,Settings:p,Type:n,Caches:r}}
+async function setENV(name, url, database) {
+	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Platform *****************/
+	const Platform = /\.apple\.com/i.test(url) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(url) ? "Disney_Plus"
+			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(url) ? "Prime_Video"
+				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBO_Max"
+					: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+						: /\.(cbsaavideo|cbsivideo)\.com/i.test(url) ? "Paramount_Plus"
+							: /dplus-ph-/i.test(url) ? "Discovery_Plus_Ph"
+								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
+									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
+										: /\.youtube\.com/i.test(url) ? "YouTube"
+											: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+												: "Universal"
+	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
+	/***************** Verify *****************/
+	let Verify = await getENV(name, "Verify", database);
+	/***************** Settings *****************/
+	let Settings = await getENV(name, Platform, database);
+	if (Platform == "Apple") {
+		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
+			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
+				: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(url) ? "Apple_TV"
+					: /vod-.*-aoc\.tv\.apple\.com/i.test(url) ? "Apple_TV_Plus"
+						: /vod-.*-amt\.tv\.apple\.com/i.test(url) ? "Apple_TV"
+							: /(hls|hls-svod)\.itunes\.apple\.com/i.test(url) ? "Apple_Fitness"
+								: "Apple"
+		Settings = await getENV(name, platform, database);
+	};
+	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
+	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
+	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
+	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	/***************** Type *****************/
+	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
+	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
+	/***************** Advanced *****************/
+	let Advanced = await getENV(name, "Advanced", database);
+	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
+	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
+	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
+	/***************** Cache *****************/
+	let Caches = await getENV(name, "Caches", database);
+	Caches = Caches?.[Platform] || [];
+	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
+	if (typeof Caches == "string") Caches = JSON.parse(Caches)
+	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	return { Platform, Verify, Advanced, Settings, Type, Caches };
+	/**
+	 * Get Environment Variables
+	 * @author VirgilClyne
+	 * @param {String} t - Persistent Store Key
+	 * @param {String} e - Platform Name
+	 * @param {Object} n - Default DataBase
+	 * @return {Promise<*>}
+	 */
+	async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.[e]||i?.Settings?.[e]||n?.[e]||n?.Settings?.[e]||n?.Settings?.Default;if("undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var g in t)r(e,g,t[g]);Object.assign(s,e)}function r(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return s}
+};
 
 /**
  * Get Cache

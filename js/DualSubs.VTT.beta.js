@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.6.4-beta");
+const $ = new Env("DualSubs v0.6.5-beta");
 const URL = new URLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
@@ -61,28 +61,12 @@ if (method == "OPTIONS") $.done();
 		} else {
 			$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 			if (Platform == "YouTube") {
-				// 创建链接请求
-				let request = { "url": url, "headers": headers };
-				request.url = URL.parse(request.url);
-				const Format = request.url.params?.format || request.url.params?.fmt
-				$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
-				if (request.url.params?.tlang) { // 已选
-					delete request.url.params?.tlang // 原字幕
-					request.url = URL.stringify(request.url);
-					$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
-					// 获取序列化字幕
-					OriginSub = await getWebVTT(request);
-					SecondSub = VTT.parse($response.body);
-				} else { // 未选
-					let langcode = DataBase?.Languages?.[Platform]?.[Settings.Languages[0]]
-					$.log(`🚧 ${$.name}`, `langcode: ${langcode}`, "");
-					request.url.params.tlang = langcode; // 翻译字幕
-					request.url = URL.stringify(request.url);
-					$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
-					// 获取序列化字幕
-					OriginSub = VTT.parse($response.body);
-					SecondSub = await getWebVTT(request);
-				};
+				const { Format, Orig_Request, Tran_Request } = await getTimedTextRequest(url, Settings.Language);
+				// 获取序列化字幕
+				if (Format == "vtt") {
+					OriginSub = await getWebVTT(Orig_Request);
+					SecondSub = await getWebVTT(Tran_Request);
+				}
 				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 			} else {
 				DualSub = OriginSub;
@@ -257,6 +241,34 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
 	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
 	return target
+};
+
+/**
+ * Get TimedText Request
+ * @author VirgilClyne
+ * @param {String} url - url
+ * @param {String} langcode - langcode
+ * @return {Promise<*>}
+ */
+async function getTimedTextRequest(url, langcode) {
+	$.log(`⚠ ${$.name}, Get TimedText Request`, `url: ${url}`, `langcode: ${langcode}`, "");
+	// 创建链接请求
+	let request = { "url": url, "headers": headers };
+	request.url = URL.parse(request.url);
+	const Format = request.url.params?.format || request.url.params?.fmt
+	$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
+	if (request.url.params?.tlang) { // 已选
+		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
+		delete request.url.params?.tlang // 原字幕
+		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
+	} else { // 未选
+		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
+		request.url.params.tlang = langcode; // 翻译字幕
+		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
+	};
+	$.log(`🚧 ${$.name}, Get TimedText Request`, `Orig_Request: ${JSON.stringify(Orig_Request)}`, "");
+	$.log(`🚧 ${$.name}, Get TimedText Request`, `Tran_Request: ${JSON.stringify(Tran_Request)}`, "");
+	return { Format, Orig_Request, Tran_Request }
 };
 
 /**

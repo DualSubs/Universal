@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs for YouTube v0.3.0-timedtext");
+const $ = new Env("DualSubs for YouTube v0.3.2-timedtext");
 const URL = new URLs();
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -38,7 +38,7 @@ if (method == "OPTIONS") $.done();
 				// 获取序列化字幕
 				OriginSub = await $.http.get(request).then(response => JSON.parse(response.body));
 				SecondSub = JSON.parse($response.body);
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 				$response.body = JSON.stringify(DualSub);
 			} else if (Format == "svr3") {
 				$.done()
@@ -46,16 +46,18 @@ if (method == "OPTIONS") $.done();
 				$.done()
 			};
 		} else { // 未选
-			let langcode = DataBase?.Languages?.[Platform]?.[Settings.Languages[0]]
+			let langcode = Settings.Languages[0]
 			$.log(`🚧 ${$.name}`, `langcode: ${langcode}`, "");
-			request.url.params.tlang = langcode; // 翻译字幕
+			let langcodes = await switchLangCode(Platform, langcode, DataBase);
+			$.log(`🚧 ${$.name}`, `langcodes: ${langcodes}`, "");
+			request.url.params.tlang = langcodes?.[1] || langcodes?.[0]; // 翻译字幕
 			request.url = URL.stringify(request.url);
 			$.log(`🚧 ${$.name}`, `request.url: ${request.url}`, "");
 			if (Format == "json3") {
 				// 获取序列化字幕
 				OriginSub = JSON.parse($response.body);
 				SecondSub = await $.http.get(request).then(response => JSON.parse(response.body));
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 				$response.body = JSON.stringify(DualSub);
 			} else if (Format == "svr3") {
 				$.done()
@@ -210,14 +212,14 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 // Switch Language Code
 async function switchLangCode(platform = "", langCode = "", database) {
 	$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
-		// 自动语言转换
-		let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
-			: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
-				: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
-					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
-						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
-							: [langCode]
-	langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[platform]?.[langcode]}\"`)
+	// 自动语言转换
+	let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
+		: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
+			: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
+				: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
+					: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
+						: [langCode]
+	langcodes = langcodes.map(langcode => database?.Languages?.[platform]?.[langcode])
 	$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 	return langcodes
 };
@@ -231,29 +233,24 @@ async function switchLangCode(platform = "", langCode = "", database) {
  * @param {Array} options - options
  * @return {Promise<*>}
  */
- async function CombineDualSubs(Sub1 = { events: [] }, Sub2 = { events: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
+async function CombineDualSubs(Format = "VTT", Sub1 = { events: [] }, Sub2 = { events: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
 	let DualSub = options.includes("Reverse") ? Sub2 : Sub1
-	const length1 = Sub1.events.length, length2 = Sub2.events.length;
-	let index0 = 0, index1 = 0, index2 = 0;
-	// 双指针法查找两个数组中的相同元素
-	while (index1 < length1 && index2 < length2) {
-		const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs + Offset;
-		const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
-		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
-			index0 = options.includes("Reverse") ? index2 : index1;
-			DualSub.events[index0].segs[0].utf8 = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
-			//DualSub.body[index0].tStartMs = options.includes("Reverse") ? timeStamp2 : timeStamp1;
-			//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
-		}
-		if (timeStamp2 > timeStamp1) {
-			index1++;
-		} else if (timeStamp2 < timeStamp1) {
-			index2++;
-		} else {
-			index1++
-			index2++
-		}
+	if (Format == "json3") {
+		const length1 = Sub1.events.length, length2 = Sub2.events.length;
+		let index0 = 0, index1 = 0, index2 = 0;
+		// 双指针法查找两个数组中的相同元素
+		while (index1 < length1 && index2 < length2) {
+			const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs + Offset;
+			const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
+			if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+				index0 = options.includes("Reverse") ? index2 : index1;
+				DualSub.events[index0].segs[0].utf8 = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
+			}
+			if (timeStamp2 > timeStamp1) index1++
+			else if (timeStamp2 < timeStamp1) index2++
+			else index1++; index2++
+		};
 	}
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;

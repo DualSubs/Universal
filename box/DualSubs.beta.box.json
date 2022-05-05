@@ -238,187 +238,69 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.Types",
-					"name": "字幕类型",
-					"val": "Google",
-					"type": "checkboxes",
-					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"id": "@DualSubs.Settings.YouTube.Language",
+					"name": "首选语言（兼容）：",
+					"val": "ZH",
+					"type": "selects",
+					"desc": "选择后会将此语言添加为额外的字幕语言",
 					"items": [
 						{
-							"key": "Official",
-							"label": "官方"
+							"key": "ZH",
+							"label": "中文（自动）"
 						},
 						{
-							"key": "Baidu",
-							"label": "百度翻译"
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
 						},
 						{
-							"key": "BaiduFanyi",
-							"label": "百度 翻译开放平台"
+							"key": "ZH-HK",
+							"label": "中文（香港）"
 						},
 						{
-							"key": "Youdao",
-							"label": "有道翻译"
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
 						},
 						{
-							"key": "YoudaoAI",
-							"label": "有道智云 AI开放平台"
+							"key": "EN",
+							"label": "英语（自动）"
 						},
 						{
-							"key": "Google",
-							"label": "Google Translate"
+							"key": "EN-US",
+							"label": "英语（美国）"
 						},
 						{
-							"key": "GoogleCloud",
-							"label": "Google Cloud Translate API"
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
 						},
 						{
-							"key": "Bing",
-							"label": "Bing Microsoft Translator"
+							"key": "ES",
+							"label": "西班牙语（自动）"
 						},
 						{
-							"key": "Azure",
-							"label": "Microsoft Azure Translator"
+							"key": "ES-ES",
+							"label": "西班牙语"
 						},
 						{
-							"key": "DeepL",
-							"label": "DeepL API"
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
 						},
 						{
-							"key": "External",
-							"label": "外部链接"
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
 						}
 					]
-				},
-				{
-					"id": "@DualSubs.Settings.YouTube.Languages[0]",
-					"name": "首选语言：",
-					"val": "ZH-HANS",
-					"type": "selects",
-					"items": [
-						{
-							"key": "ZH",
-							"label": "中文（自动）"
-						},
-						{
-							"key": "ZH-HANS",
-							"label": "中文（简体）"
-						},
-						{
-							"key": "ZH-HK",
-							"label": "中文（香港）"
-						},
-						{
-							"key": "ZH-HANT",
-							"label": "中文（繁体）"
-						},
-						{
-							"key": "EN",
-							"label": "英语（自动）"
-						},
-						{
-							"key": "EN-US",
-							"label": "英语（美国）"
-						},
-						{
-							"key": "EN-US SDH",
-							"label": "英语（美国）[CC]"
-						},
-						{
-							"key": "ES",
-							"label": "西班牙语（自动）"
-						},
-						{
-							"key": "ES-ES",
-							"label": "西班牙语"
-						},
-						{
-							"key": "ES-ES SDH",
-							"label": "西班牙语[CC]"
-						},
-						{
-							"key": "ES-419",
-							"label": "西班牙语（拉丁美洲）"
-						},
-						{
-							"key": "ES-419 SDH",
-							"label": "西班牙语（拉丁美洲）[CC]"
-						},
-						{
-							"key": "JA",
-							"label": "日文"
-						},
-						{
-							"key": "KO",
-							"label": "韩文"
-						}
-					],
-					"desc": "选择后将为此语言添加额外字幕选项"
-				},
-				{
-					"id": "@DualSubs.Settings.YouTube.Languages[1]",
-					"name": "次选语言：",
-					"val": "EN-US",
-					"type": "selects",
-					"items": [
-						{
-							"key": "ZH",
-							"label": "中文（自动）"
-						},
-						{
-							"key": "ZH-HANS",
-							"label": "中文（简体）"
-						},
-						{
-							"key": "ZH-HK",
-							"label": "中文（香港）"
-						},
-						{
-							"key": "ZH-HANT",
-							"label": "中文（繁体）"
-						},
-						{
-							"key": "EN",
-							"label": "英语（自动）"
-						},
-						{
-							"key": "EN-US",
-							"label": "英语（美国）"
-						},
-						{
-							"key": "EN-US SDH",
-							"label": "英语（美国）[CC]"
-						},
-						{
-							"key": "ES",
-							"label": "西班牙语（自动）"
-						},
-						{
-							"key": "ES-ES",
-							"label": "西班牙语"
-						},
-						{
-							"key": "ES-ES SDH",
-							"label": "西班牙语[CC]"
-						},
-						{
-							"key": "ES-419",
-							"label": "西班牙语（拉丁美洲）"
-						},
-						{
-							"key": "ES-419 SDH",
-							"label": "西班牙语（拉丁美洲）[CC]"
-						},
-						{
-							"key": "JA",
-							"label": "日文"
-						},
-						{
-							"key": "KO",
-							"label": "韩文"
-						}
-					],
-					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
 					"id": "@DualSubs.Settings.YouTube.Type",

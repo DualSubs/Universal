@@ -23,12 +23,13 @@ if (method == "OPTIONS") $.done();
 	const { Platform, Verify, Advanced, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
 		// 创建字幕JSON
-		let OriginSub = VTT.parse($response.body);
+		let OriginSub = {};
 		let SecondSub = {};
 		// 创建双语字幕JSON
 		let DualSub = {};
 		if (Type == "Official") {
 			$.log(`🚧 ${$.name}`, "官方字幕", "");
+			OriginSub = VTT.parse($response.body);
 			// 找缓存
 			const Indices = await getCache(Type, Settings, Caches);
 			let Cache = Caches?.[Indices.Index] || {};
@@ -48,6 +49,7 @@ if (method == "OPTIONS") $.done();
 			}
 			$response.body = VTT.stringify(DualSub);
 		} else if (Type == "External") {
+			OriginSub = VTT.parse($response.body);
 			$.log(`🚧 ${$.name}, 外挂字幕`, "");
 			let request = {
 				"url": Settings.External.URL,
@@ -68,6 +70,9 @@ if (method == "OPTIONS") $.done();
 				if (Format == "json3") {
 					OriginSub = await $.http.get(Orig_Request).then(response => JSON.parse(response.body));
 					SecondSub = await $.http.get(Tran_Request).then(response => JSON.parse(response.body));
+				} else if (Format == "svr3") {
+					OriginSub = await $.http.get(Orig_Request).then(response => XML.parse(response.body));
+					SecondSub = await $.http.get(Tran_Request).then(response => XML.parse(response.body));
 				} else if (Format == "vtt") {
 					OriginSub = await getWebVTT(Orig_Request);
 					SecondSub = await getWebVTT(Tran_Request);
@@ -75,6 +80,7 @@ if (method == "OPTIONS") $.done();
 				DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 				$response.body = (Format == "json3") ? JSON.stringify(DualSub) : VTT.stringify(DualSub);
 			} else {
+				OriginSub = VTT.parse($response.body);
 				DualSub = OriginSub;
 				if (Verify?.[Type]?.Method == "Row") { //逐行翻译
 					DualSub.body = await Promise.all(DualSub.body.map(async item => {

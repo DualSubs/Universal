@@ -107,9 +107,12 @@ if (method == "OPTIONS") $.done();
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		const { headers, body } = $response
-		$.done({ headers, body })
+		if ($.isQuanX()) {
+			const { headers, body } = $response
+			$.done({ headers, body })
+		} else $.done($response)
 	})
+
 /***************** Async Function *****************/
 /**
  * Set Environment Variables

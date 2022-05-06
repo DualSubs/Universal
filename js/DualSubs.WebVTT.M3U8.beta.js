@@ -48,7 +48,7 @@ if (method == "OPTIONS") $.done();
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX) {
+		if ($.isQuanX()) {
 			const { headers, body } = $response
 			$.done({ headers, body })
 		} else $.done($response)

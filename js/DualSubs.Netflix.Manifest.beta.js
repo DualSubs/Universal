@@ -182,11 +182,15 @@ async function getCache(platform, type, settings, caches = {}) {
 	function getURIs(platform, item) {
 		if (platform == "Netflix") {
 			$.log(`🚧 ${$.name}, Netflix`, `item: ${JSON.stringify(item)}`);
-			let Ids = (item?.downloadableIds) ? Object.keys(item?.downloadableIds) : null;
-			$.log(`🚧 ${$.name}`, `Ids = ${Ids}`, "");
-			let TT = item?.ttDownloadables;
-			$.log(`🚧 ${$.name}`, `TT = ${JSON.stringify(TT)}`, "");
-			return [Ids.map(Id => Object.values(TT?.[`${Id}`].downloadUrls))];
+			let downloadableIds = (item?.downloadableIds) ? Object.keys(item?.downloadableIds) : null;
+			$.log(`🚧 ${$.name}`, `downloadableIds = ${downloadableIds}`, "");
+			let ttDownloadables = item?.ttDownloadables;
+			$.log(`🚧 ${$.name}`, `ttDownloadables = ${JSON.stringify(ttDownloadables)}`, "");
+			if (downloadableIds) {
+				return [downloadableIds.map(Id => {
+					if (ttDownloadables?.[`${Id}`].downloadUrls) return Object.values(ttDownloadables?.[`${Id}`].downloadUrls)
+				})];
+			}
 		} else return [item?.URI, item?.VTTs]
 	}
 };

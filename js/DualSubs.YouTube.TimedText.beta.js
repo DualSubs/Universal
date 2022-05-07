@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs for YouTube v0.3.3-timedtext-beta");
+const $ = new Env("DualSubs for YouTube v0.3.4-timedtext-beta");
 const URL = new URLs();
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -88,9 +88,9 @@ async function setENV(name, url, database) {
 	};
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
-	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
-	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
-	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	//if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+	//if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+	//if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
 	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字

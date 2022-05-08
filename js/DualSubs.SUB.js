@@ -135,7 +135,7 @@ async function setENV(name, url, database) {
 			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(url) ? "Prime_Video"
 				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBO_Max"
 					: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
-						: /\.(cbsaavideo|cbsivideo)\.com/i.test(url) ? "Paramount_Plus"
+						: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount_Plus"
 							: /dplus-ph-/i.test(url) ? "Discovery_Plus_Ph"
 								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
 									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"

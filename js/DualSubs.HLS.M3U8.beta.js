@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.6.2-hls-beta");
+const $ = new Env("DualSubs v0.6.3-hls-beta");
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
 	// https://raw.githubusercontent.com/DualSubs/DualSubs/beta/database/DualSubs.Settings.beta.min.json
@@ -71,7 +71,7 @@ async function setENV(name, url, database) {
 			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(url) ? "Prime_Video"
 				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBO_Max"
 					: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
-						: /\.(cbsaavideo|cbsivideo)\.com/i.test(url) ? "Paramount_Plus"
+						: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount_Plus"
 							: /dplus-ph-/i.test(url) ? "Discovery_Plus_Ph"
 								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
 									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"

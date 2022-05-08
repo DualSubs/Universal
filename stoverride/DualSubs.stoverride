@@ -36,6 +36,7 @@ http:
     - "live-sc.hulustream.com"
     - "assets.huluim.com"
     - "assetshuluimcom-a.akamaihd.net"
+    - "*-pplus.cbs.com"
     - "vod-*.cbsaavideo.com"
     - "vod-*.cbsivideo.com"
     - "*.airspace-*.cbsivideo.com"
@@ -152,17 +153,17 @@ http:
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/(vod-.*|(.*)\.airspace-.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/(master|manifest)\.m3u8(\?.*)?$
+    - match: ^https?:\/\/(vod-.*|(.*)\.airspace-.*|.*-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.*)\/(master|manifest)\.m3u8(\?.*)?$
       name: DualSubs.HLS.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(vod-.*|(.*)\.airspace-.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\/(stream_vtt|manifest_.*)\.m3u8(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(vod-.*|(.*)\.airspace-.*|.*-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.*)\/(stream_vtt|manifest_.*)\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.WebVTT.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(vod-.*|(.*)\.airspace-.*)\.(cbsaavideo|cbsivideo)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(vod-.*|(.*)\.airspace-.*|.*-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.*)\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.vtt
       type: response
       require-body: true

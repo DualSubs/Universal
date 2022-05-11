@@ -186,11 +186,7 @@ async function getCache(platform, type, settings, caches = {}) {
 			$.log(`🚧 ${$.name}`, `downloadableIds = ${downloadableIds}`, "");
 			let ttDownloadables = item?.ttDownloadables;
 			$.log(`🚧 ${$.name}`, `ttDownloadables = ${JSON.stringify(ttDownloadables)}`, "");
-			if (downloadableIds) {
-				return [downloadableIds.map(Id => {
-					if (ttDownloadables?.[`${Id}`].downloadUrls) return Object.values(ttDownloadables?.[`${Id}`].downloadUrls)
-				})];
-			}
+			if (downloadableIds) return downloadableIds.map(Id => Object.values(ttDownloadables[Id].downloadUrls));
 		} else return [item?.URI, item?.VTTs]
 	}
 };
@@ -352,7 +348,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			// 修改链接
 			newSub.downloadableIds = downloadableIds.map(type => {
 				// 查询服务器ID
-				let serversIds = Object.keys(type.downloadUrls);
+				let serversIds = Object.keys(newSub.downloadableIds[type].downloadUrls);
 				$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `serversIds: ${JSON.stringify(serversIds)}`, "");
 				// 改写URL
 				type.downloadUrls = serversIds.map(id => {

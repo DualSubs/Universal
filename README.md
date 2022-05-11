@@ -107,20 +107,20 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
     * 无此类型: N/A
   * 提示: 以下图例可点击后直达下载链接或网站
 
-|  供应商  |iOS/iPadOS|  tvOS  |  macOS  | Appx | Web | 备注 |
-|   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
-| YouTube |   🔜[^7]   |   ❌[^8]   |   N/A   |   N/A   |   ✅   |        |
-|Apple TV+|   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   ✅[^5]   |   N/A   |   [✅](https://tv.apple.com/)[^2]   |   指Apple TV app中的订阅内容   |
-|Apple TV |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   ✅[^2][^5]   |   N/A   |   N/A   |   指Apple TV app中的买断或租借内容[^1]   |
-|Apple Fitness| [✅](https://apps.apple.com/cn/app/fitness/id1208224953)[^2] |   ✅[^2]   |   N/A   |   N/A   |   N/A   | [^1] |
-| Disney+ |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   N/A   |   [✅](https://www.microsoft.com/zh-cn/p/disney/9nxqxxlfst89)   |   [✅](https://www.disneyplus.com/)   |        |
-|Prime Video|   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^5]   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [🔜](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^3]   |   [🔜](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)[^3]   |   [🔜](https://www.primevideo.com)[^3]   |   包含Prime Video Channel   |
-| HBO Max |   [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4]   |   [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   |   [☑️](https://play.hbomax.com)[^4]   |        |
-|  Hulu   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   N/A   |   N/A   |   [🔜](https://www.hulu.com/)[^6]   |        |
-|Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   N/A   |   ❓   |   [✅](https://www.paramountplus.com/)   | 包含部分Live TV |
-|Discovery+<br>Philippines|   [✅](https://apps.apple.com/ph/app/discovery-stream-tv-shows/id1574345720)   |   ❓   |   ❓   |   ❓   |   [✅](https://www.discoveryplus.com/ph/)   |        |
-|Peacock TV|   [☑️](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)[^4]   |   [❓](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/peacocktv/9pl67r4p9pg5?activetab=pivot:overviewtab)   |   [☑️](https://www.peacocktv.com/)[^4]   |        |
-|         |         |         |         |         |         |        |
+|  供应商  |iOS/iPadOS|  tvOS  |  macOS  | Appx | Android | Web | 备注 |
+|   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
+| YouTube |   🔜[^7]   |   ❌[^8]   |   N/A   |   N/A   |   ❓   |   ✅   |        |
+|Apple TV+|   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   ✅[^5]   |   N/A   |   ❓   |   [✅](https://tv.apple.com/)[^2]   |   指Apple TV app中的订阅内容   |
+|Apple TV |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   ✅[^2][^5]   |   N/A   |   ❓   |   N/A   |   指Apple TV app中的买断或租借内容[^1]   |
+|Apple Fitness| [✅](https://apps.apple.com/cn/app/fitness/id1208224953)[^2] |   ✅[^2]   |   N/A   |   N/A   |   ❓   |   N/A   | [^1] |
+| Disney+ |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   N/A   |   [✅](https://www.microsoft.com/zh-cn/p/disney/9nxqxxlfst89)   |   ✅   |   [✅](https://www.disneyplus.com/)   |        |
+|Prime Video|   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^5]   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [🔜](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^3]   |   [🔜](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)[^3]   |   🔜[^3]   |   [🔜](https://www.primevideo.com)[^3]   |   包含Prime Video Channel   |
+| HBO Max |   [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4]   |   [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   |   ❓   |   [☑️](https://play.hbomax.com)[^4]   |        |
+|  Hulu   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   N/A   |   N/A   |   ❓   |   [🔜](https://www.hulu.com/)[^6]   |        |
+|Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   N/A   |   ❓   |   ❓   |   [✅](https://www.paramountplus.com/)   | 包含部分Live TV |
+|Discovery+<br>Philippines|   [✅](https://apps.apple.com/ph/app/discovery-stream-tv-shows/id1574345720)   |   ❓   |   ❓   |   ❓   |   ❓   |   [✅](https://www.discoveryplus.com/ph/)   |        |
+|Peacock TV|   [☑️](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)[^4]   |   [❓](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/peacocktv/9pl67r4p9pg5?activetab=pivot:overviewtab)   |   ❓   |   [☑️](https://www.peacocktv.com/)[^4]   |        |
+|         |         |         |         |         |         |        |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。
   [^2]: 此平台资源使用的域名`play.itunes.apple.com`与`App Store`登陆、验证、购买等功能共用域名，MitM可能造成无法访问，故默认未添加此域名，需要此平台双语的用户请自行添加`play.itunes.apple.com`至MitM域名列表。

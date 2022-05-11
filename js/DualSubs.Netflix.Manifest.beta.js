@@ -339,20 +339,32 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
 		return types.map(type => {
 			// 复制此语言选项
-			let newSub = (obj1?.EXT) ? JSON.parse(JSON.stringify(obj1))
+			let newSub = (obj1?.id) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
-			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
+			newSub.languageDescription = `\"${obj1.languageDescription}/${obj2.languageDescription} [${type}]\"`
 			// 修改语言代码
-			newSub.OPTION.LANGUAGE = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language}/${obj2.Language}[${type}]\"`
-				: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
-			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
+			newSub.language = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `${obj1.language}/${obj2.language}[${type}]`
+				: (standard) ? obj1.language : obj2.language
+			// 查询字幕类型
+			let downloadableIds = Object.keys(newSub.downloadableIds);
+			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `serversIds: ${JSON.stringify(serversIds)}`, "");
 			// 修改链接
-			newSub.OPTION.URI = (newSub.URI.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
-				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`
-			// 自动选择
-			newSub.OPTION.AUTOSELECT = "YES"
+			newSub.downloadableIds = downloadableIds.map(type => {
+				// 查询服务器ID
+				let serversIds = Object.keys(type.downloadUrls);
+				$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `serversIds: ${JSON.stringify(serversIds)}`, "");
+				// 改写URL
+				type.downloadUrls = serversIds.map(id => {
+					if (type.downloadUrls?.[id]) {
+						type.downloadUrls[id] = (type.downloadUrls?.[id].includes("?")) ? type.downloadUrls?.[id] + `&dualsubs=${type}`
+							: type.downloadUrls?.[id] + `?dualsubs=${type}`
+						return type.downloadUrls
+					}
+				})
+				return type;
+			})
+			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub.downloadableIds: ${JSON.stringify(newSub.downloadableIds)}`, "");
 			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})

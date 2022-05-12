@@ -181,7 +181,7 @@ async function getCache(platform, type, settings, caches = {}) {
 	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(platform, item).flat(Infinity).some(URL => url.includes(URL || null))); };
 	function getURIs(platform, item) {
 		if (platform == "Netflix") {
-			$.log(`🚧 ${$.name}, Netflix`, `item: ${JSON.stringify(item)}`);
+			//$.log(`🚧 ${$.name}, Netflix`, `item: ${JSON.stringify(item)}`);
 			let downloadableIds = (item?.downloadableIds) ? Object.keys(item?.downloadableIds) : null;
 			$.log(`🚧 ${$.name}`, `downloadableIds = ${downloadableIds}`, "");
 			let ttDownloadables = item?.ttDownloadables;
@@ -344,7 +344,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 				: (standard) ? obj1.language : obj2.language
 			// 查询字幕类型
 			let downloadableIds = Object.keys(newSub.downloadableIds);
-			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `serversIds: ${JSON.stringify(serversIds)}`, "");
+			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `downloadableIds: ${JSON.stringify(downloadableIds)}`, "");
 			// 修改链接
 			newSub.downloadableIds = downloadableIds.map(type => {
 				// 查询服务器ID

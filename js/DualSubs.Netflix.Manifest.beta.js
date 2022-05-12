@@ -343,24 +343,20 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			newSub.language = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `${obj1.language}/${obj2.language}[${type}]`
 				: (standard) ? obj1.language : obj2.language
 			// 查询字幕类型
-			let downloadableIds = Object.keys(newSub.downloadableIds);
-			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `downloadableIds: ${JSON.stringify(downloadableIds)}`, "");
+			let Formats = Object.keys(newSub.downloadableIds);
+			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `Formats: ${JSON.stringify(Formats)}`, "");
 			// 修改链接
-			newSub.downloadableIds = downloadableIds.map(type => {
-				// 查询服务器ID
-				let serversIds = Object.keys(newSub.downloadableIds[type].downloadUrls);
-				$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `serversIds: ${JSON.stringify(serversIds)}`, "");
-				// 改写URL
-				type.downloadUrls = serversIds.map(id => {
-					if (type.downloadUrls?.[id]) {
-						type.downloadUrls[id] = (type.downloadUrls?.[id].includes("?")) ? type.downloadUrls?.[id] + `&dualsubs=${type}`
-							: type.downloadUrls?.[id] + `?dualsubs=${type}`
-						return type.downloadUrls
-					}
-				})
-				return type;
+			newSub.ttDownloadables = Formats.map(format => {
+				for (let Id in newSub.ttDownloadables[format].downloadUrls) {
+					let downloadUrl = newSub.ttDownloadables[format].downloadUrls[Id]
+					$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `downloadUrl: ${JSON.stringify(downloadUrl)}`, "");
+					downloadUrl = (downloadUrl.includes("?")) ? downloadUrl + `&dualsubs=${type}` : downloadUrl + `?dualsubs=${type}`
+					$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `downloadUrl: ${downloadUrl}`, "");
+					newSub.ttDownloadables[format].downloadUrls[Id] = downloadUrl;
+				}
+				$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub.ttDownloadables.${format}: ${JSON.stringify(newSub.ttDownloadables[format])}`, "");
+				return newSub.ttDownloadables[format]
 			})
-			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub.downloadableIds: ${JSON.stringify(newSub.downloadableIds)}`, "");
 			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})

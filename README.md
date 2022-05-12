@@ -78,18 +78,18 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 
 ## 安装链接
 ### 🍿️ DualSubs for Streaming Media Platform
-  * Loon: [DualSubs.plugin](./plugins/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
-  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodules/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
 
 ### 🍿️ DualSubs for Youtube
   * 当前仅支持Web端有字幕视频的自动翻译及全翻译语言解锁及双语言
     * 当选择任意语言`普通字幕`时，双语字幕`首选语言`均为BoxJs中设置的`首选语言`且为翻译字幕（暂未做官方字幕查询）
     * 当选择`自动翻译`中的`翻译字幕`时，双语字幕分别为`原语言`及`目标语言`
-  * Loon: [DualSubs.YouTube.plugin](./plugins/DualSubs.YouTube.plugin?raw=true "🍿️ DualSubs for Youtube")
+  * Loon: [DualSubs.YouTube.plugin](./plugin/DualSubs.YouTube.plugin?raw=true "🍿️ DualSubs for Youtube")
   * Quantumult X: [DualSubs.YouTube.qxrewrite](./qxrewrite/DualSubs.YouTube.qxrewrite?raw=true "🍿️ DualSubs for Youtube")
-  * Surge (Shadowrocket): [DualSubs.YouTube.sgmodule](./sgmodules/DualSubs.YouTube.sgmodule?raw=true "🍿️ DualSubs for Youtube")
+  * Surge (Shadowrocket): [DualSubs.YouTube.sgmodule](./sgmodule/DualSubs.YouTube.sgmodule?raw=true "🍿️ DualSubs for Youtube")
   * Stash: [DualSubs.YouTube.stoverride](./stoverride/DualSubs.YouTube.stoverride?raw=true "🍿️ DualSubs for Youtube")
 
 ## How To

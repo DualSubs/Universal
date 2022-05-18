@@ -1,5 +1,10 @@
-#!name= 🍿️ DualSubs for YouTube
-#!desc= (0.3.x) YouTube字幕增强及双语模块
+#!name=🍿️ DualSubs for YouTube
+#!desc=(V0.3) YouTube字幕增强及双语模块
+#!openUrl=http://boxjs.com/#/app/DualSubs.YouTube
+#!author=VirgilClyne
+#!homepage=https://github.com/VirgilClyne
+#!manual=https://github.com/DualSubs/DualSubs
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
 
 [Script]
 DualSubs.YouTube.Player = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js

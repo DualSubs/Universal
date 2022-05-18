@@ -17,7 +17,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
     - [配置说明](#配置说明)
   - [安装链接](#安装链接)
     - [🍿️ DualSubs for Streaming Media Platform](#️-dualsubs-for-streaming-media-platform)
-    - [🍿️ DualSubs for Youtube](#️-dualsubs-for-youtube)
+    - [🍿️ DualSubs for YouTube](#️-dualsubs-for-youtube)
   - [How To](#how-to)
   - [支持列表](#支持列表)
 
@@ -83,14 +83,16 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
 
-### 🍿️ DualSubs for Youtube
-  * 当前仅支持Web端有字幕视频的自动翻译及全翻译语言解锁及双语言
+### 🍿️ DualSubs for YouTube
+  * 当前仅支持Web端有字幕视频的`自动翻译`(不是`自动生成`)及全翻译语言解锁及双语言
     * 当选择任意语言`普通字幕`时，双语字幕`首选语言`均为BoxJs中设置的`首选语言`且为翻译字幕（暂未做官方字幕查询）
     * 当选择`自动翻译`中的`翻译字幕`时，双语字幕分别为`原语言`及`目标语言`
-  * Loon: [DualSubs.YouTube.plugin](./plugin/DualSubs.YouTube.plugin?raw=true "🍿️ DualSubs for Youtube")
-  * Quantumult X: [DualSubs.YouTube.qxrewrite](./qxrewrite/DualSubs.YouTube.qxrewrite?raw=true "🍿️ DualSubs for Youtube")
-  * Surge (Shadowrocket): [DualSubs.YouTube.sgmodule](./sgmodule/DualSubs.YouTube.sgmodule?raw=true "🍿️ DualSubs for Youtube")
-  * Stash: [DualSubs.YouTube.stoverride](./stoverride/DualSubs.YouTube.stoverride?raw=true "🍿️ DualSubs for Youtube")
+  * 注：本插件不适用于tvOS上的YouTube app，对`www.youtube.com`的MitM会破坏tvOS上YouTube的链接
+  * Loon: [DualSubs.YouTube.plugin](./plugin/DualSubs.YouTube.plugin?raw=true "🍿️ DualSubs for YouTube")
+  * Quantumult X: [DualSubs.YouTube.qxrewrite](./qxrewrite/DualSubs.YouTube.qxrewrite?raw=true "🍿️ DualSubs for YouTube")
+  * Surge (Shadowrocket): [DualSubs.YouTube.sgmodule](./sgmodule/DualSubs.YouTube.sgmodule?raw=true "🍿️ DualSubs for YouTube")
+  * Stash: [DualSubs.YouTube.stoverride](./stoverride/DualSubs.YouTube.stoverride?raw=true "🍿️ DualSubs for YouTube")
+
 
 ## How To
   * [快速创建拥有代理服务器设置及MitM证书的描述文件](https://github.com/DualSubs/DualSubs/wiki/快速创建拥有代理服务器设置及MitM证书的描述文件)

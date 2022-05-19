@@ -151,7 +151,8 @@ async function setENV(name, url, database) {
 						: /vod-.*-amt\.tv\.apple\.com/i.test(url) ? "Apple_TV"
 							: /(hls|hls-svod)\.itunes\.apple\.com/i.test(url) ? "Apple_Fitness"
 								: "Apple"
-		Settings = await getENV(name, platform, database).Settings;
+		$.log(`🚧 ${$.name}, Set Environment Variables`, `platform: ${platform}`, "");
+		Settings = await getENV(name, platform, database).then(v=> v.Settings);
 	};
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
@@ -185,7 +186,7 @@ async function setENV(name, url, database) {
 	 * @param {Object} n - Default DataBase
 	 * @return {Promise<*>}
 	 */
-	async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.Settings?.[e]||n.Settings[e],g=i?.Config?.[e]||n?.Config?.[e],f=i?.Caches?.[e];if("string"==typeof f&&(f=JSON.parse(f)),"undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var r in t)a(e,r,t[r]);Object.assign(s,e)}function a(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return{Settings:s,Caches:f,Config:g}}
+	async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.Settings?.[e]||n.Settings[e],g=i?.Config?.[e]||n?.Config?.[e],f=i?.Caches?.[e]||void 0;if("string"==typeof f&&(f=JSON.parse(f)),"undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var r in t)o(e,r,t[r]);Object.assign(s,e)}function o(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return{Settings:s,Caches:f,Config:g}}
 };
 
 /**

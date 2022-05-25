@@ -52,6 +52,16 @@ if (method == "OPTIONS") $.done();
 
 /***************** Async Function *****************/
 /**
+ * Get Environment Variables
+ * @author VirgilClyne
+ * @param {String} t - Persistent Store Key
+ * @param {String} e - Platform Name
+ * @param {Object} n - Default DataBase
+ * @return {Promise<*>}
+ */
+async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.Settings?.[e]||n.Settings[e],g=i?.Config?.[e]||n?.Config?.[e],f=i?.Caches?.[e]||void 0;if("string"==typeof f&&(f=JSON.parse(f)),"undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var r in t)o(e,r,t[r]);Object.assign(s,e)}function o(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return{Settings:s,Caches:f,Config:g}}
+
+/**
  * Set Environment Variables
  * @author VirgilClyne
  * @param {String} name - Persistent Store Key
@@ -99,9 +109,9 @@ async function setENV(name, url, database) {
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
 	/***************** Verify *****************/
 	const { Settings: Verify } = await getENV(name, "Verify", database);
-	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
-	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
-	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	//if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+	//if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+	//if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	/***************** Advanced *****************/
 	let { Settings: Advanced } = await getENV(name, "Advanced", database);
 	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
@@ -111,15 +121,6 @@ async function setENV(name, url, database) {
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	return { Platform, Settings, Caches, Config, Type, Verify, Advanced };
-	/**
-	 * Get Environment Variables
-	 * @author VirgilClyne
-	 * @param {String} t - Persistent Store Key
-	 * @param {String} e - Platform Name
-	 * @param {Object} n - Default DataBase
-	 * @return {Promise<*>}
-	 */
-	async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.Settings?.[e]||n.Settings[e],g=i?.Config?.[e]||n?.Config?.[e],f=i?.Caches?.[e]||void 0;if("string"==typeof f&&(f=JSON.parse(f)),"undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var r in t)o(e,r,t[r]);Object.assign(s,e)}function o(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return{Settings:s,Caches:f,Config:g}}
 };
 
 /**

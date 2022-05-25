@@ -138,6 +138,7 @@ async function setENV(name, url, database) {
 		Settings = await getENV(name, platform, database).then(v=> v.Settings);
 	};
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	if (typeof Settings.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
 	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
@@ -148,8 +149,7 @@ async function setENV(name, url, database) {
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
 	/***************** Verify *****************/
 	const { Settings: Verify } = await getENV(name, "Verify", database);
-	if (typeof Settings.Types === "string") {
-		Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	if (Array.isArray(Settings.Types)) {
 		if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
 		if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
 		if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");

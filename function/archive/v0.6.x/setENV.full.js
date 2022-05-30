@@ -61,4 +61,13 @@ async function setENV(name, url, database) {
 	if (typeof Caches == "string") Caches = JSON.parse(Caches)
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	return { Platform, Verify, Advanced, Settings, Type, Caches };
+	/**
+	 * Get Environment Variables
+	 * @author VirgilClyne
+	 * @param {String} t - Persistent Store Key
+	 * @param {String} e - Platform Name
+	 * @param {Object} n - Default DataBase
+	 * @return {Promise<*>}
+	 */
+	async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.[e]||i?.Settings?.[e]||n?.[e]||n?.Settings?.[e]||n?.Settings?.Default;if("undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var g in t)r(e,g,t[g]);Object.assign(s,e)}function r(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return s}
 };

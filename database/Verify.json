@@ -1,0 +1,21 @@
+{
+	"Settings": {
+		"GoogleCloud": {
+			"Method": "Part",
+			"Mode": "Key",
+			"Auth": null
+		},
+		"Azure": {
+			"Method": "Part",
+			"Version": "Azure",
+			"Region": null,
+			"Mode": "Key",
+			"Auth": null
+		},
+		"DeepL": {
+			"Method": "Part",
+			"Version": "Free",
+			"Auth": null
+		}
+	}
+}

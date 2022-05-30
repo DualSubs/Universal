@@ -1,0 +1,9 @@
+{
+	"Settings": {
+		"Translator": {
+			"Times": 3,
+			"Interval": 100,
+			"Exponential": true
+		}
+	}
+}

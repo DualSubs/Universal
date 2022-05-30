@@ -1,0 +1,23 @@
+{
+	"Settings": {
+		"Switch": true,
+		"Types": [
+			"Official",
+			"Google"
+		],
+		"Type": "Google",
+		"Languages": [
+			"ZH",
+			"EN"
+		],
+		"Language": "ZH",
+		"External": {
+			"URL": null,
+			"Offset": 0,
+			"ShowOnly": false
+		},
+		"Position": "Forward",
+		"CacheSize": 6,
+		"Tolerance": 1000
+	}
+}

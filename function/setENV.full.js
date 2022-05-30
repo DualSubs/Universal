@@ -23,9 +23,9 @@ async function setENV(name, url, database) {
 												: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
 	/***************** Verify *****************/
-	let Verify = await getENV(name, "Verify", database);
+	const { Settings: Verify } = await getENV(name, "Verify", database);
 	/***************** Settings *****************/
-	let Settings = await getENV(name, Platform, database);
+	let { Settings, Caches = [], Config } = await getENV(name, Platform, database);
 	if (Platform == "Apple") {
 		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
 			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
@@ -34,13 +34,17 @@ async function setENV(name, url, database) {
 						: /vod-.*-amt\.tv\.apple\.com/i.test(url) ? "Apple_TV"
 							: /(hls|hls-svod)\.itunes\.apple\.com/i.test(url) ? "Apple_Fitness"
 								: "Apple"
-		Settings = await getENV(name, platform, database);
+		$.log(`🚧 ${$.name}, Set Environment Variables`, `platform: ${platform}`, "");
+		Settings = await getENV(name, platform, database).then(v=> v.Settings);
 	};
+	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
-	if (typeof Settings.Types == "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
-	if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
-	if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
-	if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	if (typeof Settings.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	if (Array.isArray(Settings.Types)) {
+		if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+		if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+		if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	}
 	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
 	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
@@ -50,15 +54,12 @@ async function setENV(name, url, database) {
 	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
 	/***************** Advanced *****************/
-	let Advanced = await getENV(name, "Advanced", database);
+	let { Settings: Advanced } = await getENV(name, "Advanced", database);
 	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
 	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
 	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
 	/***************** Cache *****************/
-	let Caches = await getENV(name, "Caches", database);
-	Caches = Caches?.[Platform] || [];
-	//$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
-	if (typeof Caches == "string") Caches = JSON.parse(Caches)
+	$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	return { Platform, Verify, Advanced, Settings, Type, Caches };
+	return { Platform, Settings, Caches, Config, Type, Verify, Advanced };
 };

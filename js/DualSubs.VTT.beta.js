@@ -95,7 +95,7 @@ if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Verify, Advanced, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Verify, Advanced, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
 		// 创建字幕JSON
 		let OriginSub = VTT.parse($response.body);
@@ -219,7 +219,7 @@ async function setENV(name, url, database) {
 	/***************** Verify *****************/
 	const { Settings: Verify } = await getENV(name, "Verify", database);
 	/***************** Settings *****************/
-	let { Settings, Caches = [], Config } = await getENV(name, Platform, database);
+	let { Settings, Caches = [], Configs } = await getENV(name, Platform, database);
 	if (Platform == "Apple") {
 		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
 			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
@@ -255,7 +255,7 @@ async function setENV(name, url, database) {
 	/***************** Cache *****************/
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	return { Platform, Settings, Caches, Config, Type, Verify, Advanced };
+	return { Platform, Settings, Caches, Configs, Type, Verify, Advanced };
 };
 
 /**
@@ -477,7 +477,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			]
 			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
 			text = (Array.isArray(text)) ? text.join("\n\n") : text;
-			request.url = request.url + `&sl=${DataBase.Languages.Google[source]}&tl=${DataBase.Languages.Google[target]}&q=${encodeURIComponent(text)}`;
+			request.url = request.url + `&sl=${DataBase.Google.Languages[source]}&tl=${DataBase.Google.Languages[target]}&q=${encodeURIComponent(text)}`;
 		} else if (type == "GoogleCloud") {
 			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${verify.GoogleCloud?.Auth}`;
 			request.headers = {
@@ -487,8 +487,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			};
 			request.body = JSON.stringify({
 				"q": text,
-				"source": DataBase.Languages.Google[source],
-				"target": DataBase.Languages.Google[target],
+				"source": DataBase.Google.Languages[source],
+				"target": DataBase.Google.Languages[target],
 				"format": "html",
 				//"key": verify.GoogleCloud?.Key
 			});
@@ -508,8 +508,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				"fromLang": "auto-detect",
 				//"text": '%s' % trans,
 				"text": text,
-				//"from": DataBase.Languages.Microsoft[source],
-				"to": DataBase.Languages.Microsoft[target]
+				//"from": DataBase.Microsoft.Languages[source],
+				"to": DataBase.Microsoft.Languages[target]
 			});
 		} else if (type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
@@ -517,7 +517,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			const BaseURL = (verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
 				: (verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
 					: "https://api.cognitive.microsofttranslator.com"
-			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Languages.Microsoft[target]}&from=${DataBase.Languages.Microsoft[source]}`;
+			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Microsoft.Languages[target]}&from=${DataBase.Microsoft.Languages[source]}`;
 			request.headers = {
 				"Content-Type": "application/json; charset=UTF-8",
 				"Accept": "application/json, text/javascript, */*; q=0.01",
@@ -548,12 +548,12 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				"User-Agent": "DualSubs",
 				"Content-Type": "application/x-www-form-urlencoded"
 			};
-			const source_lang = (DataBase.Languages.DeepL[source].includes("EN")) ? "EN"
-				: (DataBase.Languages.DeepL[source].includes("PT")) ? "PT"
-					: DataBase.Languages.DeepL[source];
-			const target_lang = (DataBase.Languages.DeepL[target] == "EN") ? "EN-US"
-				: (DataBase.Languages.DeepL[target] == "PT") ? "PT-PT"
-					: DataBase.Languages.DeepL[target];
+			const source_lang = (DataBase.DeepL.Languages[source].includes("EN")) ? "EN"
+				: (DataBase.DeepL.Languages[source].includes("PT")) ? "PT"
+					: DataBase.DeepL.Languages[source];
+			const target_lang = (DataBase.DeepL.Languages[target] == "EN") ? "EN-US"
+				: (DataBase.DeepL.Languages[target] == "PT") ? "PT-PT"
+					: DataBase.DeepL.Languages[target];
 			const BaseBody = `auth_key=${verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
 			text = (Array.isArray(text)) ? text : [text];
 			let texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
@@ -567,8 +567,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			};
 			request.body = {
 				"q": text,
-				"from": DataBase.Languages.Baidu[source],
-				"to": DataBase.Languages.Baidu[target],
+				"from": DataBase.Baidu.Languages[source],
+				"to": DataBase.Baidu.Languages[target],
 				"appid": verify.BaiduFanyi?.Key,
 				"salt": uuidv4().toString(),
 				"sign": "",
@@ -582,8 +582,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			};
 			request.body = {
 				"q": text,
-				"from": DataBase.Languages.Youdao[source],
-				"to": DataBase.Languages.Youdao[target],
+				"from": DataBase.Youdao.Languages[source],
+				"to": DataBase.Youdao.Languages[target],
 				"appKey": verify.YoudaoAI?.Key,
 				"salt": uuidv4().toString(),
 				"signType": "v3",

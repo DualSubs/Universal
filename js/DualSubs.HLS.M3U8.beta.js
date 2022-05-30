@@ -94,7 +94,7 @@ if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
 		// 找缓存
 		const Indices = await getCache(Type, Settings, Caches);
@@ -105,7 +105,7 @@ if (method == "OPTIONS") $.done();
 		Cache.URL = url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
 		for await (var language of Settings.Languages) {
-			Cache[language] = await getMEDIA(Platform, PlayList, "SUBTITLES", language);
+			Cache[language] = await getMEDIA(PlayList, "SUBTITLES", language, Configs);
 			//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		};
 		// 写入缓存
@@ -167,7 +167,7 @@ async function setENV(name, url, database) {
 	/***************** Verify *****************/
 	const { Settings: Verify } = await getENV(name, "Verify", database);
 	/***************** Settings *****************/
-	let { Settings, Caches = [], Config } = await getENV(name, Platform, database);
+	let { Settings, Caches = [], Configs } = await getENV(name, Platform, database);
 	if (Platform == "Apple") {
 		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
 			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
@@ -203,7 +203,7 @@ async function setENV(name, url, database) {
 	/***************** Cache *****************/
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	return { Platform, Settings, Caches, Config, Type, Verify, Advanced };
+	return { Platform, Settings, Caches, Configs, Type, Verify, Advanced };
 };
 
 /**
@@ -277,10 +277,10 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
  * @param {String} langCode - langCode
  * @return {Promise<*>}
  */
-async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
+async function getMEDIA(json = {}, type = "", langCode = "", database) {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
 	// 自动语言转换
-	let langcodes = await switchLangCode(platform, langCode, DataBase);
+	let langcodes = await switchLangCode(langCode, database);
 	//查询是否有符合语言的字幕
 	let datas = [];
 	for await (var langcode of langcodes) {
@@ -295,7 +295,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 
 	/***************** Fuctions *****************/
 	// Switch Language Code
-	async function switchLangCode(platform = "", langCode = "", database) {
+	async function switchLangCode(langCode = "", database) {
 		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
 		// 自动语言转换
 		let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
@@ -304,7 +304,7 @@ async function getMEDIA(platform = "", json = {}, type = "", langCode = "") {
 					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
 						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
 							: [langCode]
-		langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[platform]?.[langcode]}\"`)
+		langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[langcode]}\"`)
 		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		return langcodes
 	};

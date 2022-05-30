@@ -94,7 +94,7 @@ if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
 		if (Type == "Official") {
 			// 找缓存
@@ -167,7 +167,7 @@ async function setENV(name, url, database) {
 	/***************** Verify *****************/
 	const { Settings: Verify } = await getENV(name, "Verify", database);
 	/***************** Settings *****************/
-	let { Settings, Caches = [], Config } = await getENV(name, Platform, database);
+	let { Settings, Caches = [], Configs } = await getENV(name, Platform, database);
 	if (Platform == "Apple") {
 		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
 			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
@@ -203,7 +203,7 @@ async function setENV(name, url, database) {
 	/***************** Cache *****************/
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
 	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	return { Platform, Settings, Caches, Config, Type, Verify, Advanced };
+	return { Platform, Settings, Caches, Configs, Type, Verify, Advanced };
 };
 
 /**

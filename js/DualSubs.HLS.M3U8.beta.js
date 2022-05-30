@@ -111,7 +111,7 @@ if (method == "OPTIONS") $.done();
 		// 写入缓存
 		let newCaches = Caches;
 		newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-		$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
+		$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
 		// 兼容性判断
 		const standard = await isStandard(Platform, url, headers);
 		// 写入选项

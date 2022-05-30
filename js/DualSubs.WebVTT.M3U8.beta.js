@@ -112,7 +112,7 @@ if (method == "OPTIONS") $.done();
 				// 写入缓存
 				let newCaches = Caches;
 				newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-				$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
+				$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
 			};
 		};
 		// WebVTT.m3u8加参数

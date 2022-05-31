@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.1-hls-beta");
+const $ = new Env("DualSubs v0.7.1-hls-main-beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -63,7 +63,6 @@ if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	let url = URL.parse($request.url);
 	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
 		// 找缓存
@@ -130,9 +129,8 @@ async function setENV(name, url, database) {
 							: /dplus-ph-/i.test(url) ? "Discovery_Plus_Ph"
 								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
 									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
-										: /\.youtube\.com/i.test(url) ? "YouTube"
-											: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
-												: "Universal"
+										: /\.fubo\.tv/i.test(url) ? "Fubo_TV"
+											: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
 	/***************** Verify *****************/
 	const { Settings: Verify } = await getENV(name, "Verify", database);

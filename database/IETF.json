@@ -1,5 +1,6 @@
 {
 	"Languages": {
+		"AUTO": "",
 		"AR": "ar-001",
 		"BG": "bg-BG",
 		"CS": "cs-CZ",
@@ -7,6 +8,7 @@
 		"DE": "de-DE",
 		"EL": "el-GR",
 		"EN": "en",
+		"EN-CA": "en-CA",
 		"EN-GB": "en-UK",
 		"EN-US": "en-US",
 		"EN-US SDH": "en-US SDH",
@@ -16,7 +18,9 @@
 		"ES-ES": "es-ES",
 		"ET": "et-EE",
 		"FI": "fi-FI",
-		"FR": "fr-FR",
+		"FR": "fr",
+		"FR-CA": "fr-CA",
+		"FR-DR": "fr-FR",
 		"HU": "hu-HU",
 		"IT": "it-IT",
 		"JA": "ja-JP",
@@ -38,6 +42,8 @@
 		"ZH": "zh",
 		"ZH-HANS": "zh-CN",
 		"ZH-HK": "zh-HK",
-		"ZH-HANT": "zh-TW"
+		"ZH-HANT": "zh-TW",
+		"YUE": "yue",
+		"YUE-HK": "yue-Hant"
 	}
 }

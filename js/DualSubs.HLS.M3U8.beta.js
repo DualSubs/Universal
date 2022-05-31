@@ -302,12 +302,14 @@ async function getMEDIA(json = {}, type = "", langCode = "", database) {
 		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
 		// 自动语言转换
 		let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
-			: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
+			: (langCode == "YUE") ? ["YUE", "YUE-HK", "ZH-HK"] // 粤语（自动）
 				: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
 					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
 						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
 							: [langCode]
 		langcodes = langcodes.map((langcode) => `\"${database?.Languages?.[langcode]}\"`)
+		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+		langcodes = [...new Set(langcodes.flat(Infinity))]
 		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		return langcodes
 	};

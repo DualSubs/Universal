@@ -13,7 +13,10 @@ const DataBase = {
 		"Settings":{"Translator":{"Times":3,"Interval":100,"Exponential":true}}
 	},
 	"Default": {
-		"Settings":{"Switch":true,"Types":["Official","Google"],"Type":"Google","Languages":["ZH","EN"],"Language":"ZH","External":{"URL":null,"Offset":0,"ShowOnly":false},"Position":"Forward","CacheSize":6,"Tolerance":1000}
+		"Settings":{"Switch":true,"Types":["Official","Google"],"Type":"Google","Languages":["ZH","EN"],"Language":"ZH","External":{"URL":null,"Offset":0,"ShowOnly":false},"Position":"Forward","CacheSize":6,"Tolerance":1000},
+		"Configs": {
+			"Languages":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG"],"CS":["cs","cs-CZ"],"DA":["da","da-DK"],"DE":["de","de-DE"],"EL":["el","el-GR"],"EN":["en","en-US","en-GB","en-UK","en-CA"],"EN-CA":["en-CA","en"],"EN-GB":["en-UK","en"],"EN-US":["en-US","en"],"EN-US SDH":["en-US SDH","en-US","en"],"ES":["es","es-419","es-ES","es-419 SDH"],"ES-419":["es-419","es"],"ES-419 SDH":["es-419 SDH","es-419","es"],"ES-ES":["es-ES","es"],"ET":["et","et-EE"],"FI":["fi","fi-FI"],"FR":["fr","fr-CA","fr-FR"],"FR-CA":["fr-CA","fr"],"FR-DR":["fr-FR","fr"],"HU":["hu","hu-HU"],"IT":["it","it-IT"],"JA":["ja","ja-JP"],"KO":["ko","ko-KR"],"LT":["lt","lt-LT"],"LV":["lv","lv-LV"],"NL":["nl","nl-NL"],"NO":["no","nb-NO"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR"],"PT-PT":["pt-PT","pt"],"PT-BR":["pt-BR","pt"],"RO":["ro","ro-RO"],"RU":["ru","ru-RU"],"SK":["sk","sk-SK"],"SL":["sl","sl-SI"],"SV":["sv","sv-SE"],"IS":["is","is-IS"],"ZH":["zh","cmn"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN"],"ZH-HK":["zh-HK","yue-Hant","yue"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW"],"YUE":["yue","yue-Hant"],"YUE-HK":["yue-Hant","yue"]}
+		}
 	},
 	"Apple": {
 		"Configs": {

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.1-hls-main-beta");
+const $ = new Env("DualSubs v0.7.2-hls-main-beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -214,7 +214,7 @@ async function getCache(type, settings, caches = {}) {
 		})
 	};
 	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URI, item?.VTTs] }
+	function getURIs(item) { return [item?.URL, item?.VTTs] }
 };
 
 /**
@@ -252,7 +252,7 @@ async function getMEDIA(json = {}, type = "", langCode = "", database) {
 	//查询是否有符合语言的字幕
 	let datas = [];
 	for await (var langcode of langcodes) {
-		datas = json.body.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
+		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
 			break;
@@ -286,7 +286,7 @@ async function getMEDIA(json = {}, type = "", langCode = "", database) {
 		let Data = { ...data };
 		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
 		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
-		Data.URI = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
 		$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
 		return Data
 	};
@@ -311,7 +311,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 	for await (var obj1 of Languages1) {
 		for await (var obj2 of Languages2) {
 			// 无首选字幕时
-			if (!obj1?.EXT) {
+			if (!obj1?.TYPE) {
 				// 无首选语言时删除官方字幕选项
 				Types = Types.filter(e => e !== "Official");
 				Options = await getOptions(Platform, obj1, obj2, Types, Standard);
@@ -355,7 +355,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
 		return types.map(type => {
 			// 复制此语言选项
-			let newSub = (obj1?.EXT) ? JSON.parse(JSON.stringify(obj1))
+			let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
 			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name} [${type}]\"`
@@ -365,7 +365,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			// 增加副语言
 			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
 			// 修改链接
-			newSub.OPTION.URI = (newSub.URI.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
+			newSub.OPTION.URI = (newSub.URL.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
 				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`
 			// 自动选择
 			newSub.OPTION.AUTOSELECT = "YES"
@@ -377,7 +377,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 	async function getIndex(platform, json, obj) {
 		$.log(`⚠ ${$.name}, Get Same Options Index`, "");
 		// 计算位置
-		let Index = json.body.findIndex(item => {
+		let Index = json.findIndex(item => {
 			if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
 				&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
 				&& item?.OPTION?.CHARACTERISTICS == obj?.OPTION?.CHARACTERISTICS) {
@@ -393,8 +393,8 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 	async function insertOptions(json, index, options, standard) {
 		$.log(`⚠ ${$.name}, Insert Options`, "");
 		// 插入字幕选项
-		if (standard == true) json.body.splice(index + 1, 0, ...options)
-		else json.body.splice(index, 1, ...options); // 兼容性设置
+		if (standard == true) json.splice(index + 1, 0, ...options)
+		else json.splice(index, 1, ...options); // 兼容性设置
 	};
 };
 
@@ -438,4 +438,45 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
 
 // https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
-function EXTM3U(t){return new class{constructor(t){this.name="EXTM3U v0.6.0",this.opts=t,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.m3u8=new String,this.json={headers:{},option:[],body:[]}}parse(t=this.m3u8){const i=/^(?<EXT>(EXT|AIV)[^:]+):(?<OPTION>.+)([^](?<URI>.+))?[^]*$/;let n={headers:t.match(/^#(?<fileType>EXTM3U)?[^]*/)?.groups??"",option:t.match(/^#(?<EXT>EXT-X-[^:]+)$/gm)??[],body:t.split(/[^]#/).map((t=>t.match(i)?.groups??""))};return n.body=n.body.map((t=>(/=/.test(t?.OPTION)&&this.opts.includes(t.EXT)&&(t.OPTION=Object.fromEntries(t.OPTION.split(/,(?=[A-Z])/).map((t=>t.split(/=(.*)/))))),t))),n}stringify(t=this.json){return[t.headers="#"+t.headers.fileType,t.option=t.option.join(this.newLine),t.body=t.body.map((t=>{if(t)return"object"==typeof t?.OPTION&&(t.OPTION=Object.entries(t.OPTION).map((t=>t.join("="))).join(",")),"EXT-X-STREAM-INF"==t.EXT?"#"+t.EXT+":"+t.OPTION+this.newLine+t.URI:"#"+t.EXT+":"+t.OPTION})).join(this.newLine)].join(this.newLine)}}(t)}
+//function EXTM3U(t){return new class{constructor(t){this.name="EXTM3U v0.6.0",this.opts=t,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.m3u8=new String,this.json={headers:{},option:[],body:[]}}parse(t=this.m3u8){const i=/^(?<EXT>(EXT|AIV)[^:]+):(?<OPTION>.+)([^](?<URI>.+))?[^]*$/;let n={headers:t.match(/^#(?<fileType>EXTM3U)?[^]*/)?.groups??"",option:t.match(/^#(?<EXT>EXT-X-[^:]+)$/gm)??[],body:t.split(/[^]#/).map((t=>t.match(i)?.groups??""))};return n.body=n.body.map((t=>(/=/.test(t?.OPTION)&&this.opts.includes(t.EXT)&&(t.OPTION=Object.fromEntries(t.OPTION.split(/,(?=[A-Z])/).map((t=>t.split(/=(.*)/))))),t))),n}stringify(t=this.json){return[t.headers="#"+t.headers.fileType,t.option=t.option.join(this.newLine),t.body=t.body.map((t=>{if(t)return"object"==typeof t?.OPTION&&(t.OPTION=Object.entries(t.OPTION).map((t=>t.join("="))).join(",")),"EXT-X-STREAM-INF"==t.EXT?"#"+t.EXT+":"+t.OPTION+this.newLine+t.URI:"#"+t.EXT+":"+t.OPTION})).join(this.newLine)].join(this.newLine)}}(t)}
+// refer: https://datatracker.ietf.org/doc/html/draft-pantos-http-live-streaming-08
+function EXTM3U(opts) {
+	return new (class {
+		constructor(opts) {
+			this.name = "EXTM3U v0.7.0";
+			this.opts = opts;
+			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
+		};
+
+		parse(m3u8 = new String) {
+			$.log(`🚧 ${$.name}, parse EXTM3U`, "");
+			/***************** v0.7.0-beta *****************/
+			const EXTM3U_Regex = /^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[^]?(?<URI>.+)?$/;
+			let json = m3u8.split(/[^]#/).map(v=>v.match(EXTM3U_Regex)?.groups ?? v)
+			$.log(`🚧 ${$.name}, parse EXTM3U`, `json: ${JSON.stringify(json)}`, "");
+			json = json.map(item => {
+				$.log(`🚧 ${$.name}, parse EXTM3U`, `before: item.OPTION.split(/,(?=[A-Z])/) ${JSON.stringify(item.OPTION?.split(/,(?=[A-Z])/) ?? "")}`, "");
+				if (/=/.test(item?.OPTION) && this.opts.includes(item.TYPE)) item.OPTION = Object.fromEntries(item.OPTION.split(/,(?=[A-Z])/).map(item => item.split(/=(.*)/)));
+				return item
+			});
+			$.log(`🚧 ${$.name}, parse WebVTT`, `json: ${JSON.stringify(json)}`, "");
+			return json
+		};
+
+		stringify(json = new Array) {
+			$.log(`🚧 ${$.name}, stringify EXTM3U`, "");
+			if (json?.[0] !== "#EXTM3U" && json?.[1] !== "#EXTM3U") json.unshift("#EXTM3U")
+			let m3u8 = json.map(item => {
+				if (typeof item?.OPTION == "object") item.OPTION = Object.entries(item.OPTION).map(item => item = item.join("=")).join(",");
+				/***************** v0.7.0-beta *****************/
+				return item = (item.URI) ? item.TYPE + ":" + item.OPTION + this.newLine + item.URI
+					: (item.OPTION) ? item = item.TYPE + ":" + item.OPTION
+						: (item.TYPE) ? item = item.TYPE
+							: item = item
+			})
+			m3u8 = m3u8.join(this.newLine + "#")
+			$.log(`🚧 ${$.name}, stringify EXTM3U`, `m3u8: ${m3u8}`, "");
+			return m3u8
+		};
+	})(opts)
+}

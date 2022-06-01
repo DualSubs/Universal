@@ -2,9 +2,9 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.1-hls-webvtt-beta");
+const $ = new Env("DualSubs v0.7.2-hls-webvtt-beta");
 const URL = new URLs();
-const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
+const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
 	"Verify": {
 		"Settings":{"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},"DeepL":{"Method":"Part","Version":"Free","Auth":null}}
@@ -65,6 +65,8 @@ if (method == "OPTIONS") $.done();
 !(async () => {
 	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
+		// 序列化M3U8
+		let PlayList = M3U8.parse($response.body);
 		if (Type == "Official") {
 			// 找缓存
 			const Indices = await getCache(Type, Settings, Caches);
@@ -74,7 +76,7 @@ if (method == "OPTIONS") $.done();
 				// 获取VTT字幕地址数组
 				for await (var language of Settings.Languages) {
 					for await (var data of Cache[language]) {
-						data.VTTs = await getVTTs(Platform, data.URI);
+						data.VTTs = await getVTTs(Platform, data.URL);
 					}
 				}
 				$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
@@ -85,9 +87,20 @@ if (method == "OPTIONS") $.done();
 			};
 		};
 		// WebVTT.m3u8加参数
-		$response.body = await setWebVTTm3u8($response.body, Type);
+		//$response.body = await setWebVTTm3u8($response.body, Type);
+		PlayList = PlayList.map(item => {
+			if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
+				const symbol = (item.URI.includes("?")) ? "&" : "?"
+				item.URI = item.URI + symbol + `dualsubs=${Type}`
+			}
+			return item;
+		})
 		// 删除BYTERANGE
-		$response.body = $response.body.replace(/#EXT-X-BYTERANGE:.*/m, "");
+		//$response.body = $response.body.replace(/#EXT-X-BYTERANGE:.*/m, "");
+		PlayList = PlayList.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
+		// 字符串M3U8
+		PlayList = M3U8.stringify(PlayList);
+		$response.body = PlayList;
 	}
 })()
 	.catch((e) => $.logErr(e))
@@ -192,11 +205,11 @@ async function getCache(type, settings, caches = {}) {
 			// 修正缓存
 			if (Indices[settings.Languages[0]] !== -1) {
 				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-					if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
+					if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
 				});
 				if (Indices[settings.Languages[1]] == -1) {
 					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-						if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+						if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
 					});
 				};
 			};
@@ -214,7 +227,7 @@ async function getCache(type, settings, caches = {}) {
 		})
 	};
 	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URI, item?.VTTs] }
+	function getURIs(item) { return [item?.URL, item?.VTTs] }
 };
 
 /**
@@ -247,26 +260,21 @@ async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
 	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
-		let VTTs = response.body.match(/^.+\.(web)?vtt(\?.*)?$/gim);
+		let PlayList = M3U8.parse(response.body);
+		//let VTTs = response.body.match(/^.+\.(web)?vtt(\?.*)?$/gim);
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
+		PlayList = PlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
 		// 筛选字幕
-		VTTs = VTTs.filter(item => !/empty/.test(item))
+		//VTTs = VTTs.filter(item => !/empty/.test(item))
+		PlayList = PlayList.filter(({ URI }) => !/empty/.test(URI));
 		if (platform == "Disney_Plus") {
-			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+			//if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+			if (PlayList.some(({ URI }) => /\/.+-DUB_CARD\//.test(URI))) PlayList = PlayList.filter(({ URI }) => !/\/.+-MAIN\//.test(URI));
 		};
-		/*
-		if (platform == "Apple_TV" || platform == "Apple_TV_Plus") {
-			VTTs = VTTs.filter(item => !/\/empty-\d+\.webvtt/.test(item))
-		} else if (platform == "Disney_Plus") {
-			VTTs = VTTs.filter(item => !/\/subtitles_empty\//.test(item))
-			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
-		} else if (platform == "HBO_Max") {
-			VTTs = VTTs.filter(item => !/\/empty\//.test(item))
-		}
-		*/
-		VTTs = VTTs.map(VTT => aPath(url, VTT));
+		//VTTs = VTTs.map(VTT => aPath(url, VTT));
+		VTTs = PlayList.map(({ URI }) => URI = aPath(url, URI));
 		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
-		return VTTs
+		return VTTs;
 	})
 	else return null;
 	/***************** Fuctions *****************/
@@ -297,4 +305,45 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
 
 // https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
-function EXTM3U(t){return new class{constructor(t){this.name="EXTM3U v0.6.0",this.opts=t,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.m3u8=new String,this.json={headers:{},option:[],body:[]}}parse(t=this.m3u8){const i=/^(?<EXT>(EXT|AIV)[^:]+):(?<OPTION>.+)([^](?<URI>.+))?[^]*$/;let n={headers:t.match(/^#(?<fileType>EXTM3U)?[^]*/)?.groups??"",option:t.match(/^#(?<EXT>EXT-X-[^:]+)$/gm)??[],body:t.split(/[^]#/).map((t=>t.match(i)?.groups??""))};return n.body=n.body.map((t=>(/=/.test(t?.OPTION)&&this.opts.includes(t.EXT)&&(t.OPTION=Object.fromEntries(t.OPTION.split(/,(?=[A-Z])/).map((t=>t.split(/=(.*)/))))),t))),n}stringify(t=this.json){return[t.headers="#"+t.headers.fileType,t.option=t.option.join(this.newLine),t.body=t.body.map((t=>{if(t)return"object"==typeof t?.OPTION&&(t.OPTION=Object.entries(t.OPTION).map((t=>t.join("="))).join(",")),"EXT-X-STREAM-INF"==t.EXT?"#"+t.EXT+":"+t.OPTION+this.newLine+t.URI:"#"+t.EXT+":"+t.OPTION})).join(this.newLine)].join(this.newLine)}}(t)}
+//function EXTM3U(t){return new class{constructor(t){this.name="EXTM3U v0.6.0",this.opts=t,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.m3u8=new String,this.json={headers:{},option:[],body:[]}}parse(t=this.m3u8){const i=/^(?<EXT>(EXT|AIV)[^:]+):(?<OPTION>.+)([^](?<URI>.+))?[^]*$/;let n={headers:t.match(/^#(?<fileType>EXTM3U)?[^]*/)?.groups??"",option:t.match(/^#(?<EXT>EXT-X-[^:]+)$/gm)??[],body:t.split(/[^]#/).map((t=>t.match(i)?.groups??""))};return n.body=n.body.map((t=>(/=/.test(t?.OPTION)&&this.opts.includes(t.EXT)&&(t.OPTION=Object.fromEntries(t.OPTION.split(/,(?=[A-Z])/).map((t=>t.split(/=(.*)/))))),t))),n}stringify(t=this.json){return[t.headers="#"+t.headers.fileType,t.option=t.option.join(this.newLine),t.body=t.body.map((t=>{if(t)return"object"==typeof t?.OPTION&&(t.OPTION=Object.entries(t.OPTION).map((t=>t.join("="))).join(",")),"EXT-X-STREAM-INF"==t.EXT?"#"+t.EXT+":"+t.OPTION+this.newLine+t.URI:"#"+t.EXT+":"+t.OPTION})).join(this.newLine)].join(this.newLine)}}(t)}
+// refer: https://datatracker.ietf.org/doc/html/draft-pantos-http-live-streaming-08
+function EXTM3U(opts) {
+	return new (class {
+		constructor(opts) {
+			this.name = "EXTM3U v0.7.0";
+			this.opts = opts;
+			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
+		};
+
+		parse(m3u8 = new String) {
+			$.log(`🚧 ${$.name}, parse EXTM3U`, "");
+			/***************** v0.7.0-beta *****************/
+			const EXTM3U_Regex = /^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[^]?(?<URI>.+)?$/;
+			let json = m3u8.split(/[^]#/).map(v=>v.match(EXTM3U_Regex)?.groups ?? v)
+			$.log(`🚧 ${$.name}, parse EXTM3U`, `json: ${JSON.stringify(json)}`, "");
+			json = json.map(item => {
+				$.log(`🚧 ${$.name}, parse EXTM3U`, `before: item.OPTION.split(/,(?=[A-Z])/) ${JSON.stringify(item.OPTION?.split(/,(?=[A-Z])/) ?? "")}`, "");
+				if (/=/.test(item?.OPTION) && this.opts.includes(item.TYPE)) item.OPTION = Object.fromEntries(item.OPTION.split(/,(?=[A-Z])/).map(item => item.split(/=(.*)/)));
+				return item
+			});
+			$.log(`🚧 ${$.name}, parse WebVTT`, `json: ${JSON.stringify(json)}`, "");
+			return json
+		};
+
+		stringify(json = new Array) {
+			$.log(`🚧 ${$.name}, stringify EXTM3U`, "");
+			if (json?.[0] !== "#EXTM3U" && json?.[1] !== "#EXTM3U") json.unshift("#EXTM3U")
+			let m3u8 = json.map(item => {
+				if (typeof item?.OPTION == "object") item.OPTION = Object.entries(item.OPTION).map(item => item = item.join("=")).join(",");
+				/***************** v0.7.0-beta *****************/
+				return item = (item.URI) ? item.TYPE + ":" + item.OPTION + this.newLine + item.URI
+					: (item.OPTION) ? item = item.TYPE + ":" + item.OPTION
+						: (item.TYPE) ? item = item.TYPE
+							: item = item
+			})
+			m3u8 = m3u8.join(this.newLine + "#")
+			$.log(`🚧 ${$.name}, stringify EXTM3U`, `m3u8: ${m3u8}`, "");
+			return m3u8
+		};
+	})(opts)
+}

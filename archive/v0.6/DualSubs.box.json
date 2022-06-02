@@ -1,0 +1,3193 @@
+{
+	"id": "DualSubs.app.sub",
+	"name": "DualSubs",
+	"author": "@DualSubs",
+	"description": "Powered by DualSubs",
+	"icon": "https://avatars.githubusercontent.com/u/100578089?&v=4",
+	"repo": "https://github.com/DualSubs",
+	"apps": [
+		{
+			"id": "DualSubs.Verify",
+			"name": "DualSubs: Verify",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Verify"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Verify.GoogleCloud.Method",
+					"name": "[Google Cloud] Translation API 翻译方式",
+					"val": "Part",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Part",
+							"label": "逐段翻译"
+						},
+						{
+							"key": "Row",
+							"label": "逐句翻译"
+						}
+					],
+					"desc": "逐段翻译：每128句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.GoogleCloud.Mode",
+					"name": "[Google Cloud] Translation API 认证方式",
+					"val": "Key",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Key",
+							"label": "密钥"
+						},
+						{
+							"key": "Token",
+							"label": "令牌"
+						}
+					],
+					"desc": "验证方式二选一"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.GoogleCloud.Auth",
+					"name": "[Google Cloud] Translation API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.Azure.Method",
+					"name": "[Microsoft Azure] Translator 翻译方式",
+					"val": "Part",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Part",
+							"label": "逐段翻译"
+						},
+						{
+							"key": "Row",
+							"label": "逐句翻译"
+						}
+					],
+					"desc": "逐段翻译：每100句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.Azure.Version",
+					"name": "[Microsoft Azure] Translator 版本",
+					"val": "Azure",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Azure",
+							"label": "国际版"
+						},
+						{
+							"key": "AzureCN",
+							"label": "中国版"
+						}
+					],
+					"desc": "版本二选一"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.Azure.Region",
+					"name": "[Microsoft Azure] Translator 区域代码",
+					"val": "global",
+					"type": "text",
+					"placeholder": "global",
+					"desc": "如果开通Microsoft Azure Translator时没有选择全球global，则需要填写开通的地区代码，如chinanorth, chinaeast2等"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.Azure.Mode",
+					"name": "[Microsoft Azure] Translator 认证方式",
+					"val": "Key",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Key",
+							"label": "密钥"
+						},
+						{
+							"key": "Token",
+							"label": "令牌"
+						}
+					],
+					"desc": "验证方式二选一"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.Azure.Auth",
+					"name": "[Microsoft Azure] Translator 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "c3639587ac214f2e917862c80a2b821b",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.DeepL.Method",
+					"name": "[DeepL] API 翻译方式",
+					"val": "Part",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Part",
+							"label": "逐段翻译"
+						},
+						{
+							"key": "Row",
+							"label": "逐句翻译"
+						}
+					],
+					"desc": "逐段翻译：每50句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.DeepL.Version",
+					"name": "[DeepL] API 模式",
+					"val": "Free",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Free",
+							"label": "Free"
+						},
+						{
+							"key": "Pro",
+							"label": "Pro"
+						}
+					],
+					"desc": "模式二选一"
+				},
+				{
+					"id": "@DualSubs.Settings.Verify.DeepL.Auth",
+					"name": "[DeepL] API 认证密钥",
+					"val": "",
+					"type": "text",
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "未提供时不会启用此类型字幕"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Unlock.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Unlock.png"
+			]
+		},
+		{
+			"id": "DualSubs.Advanced",
+			"name": "DualSubs: Advanced Options",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Advanced"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Advanced.Translator.Times",
+					"name": "翻译器: 重试次数",
+					"val": "3",
+					"type": "number",
+					"placeholder": "3",
+					"desc": "单位：次，正整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Advanced.Translator.Interval",
+					"name": "翻译器: 重试间隔时长",
+					"val": "100",
+					"type": "number",
+					"placeholder": "100",
+					"desc": "单位：毫秒(ms)，正整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Advanced.Translator.Exponential",
+					"name": "翻译器: 重试间隔时长递增",
+					"val": true,
+					"type": "boolean",
+					"desc": "例如，第一次重试间隔时长1000ms，第二次重试间隔时长2000ms，第三次重试间隔时长4000ms，以此类推"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Server.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png"
+			]
+		},
+		{
+			"id": "DualSubs.YouTube",
+			"name": "DualSubs: YouTube",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.YouTube",
+				"@DualSubs.Caches.YouTube"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.YouTube.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.Language",
+					"name": "首选语言（兼容）：",
+					"val": "ZH",
+					"type": "selects",
+					"desc": "选择后会将此语言添加为额外的字幕语言",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.Type",
+					"name": "字幕类型（兼容）",
+					"val": "Google",
+					"type": "selects",
+					"desc": "请选择要替换的字幕类型，会为不兼容的播放器替换为此字幕类型",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 3,
+					"type": "number",
+					"placeholder": "3",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.YouTube.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/YouTube.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png"
+			]
+		},
+		{
+			"id": "DualSubs.Apple_TV",
+			"name": "DualSubs: Apple TV",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Apple_TV",
+				"@DualSubs.Caches.Apple",
+				"@DualSubs.Caches.Apple_TV"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Apple_TV.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.Types",
+					"name": "字幕类型",
+					"val": "Official",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": "次要字幕的位置"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Apple_TV.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_TV.png"
+			]
+		},
+		{
+			"id": "DualSubs.Apple_TV_Plus",
+			"name": "DualSubs: Apple TV+",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Apple_TV_Plus",
+				"@DualSubs.Caches.Apple",
+				"@DualSubs.Caches.Apple_TV_Plus"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.Types",
+					"name": "字幕类型",
+					"val": "Official",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": "次要字幕的位置"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_TV_Plus.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Apple_TV_Plus.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_TV_Plus.png"
+			]
+		},
+		{
+			"id": "DualSubs.Apple_Fitness",
+			"name": "DualSubs: Apple Fitness",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Apple_Fitness",
+				"@DualSubs.Caches.Apple"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.Types",
+					"name": "字幕类型",
+					"val": "Official,Google",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": "次要字幕的位置"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Apple_Fitness.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Apple_Fitness.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple_Fitness.png"
+			]
+		},
+		{
+			"id": "DualSubs.Disney_Plus",
+			"name": "DualSubs: Disney+",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Disney_Plus",
+				"@DualSubs.Caches.Disney_Plus"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.Types",
+					"name": "字幕类型",
+					"val": "Official",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": "次要字幕的位置"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 5,
+					"type": "number",
+					"placeholder": "5",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Disney_Plus.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Disney+.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Disney+.png"
+			]
+		},
+		{
+			"id": "DualSubs.Prime_Video",
+			"name": "DualSubs: Prime Video",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Prime_Video",
+				"@DualSubs.Caches.Prime_Video"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Prime_Video.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.Types",
+					"name": "字幕类型",
+					"val": "Official,Google",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Prime_Video.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Prime_Video.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Prime_Video.png"
+			]
+		},
+		{
+			"id": "DualSubs.HBO_Max",
+			"name": "DualSubs: HBO Max",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.HBO_Max",
+				"@DualSubs.Caches.HBO_Max"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.HBO_Max.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.Types",
+					"name": "字幕类型",
+					"val": "Google",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.Type",
+					"name": "字幕类型（兼容）",
+					"val": "Google",
+					"type": "selects",
+					"desc": "请选择要替换的字幕类型，会为不兼容的播放器替换为此字幕类型",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.HBO_Max.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/HBO_Max.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HBO_Max.png"
+			]
+		},
+		{
+			"id": "DualSubs.Hulu",
+			"name": "DualSubs: Hulu",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Hulu",
+				"@DualSubs.Caches.Hulu"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Hulu.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.Types",
+					"name": "字幕类型",
+					"val": "Google",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Hulu.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Hulu.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hulu.png"
+			]
+		},
+		{
+			"id": "DualSubs.Paramount_Plus",
+			"name": "DualSubs: Paramount+",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Paramount_Plus",
+				"@DualSubs.Caches.Paramount_Plus"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.Types",
+					"name": "字幕类型",
+					"val": "Official,Google,DeepL,External",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Paramount_Plus.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Paramount.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Paramount.png"
+			]
+		},
+		{
+			"id": "DualSubs.Discovery_Plus_Ph",
+			"name": "DualSubs: Discovery+ Philippines",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Discovery_Plus_Ph",
+				"@DualSubs.Caches.Discovery_Plus_Ph"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Types",
+					"name": "字幕类型",
+					"val": "Google",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/discovery%2B.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/discovery%2B.png"
+			]
+		},
+		{
+			"id": "DualSubs.Peacock_TV",
+			"name": "DualSubs: Peacock TV",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Peacock_TV",
+				"@DualSubs.Caches.Peacock_TV"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.Types",
+					"name": "字幕类型",
+					"val": "Google",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.Type",
+					"name": "字幕类型（兼容）",
+					"val": "Google",
+					"type": "selects",
+					"desc": "请选择要替换的字幕类型，会为不兼容的播放器替换为此字幕类型",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 2,
+					"type": "number",
+					"placeholder": "2",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Peacock_TV.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/beta",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Peacock.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Peacock.png"
+			]
+		},
+		{
+			"id": "DualSubs.Netflix",
+			"name": "DualSubs: Netflix",
+			"descs_html": [
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Settings.Netflix",
+				"@DualSubs.Caches.Netflix"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Settings.Netflix.Switch",
+					"name": "功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此平台修改功能"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.Types",
+					"name": "字幕类型",
+					"val": "Official,Google",
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate API"
+						},
+						{
+							"key": "Azure",
+							"label": "Microsoft Azure Translator"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.Languages[0]",
+					"name": "首选语言：",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后将为此语言添加额外字幕选项"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.Languages[1]",
+					"name": "次选语言：",
+					"val": "EN",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日文"
+						},
+						{
+							"key": "KO",
+							"label": "韩文"
+						}
+					],
+					"desc": "选择后会将此语言添加为额外的字幕语言"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.External.URL",
+					"name": "外挂字幕: URL",
+					"val": null,
+					"type": "text",
+					"placeholder": "https://www.example.com/subs/123.srt",
+					"desc": "兼容WebVTT和SRT格式字幕"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.External.Offset",
+					"name": "外挂字幕: 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.External.ShowOnly",
+					"name": "外挂字幕: 只显示外挂字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.Position",
+					"name": "双语字幕位置",
+					"val": "Forward",
+					"type": "radios",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "第二行"
+						},
+						{
+							"key": "Reverse",
+							"label": "第一行"
+						}
+					],
+					"desc": ""
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 3,
+					"type": "number",
+					"placeholder": "3",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
+				},
+				{
+					"id": "@DualSubs.Settings.Netflix.Tolerance",
+					"name": "时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/DualSubs/tree/main",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Netflix.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png"
+			]
+		}
+	]
+}

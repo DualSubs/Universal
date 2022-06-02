@@ -206,11 +206,11 @@ http:
 
 script-providers:
   DualSubs.HLS.m3u8:
-    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.M3U8.js
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/archive/v0.6/DualSubs.HLS.M3U8.js
     interval: 86400
   DualSubs.WebVTT.m3u8:
-    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.WebVTT.M3U8.js
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/archive/v0.6/DualSubs.WebVTT.M3U8.js
     interval: 86400
   DualSubs.vtt:
-    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/archive/v0.6/DualSubs.VTT.js
     interval: 86400

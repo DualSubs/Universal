@@ -333,7 +333,7 @@ async function getOfficialRequest(platform, VTTs = [], oVTTs = []) {
 	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
 
 	if (platform == "Apple") {
-		let oIndex = oVTTs.findIndex(item => item.includes(fileName));
+		let oIndex = oVTTs.findIndex(item => item?.includes(fileName));
 		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_oIndex: ${oIndex}`, "")
 		let oPosition = oIndex / oVTTs.length;
 		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_oPosition: ${oPosition}`, "")
@@ -351,7 +351,7 @@ async function getOfficialRequest(platform, VTTs = [], oVTTs = []) {
 		return requests
 	} else {
 		let request = {
-			"url": VTTs.find(item => item.includes(fileName)) || VTTs[0],
+			"url": VTTs.find(item => item?.includes(fileName)) || VTTs[0],
 			"headers": headers,
 		};
 		$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");

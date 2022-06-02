@@ -114,6 +114,7 @@ if (method == "OPTIONS") $.done();
 /***************** Async Function *****************/
 /**
  * Get Environment Variables
+ * https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
  * @author VirgilClyne
  * @param {String} t - Persistent Store Key
  * @param {String} e - Platform Name

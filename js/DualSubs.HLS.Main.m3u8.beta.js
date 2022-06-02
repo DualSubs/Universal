@@ -102,6 +102,7 @@ if (method == "OPTIONS") $.done();
 /**
  * Get Environment Variables
  * @author VirgilClyne
+ * https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
  * @param {String} t - Persistent Store Key
  * @param {String} e - Platform Name
  * @param {Object} n - Default DataBase

@@ -16,7 +16,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
     - [安装说明](#安装说明)
     - [配置说明](#配置说明)
   - [安装链接](#安装链接)
-    - [🍿️ DualSubs for Streaming Media Platform](#️-dualsubs-for-streaming-media-platform)
+    - [🍿️ DualSubs for HLS Media Platform](#️-dualsubs-for-hls-media-platform)
     - [🍿️ DualSubs for YouTube](#️-dualsubs-for-youtube)
   - [How To](#how-to)
   - [支持列表](#支持列表)
@@ -60,7 +60,8 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
        * Surge (Shadowrocket): [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
        * Stash: [boxjs.rewrite.stash.stoverride](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.stoverride "BoxJs")
     2. 浏览器访问[BoxJs.com](http://boxjs.com)，在[`订阅`](http://boxjs.com/#/sub)页面点击`+`添加本项目订阅:
-       * [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
+       * 🆕V0.7版: [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
+       * [DualSubs.box.json](./archive/v0.6/DualSubs.box.json?raw=true "🍿️ DualSubs")
 ### 配置说明
   * 配合`BoxJs`及订阅使用
     1. 浏览器访问[BoxJs.com](http://boxjs.com)
@@ -77,11 +78,18 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
     5. (可选)在`DualSubs: Advanced Options`中配置高级设置
 
 ## 安装链接
-### 🍿️ DualSubs for Streaming Media Platform
-  * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
-  * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
-  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
-  * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
+### 🍿️ DualSubs for HLS Media Platform
+  * 🆕V0.7版，结构性较大更新，与之前版本不兼容，更加通用，未来会增加更多字幕格式支持
+    * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
+    * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
+    * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
+    * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * V0.6版，不再更新，老用户可继续使用，同时保留V0.6版boxjs配置面板
+    * BoxJs: [DualSubs.box.json](./archive/v0.6/DualSubs.box.json?raw=true "🍿️ DualSubs")
+    * Loon: [DualSubs.plugin](./archive/v0.6/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
+    * Quantumult X: [DualSubs.qxrewrite](./archive/v0.6/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
+    * Surge (Shadowrocket): [DualSubs.sgmodule](./archive/v0.6/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
+    * Stash: [DualSubs.stoverride](./archive/v0.6/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
 
 ### 🍿️ DualSubs for YouTube
   * 当前仅支持Web端有字幕视频的`自动翻译`(不是`自动生成`)及全翻译语言解锁及双语言
@@ -92,7 +100,6 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
   * Quantumult X: [DualSubs.YouTube.qxrewrite](./qxrewrite/DualSubs.YouTube.qxrewrite?raw=true "🍿️ DualSubs for YouTube")
   * Surge (Shadowrocket): [DualSubs.YouTube.sgmodule](./sgmodule/DualSubs.YouTube.sgmodule?raw=true "🍿️ DualSubs for YouTube")
   * Stash: [DualSubs.YouTube.stoverride](./stoverride/DualSubs.YouTube.stoverride?raw=true "🍿️ DualSubs for YouTube")
-
 
 ## How To
   * [快速创建拥有代理服务器设置及MitM证书的描述文件](https://github.com/DualSubs/DualSubs/wiki/快速创建拥有代理服务器设置及MitM证书的描述文件)

@@ -445,7 +445,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			]
 			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
 			text = (Array.isArray(text)) ? text.join("\n\n") : text;
-			request.url = request.url + `&sl=${DataBase.Google.Languages[source]}&tl=${DataBase.Google.Languages[target]}&q=${encodeURIComponent(text)}`;
+			request.url = request.url + `&sl=${DataBase.Google.Configs.Languages[source]}&tl=${DataBase.Google.Configs.Languages[target]}&q=${encodeURIComponent(text)}`;
 		} else if (type == "GoogleCloud") {
 			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${verify.GoogleCloud?.Auth}`;
 			request.headers = {
@@ -455,8 +455,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			};
 			request.body = JSON.stringify({
 				"q": text,
-				"source": DataBase.Google.Languages[source],
-				"target": DataBase.Google.Languages[target],
+				"source": DataBase.Google.Configs.Languages[source],
+				"target": DataBase.Google.Configs.Languages[target],
 				"format": "html",
 				//"key": verify.GoogleCloud?.Key
 			});
@@ -476,8 +476,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				"fromLang": "auto-detect",
 				//"text": '%s' % trans,
 				"text": text,
-				//"from": DataBase.Microsoft.Languages[source],
-				"to": DataBase.Microsoft.Languages[target]
+				//"from": DataBase.Microsoft.Configs.Languages[source],
+				"to": DataBase.Microsoft.Configs.Languages[target]
 			});
 		} else if (type == "Azure") {
 			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
@@ -485,7 +485,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			const BaseURL = (verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
 				: (verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
 					: "https://api.cognitive.microsofttranslator.com"
-			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Microsoft.Languages[target]}&from=${DataBase.Microsoft.Languages[source]}`;
+			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Microsoft.Configs.Languages[target]}&from=${DataBase.Microsoft.Configs.Languages[source]}`;
 			request.headers = {
 				"Content-Type": "application/json; charset=UTF-8",
 				"Accept": "application/json, text/javascript, */*; q=0.01",
@@ -516,12 +516,12 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				"User-Agent": "DualSubs",
 				"Content-Type": "application/x-www-form-urlencoded"
 			};
-			const source_lang = (DataBase.DeepL.Languages[source].includes("EN")) ? "EN"
-				: (DataBase.DeepL.Languages[source].includes("PT")) ? "PT"
-					: DataBase.DeepL.Languages[source];
-			const target_lang = (DataBase.DeepL.Languages[target] == "EN") ? "EN-US"
-				: (DataBase.DeepL.Languages[target] == "PT") ? "PT-PT"
-					: DataBase.DeepL.Languages[target];
+			const source_lang = (DataBase.DeepL.Configs.Languages[source].includes("EN")) ? "EN"
+				: (DataBase.DeepL.Configs.Languages[source].includes("PT")) ? "PT"
+					: DataBase.DeepL.Configs.Languages[source];
+			const target_lang = (DataBase.DeepL.Configs.Languages[target] == "EN") ? "EN-US"
+				: (DataBase.DeepL.Configs.Languages[target] == "PT") ? "PT-PT"
+					: DataBase.DeepL.Configs.Languages[target];
 			const BaseBody = `auth_key=${verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
 			text = (Array.isArray(text)) ? text : [text];
 			let texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
@@ -535,8 +535,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			};
 			request.body = {
 				"q": text,
-				"from": DataBase.Baidu.Languages[source],
-				"to": DataBase.Baidu.Languages[target],
+				"from": DataBase.Baidu.Configs.Languages[source],
+				"to": DataBase.Baidu.Configs.Languages[target],
 				"appid": verify.BaiduFanyi?.Key,
 				"salt": uuidv4().toString(),
 				"sign": "",
@@ -550,8 +550,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			};
 			request.body = {
 				"q": text,
-				"from": DataBase.Youdao.Languages[source],
-				"to": DataBase.Youdao.Languages[target],
+				"from": DataBase.Youdao.Configs.Languages[source],
+				"to": DataBase.Youdao.Configs.Languages[target],
 				"appKey": verify.YoudaoAI?.Key,
 				"salt": uuidv4().toString(),
 				"signType": "v3",

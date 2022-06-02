@@ -262,18 +262,13 @@ async function getVTTs(platform, url) {
 	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let PlayList = M3U8.parse(response.body);
-		//let VTTs = response.body.match(/^.+\.(web)?vtt(\?.*)?$/gim);
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body.match(/^.+\.vtt$/gim): ${VTTs}`, "");
-		PlayList = PlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
 		// 筛选字幕
-		//VTTs = VTTs.filter(item => !/empty/.test(item))
+		PlayList = PlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
 		PlayList = PlayList.filter(({ URI }) => !/empty/.test(URI));
+		VTTs = PlayList.map(({ URI }) => aPath(url, URI))
 		if (platform == "Disney_Plus") {
-			//if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
-			if (PlayList.some(({ URI }) => /\/.+-DUB_CARD\//.test(URI))) PlayList = PlayList.filter(({ URI }) => !/\/.+-MAIN\//.test(URI));
+			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
 		};
-		//VTTs = VTTs.map(VTT => aPath(url, VTT));
-		VTTs = PlayList.map(({ URI }) => URI = aPath(url, URI));
 		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
 		return VTTs;
 	})

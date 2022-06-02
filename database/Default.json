@@ -3,7 +3,10 @@
 		"Switch": true,
 		"Types": [
 			"Official",
-			"Google"
+			"Google",
+			"GoogleCloud",
+			"Azure",
+			"DeepL"
 		],
 		"Type": "Google",
 		"Languages": [

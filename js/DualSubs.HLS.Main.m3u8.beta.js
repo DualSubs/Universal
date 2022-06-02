@@ -438,4 +438,45 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
 
 // https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
-function EXTM3U(t){return new class{constructor(t){this.name="EXTM3U v0.7.0",this.opts=t,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(t=new String){const n=/^(?<TYPE>[^#:]+)(:(?<OPTION>.+))?([^](?<URI>.+))?$/;let s=t.split(/[^]#/).map((t=>t.match(n)?.groups??t));return s=s.map((t=>(/=/.test(t?.OPTION)&&this.opts.includes(t.TYPE)&&(t.OPTION=Object.fromEntries(t.OPTION.split(/,(?=[A-Z])/).map((t=>t.split(/=(.*)/))))),t))),s}stringify(t=new Array){"#EXTM3U"!==t?.[0]&&"#EXTM3U"!==t?.[1]&&t.unshift("#EXTM3U");let n=t.map((t=>("object"==typeof t?.OPTION&&(t.OPTION=Object.entries(t.OPTION).map((t=>t.join("="))).join(",")),t.URI?t.TYPE+":"+t.OPTION+this.newLine+t.URI:t=t.OPTION?t.TYPE+":"+t.OPTION:t.TYPE?t.TYPE:t)));return n=n.join(this.newLine+"#"),n}}(t)}
+//function EXTM3U(t){return new class{constructor(t){this.name="EXTM3U v0.7.0",this.opts=t,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(t=new String){const n=/^(?<TYPE>[^#:]+)(:(?<OPTION>.+))?([^](?<URI>.+))?$/;let s=t.split(/[^]#/).map((t=>t.match(n)?.groups??t));return s=s.map((t=>(/=/.test(t?.OPTION)&&this.opts.includes(t.TYPE)&&(t.OPTION=Object.fromEntries(t.OPTION.split(/,(?=[A-Z])/).map((t=>t.split(/=(.*)/))))),t))),s}stringify(t=new Array){"#EXTM3U"!==t?.[0]&&"#EXTM3U"!==t?.[1]&&t.unshift("#EXTM3U");let n=t.map((t=>("object"==typeof t?.OPTION&&(t.OPTION=Object.entries(t.OPTION).map((t=>t.join("="))).join(",")),t.URI?t.TYPE+":"+t.OPTION+this.newLine+t.URI:t=t.OPTION?t.TYPE+":"+t.OPTION:t.TYPE?t.TYPE:t)));return n=n.join(this.newLine+"#"),n}}(t)}
+// refer: https://datatracker.ietf.org/doc/html/draft-pantos-http-live-streaming-08
+function EXTM3U(opts) {
+	return new (class {
+		constructor(opts) {
+			this.name = "EXTM3U v0.7.0";
+			this.opts = opts;
+			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
+		};
+
+		parse(m3u8 = new String) {
+			$.log(`🚧 ${$.name}, parse EXTM3U`, "");
+			/***************** v0.7.0-beta *****************/
+			const EXTM3U_Regex = /^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[^]?(?<URI>.+)?$/;
+			let json = m3u8.split(/[^]#/).map(v => v.match(EXTM3U_Regex)?.groups ?? v)
+			$.log(`🚧 ${$.name}, parse EXTM3U`, `json: ${JSON.stringify(json)}`, "");
+			json = json.map(item => {
+				$.log(`🚧 ${$.name}, parse EXTM3U`, `before: item.OPTION.split(/,(?=[A-Z])/) ${JSON.stringify(item.OPTION?.split(/,(?=[A-Z])/) ?? "")}`, "");
+				if (/=/.test(item?.OPTION) && this.opts.includes(item.TYPE)) item.OPTION = Object.fromEntries(item.OPTION.split(/,(?=[A-Z])/).map(item => item.split(/=(.*)/)));
+				return item
+			});
+			$.log(`🚧 ${$.name}, parse WebVTT`, `json: ${JSON.stringify(json)}`, "");
+			return json
+		};
+
+		stringify(json = new Array) {
+			$.log(`🚧 ${$.name}, stringify EXTM3U`, "");
+			if (!json?.[0]?.includes("#EXTM3U")) json.unshift("#EXTM3U")
+			let m3u8 = json.map(item => {
+				if (typeof item?.OPTION == "object") item.OPTION = Object.entries(item.OPTION).map(item => item = item.join("=")).join(",");
+				/***************** v0.7.0-beta *****************/
+				return item = (item.URI) ? item.TYPE + ":" + item.OPTION + this.newLine + item.URI
+					: (item.OPTION) ? item = item.TYPE + ":" + item.OPTION
+						: (item.TYPE) ? item = item.TYPE
+							: item = item
+			})
+			m3u8 = m3u8.join(this.newLine + "#")
+			$.log(`🚧 ${$.name}, stringify EXTM3U`, `m3u8: ${m3u8}`, "");
+			return m3u8
+		};
+	})(opts)
+}

@@ -2,7 +2,7 @@
 	"id": "DualSubs.app.sub",
 	"name": "DualSubs",
 	"author": "@DualSubs",
-	"description": "Powered by DualSubs",
+	"description": "流媒体平台字幕增强及双语模块",
 	"icon": "https://avatars.githubusercontent.com/u/100578089?&v=4",
 	"repo": "https://github.com/DualSubs",
 	"apps": [
@@ -14,11 +14,11 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Verify"
+				"@DualSubs.Verify.Settings"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Verify.GoogleCloud.Method",
+					"id": "@DualSubs.Verify.Settings.GoogleCloud.Method",
 					"name": "[Google Cloud] Translation API 翻译方式",
 					"val": "Part",
 					"type": "radios",
@@ -35,7 +35,7 @@
 					"desc": "逐段翻译：每128句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.GoogleCloud.Mode",
+					"id": "@DualSubs.Verify.Settings.GoogleCloud.Mode",
 					"name": "[Google Cloud] Translation API 认证方式",
 					"val": "Key",
 					"type": "radios",
@@ -52,7 +52,7 @@
 					"desc": "验证方式二选一"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.GoogleCloud.Auth",
+					"id": "@DualSubs.Verify.Settings.GoogleCloud.Auth",
 					"name": "[Google Cloud] Translation API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -60,7 +60,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.Azure.Method",
+					"id": "@DualSubs.Verify.Settings.Azure.Method",
 					"name": "[Microsoft Azure] Translator 翻译方式",
 					"val": "Part",
 					"type": "radios",
@@ -77,7 +77,7 @@
 					"desc": "逐段翻译：每100句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.Azure.Version",
+					"id": "@DualSubs.Verify.Settings.Azure.Version",
 					"name": "[Microsoft Azure] Translator 版本",
 					"val": "Azure",
 					"type": "radios",
@@ -94,7 +94,7 @@
 					"desc": "版本二选一"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.Azure.Region",
+					"id": "@DualSubs.Verify.Settings.Azure.Region",
 					"name": "[Microsoft Azure] Translator 区域代码",
 					"val": "global",
 					"type": "text",
@@ -102,7 +102,7 @@
 					"desc": "如果开通Microsoft Azure Translator时没有选择全球global，则需要填写开通的地区代码，如chinanorth, chinaeast2等"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.Azure.Mode",
+					"id": "@DualSubs.Verify.Settings.Azure.Mode",
 					"name": "[Microsoft Azure] Translator 认证方式",
 					"val": "Key",
 					"type": "radios",
@@ -119,7 +119,7 @@
 					"desc": "验证方式二选一"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.Azure.Auth",
+					"id": "@DualSubs.Verify.Settings.Azure.Auth",
 					"name": "[Microsoft Azure] Translator 认证密钥",
 					"val": "",
 					"type": "text",
@@ -127,7 +127,7 @@
 					"desc": "未提供时不会启用此类型字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.DeepL.Method",
+					"id": "@DualSubs.Verify.Settings.DeepL.Method",
 					"name": "[DeepL] API 翻译方式",
 					"val": "Part",
 					"type": "radios",
@@ -144,7 +144,7 @@
 					"desc": "逐段翻译：每50句文本合并发送一次翻译请求，对请求次数或频率限制型API友好，且翻译时会参考上下文；逐句翻译：每句文本都发送一次翻译请求；"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.DeepL.Version",
+					"id": "@DualSubs.Verify.Settings.DeepL.Version",
 					"name": "[DeepL] API 模式",
 					"val": "Free",
 					"type": "radios",
@@ -161,7 +161,7 @@
 					"desc": "模式二选一"
 				},
 				{
-					"id": "@DualSubs.Settings.Verify.DeepL.Auth",
+					"id": "@DualSubs.Verify.Settings.DeepL.Auth",
 					"name": "[DeepL] API 认证密钥",
 					"val": "",
 					"type": "text",
@@ -184,11 +184,11 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Advanced"
+				"@DualSubs.Advanced.Settings"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Advanced.Translator.Times",
+					"id": "@DualSubs.Advanced.Settings.Translator.Times",
 					"name": "翻译器: 重试次数",
 					"val": "3",
 					"type": "number",
@@ -196,7 +196,7 @@
 					"desc": "单位：次，正整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Advanced.Translator.Interval",
+					"id": "@DualSubs.Advanced.Settings.Translator.Interval",
 					"name": "翻译器: 重试间隔时长",
 					"val": "100",
 					"type": "number",
@@ -204,7 +204,7 @@
 					"desc": "单位：毫秒(ms)，正整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Advanced.Translator.Exponential",
+					"id": "@DualSubs.Advanced.Settings.Translator.Exponential",
 					"name": "翻译器: 重试间隔时长递增",
 					"val": true,
 					"type": "boolean",
@@ -226,19 +226,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.YouTube",
-				"@DualSubs.Caches.YouTube"
+				"@DualSubs.YouTube.Settings",
+				"@DualSubs.YouTube.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.YouTube.Switch",
+					"id": "@DualSubs.YouTube.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.Language",
+					"id": "@DualSubs.YouTube.Settings.Language",
 					"name": "首选语言（兼容）：",
 					"val": "ZH",
 					"type": "selects",
@@ -303,7 +303,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.Type",
+					"id": "@DualSubs.YouTube.Settings.Type",
 					"name": "字幕类型（兼容）",
 					"val": "Google",
 					"type": "selects",
@@ -336,7 +336,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.External.URL",
+					"id": "@DualSubs.YouTube.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -344,7 +344,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.External.Offset",
+					"id": "@DualSubs.YouTube.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -352,14 +352,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.External.ShowOnly",
+					"id": "@DualSubs.YouTube.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.Position",
+					"id": "@DualSubs.YouTube.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -376,7 +376,7 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.CacheSize",
+					"id": "@DualSubs.YouTube.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 3,
 					"type": "number",
@@ -384,7 +384,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.YouTube.Tolerance",
+					"id": "@DualSubs.YouTube.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -407,20 +407,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Apple_TV",
-				"@DualSubs.Caches.Apple",
-				"@DualSubs.Caches.Apple_TV"
+				"@DualSubs.Apple_TV.Settings",
+				"@DualSubs.Apple.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Apple_TV.Switch",
+					"id": "@DualSubs.Apple_TV.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.Types",
+					"id": "@DualSubs.Apple_TV.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official",
 					"type": "checkboxes",
@@ -453,7 +452,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.Languages[0]",
+					"id": "@DualSubs.Apple_TV.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -518,7 +517,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.Languages[1]",
+					"id": "@DualSubs.Apple_TV.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -583,7 +582,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.External.URL",
+					"id": "@DualSubs.Apple_TV.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -591,7 +590,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.External.Offset",
+					"id": "@DualSubs.Apple_TV.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -599,14 +598,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.External.ShowOnly",
+					"id": "@DualSubs.Apple_TV.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.Position",
+					"id": "@DualSubs.Apple_TV.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -623,7 +622,7 @@
 					"desc": "次要字幕的位置"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.CacheSize",
+					"id": "@DualSubs.Apple_TV.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -631,7 +630,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV.Tolerance",
+					"id": "@DualSubs.Apple_TV.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -654,20 +653,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Apple_TV_Plus",
-				"@DualSubs.Caches.Apple",
-				"@DualSubs.Caches.Apple_TV_Plus"
+				"@DualSubs.Apple_TV_Plus.Settings",
+				"@DualSubs.Apple.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.Switch",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.Types",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official",
 					"type": "checkboxes",
@@ -700,7 +698,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.Languages[0]",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -765,7 +763,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.Languages[1]",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -830,7 +828,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.External.URL",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -838,7 +836,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.External.Offset",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -846,14 +844,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.External.ShowOnly",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.Position",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -870,7 +868,7 @@
 					"desc": "次要字幕的位置"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.CacheSize",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -878,7 +876,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_TV_Plus.Tolerance",
+					"id": "@DualSubs.Apple_TV_Plus.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -901,19 +899,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Apple_Fitness",
-				"@DualSubs.Caches.Apple"
+				"@DualSubs.Apple_Fitness.Settings",
+				"@DualSubs.Apple.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.Switch",
+					"id": "@DualSubs.Apple_Fitness.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.Types",
+					"id": "@DualSubs.Apple_Fitness.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official,Google",
 					"type": "checkboxes",
@@ -946,7 +944,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.Languages[0]",
+					"id": "@DualSubs.Apple_Fitness.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -1011,7 +1009,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.Languages[1]",
+					"id": "@DualSubs.Apple_Fitness.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -1076,7 +1074,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.External.URL",
+					"id": "@DualSubs.Apple_Fitness.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -1084,7 +1082,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.External.Offset",
+					"id": "@DualSubs.Apple_Fitness.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -1092,14 +1090,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.External.ShowOnly",
+					"id": "@DualSubs.Apple_Fitness.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.Position",
+					"id": "@DualSubs.Apple_Fitness.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -1116,7 +1114,7 @@
 					"desc": "次要字幕的位置"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.CacheSize",
+					"id": "@DualSubs.Apple_Fitness.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -1124,7 +1122,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Apple_Fitness.Tolerance",
+					"id": "@DualSubs.Apple_Fitness.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -1147,19 +1145,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Disney_Plus",
-				"@DualSubs.Caches.Disney_Plus"
+				"@DualSubs.Disney_Plus.Settings",
+				"@DualSubs.Disney_Plus.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.Switch",
+					"id": "@DualSubs.Disney_Plus.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.Types",
+					"id": "@DualSubs.Disney_Plus.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official",
 					"type": "checkboxes",
@@ -1192,7 +1190,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.Languages[0]",
+					"id": "@DualSubs.Disney_Plus.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -1257,7 +1255,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.Languages[1]",
+					"id": "@DualSubs.Disney_Plus.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -1322,7 +1320,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.External.URL",
+					"id": "@DualSubs.Disney_Plus.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -1330,7 +1328,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.External.Offset",
+					"id": "@DualSubs.Disney_Plus.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -1338,14 +1336,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.External.ShowOnly",
+					"id": "@DualSubs.Disney_Plus.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.Position",
+					"id": "@DualSubs.Disney_Plus.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -1362,7 +1360,7 @@
 					"desc": "次要字幕的位置"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.CacheSize",
+					"id": "@DualSubs.Disney_Plus.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 5,
 					"type": "number",
@@ -1370,7 +1368,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量如果仅供本机使用，可以设置为1，Disney+因为自身客户端缓存，建议设置为5以上，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Disney_Plus.Tolerance",
+					"id": "@DualSubs.Disney_Plus.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -1393,19 +1391,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Prime_Video",
-				"@DualSubs.Caches.Prime_Video"
+				"@DualSubs.Prime_Video.Settings",
+				"@DualSubs.Prime_Video.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Prime_Video.Switch",
+					"id": "@DualSubs.Prime_Video.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.Types",
+					"id": "@DualSubs.Prime_Video.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official,Google",
 					"type": "checkboxes",
@@ -1438,7 +1436,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.Languages[0]",
+					"id": "@DualSubs.Prime_Video.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -1503,7 +1501,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.Languages[1]",
+					"id": "@DualSubs.Prime_Video.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -1568,7 +1566,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.External.URL",
+					"id": "@DualSubs.Prime_Video.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -1576,7 +1574,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.External.Offset",
+					"id": "@DualSubs.Prime_Video.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -1584,14 +1582,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.External.ShowOnly",
+					"id": "@DualSubs.Prime_Video.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.Position",
+					"id": "@DualSubs.Prime_Video.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -1608,7 +1606,7 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.CacheSize",
+					"id": "@DualSubs.Prime_Video.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -1616,7 +1614,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Prime_Video.Tolerance",
+					"id": "@DualSubs.Prime_Video.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -1639,19 +1637,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.HBO_Max",
-				"@DualSubs.Caches.HBO_Max"
+				"@DualSubs.HBO_Max.Settings",
+				"@DualSubs.HBO_Max.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.HBO_Max.Switch",
+					"id": "@DualSubs.HBO_Max.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.Types",
+					"id": "@DualSubs.HBO_Max.Settings.Types",
 					"name": "字幕类型",
 					"val": "Google",
 					"type": "checkboxes",
@@ -1684,7 +1682,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.Type",
+					"id": "@DualSubs.HBO_Max.Settings.Type",
 					"name": "字幕类型（兼容）",
 					"val": "Google",
 					"type": "selects",
@@ -1717,7 +1715,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.Languages[0]",
+					"id": "@DualSubs.HBO_Max.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -1790,7 +1788,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.Languages[1]",
+					"id": "@DualSubs.HBO_Max.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -1863,7 +1861,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.External.URL",
+					"id": "@DualSubs.HBO_Max.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -1871,7 +1869,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.External.Offset",
+					"id": "@DualSubs.HBO_Max.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -1879,14 +1877,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.External.ShowOnly",
+					"id": "@DualSubs.HBO_Max.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.Position",
+					"id": "@DualSubs.HBO_Max.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -1903,7 +1901,7 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.CacheSize",
+					"id": "@DualSubs.HBO_Max.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -1911,7 +1909,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.HBO_Max.Tolerance",
+					"id": "@DualSubs.HBO_Max.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -1934,19 +1932,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Hulu",
-				"@DualSubs.Caches.Hulu"
+				"@DualSubs.Hulu.Settings",
+				"@DualSubs.Hulu.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Hulu.Switch",
+					"id": "@DualSubs.Hulu.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.Types",
+					"id": "@DualSubs.Hulu.Settings.Types",
 					"name": "字幕类型",
 					"val": "Google",
 					"type": "checkboxes",
@@ -1979,7 +1977,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.Languages[0]",
+					"id": "@DualSubs.Hulu.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -2044,7 +2042,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.Languages[1]",
+					"id": "@DualSubs.Hulu.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -2109,7 +2107,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.External.URL",
+					"id": "@DualSubs.Hulu.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -2117,7 +2115,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.External.Offset",
+					"id": "@DualSubs.Hulu.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -2125,14 +2123,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.External.ShowOnly",
+					"id": "@DualSubs.Hulu.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.Position",
+					"id": "@DualSubs.Hulu.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -2149,7 +2147,7 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.CacheSize",
+					"id": "@DualSubs.Hulu.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -2157,7 +2155,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Hulu.Tolerance",
+					"id": "@DualSubs.Hulu.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -2180,19 +2178,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Paramount_Plus",
-				"@DualSubs.Caches.Paramount_Plus"
+				"@DualSubs.Paramount_Plus.Settings",
+				"@DualSubs.Paramount_Plus.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.Switch",
+					"id": "@DualSubs.Paramount_Plus.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.Types",
+					"id": "@DualSubs.Paramount_Plus.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official,Google,DeepL,External",
 					"type": "checkboxes",
@@ -2225,7 +2223,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.Languages[0]",
+					"id": "@DualSubs.Paramount_Plus.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -2290,7 +2288,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.Languages[1]",
+					"id": "@DualSubs.Paramount_Plus.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -2355,7 +2353,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.External.URL",
+					"id": "@DualSubs.Paramount_Plus.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -2363,7 +2361,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.External.Offset",
+					"id": "@DualSubs.Paramount_Plus.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -2371,14 +2369,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.External.ShowOnly",
+					"id": "@DualSubs.Paramount_Plus.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.Position",
+					"id": "@DualSubs.Paramount_Plus.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -2395,7 +2393,7 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.CacheSize",
+					"id": "@DualSubs.Paramount_Plus.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -2403,7 +2401,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Paramount_Plus.Tolerance",
+					"id": "@DualSubs.Paramount_Plus.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -2426,19 +2424,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Discovery_Plus_Ph",
-				"@DualSubs.Caches.Discovery_Plus_Ph"
+				"@DualSubs.Discovery_Plus_Ph.Settings",
+				"@DualSubs.Discovery_Plus_Ph.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Switch",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Types",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.Types",
 					"name": "字幕类型",
 					"val": "Google",
 					"type": "checkboxes",
@@ -2471,7 +2469,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Languages[0]",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -2536,7 +2534,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Languages[1]",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -2601,7 +2599,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.URL",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -2609,7 +2607,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.Offset",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -2617,14 +2615,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.External.ShowOnly",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Position",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -2641,7 +2639,7 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.CacheSize",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -2649,7 +2647,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Discovery_Plus_Ph.Tolerance",
+					"id": "@DualSubs.Discovery_Plus_Ph.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -2672,19 +2670,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Peacock_TV",
-				"@DualSubs.Caches.Peacock_TV"
+				"@DualSubs.Peacock_TV.Settings",
+				"@DualSubs.Peacock_TV.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.Switch",
+					"id": "@DualSubs.Peacock_TV.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.Types",
+					"id": "@DualSubs.Peacock_TV.Settings.Types",
 					"name": "字幕类型",
 					"val": "Google",
 					"type": "checkboxes",
@@ -2717,7 +2715,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.Type",
+					"id": "@DualSubs.Peacock_TV.Settings.Type",
 					"name": "字幕类型（兼容）",
 					"val": "Google",
 					"type": "selects",
@@ -2750,7 +2748,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.Languages[0]",
+					"id": "@DualSubs.Peacock_TV.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -2815,7 +2813,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.Languages[1]",
+					"id": "@DualSubs.Peacock_TV.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -2880,7 +2878,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.External.URL",
+					"id": "@DualSubs.Peacock_TV.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -2888,7 +2886,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.External.Offset",
+					"id": "@DualSubs.Peacock_TV.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -2896,14 +2894,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.External.ShowOnly",
+					"id": "@DualSubs.Peacock_TV.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.Position",
+					"id": "@DualSubs.Peacock_TV.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -2920,7 +2918,7 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.CacheSize",
+					"id": "@DualSubs.Peacock_TV.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 2,
 					"type": "number",
@@ -2928,7 +2926,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Peacock_TV.Tolerance",
+					"id": "@DualSubs.Peacock_TV.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",
@@ -2951,19 +2949,19 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Settings.Netflix",
-				"@DualSubs.Caches.Netflix"
+				"@DualSubs.Netflix.Settings",
+				"@DualSubs.Netflix.Caches"
 			],
 			"settings": [
 				{
-					"id": "@DualSubs.Settings.Netflix.Switch",
+					"id": "@DualSubs.Netflix.Settings.Switch",
 					"name": "功能开关",
 					"val": true,
 					"type": "boolean",
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.Types",
+					"id": "@DualSubs.Netflix.Settings.Types",
 					"name": "字幕类型",
 					"val": "Official,Google",
 					"type": "checkboxes",
@@ -2996,7 +2994,7 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.Languages[0]",
+					"id": "@DualSubs.Netflix.Settings.Languages[0]",
 					"name": "首选语言：",
 					"val": "ZH",
 					"type": "selects",
@@ -3061,7 +3059,7 @@
 					"desc": "选择后将为此语言添加额外字幕选项"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.Languages[1]",
+					"id": "@DualSubs.Netflix.Settings.Languages[1]",
 					"name": "次选语言：",
 					"val": "EN",
 					"type": "selects",
@@ -3126,7 +3124,7 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.External.URL",
+					"id": "@DualSubs.Netflix.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
 					"type": "text",
@@ -3134,7 +3132,7 @@
 					"desc": "兼容WebVTT和SRT格式字幕"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.External.Offset",
+					"id": "@DualSubs.Netflix.Settings.External.Offset",
 					"name": "外挂字幕: 时间偏移量",
 					"val": 0,
 					"type": "number",
@@ -3142,14 +3140,14 @@
 					"desc": "单位：毫秒(ms)，正负整数"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.External.ShowOnly",
+					"id": "@DualSubs.Netflix.Settings.External.ShowOnly",
 					"name": "外挂字幕: 只显示外挂字幕",
 					"val": false,
 					"type": "boolean",
 					"desc": "开启后仅显示外挂字幕，不做字幕合并操作"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.Position",
+					"id": "@DualSubs.Netflix.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",
 					"type": "radios",
@@ -3166,7 +3164,7 @@
 					"desc": ""
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.CacheSize",
+					"id": "@DualSubs.Netflix.Settings.CacheSize",
 					"name": "播放记录缓存数量",
 					"val": 3,
 					"type": "number",
@@ -3174,7 +3172,7 @@
 					"desc": "此选项决定同网关、同平台、同时处理和播放的数量，如果仅供本机使用，可以设置为1，如果本机作为网关处理局域网多台设备同时观看播放，建议设置此数值不小于播放设备数"
 				},
 				{
-					"id": "@DualSubs.Settings.Netflix.Tolerance",
+					"id": "@DualSubs.Netflix.Settings.Tolerance",
 					"name": "时间戳公差",
 					"val": 1000,
 					"type": "number",

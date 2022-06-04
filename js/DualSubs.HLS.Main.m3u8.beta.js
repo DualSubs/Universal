@@ -101,8 +101,8 @@ if (method == "OPTIONS") $.done();
 /***************** Async Function *****************/
 /**
  * Get Environment Variables
- * @author VirgilClyne
  * https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
+ * @author VirgilClyne
  * @param {String} t - Persistent Store Key
  * @param {String} e - Platform Name
  * @param {Object} n - Default DataBase
@@ -131,7 +131,9 @@ async function setENV(name, url, database) {
 								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
 									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
 										: /\.fubo\.tv/i.test(url) ? "Fubo_TV"
-											: "Universal"
+											: /\.youtube\.com/i.test(url) ? "YouTube"
+												: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+													: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
 	/***************** Verify *****************/
 	const { Settings: Verify } = await getENV(name, "Verify", database);

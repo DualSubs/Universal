@@ -182,7 +182,9 @@ async function setENV(name, url, database) {
 								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
 									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
 										: /\.fubo\.tv/i.test(url) ? "Fubo_TV"
-											: "Universal"
+											: /\.youtube\.com/i.test(url) ? "YouTube"
+												: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+													: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
 	/***************** Verify *****************/
 	const { Settings: Verify } = await getENV(name, "Verify", database);
@@ -244,11 +246,11 @@ async function getCache(type, settings, caches = {}) {
 			// 修正缓存
 			if (Indices[settings.Languages[0]] !== -1) {
 				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-					if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
+					if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
 				});
 				if (Indices[settings.Languages[1]] == -1) {
 					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-						if (data.OPTION?.FORCED !== "YES" && data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+						if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
 					});
 				};
 			};
@@ -266,7 +268,7 @@ async function getCache(type, settings, caches = {}) {
 		})
 	};
 	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URI, item?.VTTs] }
+	function getURIs(item) { return [item?.URL, item?.VTTs] }
 };
 
 /**

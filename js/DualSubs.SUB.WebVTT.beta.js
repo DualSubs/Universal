@@ -445,7 +445,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 					}
 				}
 			]
-			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
+			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 3))] // 随机Request, 排除最后三项
 			text = (Array.isArray(text)) ? text.join("\n\n") : text;
 			request.url = request.url + `&sl=${DataBase.Google.Configs.Languages[source]}&tl=${DataBase.Google.Configs.Languages[target]}&q=${encodeURIComponent(text)}`;
 		} else if (type == "GoogleCloud") {

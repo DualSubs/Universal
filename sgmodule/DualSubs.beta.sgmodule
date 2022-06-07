@@ -7,7 +7,7 @@
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Streaming.png
 
 [General]
-force-http-engine-hosts = %APPEND% *.hls.row.aiv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, assets.huluim.com
+force-http-engine-hosts = %APPEND% *.hls.row.aiv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, assets.huluim.com, vod-*.live.cf.md.bbci.co.uk, vod-*-live.akamaized.net
 
 [Script]
 DualSubs.Apple_TV.HLS.Main.m3u8 = type=http-response, pattern=^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(\?.*), requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.Main.m3u8.beta.js
@@ -58,7 +58,8 @@ DualSubs.Fubo_TV.HLS.Main.m3u8 = type=http-response, pattern=^https?:\/\/.*-vod\
 DualSubs.Fubo_TV.HLS.WebVTT.m3u8 = type=http-response, pattern=^https?:\/\/.*-vod\.fubo\.tv\/(.*)\/manifests\/subtitles\/(.*)\/media\.m3u8(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.WebVTT.m3u8.beta.js
 DualSubs.Fubo_TV.SUB.WebVTT = type=http-response, pattern=^https?:\/\/.*-vod\.fubo\.tv\/(.*)\/manifests\/subtitles\/(.*)\.vtt(\?.*dualsubs=\w+)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
 
-DualSubs.BBC_iPlayer.HLS.Main.m3u8 = type=http-response, pattern=^https?:\/\/vod-.*\.live\.cf\.md\.bbci\.co\.uk\/(.*)\/hls_master\.m3u8(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.Main.m3u8.beta.js
+DualSubs.BBC_iPlayer.HLS.Main.m3u8 = type=http-response, pattern=^https?:\/\/vod-hls-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/(.*)_hls_master\.m3u8(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.Main.m3u8.beta.js
+DualSubs.BBC_iPlayer.SUB.WebVTT = type=http-response, pattern=^https?:\/\/vod-sub-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.*)\.cc\.vtt(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
 
 DualSubs.Britbox.SUB.WebVTT = type=http-response, pattern=^https?:\/\/api\.britbox\.com\/v1\/subtitles(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
 

@@ -4,7 +4,7 @@ README:https://github.com/DualSubs/DualSubs/
 
 const $ = new Env("DualSubs v0.4.0-sub-timedtext-beta");
 const URL = new URLs();
-
+const XML = new XMLs();
 const DataBase = {
 	"Verify": {
 		"Settings":{"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},"DeepL":{"Method":"Part","Version":"Free","Auth":null}}
@@ -63,13 +63,13 @@ if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Type, Caches } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
 	if (Settings.Switch) {
 		// 创建字幕JSON
 		let OriginSub = {};
 		let SecondSub = {};
 		let DualSub = {};
-		const { Format, Orig_Request, Tran_Request } = await getTimedTextRequest(url, Settings.Language);
+		const { Format, Orig_Request, Tran_Request } = await getTimedTextRequest(url, Settings.Language, Configs);
 		if (Format == "json3") {
 			// 获取序列化字幕
 			OriginSub = await $.http.get(Orig_Request).then(response => JSON.parse(response.body));
@@ -77,7 +77,13 @@ if (method == "OPTIONS") $.done();
 			DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 			$response.body = JSON.stringify(DualSub);
 		} else if (Format == "svr3") {
-			$.done()
+			// 获取序列化字幕
+			OriginSub = await $.http.get(Orig_Request).then(response => ParseXML(response.body));
+			$.log(`🚧 ${$.name}`, `OriginSub: ${OriginSub}`, "");
+			SecondSub = await $.http.get(Tran_Request).then(response => XML.parse(response.body));
+			$.log(`🚧 ${$.name}`, `SecondSub: ${SecondSub}`, "");
+			//DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+			//$response.body = XML.stringify(DualSub);
 		} else if (Format == "vtt") {
 			$.done()
 		};
@@ -177,7 +183,7 @@ async function setENV(name, url, database) {
  * @param {String} langcode - langcode
  * @return {Promise<*>}
  */
-async function getTimedTextRequest(url, langcode) {
+async function getTimedTextRequest(url, langcode, database) {
 	$.log(`⚠ ${$.name}, Get TimedText Request`, `url: ${url}`, `langcode: ${langcode}`, "");
 	// 创建链接请求
 	let request = { "url": url, "headers": headers };
@@ -190,7 +196,7 @@ async function getTimedTextRequest(url, langcode) {
 		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
 	} else { // 未选
 		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
-		request.url.params.tlang = langcode; // 翻译字幕
+		request.url.params.tlang = database.Languages[langcode]; // 翻译字幕
 		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
 	};
 	$.log(`🚧 ${$.name}, Get TimedText Request`, `Orig_Request: ${JSON.stringify(Orig_Request)}`, "");
@@ -249,3 +255,265 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 
 // https://github.com/VirgilClyne/VirgilClyne/blob/main/function/URL/URLs.embedded.min.js
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
+
+// refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
+// refer: https://goessner.net/download/prj/jsonxml/json2xml.js
+function XMLs(opts) {
+	return new (class {
+		constructor(opts) {
+			this.name = "XML v0.1.0";
+			this.opts = opts;
+			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
+		};
+
+		parse(xml = new String, reviver = "") {
+			const UNESCAPE = {
+				"&amp;": "&",
+				"&lt;": "<",
+				"&gt;": ">",
+				"&apos;": "'",
+				"&quot;": '"'
+			};
+			const ATTRIBUTE_KEY = "@";
+			const CHILD_NODE_KEY = "#";
+
+			$.log(`🚧 ${$.name}, parse EXTM3U`, "");
+			let parsedXML = parseXML(xml);
+			let json = toObject(parsedXML, reviver);
+			$.log(`🚧 ${$.name}, parse XML`, `json: ${JSON.stringify(json)}`, "");
+			return json;
+
+			/***************** Fuctions *****************/
+			function parseXML(text) {
+				var list = String.prototype.split.call(text, /<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/);
+				var length = list.length;
+
+				// root element
+				var root = { f: [] };
+				var elem = root;
+
+				// dom tree stack
+				var stack = [];
+
+				for (var i = 0; i < length;) {
+					// text node
+					var str = list[i++];
+					if (str) appendText(str);
+
+					// child node
+					var tag = list[i++];
+					if (tag) parseNode(tag);
+				}
+
+				return root;
+
+				function parseNode(tag) {
+					var tagLength = tag.length;
+					var firstChar = tag[0];
+					if (firstChar === "/") {
+						// close tag
+						var closed = tag.replace(/^\/|[\s\/].*$/g, "").toLowerCase();
+						while (stack.length) {
+							var tagName = elem.n && elem.n.toLowerCase();
+							elem = stack.pop();
+							if (tagName === closed) break;
+						}
+					} else if (firstChar === "?") {
+						// XML declaration
+						appendChild({ n: "?", r: tag.substr(1, tagLength - 2) });
+					} else if (firstChar === "!") {
+						if (tag.substr(1, 7) === "[CDATA[" && tag.substr(-2) === "]]") {
+							// CDATA section
+							appendText(tag.substr(8, tagLength - 10));
+						} else {
+							// comment
+							appendChild({ n: "!", r: tag.substr(1) });
+						}
+					} else {
+						var child = openTag(tag);
+						appendChild(child);
+						if (tag[tagLength - 1] === "/") {
+							child.c = 1; // emptyTag
+						} else {
+							stack.push(elem); // openTag
+							elem = child;
+						}
+					}
+				}
+
+				function appendChild(child) {
+					elem.f.push(child);
+				}
+
+				function appendText(str) {
+					str = removeSpaces(str);
+					if (str) appendChild(unescapeXML(str));
+				}
+			}
+
+
+			function openTag(tag) {
+				var elem = { f: [] };
+				tag = tag.replace(/\s*\/?$/, "");
+				var pos = tag.search(/[\s='"\/]/);
+				if (pos < 0) {
+					elem.n = tag;
+				} else {
+					elem.n = tag.substr(0, pos);
+					elem.t = tag.substr(pos);
+				}
+				return elem;
+			}
+
+			function parseAttribute(elem, reviver) {
+				if (!elem.t) return;
+				var list = elem.t.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/);
+				var length = list.length;
+				var attributes, val;
+
+				for (var i = 0; i < length; i++) {
+					var str = removeSpaces(list[i]);
+					if (!str) continue;
+
+					if (!attributes) {
+						attributes = {};
+					}
+
+					var pos = str.indexOf("=");
+					if (pos < 0) {
+						// bare attribute
+						str = ATTRIBUTE_KEY + str;
+						val = null;
+					} else {
+						// attribute key/value pair
+						val = str.substr(pos + 1).replace(/^\s+/, "");
+						str = ATTRIBUTE_KEY + str.substr(0, pos).replace(/\s+$/, "");
+
+						// quote: foo="FOO" bar='BAR'
+						var firstChar = val[0];
+						var lastChar = val[val.length - 1];
+						if (firstChar === lastChar && (firstChar === "'" || firstChar === '"')) {
+							val = val.substr(1, val.length - 2);
+						}
+
+						val = unescapeXML(val);
+					}
+					if (reviver) {
+						val = reviver(str, val);
+					}
+					addObject(attributes, str, val);
+				}
+
+				return attributes;
+			}
+
+			function removeSpaces(str) {
+				return str && str.replace(/^\s+|\s+$/g, "");
+			}
+
+			function unescapeXML(str) {
+				return str.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g, function (str) {
+					if (str[1] === "#") {
+						var code = (str[2] === "x") ? parseInt(str.substr(3), 16) : parseInt(str.substr(2), 10);
+						if (code > -1) return String.fromCharCode(code);
+					}
+					return UNESCAPE[str] || str;
+				});
+			}
+
+			function toObject(elem, reviver) {
+				if ("string" === typeof elem) return elem;
+
+				var raw = elem.r;
+				if (raw) return raw;
+
+				var attributes = parseAttribute(elem, reviver);
+				var object;
+				var childList = elem.f;
+				var childLength = childList.length;
+
+				if (attributes || childLength > 1) {
+					// merge attributes and child nodes
+					object = attributes || {};
+					childList.forEach(function (child) {
+						if ("string" === typeof child) {
+							addObject(object, CHILD_NODE_KEY, child);
+						} else {
+							addObject(object, child.n, toObject(child, reviver));
+						}
+					});
+				} else if (childLength) {
+					// the node has single child node but no attribute
+					var child = childList[0];
+					object = toObject(child, reviver);
+					if (child.n) {
+						var wrap = {};
+						wrap[child.n] = object;
+						object = wrap;
+					}
+				} else {
+					// the node has no attribute nor child node
+					object = elem.c ? null : "";
+				}
+
+				if (reviver) {
+					object = reviver(elem.n || "", object);
+				}
+
+				return object;
+			}
+
+			function addObject(object, key, val) {
+				if ("undefined" === typeof val) return;
+				var prev = object[key];
+				if (prev instanceof Array) {
+					prev.push(val);
+				} else if (key in object) {
+					object[key] = [prev, val];
+				} else {
+					object[key] = val;
+				}
+			}
+		};
+
+		stringify(json = new Object, tab = "") {
+			$.log(`🚧 ${$.name}, stringify XML`, "");
+			var XML = "";
+			for (var m in json)
+				XML += toXml(json[m], m, "");
+			XML = tab ? XML.replace(/\t/g, tab) : XML.replace(/\t|\n/g, "");
+			$.log(`🚧 ${$.name}, stringify XML`, `XML: ${XML}`, "");
+			return XML;
+			/***************** Fuctions *****************/
+			function toXml(v, name, ind) {
+				var xml = "";
+				if (v instanceof Array) {
+					for (var i = 0, n = v.length; i < n; i++)
+						xml += ind + toXml(v[i], name, ind + "\t") + "\n";
+				} else if (typeof (v) == "object") {
+					var hasChild = false;
+					xml += ind + "<" + name;
+					for (var m in v) {
+						if (m.charAt(0) == "@")
+							xml += " " + m.substr(1) + "=\"" + v[m].toString() + "\"";
+						else
+							hasChild = true;
+					}
+					xml += hasChild ? ">" : "/>";
+					if (hasChild) {
+						for (var m in v) {
+							if (m == "#text")
+								xml += v[m];
+							else if (m == "#cdata")
+								xml += "<![CDATA[" + v[m] + "]]>";
+							else if (m.charAt(0) != "@")
+								xml += toXml(v[m], m, ind + "\t");
+						}
+						xml += (xml.charAt(xml.length - 1) == "\n" ? ind : "") + "</" + name + ">";
+					}
+				} else xml += ind + "<" + name + ">" + v.toString() + "</" + name + ">";
+				return xml;
+			};
+		};
+	})(opts)
+}

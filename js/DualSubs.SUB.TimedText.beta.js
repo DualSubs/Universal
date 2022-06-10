@@ -54,47 +54,50 @@ const DataBase = {
 		}
 	}
 };
+
+if ($request.method == "OPTIONS") $.done();
 delete $request.headers["Host"]
 delete $request.headers["Connection"]
 delete $request.headers["Range"]
-const { url, method, headers } = $request
-$.log(`🚧 ${$.name}`, `url: ${url}`, "");
-if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
+		let url = URL.parse($request.url);
+		$.log(`⚠ ${$.name}, url.path=${url.path}`);
+		const { Orig_URL, Tran_URL } = await getTimedTextURLs(url, Settings.Language, Configs);
 		// 创建字幕JSON
-		let OriginSub = {};
-		let SecondSub = {};
+		let OriginSub = await $.http.get({ "url": Orig_URL, "headers": $request.headers }).then(response => response.body);
+		let SecondSub = await $.http.get({ "url": Tran_URL, "headers": $request.headers }).then(response => response.body);
 		let DualSub = {};
-		const { Format, Orig_Request, Tran_Request } = await getTimedTextRequest(url, Settings.Language, Configs);
-		if (Format == "json3") {
-			// 获取序列化字幕
-			OriginSub = await $.http.get(Orig_Request).then(response => JSON.parse(response.body));
-			SecondSub = await $.http.get(Tran_Request).then(response => JSON.parse(response.body));
-			DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-			$response.body = JSON.stringify(DualSub);
-		} else if (Format == "svr3") {
-			// 获取序列化字幕
-			OriginSub = await $.http.get(Orig_Request).then(response => ParseXML(response.body));
-			$.log(`🚧 ${$.name}`, `OriginSub: ${OriginSub}`, "");
-			SecondSub = await $.http.get(Tran_Request).then(response => XML.parse(response.body));
-			$.log(`🚧 ${$.name}`, `SecondSub: ${SecondSub}`, "");
+		$.log(`🚧 ${$.name}`, `Format: ${url.params?.format || url.params?.fmt}`, "");
+		switch (url.params?.format || url.params?.fmt) {
+			case "json3":
+				// 获取序列化字幕
+				OriginSub = JSON.parse(OriginSub);
+				SecondSub = JSON.parse(SecondSub);
+				DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				$response.body = JSON.stringify(DualSub);
+			case "srv3":
+				// 获取序列化字幕
+				OriginSub = ParseXML(OriginSub);
+				$.log(`🚧 ${$.name}`, `OriginSub: ${OriginSub}`, "");
+				SecondSub = XML.parse(SecondSub);
+				$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+				SecondSub = XML.stringify(SecondSub);
+				$.log(`🚧 ${$.name}`, `SecondSub: ${SecondSub}`, "");
 			//DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 			//$response.body = XML.stringify(DualSub);
-		} else if (Format == "vtt") {
-			$.done()
+			//case "vtt":
+			//default:
 		};
 	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX()) {
-			const { headers, body } = $response
-			$.done({ headers, body })
-		} else $.done($response)
+		if ($.isQuanX()) $.done({ url: $request.url, body: $request.body })
+		else $.done($request)
 	})
 
 /***************** Async Function *****************/
@@ -177,31 +180,29 @@ async function setENV(name, url, database) {
 };
 
 /**
- * Get TimedText Request
+ * Get TimedText URLs
  * @author VirgilClyne
- * @param {String} url - url
+ * @param {Object} url - url
  * @param {String} langcode - langcode
+ * @param {Object} database - database
  * @return {Promise<*>}
  */
-async function getTimedTextRequest(url, langcode, database) {
-	$.log(`⚠ ${$.name}, Get TimedText Request`, `url: ${url}`, `langcode: ${langcode}`, "");
-	// 创建链接请求
-	let request = { "url": url, "headers": headers };
-	request.url = URL.parse(request.url);
-	const Format = request.url.params?.format || request.url.params?.fmt
-	$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
-	if (request.url.params?.tlang) { // 已选
-		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
-		delete request.url.params?.tlang // 原字幕
-		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
+async function getTimedTextURLs(url, langcode, database) {
+	$.log(`⚠ ${$.name}, Get TimedText URLs`, `url: ${JSON.stringify(url)}`, `langcode: ${langcode}`, "");
+	// 创建链接URL
+	let URLs = [];
+	if (url.params?.tlang) { // 已选
+		URLs[1] = URL.stringify(url);
+		delete url.params?.tlang // 原字幕
+		URLs[0] = URL.stringify(url);
 	} else { // 未选
-		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
-		request.url.params.tlang = database.Languages[langcode]; // 翻译字幕
-		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
+		URLs[0] = URL.stringify(url);
+		url.params.tlang = database.Languages[langcode]; // 翻译字幕
+		URLs[1] = URL.stringify(url);
 	};
-	$.log(`🚧 ${$.name}, Get TimedText Request`, `Orig_Request: ${JSON.stringify(Orig_Request)}`, "");
-	$.log(`🚧 ${$.name}, Get TimedText Request`, `Tran_Request: ${JSON.stringify(Tran_Request)}`, "");
-	return { Format, Orig_Request, Tran_Request }
+	$.log(`🚧 ${$.name}, Get TimedText URLs`, `Orig_URL: ${URLs[0]}`, "");
+	$.log(`🚧 ${$.name}, Get TimedText URLs`, `Tran_URL: ${URLs[1]}`, "");
+	return { Orig_URL: URLs[0], Tran_URL: URLs[1]};
 };
 
 /** 

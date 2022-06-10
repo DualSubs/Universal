@@ -264,7 +264,6 @@ function XMLs(opts) {
 		constructor(opts) {
 			this.name = "XML v0.1.0";
 			this.opts = opts;
-			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
 		};
 
 		parse(xml = new String, reviver = "") {
@@ -278,7 +277,7 @@ function XMLs(opts) {
 			const ATTRIBUTE_KEY = "@";
 			const CHILD_NODE_KEY = "#";
 
-			$.log(`🚧 ${$.name}, parse EXTM3U`, "");
+			$.log(`🚧 ${$.name}, parse XML`, "");
 			let parsedXML = parseXML(xml);
 			let json = toObject(parsedXML, reviver);
 			$.log(`🚧 ${$.name}, parse XML`, `json: ${JSON.stringify(json)}`, "");
@@ -503,7 +502,7 @@ function XMLs(opts) {
 					xml += hasChild ? ">" : "/>";
 					if (hasChild) {
 						for (var m in v) {
-							if (m == "#text")
+							if (m == "#")
 								xml += v[m];
 							else if (m == "#cdata")
 								xml += "<![CDATA[" + v[m] + "]]>";
@@ -512,7 +511,8 @@ function XMLs(opts) {
 						}
 						xml += (xml.charAt(xml.length - 1) == "\n" ? ind : "") + "</" + name + ">";
 					}
-				} else xml += ind + "<" + name + ">" + v.toString() + "</" + name + ">";
+				} else if (name === "?") xml += ind + "<" + name + v.toString() + name + ">";
+				else xml += ind + "<" + name + ">" + v.toString() + "</" + name + ">";
 				return xml;
 			};
 		};

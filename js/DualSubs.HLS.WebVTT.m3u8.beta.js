@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.2-hls-webvtt-beta");
+const $ = new Env("DualSubs v0.7.3-hls-webvtt-beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -54,37 +54,45 @@ const DataBase = {
 		}
 	}
 };
+
+if ($request.method == "OPTIONS") $.done();
 delete $request.headers["Host"]
 delete $request.headers["Connection"]
 delete $request.headers["Range"]
-const { url, method, headers } = $request
-$.log(`🚧 ${$.name}`, `url: ${url}`, "");
-if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
 		// 序列化M3U8
 		let PlayList = M3U8.parse($response.body);
-		if (Type == "Official") {
-			// 找缓存
-			const Indices = await getCache(Type, Settings, Caches);
-			let Cache = Caches?.[Indices.Index] || {};
-			if (Indices.Index !== -1) {
-				// 创建缓存
-				// 获取VTT字幕地址数组
-				for await (var language of Settings.Languages) {
-					for await (var data of Cache[language]) {
-						data.VTTs = await getVTTs(Platform, data.URL);
+		switch (Type) {
+			case "Official":
+				// 找缓存
+				const Indices = await getCache(Type, Settings, Caches);
+				let Cache = Caches?.[Indices.Index] || {};
+				if (Indices.Index !== -1) {
+					// 创建缓存
+					// 获取VTT字幕地址数组
+					for await (var language of Settings.Languages) {
+						for await (var data of Cache[language]) {
+							data.VTTs = await getVTTs(Platform, data.URL);
+						}
 					}
-				}
-				$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-				// 写入缓存
-				let newCaches = Caches;
-				newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-				$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
-			};
+					$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
+					// 写入缓存
+					let newCaches = Caches;
+					newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
+					$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
+				};
+				break;
+			case "External":
+			case "Google":
+			case "GoogleCloud":
+			case "Azure":
+			case "DeepL":
+			default:
+				break;
 		};
 		// WebVTT.m3u8加参数
 		//$response.body = await setWebVTTm3u8($response.body, Type);
@@ -105,10 +113,8 @@ if (method == "OPTIONS") $.done();
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX()) {
-			const { headers, body } = $response
-			$.done({ headers, body })
-		} else $.done($response)
+		if ($.isQuanX()) $.done({ headers: $response.headers, body: $response.body })
+		else $.done($response)
 	})
 
 /***************** Async Function *****************/
@@ -226,10 +232,10 @@ async function getCache(type, settings, caches = {}) {
 			let URLs = [item?.URL];
 			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
+			return URLs.flat(Infinity).some(URL => $request.url.includes(URL || null));
 		})
 	};
-	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
+	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => $request.url.includes(URL || null))); };
 	function getURIs(item) { return [item?.URL, item?.VTTs] }
 };
 
@@ -261,7 +267,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
  */
 async function getVTTs(platform, url) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
-	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
+	if (url) return await $.http.get({ url: url, headers: $request.headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let PlayList = M3U8.parse(response.body);
 		// 筛选字幕

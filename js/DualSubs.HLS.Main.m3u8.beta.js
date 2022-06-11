@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.2-hls-main-beta");
+const $ = new Env("DualSubs v0.7.3-hls-main-beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -54,16 +54,15 @@ const DataBase = {
 		}
 	}
 };
+
+if ($request.method == "OPTIONS") $.done();
 delete $request.headers["Host"]
 delete $request.headers["Connection"]
 delete $request.headers["Range"]
-const { url, method, headers } = $request
-$.log(`🚧 ${$.name}`, `url: ${url}`, "");
-if (method == "OPTIONS") $.done();
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", url, DataBase);
+	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
 		// 找缓存
 		const Indices = await getCache(Type, Settings, Caches);
@@ -71,7 +70,7 @@ if (method == "OPTIONS") $.done();
 		// 序列化M3U8
 		let PlayList = M3U8.parse($response.body);
 		// PlayList.m3u8 URL
-		Cache.URL = url;
+		Cache.URL = $request.url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
 		for await (var language of Settings.Languages) {
 			Cache[language] = await getMEDIA(PlayList, "SUBTITLES", language, Configs);
@@ -82,7 +81,7 @@ if (method == "OPTIONS") $.done();
 		newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
 		$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
 		// 兼容性判断
-		const standard = await isStandard(Platform, url, headers);
+		const standard = await isStandard(Platform, $request.url, $request.headers);
 		// 写入选项
 		PlayList = await setOptions(Platform, PlayList, Cache[Settings.Languages[0]], Cache[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
 		// 字符串M3U8
@@ -92,10 +91,8 @@ if (method == "OPTIONS") $.done();
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX()) {
-			const { headers, body } = $response
-			$.done({ headers, body })
-		} else $.done($response)
+		if ($.isQuanX()) $.done({ headers: $response.headers, body: $response.body })
+		else $.done($response)
 	})
 
 /***************** Async Function *****************/
@@ -213,10 +210,10 @@ async function getCache(type, settings, caches = {}) {
 			let URLs = [item?.URL];
 			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
+			return URLs.flat(Infinity).some(URL => $request.url.includes(URL || null));
 		})
 	};
-	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
+	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => $request.url.includes(URL || null))); };
 	function getURIs(item) { return [item?.URL, item?.VTTs] }
 };
 
@@ -289,7 +286,7 @@ async function getMEDIA(json = {}, type = "", langCode = "", database) {
 		let Data = { ...data };
 		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
 		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
-		Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		Data.URL = aPath($request.url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
 		$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
 		return Data
 	};

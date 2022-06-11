@@ -79,6 +79,7 @@ delete $request.headers["Range"]
 				SecondSub = JSON.parse(SecondSub);
 				DualSub = await CombineDualSubs("json3", OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 				$response.body = JSON.stringify(DualSub);
+				break;
 			case "srv3":
 				// 获取序列化字幕
 				OriginSub = XML.parse(OriginSub);
@@ -89,14 +90,16 @@ delete $request.headers["Range"]
 				//$.log(`🚧 ${$.name}`, `SecondSub: ${SecondSub}`, "");
 				DualSub = await CombineDualSubs("srv3", OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 				$response.body = XML.stringify(DualSub);
+				break;
 			case "vtt":
 			default:
+				break;
 		};
 	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX()) $.done({ url: $response.url, body: $response.body })
+		if ($.isQuanX()) $.done({ headers: $response.headers, body: $response.body })
 		else $.done($response)
 	})
 

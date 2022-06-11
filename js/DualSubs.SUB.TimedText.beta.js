@@ -77,27 +77,27 @@ delete $request.headers["Range"]
 				// 获取序列化字幕
 				OriginSub = JSON.parse(OriginSub);
 				SecondSub = JSON.parse(SecondSub);
-				DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				DualSub = await CombineDualSubs("json3", OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 				$response.body = JSON.stringify(DualSub);
 			case "srv3":
 				// 获取序列化字幕
-				OriginSub = ParseXML(OriginSub);
-				$.log(`🚧 ${$.name}`, `OriginSub: ${OriginSub}`, "");
+				OriginSub = XML.parse(OriginSub);
+				$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 				SecondSub = XML.parse(SecondSub);
 				$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-				SecondSub = XML.stringify(SecondSub);
-				$.log(`🚧 ${$.name}`, `SecondSub: ${SecondSub}`, "");
-			//DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-			//$response.body = XML.stringify(DualSub);
-			//case "vtt":
-			//default:
+				//SecondSub = XML.stringify(SecondSub);
+				//$.log(`🚧 ${$.name}`, `SecondSub: ${SecondSub}`, "");
+				DualSub = await CombineDualSubs("srv3", OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+				$response.body = XML.stringify(DualSub);
+			case "vtt":
+			default:
 		};
 	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX()) $.done({ url: $request.url, body: $request.body })
-		else $.done($request)
+		if ($.isQuanX()) $.done({ url: $response.url, body: $response.body })
+		else $.done($response)
 	})
 
 /***************** Async Function *****************/
@@ -214,7 +214,7 @@ async function getTimedTextURLs(url, langcode, database) {
  * @param {Array} options - options
  * @return {Promise<*>}
  */
-async function CombineDualSubs(Format = "VTT", Sub1 = { events: [] }, Sub2 = { events: [] }, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
+async function CombineDualSubs(Format = "VTT", Sub1 = {}, Sub2 = {}, Offset = 0, Tolerance = 1000, options = ["Forward"]) { // options = ["Forward", "Reverse"]
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
@@ -223,29 +223,50 @@ async function CombineDualSubs(Format = "VTT", Sub1 = { events: [] }, Sub2 = { e
 	// 有序数列 用不着排序
 	//FirstSub.body.sort((x, y) => x - y);
 	//SecondSub.body.sort((x, y) => x - y);
-	if (Format == "json3") {
-		const length1 = Sub1.events.length, length2 = Sub2.events.length;
-		let index0 = 0, index1 = 0, index2 = 0;
-		// 双指针法查找两个数组中的相同元素
-		while (index1 < length1 && index2 < length2) {
-			const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs + Offset;
-			const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
-			$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
-			$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
-			$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
-			if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
-				index0 = options.includes("Reverse") ? index2 : index1;
-				DualSub.events[index0].segs[0].utf8 = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
-				$.log(`🚧`, `DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
-				//DualSub.body[index0].tStartMs = options.includes("Reverse") ? timeStamp2 : timeStamp1;
-				//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
-			}
-			if (timeStamp2 > timeStamp1) index1++
-			else if (timeStamp2 < timeStamp1) index2++
-			else index1++; index2++
-		};
+	const length1 = Sub1?.events?.length ?? Sub1?.timedtext?.body?.p?.length;
+	const length2 = Sub2?.events?.length ?? Sub2?.timedtext?.body?.p?.length;
+	let index0 = 0, index1 = 0, index2 = 0;
+	switch (Format) {
+		case "json3":
+			// 双指针法查找两个数组中的相同元素
+			while (index1 < length1 && index2 < length2) {
+				const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
+				const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
+				$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+				$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+				$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+				if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+					index0 = options.includes("Reverse") ? index2 : index1;
+					DualSub.events[index0].segs[0].utf8 = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
+					$.log(`🚧`, `DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
+					//DualSub.body[index0].tStartMs = options.includes("Reverse") ? timeStamp2 : timeStamp1;
+					//DualSub.body[index0].index = options.includes("Reverse") ? index2 : index1;
+				}
+				if (timeStamp2 > timeStamp1) index1++
+				else if (timeStamp2 < timeStamp1) index2++
+				else index1++; index2++
+			};
+		case "srv3":
+			// 双指针法查找两个数组中的相同元素
+			while (index1 < length1 && index2 < length2) {
+				const timeStamp1 = parseInt(Sub1.timedtext.body.p[index1]["@t"], 10), timeStamp2 = parseInt(Sub2.timedtext.body.p[index2]["@t"], 10);
+				const text1 = Sub1.timedtext.body.p[index1]["#"] ?? "", text2 = Sub2.timedtext.body.p[index2]["#"] ?? "";
+				$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+				$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+				$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+				if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+					index0 = options.includes("Reverse") ? index2 : index1;
+					DualSub.timedtext.body.p[index0]["#"] = options.includes("Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`;
+					$.log(`🚧`, `DualSub.timedtext.body.p[index0]["#"]: ${DualSub.timedtext.body.p[index0]["#"]}`, "");
+					//DualSub.timedtext.body.p[index0]["@t"] = options.includes("Reverse") ? timeStamp2 : timeStamp1;
+					//DualSub.timedtext.body.p[index0].index = options.includes("Reverse") ? index2 : index1;
+				}
+				if (timeStamp2 > timeStamp1) index1++
+				else if (timeStamp2 < timeStamp1) index2++
+				else index1++; index2++
+			};
 	}
-	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;
 };
 

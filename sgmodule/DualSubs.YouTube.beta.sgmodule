@@ -8,8 +8,7 @@
 
 [Script]
 DualSubs.YouTube.Player = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.Player.beta.js
-DualSubs.SUB.TimedText = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(?!vtt).*)$, requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.TimedText.beta.js
-DualSubs.SUB.WebVTT = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(vtt).*)$, requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
+DualSubs.YouTube.TimedText = type=http-response, pattern=^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$, requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.YouTube.TimedText.beta.js
 
 [MITM]
 hostname = %APPEND% www.youtube.com, m.youtube.com

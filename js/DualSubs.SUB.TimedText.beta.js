@@ -233,12 +233,12 @@ async function CombineDualSubs(Format = "VTT", Sub1 = {}, Sub2 = {}, Offset = 0,
 		case "json3":
 			// 双指针法查找两个数组中的相同元素
 			while (index1 < length1 && index2 < length2) {
-				const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
-				const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
 				$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+				const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
 				$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+				const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
 				$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
-				if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+				if (Math.abs(timeStamp1 - timeStamp2) <= 0) {
 					index0 = options.includes("Reverse") ? index2 : index1;
 					DualSub.events[index0].segs[0].utf8 = options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
 					$.log(`🚧`, `DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
@@ -252,18 +252,32 @@ async function CombineDualSubs(Format = "VTT", Sub1 = {}, Sub2 = {}, Offset = 0,
 		case "srv3":
 			// 双指针法查找两个数组中的相同元素
 			while (index1 < length1 && index2 < length2) {
-				const timeStamp1 = parseInt(Sub1.timedtext.body.p[index1]["@t"], 10), timeStamp2 = parseInt(Sub2.timedtext.body.p[index2]["@t"], 10);
-				const text1 = Sub1.timedtext.body.p[index1]["#"] ?? "", text2 = Sub2.timedtext.body.p[index2]["#"] ?? "";
 				$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+				const timeStamp1 = parseInt(Sub1.timedtext.body.p[index1]["@t"], 10);
+				const timeStamp2 = parseInt(Sub2.timedtext.body.p[index2]["@t"], 10);
 				$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
-				$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
-				if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+				if (Math.abs(timeStamp1 - timeStamp2) <= 0) {
 					index0 = options.includes("Reverse") ? index2 : index1;
-					DualSub.timedtext.body.p[index0]["#"] = options.includes("Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`;
-					$.log(`🚧`, `DualSub.timedtext.body.p[index0]["#"]: ${DualSub.timedtext.body.p[index0]["#"]}`, "");
+					const text1 = Sub1.timedtext.body.p[index1]?.["#"];
+					const text2 = Sub2.timedtext.body.p[index2]?.["#"];
+					$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+					if (text1 && text2) {
+						DualSub.timedtext.body.p[index0]["#"] = options.includes("Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`;
+						$.log(`🚧`, `DualSub.timedtext.body.p[index0]["#"]: ${DualSub.timedtext.body.p[index0]["#"]}`, "");
+					}
 					//DualSub.timedtext.body.p[index0]["@t"] = options.includes("Reverse") ? timeStamp2 : timeStamp1;
 					//DualSub.timedtext.body.p[index0].index = options.includes("Reverse") ? index2 : index1;
-				}
+					/*
+					const sentences1 = Sub1.timedtext.body.p[index1]?.s;
+					const sentences2 = Sub2.timedtext.body.p[index1]?.s;
+					if (Array.isArray(sentences1) && Array.isArray(sentences2)) {
+						$.log(`🚧`, `sentences1: ${JSON.stringify(sentences1)}`, `sentences2: ${JSON.stringify(sentences2)}`, "");
+						sentences1[0]["@t"] = timeStamp1;
+						sentences2[0]["@t"] = timeStamp2;
+						DualSub.timedtext.body.p[index0].s = [...sentences1, ...sentences2].sort(compare("@t"));
+					} else if (sentences1 && sentences2) DualSub.timedtext.body.p[index0].s["#"] = options.includes("Reverse") ? `${sentences2["#"]}&#x000A;${sentences1["#"]}` : `${sentences1["#"]}&#x000A;${sentences2["#"]}`;
+					*/
+				};
 				if (timeStamp2 > timeStamp1) index1++
 				else if (timeStamp2 < timeStamp1) index2++
 				else index1++; index2++
@@ -271,6 +285,14 @@ async function CombineDualSubs(Format = "VTT", Sub1 = {}, Sub2 = {}, Offset = 0,
 	}
 	$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;
+	/***************** function *****************/
+	function compare(p){ //这是比较函数
+		return function(m,n){
+			var a = m[p];
+			var b = n[p];
+			return a - b; //升序
+		}
+	}
 };
 
 /***************** Env *****************/

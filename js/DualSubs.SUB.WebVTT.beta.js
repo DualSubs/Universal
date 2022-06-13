@@ -545,9 +545,12 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 						else if (data) {
 							const _data = JSON.parse(data)
 							let texts = [];
-							if (type == "Google") {
-								if (Array.isArray(_data)) texts = _data?.[0]?.map(item => item?.[0]);
-								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans);
+							switch (type) {
+								default:
+								case "Google":
+									if (Array.isArray(_data)) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+									else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
+									break;
 							}
 							texts = texts.join("").split(/\n\n/);
 							resolve(texts);
@@ -563,10 +566,22 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 						else if (data) {
 							const _data = JSON.parse(data)
 							let texts = [];
-							if (type == "Google") texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
-							else if (type == "GoogleCloud") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
-							else if (type == "Bing" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
-							else if (type == "DeepL") texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+							switch (type) {
+								default:
+								case "Google":
+									texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
+									break;
+								case "GoogleCloud":
+									texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+									break;
+								case "Bing":
+								case "Azure":
+									texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+									break;
+								case "DeepL":
+									texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+									break;
+							}
 							resolve(texts);
 						} else throw new Error(response);
 					} catch (e) {

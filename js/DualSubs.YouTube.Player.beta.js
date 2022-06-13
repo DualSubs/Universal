@@ -67,7 +67,8 @@ delete $request.headers["Range"]
 		let url = URL.parse($request.url);
 		$.log(`⚠ ${$.name}, url.path=${url.path}`);
 		// 设置格式
-		const Format = $request.headers["Content-Type"].match(/([^\/;]+)/g)[2];
+		//const Format = $request.headers["Content-Type"].match(/([^\/;]+)/g)[2];
+		const Format = $request.headers["Content-Type"].split("; ")[0].split("/")[1]
 		$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
 		switch (Format) {
 			case "json":
@@ -100,6 +101,8 @@ delete $request.headers["Range"]
 				};
 				$response.body = JSON.stringify(data);
 				break;
+			case "xml":
+			case "x-protobuf":
 			default:
 				break;
 		};

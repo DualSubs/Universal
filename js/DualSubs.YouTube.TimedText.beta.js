@@ -69,7 +69,7 @@ delete $request.headers["Range"]
 		$.log(`⚠ ${$.name}, url.path=${url.path}`);
 		if (url.params?.kind !== "asr") {
 			// 设置格式
-			const Format = url?.params?.dualsubs || Settings.Type;
+			const Format = url.params?.format || url.params?.fmt;
 			$.log(`🚧 ${$.name}, Format: ${Format}`, "");
 			// 创建字幕Object
 			let { OriginSub, SecondSub } = await getTimedText(url, $request.headers, Settings.Language, Configs);

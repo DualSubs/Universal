@@ -2,10 +2,9 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.1-youtube-timedtext-beta");
+const $ = new Env("DualSubs v0.7.4-sub-xml-beta");
 const URL = new URLs();
 const XML = new XMLs();
-const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Verify": {
 		"Settings":{"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},"DeepL":{"Method":"Part","Version":"Free","Auth":null}}
@@ -63,44 +62,41 @@ delete $request.headers["Range"]
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
+	const { Platform, Verify, Advanced, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
 		let url = URL.parse($request.url);
 		$.log(`⚠ ${$.name}, url.path=${url.path}`);
-		if (url.params?.kind !== "asr") {
-			// 设置格式
-			const Format = url?.params?.dualsubs || Settings.Type;
-			$.log(`🚧 ${$.name}, Format: ${Format}`, "");
-			// 设置URL
-			const { Orig_URL, Tran_URL } = await getTimedTextURLs(url, Settings.Language, Configs);
-			// 创建字幕JSON
-			let OriginSub = await $.http.get({ "url": Orig_URL, "headers": $request.headers }).then(response => response.body);
-			let SecondSub = await $.http.get({ "url": Tran_URL, "headers": $request.headers }).then(response => response.body);
-			// 创建双语字幕JSON
-			let DualSub = {};
-			// 处理格式
-			switch (Format) {
-				case "json3":
-					OriginSub = JSON.parse(OriginSub);
-					SecondSub = JSON.parse(SecondSub);
-					DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-					$response.body = JSON.stringify(DualSub);
-					break;
-				case "srv3":
-					OriginSub = XML.parse(OriginSub);
-					SecondSub = XML.parse(SecondSub);
-					DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-					$response.body = XML.stringify(DualSub);
-					break;
-				case "vtt":
-					OriginSub = VTT.parse(OriginSub);
-					SecondSub = VTT.parse(SecondSub);
-					DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-					$response.body = VTT.stringify(DualSub);
-				default:
-					break;
-			};
-		}
+		// 设置类型
+		const Type = url?.params?.dualsubs || Settings.Type;
+		$.log(`🚧 ${$.name}, Type: ${Type}`, "");
+		// 创建字幕JSON
+		let OriginSub = XML.parse($response.body);
+		$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+		let SecondSub = {};
+		// 创建双语字幕JSON
+		let DualSub = {};
+		// 处理类型
+		switch (Type) {
+			case "Official":
+				$.log(`🚧 ${$.name}`, "官方字幕", "");
+				break;
+			case "External":
+				$.log(`🚧 ${$.name}, 外挂字幕`, "");
+				break;
+			case "Google":
+			case "GoogleCloud":
+			case "Azure":
+			case "DeepL":
+			default:
+				$.log(`🚧 ${$.name}`, `翻译字幕`, "");
+				break;
+		};
+		//$response.body = XML.stringify(DualSub);
+		if ($response.headers["Content-Range"]) {
+			let length = byteLength($response.body);
+			$.log(`🚧 ${$.name}, Content-Range`, `length: ${length}`, "")
+			$response.headers["Content-Range"] = `bytes 0-${length - 1}/${length}`
+		};
 	};
 })()
 	.catch((e) => $.logErr(e))
@@ -183,33 +179,363 @@ async function setENV(name, url, database) {
 };
 
 /**
- * Get TimedText URLs
+ * Get Cache
  * @author VirgilClyne
- * @param {Object} url - Parsed Request URL
- * @param {String} langcode - langcode
- * @param {Object} database - database
+ * @param {String} url - Request URL
+ * @param {String} type - type
+ * @param {Object} settings - settings
+ * @param {Object} cache - cache
  * @return {Promise<*>}
  */
-async function getTimedTextURLs(url, langcode, database) {
-	$.log(`⚠ ${$.name}, Get TimedText URLs`, `url: ${JSON.stringify(url)}`, `langcode: ${langcode}`, "");
-	// 创建链接URL
-	let URLs = [];
-	if (url.params?.tlang) { // 已选
-		URLs[1] = URL.stringify(url);
-		delete url.params?.tlang // 原字幕
-		URLs[0] = URL.stringify(url);
-	} else { // 未选
-		URLs[0] = URL.stringify(url);
-		url.params.tlang = database.Languages[langcode]; // 翻译字幕
-		URLs[1] = URL.stringify(url);
+async function getCache(url, type, settings, caches = {}) {
+	$.log(`⚠ ${$.name}, Get Cache`, "");
+	let Indices = {};
+	Indices.Index = await getIndex(url, settings, caches);
+	if (Indices.Index !== -1) {
+		for await (var language of settings.Languages) Indices[language] = await getDataIndex(url, Indices.Index, language)
+		if (type == "Official") {
+			// 修正缓存
+			if (Indices[settings.Languages[0]] !== -1) {
+				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
+					if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
+				});
+				if (Indices[settings.Languages[1]] == -1) {
+					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
+						if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
+					});
+				};
+			};
+		};
+	}
+	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
+	return Indices
+	/***************** Fuctions *****************/
+	async function getIndex(url, settings, caches) {
+		return caches.findIndex(item => {
+			let URLs = [item?.URL];
+			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
+			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
+			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
+		})
 	};
-	$.log(`🚧 ${$.name}, Get TimedText URLs`, `Orig_URL: ${URLs[0]}`, "");
-	$.log(`🚧 ${$.name}, Get TimedText URLs`, `Tran_URL: ${URLs[1]}`, "");
-	return { Orig_URL: URLs[0], Tran_URL: URLs[1]};
+	async function getDataIndex(url, index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
+	function getURIs(item) { return [item?.URL, item?.VTTs] }
+};
+
+/**
+ * Set Cache
+ * @author VirgilClyne
+ * @param {Number} index - index
+ * @param {Object} target - target
+ * @param {Object} sources - sources
+ * @param {Number} num - num
+ * @return {Promise<*>}
+ */
+async function setCache(index = -1, target = {}, sources = {}, num = 1) {
+	$.log(`⚠ ${$.name}, Set Cache`, "");
+	// 刷新播放记录，所以始终置顶
+	if (index !== -1) delete target[index] // 删除旧记录
+	target.unshift(sources) // 头部插入缓存
+	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
+	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
+	return target
+};
+
+/**
+ * Get Official Request
+ * @author VirgilClyne
+ * @param {String} url - Request URL
+ * @param {String} headers - Request Headers
+ * @param {String} platform - Steaming Media Platform
+ * @param {Array} VTTs - VTTs
+ * @return {Promise<*>}
+ */
+async function getOfficialRequest(url, headers, platform, VTTs = [], oVTTs = []) {
+	$.log(`⚠ ${$.name}, Get Official Request`, "");
+	$.log(`⚠ ${$.name}, Get Official Request`, `VTTs: ${VTTs}`, "");
+	let fileName = (platform == "Apple") ? url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple 片段分型序号不同
+		: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Disney+ 片段名称相同
+			: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Hulu 片段分型序号相同
+				: null; // Amazon Prime Video HBO_Max不拆分字幕片段
+	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
+
+	if (platform == "Apple") {
+		let oIndex = oVTTs.findIndex(item => item?.includes(fileName));
+		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_oIndex: ${oIndex}`, "")
+		let oPosition = oIndex / oVTTs.length;
+		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_oPosition: ${oPosition}`, "")
+		//let Index = VTTs.findIndex(item => item.includes(fileName));
+		let Index = Math.round(oPosition * VTTs.length);
+		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_Index: ${Index}`, "")
+		nearlyVTTs = VTTs.slice((Index - 2 < 0) ? 0 : Index - 2, Index + 2);
+		let requests = nearlyVTTs.map(VTT => {
+			return {
+				"url": VTT,
+				"headers": headers,
+			}
+		});
+		$.log(`🚧 ${$.name}, Get Official Request`, `requests: ${JSON.stringify(requests)}`, "");
+		return requests
+	} else {
+		let request = {
+			"url": VTTs.find(item => item?.includes(fileName)) || VTTs[0],
+			"headers": headers,
+		};
+		$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");
+		return request
+	}
+};
+
+/**
+ * getWebVTT
+ * @author VirgilClyne
+ * @param {object} request - request
+ * @return {Promise<*>}
+ */
+async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
+
+/**
+ * combineText
+ * @author VirgilClyne
+ * @param {String} text1 - text1
+ * @param {String} text2 - text2
+ * @param {String} position - position
+ * @return {Promise<*>}
+ */
+async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+
+/**
+ * Translator
+ * @author VirgilClyne
+ * @param {String} type - type
+ * @param {String} source - source
+ * @param {String} target - target
+ * @param {String} text - text
+ * @param {Object} verify - verify
+ * @return {Promise<*>}
+ */
+ async function Translator(type = "Google", source = "", target = "", text = "", verify = {}) {
+	$.log(`⚠ ${$.name}, Translator`, `orig: ${text}`, "");
+	// 构造请求
+	let request = await GetRequest(type, source, target, text);
+	// 发送请求
+	let trans = await GetData(type, request);
+	$.log(`🚧 ${$.name}, Translator`, `trans: ${trans}`, "");
+	return trans
+	/***************** Fuctions *****************/
+	// Get Translate Request
+	async function GetRequest(type = "", source = "", target = "", text = "") {
+		$.log(`⚠ ${$.name}, Get Translate Request`, "");
+		const UAPool = [
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0", // 6.4%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:95.0) Gecko/20100101 Firefox/95.0", // 6.2%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36", // 5.2%
+			"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36", // 4.8%
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134",
+			"Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
+			"Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+		];
+		let request = {};
+		if (type == "Google") {
+			const BaseRequest = [
+				{ // Google API
+					"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t",
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
+					}
+				},
+				{ // Google Translate App
+					"url": "https://translate.google.com/translate_a/single?client=it&dt=qca&dt=t&dt=rmt&dt=bd&dt=rms&dt=sos&dt=md&dt=gt&dt=ld&dt=ss&dt=ex&otf=2&dj=1&hl=en&ie=UTF-8&oe=UTF-8",
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
+					}
+				},
+				{ // Google Translate App
+					"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dj=1&source=bubble&dt=t&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at",
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
+					}
+				},
+				{// Google Dictionary Chrome extension https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja
+					"url": "https://clients5.google.com/translate_a/t?client=dict-chrome-ex",
+					"headers": {
+						"Accept": "*/*",
+						"User-Agent": ""
+					}
+				}
+			]
+			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 3))] // 随机Request, 排除最后三项
+			text = (Array.isArray(text)) ? text.join("\n\n") : text;
+			request.url = request.url + `&sl=${DataBase.Google.Configs.Languages[source]}&tl=${DataBase.Google.Configs.Languages[target]}&q=${encodeURIComponent(text)}`;
+		} else if (type == "GoogleCloud") {
+			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${verify.GoogleCloud?.Auth}`;
+			request.headers = {
+				//"Authorization": `Bearer ${verify.GoogleCloud?.Auth}`,
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/json; charset=utf-8"
+			};
+			request.body = JSON.stringify({
+				"q": text,
+				"source": DataBase.Google.Configs.Languages[source],
+				"target": DataBase.Google.Configs.Languages[target],
+				"format": "html",
+				//"key": verify.GoogleCloud?.Key
+			});
+		} else if (type == "Bing") {
+			// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
+			const BaseURL = (verify.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+				: (verify.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
+					: "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+			request.url = `${BaseURL}`;
+			request.headers = {
+				"Accept": "*/*",
+				"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)], // 随机UA
+				"Content-type": "application/x-www-form-urlencoded",
+				"Refer": "https://www.bing.com/",
+			};
+			request.body = JSON.stringify({
+				"fromLang": "auto-detect",
+				//"text": '%s' % trans,
+				"text": text,
+				//"from": DataBase.Microsoft.Configs.Languages[source],
+				"to": DataBase.Microsoft.Configs.Languages[target]
+			});
+		} else if (type == "Azure") {
+			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
+			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
+			const BaseURL = (verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
+				: (verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
+					: "https://api.cognitive.microsofttranslator.com"
+			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Microsoft.Configs.Languages[target]}&from=${DataBase.Microsoft.Configs.Languages[source]}`;
+			request.headers = {
+				"Content-Type": "application/json; charset=UTF-8",
+				"Accept": "application/json, text/javascript, */*; q=0.01",
+				"Accept-Language": "zh-hans"
+				//"Authorization": `Bearer ${verify.Azure?.Auth}`,
+				//"Ocp-Apim-Subscription-Key": verify.Azure?.Auth,
+				//"Ocp-Apim-Subscription-Region": verify.Azure?.Region, // chinanorth, chinaeast2
+				//"X-ClientTraceId": uuidv4().toString()
+			};
+			if (verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = verify.Azure.Region;
+			if (verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = verify.Azure.Auth;
+			else if (verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${verify.Azure.Auth}`;
+			text = (Array.isArray(text)) ? text : [text];
+			let texts = await Promise.all(text?.map(async item => { return { "text": item } }))
+			request.body = JSON.stringify(texts);
+			/*
+			request.body = JSON.stringify([{
+				"text": text
+			}]);
+			*/
+		} else if (type == "DeepL") {
+			const BaseURL = (verify.DeepL.Version == "Free") ? "https://api-free.deepl.com"
+				: (verify.DeepL.Version == "Pro") ? "https://api.deepl.com"
+					: "https://api-free.deepl.com"
+			request.url = `${BaseURL}/v2/translate`
+			request.headers = {
+				"Accept": "*/*",
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/x-www-form-urlencoded"
+			};
+			const source_lang = (DataBase.DeepL.Configs.Languages[source].includes("EN")) ? "EN"
+				: (DataBase.DeepL.Configs.Languages[source].includes("PT")) ? "PT"
+					: DataBase.DeepL.Configs.Languages[source];
+			const target_lang = (DataBase.DeepL.Configs.Languages[target] == "EN") ? "EN-US"
+				: (DataBase.DeepL.Configs.Languages[target] == "PT") ? "PT-PT"
+					: DataBase.DeepL.Configs.Languages[target];
+			const BaseBody = `auth_key=${verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+			text = (Array.isArray(text)) ? text : [text];
+			let texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
+			request.body = BaseBody + texts.join("");
+		} else if (type == "BaiduFanyi") {
+			// https://fanyi-api.baidu.com/doc/24
+			request.url = `https://fanyi-api.baidu.com/api/trans/vip/language`;
+			request.headers = {
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/x-www-form-urlencoded"
+			};
+			request.body = {
+				"q": text,
+				"from": DataBase.Baidu.Configs.Languages[source],
+				"to": DataBase.Baidu.Configs.Languages[target],
+				"appid": verify.BaiduFanyi?.Key,
+				"salt": uuidv4().toString(),
+				"sign": "",
+			};
+		} else if (type == "YoudaoAI") {
+			// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
+			request.url = `https://openapi.youdao.com/api`;
+			request.headers = {
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/json; charset=utf-8"
+			};
+			request.body = {
+				"q": text,
+				"from": DataBase.Youdao.Configs.Languages[source],
+				"to": DataBase.Youdao.Configs.Languages[target],
+				"appKey": verify.YoudaoAI?.Key,
+				"salt": uuidv4().toString(),
+				"signType": "v3",
+				"sign": "",
+				"curtime": Math.floor(+new Date() / 1000)
+			};
+		}
+		//$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
+		return request
+	};
+	// Get Translate Data
+	function GetData(type, request) {
+		$.log(`⚠ ${$.name}, Get Translate Data`, "");
+		return new Promise(resolve => {
+			if (type == "Google") {
+				$.get(request, (error, response, data) => {
+					try {
+						if (error) throw new Error(error)
+						else if (data) {
+							const _data = JSON.parse(data)
+							let texts = [];
+							if (type == "Google") {
+								if (Array.isArray(_data)) texts = _data?.[0]?.map(item => item?.[0]);
+								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans);
+							}
+							texts = texts.join("").split(/\n\n/);
+							resolve(texts);
+						} else throw new Error(response);
+					} catch (e) {
+						throw e;
+					}
+				});
+			} else {
+				$.post(request, (error, response, data) => {
+					try {
+						if (error) throw new Error(error)
+						else if (data) {
+							const _data = JSON.parse(data)
+							let texts = [];
+							if (type == "Google") texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
+							else if (type == "GoogleCloud") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+							else if (type == "Bing" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+							else if (type == "DeepL") texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+							resolve(texts);
+						} else throw new Error(response);
+					} catch (e) {
+						throw e;
+					}
+				});
+			};
+		});
+	};
 };
 
 /** 
  * Combine Dual Subtitles
+ * @author VirgilClyne
  * @param {Object} Sub1 - Sub1
  * @param {Object} Sub2 - Sub2
  * @param {Number} Offset - Offset
@@ -217,7 +543,7 @@ async function getTimedTextURLs(url, langcode, database) {
  * @param {Array} options - options = ["Forward", "Reverse", "ShowOnly"]
  * @return {Promise<*>}
  */
-async function CombineDualSubs(Format = "VTT", Sub1 = {}, Sub2 = {}, Offset = 0, Tolerance = 1000, Options = ["Forward"]) {
+async function CombineDualSubs(Sub1 = { headers: {}, CSS: {}, body: [] }, Sub2 = { headers: {}, CSS: {}, body: [] }, Offset = 0, Tolerance = 1000, Options = ["Forward"]) {
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Options:${Options}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
@@ -226,93 +552,81 @@ async function CombineDualSubs(Format = "VTT", Sub1 = {}, Sub2 = {}, Offset = 0,
 	// 有序数列 用不着排序
 	//FirstSub.body.sort((x, y) => x - y);
 	//SecondSub.body.sort((x, y) => x - y);
-	const length1 = Sub1?.timedtext?.body?.p?.length ?? Sub1?.events?.length ?? Sub1?.body?.length;
-	const length2 = Sub2?.timedtext?.body?.p?.length ?? Sub2?.events?.length ?? Sub2?.body?.length;
+	const length1 = Sub1.body.length, length2 = Sub2.body.length;
 	let index0 = 0, index1 = 0, index2 = 0;
-	switch (Format) {
-		case "json3":
-			// 双指针法查找两个数组中的相同元素
-			while (index1 < length1 && index2 < length2) {
-				//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
-				const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
-				//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
-				const text1 = Sub1.events[index1]?.segs[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs[0].utf8 ?? "";
-				//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
-				if (Math.abs(timeStamp1 - timeStamp2) <= 0) {
-					index0 = Options.includes("Reverse") ? index2 : index1;
-					DualSub.events[index0].segs[0].utf8 = Options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
-					//$.log(`🚧`, `DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
-					//DualSub.body[index0].tStartMs = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
-					//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
+	// 双指针法查找两个数组中的相同元素
+	while (index1 < length1 && index2 < length2) {
+		const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp + Offset;
+		const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
+		//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+		//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+		//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+		if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+			index0 = Options.includes("Reverse") ? index2 : index1;
+			// 多行字幕交替插入
+			/*
+			if (Array.isArray(text1) && Array.isArray(text2)) {
+				let a = Options.includes("Reverse") ? text2 : text1;
+				let b = Options.includes("Reverse") ? text1 : text2;
+				let c = [];
+				let length = a.length > b.length ? a.length : b.length;
+				for (let j = 0; j < length; j++) {
+					if (a[j]) c.push(a[j]);
+					if (b[j]) c.push(b[j]);
 				}
-				if (timeStamp2 > timeStamp1) index1++
-				else if (timeStamp2 < timeStamp1) index2++
-				else index1++; index2++
-			};
-			break;
-		case "srv3":
-			// 双指针法查找两个数组中的相同元素
-			while (index1 < length1 && index2 < length2) {
-				//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
-				const timeStamp1 = parseInt(Sub1.timedtext.body.p[index1]["@t"], 10);
-				const timeStamp2 = parseInt(Sub2.timedtext.body.p[index2]["@t"], 10);
-				//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
-				if (Math.abs(timeStamp1 - timeStamp2) <= 0) {
-					index0 = Options.includes("Reverse") ? index2 : index1;
-					const text1 = Sub1.timedtext.body.p[index1]?.["#"];
-					const text2 = Sub2.timedtext.body.p[index2]?.["#"];
-					//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
-					if (text1 && text2) {
-						DualSub.timedtext.body.p[index0]["#"] = Options.includes("Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`;
-						//$.log(`🚧`, `DualSub.timedtext.body.p[index0]["#"]: ${DualSub.timedtext.body.p[index0]["#"]}`, "");
-					}
-					//DualSub.timedtext.body.p[index0]["@t"] = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
-					//DualSub.timedtext.body.p[index0].index = Options.includes("Reverse") ? index2 : index1;
-					/*
-					const sentences1 = Sub1.timedtext.body.p[index1]?.s;
-					const sentences2 = Sub2.timedtext.body.p[index1]?.s;
-					if (Array.isArray(sentences1) && Array.isArray(sentences2)) {
-						$.log(`🚧`, `sentences1: ${JSON.stringify(sentences1)}`, `sentences2: ${JSON.stringify(sentences2)}`, "");
-						sentences1[0]["@t"] = timeStamp1;
-						sentences2[0]["@t"] = timeStamp2;
-						DualSub.timedtext.body.p[index0].s = [...sentences1, ...sentences2].sort(compare("@t"));
-					} else if (sentences1 && sentences2) DualSub.timedtext.body.p[index0].s["#"] = Options.includes("Reverse") ? `${sentences2["#"]}&#x000A;${sentences1["#"]}` : `${sentences1["#"]}&#x000A;${sentences2["#"]}`;
-					*/
-				};
-				if (timeStamp2 > timeStamp1) index1++
-				else if (timeStamp2 < timeStamp1) index2++
-				else index1++; index2++
-			};
-			break;
-		case "vtt":
-			while (index1 < length1 && index2 < length2) {
-				//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
-				const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp;
-				//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
-				const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
-				//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
-				if (Math.abs(timeStamp1 - timeStamp2) <= 0) {
-					index0 = Options.includes("Reverse") ? index2 : index1;
-					DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}` : Options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
-					//$.log(`🚧`, `index0: ${index0}`, `text: ${DualSub.body[index0].text}`, "");
-					//DualSub.body[index0].timeStamp = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
-					//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
-				}
-				if (timeStamp2 > timeStamp1) index1++
-				else if (timeStamp2 < timeStamp1) index2++
-				else { index1++; index2++ }
-			};
-			break;
+				DualSub.body[index0].text = c;
+			} else 
+			*/
+			DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}` : Options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
+			//$.log(`🚧`, `index0: ${index0}`, `text: ${DualSub.body[index0].text}`, "");
+			//DualSub.body[index0].timeStamp = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
+			//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
+		}
+		if (timeStamp2 > timeStamp1) index1++
+		else if (timeStamp2 < timeStamp1) index2++
+		else { index1++; index2++ }
 	}
 	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	return DualSub;
-	/***************** function *****************/
-	function compare(p){ //这是比较函数
-		return function(m,n){
-			var a = m[p];
-			var b = n[p];
-			return a - b; //升序
-		}
+};
+
+/** 
+ * Chunk Array
+ * @author VirgilClyne
+ * @param {Array} source - source
+ * @param {Number} length - number
+ * @return {Promise<*>}
+ */
+async function chunk(source, length) {
+	$.log(`⚠ ${$.name}, Chunk Array`, "");
+    var index = 0, target = [];
+    while(index < source.length) target.push(source.slice(index, index += length));
+	//$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	return target;
+};
+
+/**
+ * Retries the given function until it succeeds given a number of retries and an interval between them. They are set
+ * by default to retry 5 times with 1sec in between. There's also a flag to make the cooldown time exponential
+ * https://gitlab.com/-/snippets/1775781
+ * @author Daniel Iñigo <danielinigobanos@gmail.com>
+ * @param {Function} fn - Returns a promise
+ * @param {Array} argsArray - args Array
+ * @param {Number} retriesLeft - Number of retries. If -1 will keep retrying
+ * @param {Number} interval - Millis between retries. If exponential set to true will be doubled each retry
+ * @param {Boolean} exponential - Flag for exponential back-off mode
+ * @return {Promise<*>}
+ */
+async function retry(fn, argsArray = [], retriesLeft = 5, interval = 1000, exponential = false) {
+	$.log(`${fn.name}`, `剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	try {
+		const val = await fn.apply(this, argsArray);
+		return val;
+	} catch (error) {
+		if (retriesLeft) {
+			await new Promise(r => setTimeout(r, interval));
+			return retry(fn, argsArray, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
+		} else throw new Error("最大重试次数");
 	}
 };
 
@@ -324,8 +638,8 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 // https://github.com/VirgilClyne/VirgilClyne/blob/main/function/URL/URLs.embedded.min.js
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
 
-// https://github.com/DualSubs/WebVTT/blob/main/WebVTT.embedded.min.js
-function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","singleLine","\n"]){this.name="WebVTT v1.8.1",this.opts=e,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.vtt=new String,this.txt=new String,this.json={headers:{},CSS:{},body:[]}}parse(e=this.vtt){const t=this.opts.includes("milliseconds")?/^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/:/^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/;let i={headers:e.match(/^(?<fileType>WEBVTT)?[^](?<Xoptions>.+[^])*/)?.groups??null,CSS:e.match(/^(?<Style>STYLE)[^](?<Boxes>.*::cue.*(\(.*\))?((\n|.)*}$)?)/m)?.groups??null,body:e.split(/\r\n\r\n|\r\r|\n\n/).map((e=>e.match(t)?.groups??""))};return i.body=i.body.filter(Boolean),i.body=i.body.map(((e,t)=>{if(e.index=t,"WEBVTT"!==i.headers?.fileType&&(e.timeLine=e.timeLine.replace(",","."),e.startTime=e.startTime.replace(",","."),e.endTime=e.endTime.replace(",",".")),this.opts.includes("timeStamp")){let t=e.startTime.replace(/(.*)/,"1970-01-01T$1Z");e.timeStamp=this.opts.includes("milliseconds")?Date.parse(t):Date.parse(t)/1e3}return e.text=e.text?.trim()??"_",this.opts.includes("singleLine")?e.text=e.text.replace(/\r\n|\r|\n/," "):this.opts.includes("multiLine")&&(e.text=e.text.split(/\r\n|\r|\n/)),e})),i}stringify(e=this.json){return[e.headers=[e.headers?.fileType||"WEBVTT",e.headers?.Xoptions||null].join(this.newLine),e.CSS=e.CSS?.Style?[e.CSS.Style,e.CSS.Boxes].join(this.newLine):null,e.body=e.body.map((e=>(Array.isArray(e.text)&&(e.text=e.text.join(this.newLine)),e=`${e.timeLine} ${e?.options??""}${this.newLine}${e.text}`))).join(this.newLine+this.newLine)].join(this.newLine+this.newLine)}}(e)}
+// https://stackoverflow.com/posts/23329386/revisions
+function byteLength(t){for(var e=t.length,n=t.length-1;n>=0;n--){var r=t.charCodeAt(n);r>127&&r<=2047?e++:r>2047&&r<=65535&&(e+=2),r>=56320&&r<=57343&&n--}return e}
 
 // refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
 // refer: https://goessner.net/download/prj/jsonxml/json2xml.js

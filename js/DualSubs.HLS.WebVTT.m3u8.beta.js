@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.3-hls-webvtt-beta");
+const $ = new Env("DualSubs v0.7.4-hls-webvtt-beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -62,10 +62,14 @@ delete $request.headers["Range"]
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
+	const { Platform, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
-		// 序列化M3U8
-		let PlayList = M3U8.parse($response.body);
+		let url = URL.parse($request.url);
+		$.log(`⚠ ${$.name}, url.path=${url.path}`);
+		// 设置类型
+		const Type = url?.params?.dualsubs || Settings.Type;
+		$.log(`🚧 ${$.name}, Type: ${Type}`, "");
+		// 处理类型
 		switch (Type) {
 			case "Official":
 				// 找缓存
@@ -94,6 +98,8 @@ delete $request.headers["Range"]
 			default:
 				break;
 		};
+		// 序列化M3U8
+		let PlayList = M3U8.parse($response.body);
 		// WebVTT.m3u8加参数
 		//$response.body = await setWebVTTm3u8($response.body, Type);
 		PlayList = PlayList.map(item => {
@@ -109,7 +115,7 @@ delete $request.headers["Range"]
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		$response.body = PlayList;
-	}
+	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
@@ -139,6 +145,13 @@ async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.[e]?.Settings||n?.[e]?.Se
  */
 async function setENV(name, url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Verify *****************/
+	const { Settings: Verify } = await getENV(name, "Verify", database);
+	/***************** Advanced *****************/
+	let { Settings: Advanced } = await getENV(name, "Advanced", database);
+	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
+	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
+	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
 	/***************** Platform *****************/
 	const Platform = /\.apple\.com/i.test(url) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(url) ? "Disney_Plus"
@@ -154,8 +167,6 @@ async function setENV(name, url, database) {
 												: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
 													: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
-	/***************** Verify *****************/
-	const { Settings: Verify } = await getENV(name, "Verify", database);
 	/***************** Settings *****************/
 	let { Settings, Caches = [], Configs } = await getENV(name, Platform, database);
 	if (Platform == "Apple") {
@@ -182,18 +193,7 @@ async function setENV(name, url, database) {
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
-	/***************** Type *****************/
-	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
-	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
-	/***************** Advanced *****************/
-	let { Settings: Advanced } = await getENV(name, "Advanced", database);
-	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
-	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
-	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
-	/***************** Cache *****************/
-	$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
-	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	return { Platform, Settings, Caches, Configs, Type, Verify, Advanced };
+	return { Platform, Verify, Advanced, Settings, Caches, Configs };
 };
 
 /**

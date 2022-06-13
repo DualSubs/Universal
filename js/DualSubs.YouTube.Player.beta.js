@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.4.0-youtube-player-beta");
+const $ = new Env("DualSubs v0.4.1-youtube-player-beta");
 const URL = new URLs();
 
 const DataBase = {
@@ -62,16 +62,16 @@ delete $request.headers["Range"]
 
 /***************** Processing *****************/
 !(async () => {
-	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
+	const { Platform, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
-		// 找缓存
-		//const Indices = await getCache(Type, Settings, Caches);
-		$.log(`🚧 ${$.name}`, `Format: ${$request.headers["Content-Type"].match(/([^\/;]+)/g)[2]}`, "");
-		switch ($request.headers["Content-Type"].match(/([^\/;]+)/g)[2]) {
+		let url = URL.parse($request.url);
+		$.log(`⚠ ${$.name}, url.path=${url.path}`);
+		// 设置格式
+		const Format = $request.headers["Content-Type"].match(/([^\/;]+)/g)[2];
+		$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
+		switch (Format) {
 			case "json":
 				let data = JSON.parse($response.body);
-				// PlayList.m3u8 URL
-				Cache.URL = url;
 				// 找节点
 				let Captions = data?.captions
 				if (Captions) { // 有基础字幕
@@ -79,7 +79,6 @@ delete $request.headers["Range"]
 					// 增补语言数据库
 					DataBase.translationLanguages = [{ "languageCode": "sq", "languageName": { "simpleText": "阿尔巴尼亚语" } }, { "languageCode": "ar", "languageName": { "simpleText": "阿拉伯语" } }, { "languageCode": "am", "languageName": { "simpleText": "阿姆哈拉语" } }, { "languageCode": "az", "languageName": { "simpleText": "阿塞拜疆语" } }, { "languageCode": "ga", "languageName": { "simpleText": "爱尔兰语" } }, { "languageCode": "et", "languageName": { "simpleText": "爱沙尼亚语" } }, { "languageCode": "or", "languageName": { "simpleText": "奥里亚语" } }, { "languageCode": "eu", "languageName": { "simpleText": "巴斯克语" } }, { "languageCode": "be", "languageName": { "simpleText": "白俄罗斯语" } }, { "languageCode": "bg", "languageName": { "simpleText": "保加利亚语" } }, { "languageCode": "is", "languageName": { "simpleText": "冰岛语" } }, { "languageCode": "pl", "languageName": { "simpleText": "波兰语" } }, { "languageCode": "bs", "languageName": { "simpleText": "波斯尼亚语" } }, { "languageCode": "fa", "languageName": { "simpleText": "波斯语" } }, { "languageCode": "tt", "languageName": { "simpleText": "鞑靼语" } }, { "languageCode": "da", "languageName": { "simpleText": "丹麦语" } }, { "languageCode": "de", "languageName": { "simpleText": "德语" } }, { "languageCode": "ru", "languageName": { "simpleText": "俄语" } }, { "languageCode": "fr", "languageName": { "simpleText": "法语" } }, { "languageCode": "fil", "languageName": { "simpleText": "菲律宾语" } }, { "languageCode": "fi", "languageName": { "simpleText": "芬兰语" } }, { "languageCode": "km", "languageName": { "simpleText": "高棉语" } }, { "languageCode": "ka", "languageName": { "simpleText": "格鲁吉亚语" } }, { "languageCode": "gu", "languageName": { "simpleText": "古吉拉特语" } }, { "languageCode": "kk", "languageName": { "simpleText": "哈萨克语" } }, { "languageCode": "ht", "languageName": { "simpleText": "海地克里奥尔语" } }, { "languageCode": "ko", "languageName": { "simpleText": "韩语" } }, { "languageCode": "ha", "languageName": { "simpleText": "豪萨语" } }, { "languageCode": "nl", "languageName": { "simpleText": "荷兰语" } }, { "languageCode": "gl", "languageName": { "simpleText": "加利西亚语" } }, { "languageCode": "ca", "languageName": { "simpleText": "加泰罗尼亚语" } }, { "languageCode": "cs", "languageName": { "simpleText": "捷克语" } }, { "languageCode": "kn", "languageName": { "simpleText": "卡纳达语" } }, { "languageCode": "ky", "languageName": { "simpleText": "柯尔克孜语" } }, { "languageCode": "xh", "languageName": { "simpleText": "科萨语" } }, { "languageCode": "co", "languageName": { "simpleText": "科西嘉语" } }, { "languageCode": "hr", "languageName": { "simpleText": "克罗地亚语" } }, { "languageCode": "ku", "languageName": { "simpleText": "库尔德语" } }, { "languageCode": "la", "languageName": { "simpleText": "拉丁语" } }, { "languageCode": "lv", "languageName": { "simpleText": "拉脱维亚语" } }, { "languageCode": "lo", "languageName": { "simpleText": "老挝语" } }, { "languageCode": "lt", "languageName": { "simpleText": "立陶宛语" } }, { "languageCode": "lb", "languageName": { "simpleText": "卢森堡语" } }, { "languageCode": "rw", "languageName": { "simpleText": "卢旺达语" } }, { "languageCode": "ro", "languageName": { "simpleText": "罗马尼亚语" } }, { "languageCode": "mt", "languageName": { "simpleText": "马耳他语" } }, { "languageCode": "mr", "languageName": { "simpleText": "马拉地语" } }, { "languageCode": "mg", "languageName": { "simpleText": "马拉加斯语" } }, { "languageCode": "ml", "languageName": { "simpleText": "马拉雅拉姆语" } }, { "languageCode": "ms", "languageName": { "simpleText": "马来语" } }, { "languageCode": "mk", "languageName": { "simpleText": "马其顿语" } }, { "languageCode": "mi", "languageName": { "simpleText": "毛利语" } }, { "languageCode": "mn", "languageName": { "simpleText": "蒙古语" } }, { "languageCode": "bn", "languageName": { "simpleText": "孟加拉语" } }, { "languageCode": "my", "languageName": { "simpleText": "缅甸语" } }, { "languageCode": "hmn", "languageName": { "simpleText": "苗语" } }, { "languageCode": "af", "languageName": { "simpleText": "南非荷兰语" } }, { "languageCode": "st", "languageName": { "simpleText": "南索托语" } }, { "languageCode": "ne", "languageName": { "simpleText": "尼泊尔语" } }, { "languageCode": "no", "languageName": { "simpleText": "挪威语" } }, { "languageCode": "pa", "languageName": { "simpleText": "旁遮普语" } }, { "languageCode": "pt", "languageName": { "simpleText": "葡萄牙语" } }, { "languageCode": "ps", "languageName": { "simpleText": "普什图语" } }, { "languageCode": "ny", "languageName": { "simpleText": "齐切瓦语" } }, { "languageCode": "ja", "languageName": { "simpleText": "日语" } }, { "languageCode": "sv", "languageName": { "simpleText": "瑞典语" } }, { "languageCode": "sm", "languageName": { "simpleText": "萨摩亚语" } }, { "languageCode": "sr", "languageName": { "simpleText": "塞尔维亚语" } }, { "languageCode": "si", "languageName": { "simpleText": "僧伽罗语" } }, { "languageCode": "sn", "languageName": { "simpleText": "绍纳语" } }, { "languageCode": "eo", "languageName": { "simpleText": "世界语" } }, { "languageCode": "sk", "languageName": { "simpleText": "斯洛伐克语" } }, { "languageCode": "sl", "languageName": { "simpleText": "斯洛文尼亚语" } }, { "languageCode": "sw", "languageName": { "simpleText": "斯瓦希里语" } }, { "languageCode": "gd", "languageName": { "simpleText": "苏格兰盖尔语" } }, { "languageCode": "ceb", "languageName": { "simpleText": "宿务语" } }, { "languageCode": "so", "languageName": { "simpleText": "索马里语" } }, { "languageCode": "tg", "languageName": { "simpleText": "塔吉克语" } }, { "languageCode": "te", "languageName": { "simpleText": "泰卢固语" } }, { "languageCode": "ta", "languageName": { "simpleText": "泰米尔语" } }, { "languageCode": "th", "languageName": { "simpleText": "泰语" } }, { "languageCode": "tr", "languageName": { "simpleText": "土耳其语" } }, { "languageCode": "tk", "languageName": { "simpleText": "土库曼语" } }, { "languageCode": "cy", "languageName": { "simpleText": "威尔士语" } }, { "languageCode": "ug", "languageName": { "simpleText": "维吾尔语" } }, { "languageCode": "ur", "languageName": { "simpleText": "乌尔都语" } }, { "languageCode": "uk", "languageName": { "simpleText": "乌克兰语" } }, { "languageCode": "uz", "languageName": { "simpleText": "乌兹别克语" } }, { "languageCode": "es", "languageName": { "simpleText": "西班牙语" } }, { "languageCode": "fy", "languageName": { "simpleText": "西弗里西亚语" } }, { "languageCode": "iw", "languageName": { "simpleText": "希伯来语" } }, { "languageCode": "el", "languageName": { "simpleText": "希腊语" } }, { "languageCode": "haw", "languageName": { "simpleText": "夏威夷语" } }, { "languageCode": "sd", "languageName": { "simpleText": "信德语" } }, { "languageCode": "hu", "languageName": { "simpleText": "匈牙利语" } }, { "languageCode": "su", "languageName": { "simpleText": "巽他语" } }, { "languageCode": "hy", "languageName": { "simpleText": "亚美尼亚语" } }, { "languageCode": "ig", "languageName": { "simpleText": "伊博语" } }, { "languageCode": "it", "languageName": { "simpleText": "意大利语" } }, { "languageCode": "yi", "languageName": { "simpleText": "意第绪语" } }, { "languageCode": "hi", "languageName": { "simpleText": "印地语" } }, { "languageCode": "id", "languageName": { "simpleText": "印度尼西亚语" } }, { "languageCode": "en", "languageName": { "simpleText": "英语" } }, { "languageCode": "yo", "languageName": { "simpleText": "约鲁巴语" } }, { "languageCode": "vi", "languageName": { "simpleText": "越南语" } }, { "languageCode": "jv", "languageName": { "simpleText": "爪哇语" } }, { "languageCode": "zh-Hant", "languageName": { "simpleText": "中文（繁体）" } }, { "languageCode": "zh-Hans", "languageName": { "simpleText": "中文（简体）" } }, { "languageCode": "zu", "languageName": { "simpleText": "祖鲁语" } }];
 					if (Captions.playerCaptionsRenderer) {
-						Cache.baseURL = Captions?.playerCaptionsRenderer?.baseUrl; // 基础字幕URL
 						Captions.playerCaptionsRenderer.visibility = "ON" // 字幕选项按钮可见
 						Captions.playerCaptionsRenderer.showAutoCaptions = true; // 包含自动生成的字幕
 					}
@@ -92,37 +91,23 @@ delete $request.headers["Range"]
 								caption.isTranslatable = true
 								return caption
 							});
-							/*
-							// 查询字幕选项
-							// 提取数据 用遍历语法可以兼容自定义数量的语言查询
-							for await (var language of Settings.Languages) {
-								Cache[language] = await getCaptions(Platform, Cache, Tracklist, language);
-								$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
-							};
-							$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-							// 兼容性判断
-							const standard = await isStandard(Platform, url, headers);
-							// 写入选项
-							Tracklist = await setOptions(Platform, Tracklist, Cache[Settings.Languages[0]], Cache[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
-							*/
 						};
 						// 加翻译语言
 						if (Tracklist?.translationLanguages) {
 							Tracklist.translationLanguages = Object.assign(Tracklist.translationLanguages, DataBase.translationLanguages);
 						} else Tracklist.translationLanguages = DataBase.translationLanguages;
 					};
-					// 写入缓存
-					//let newCaches = Caches;
-					//newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-					//$.setjson(newCaches, `@DualSubs.Caches.${Platform}`);
 				};
 				$response.body = JSON.stringify(data);
-		}
+				break;
+			default:
+				break;
+		};
 	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX()) $.done({ body: $response.body })
+		if ($.isQuanX()) $.done({ headers: $response.headers, body: $response.body })
 		else $.done($response)
 	})
 
@@ -148,6 +133,13 @@ async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.[e]?.Settings||n?.[e]?.Se
  */
 async function setENV(name, url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Verify *****************/
+	const { Settings: Verify } = await getENV(name, "Verify", database);
+	/***************** Advanced *****************/
+	let { Settings: Advanced } = await getENV(name, "Advanced", database);
+	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
+	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
+	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
 	/***************** Platform *****************/
 	const Platform = /\.apple\.com/i.test(url) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(url) ? "Disney_Plus"
@@ -163,8 +155,6 @@ async function setENV(name, url, database) {
 												: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
 													: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
-	/***************** Verify *****************/
-	const { Settings: Verify } = await getENV(name, "Verify", database);
 	/***************** Settings *****************/
 	let { Settings, Caches = [], Configs } = await getENV(name, Platform, database);
 	if (Platform == "Apple") {
@@ -191,213 +181,7 @@ async function setENV(name, url, database) {
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
-	/***************** Type *****************/
-	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
-	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
-	/***************** Advanced *****************/
-	let { Settings: Advanced } = await getENV(name, "Advanced", database);
-	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
-	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
-	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
-	/***************** Cache *****************/
-	$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
-	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	return { Platform, Settings, Caches, Configs, Type, Verify, Advanced };
-};
-
-/**
- * Get Cache
- * @author VirgilClyne
- * @param {String} type - type
- * @param {Object} settings - settings
- * @param {Object} cache - cache
- * @return {Promise<*>}
- */
-async function getCache(type, settings, caches = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let Indices = {};
-	Indices.Index = await getIndex(settings, caches);
-	if (Indices.Index !== -1) {
-		for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
-		if (type == "Official") {
-			// 修正缓存
-			if (Indices[settings.Languages[0]] !== -1) {
-				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-					if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
-				});
-				if (Indices[settings.Languages[1]] == -1) {
-					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-						if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
-					});
-				};
-			};
-		};
-	}
-	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
-	return Indices
-	/***************** Fuctions *****************/
-	async function getIndex(settings, caches) {
-		return caches.findIndex(item => {
-			let URLs = [item?.URL];
-			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
-			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
-		})
-	};
-	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URL, item?.VTTs] }
-};
-
-/**
- * Set Cache
- * @author VirgilClyne
- * @param {Number} index - index
- * @param {Object} target - target
- * @param {Object} sources - sources
- * @param {Number} num - num
- * @return {Promise<*>}
- */
-async function setCache(index = -1, target = {}, sources = {}, num = 1) {
-	$.log(`⚠ ${$.name}, Set Cache`, "");
-	// 刷新播放记录，所以始终置顶
-	if (index !== -1) delete target[index] // 删除旧记录
-	target.unshift(sources) // 头部插入缓存
-	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
-	return target
-};
-
-// Function 4
-// Get Captions Data
-async function getCaptions(platform = "", cache = {}, tracklist = {}, langCode = "") {
-	$.log(`⚠ ${$.name}, Get Captions Data`, "");
-	// 自动语言转换
-	let langcodes = await switchLangCode(platform, langCode, DataBase);
-	//查询是否有符合语言的字幕
-	let captionTracks = [];
-	for await (var langcode of langcodes) {
-		captionTracks = tracklist.captionTracks.filter(item => (item?.languageCode == langcode));
-		$.log(`🚧 ${$.name}, captionTracks`, JSON.stringify(captionTracks), "");
-		if (captionTracks.length !== 0) {
-			captionTracks = await Promise.all(captionTracks.map(async captionTrack => await setCaption(cache, captionTrack, langcode)));
-			break;
-		} else captionTracks = [await setCaption(cache, {}, langcodes[0])];
-	};
-	$.log(`🎉 ${$.name}, Get Captions Data`, `captionTracks: ${JSON.stringify(captionTracks)}`, "");
-	return captionTracks
-
-	/***************** Fuctions *****************/
-	// Function 4.1
-	// Switch Language Code
-	async function switchLangCode(platform = "", langCode = "", database) {
-		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
-		// 自动语言转换
-		let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
-			: (langCode == "YUE") ? ["YUE", "YUE-HK"] // 粤语（自动）
-				: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
-					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
-						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
-							: [langCode]
-		langcodes = langcodes.map(langcode => database?.Languages?.[platform]?.[langcode]);
-		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
-		return langcodes
-	};
-	// Function 4.2
-	// Set Captions Data
-	async function setCaption(cache = {}, captionTrack = {}, langCode = "") {
-		$.log(`⚠ ${$.name}, Set captions Data`, "");
-		let Caption = {
-			"fake": (captionTrack == {}) ? true : false,
-			"baseUrl": captionTrack?.baseUrl ?? `${cache.baseURL}&lang=${langCode}`,
-			"name": {
-				"simpleText": captionTrack?.Name?.simpleText ?? langCode
-			},
-			"vssId": captionTrack?.vssId ?? `.${langCode}`,
-			"languageCode": langCode,
-			"isTranslatable": true
-		};
-		if (DataBase.translationLanguages.findIndex(item => item.languageCode == langCode) !== -1) Caption.name.simpleText = DataBase?.translationLanguages?.[DataBase.translationLanguages.findIndex(item => item.languageCode == langCode)].languageName?.simpleText
-		if (captionTrack.kind) Caption.kind = captionTrack?.kind ?? "asr";
-		$.log(`🎉 ${$.name}, Set Captions Data`, `Caption: ${JSON.stringify(Caption)}`, "");
-		return Caption
-	};
-};
-
-// Function 5
-// Set DualSubs Subtitle Options
-async function setOptions(Platform = "", Tracklist = {}, Languages1 = [], Languages2 = [], Types = [], Standard = true, Type = "") {
-	// 兼容性设置
-	Types = (Standard == true) ? Types : [Type];
-	$.log(`⚠ ${$.name}, Set DualSubs Subtitle Options`, `Types: ${Types}`, "");
-	for await (var obj1 of Languages1) {
-		for await (var obj2 of Languages2) {
-			Options = await getOptions(Platform, obj1, obj2, Types, Standard);
-			if (Options.length !== 0) {
-				// 插入字幕选项
-				Tracklist.captionTracks = Tracklist.captionTracks.concat(Options);
-			};
-		};
-	};
-	return Tracklist
-
-	/***************** Fuctions *****************/
-	// Function 5.1
-	// Get DualSubs Subtitle Options
-	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
-		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
-		return types.map(type => {
-			// 复制此语言选项
-			let newCaption = (!obj1?.fake) ? JSON.parse(JSON.stringify(obj1))
-				: JSON.parse(JSON.stringify(obj2))
-			// 删除标记
-			delete newCaption.fake
-			// 修改名称
-			newCaption.name.simpleText = `${obj1.name.simpleText}`
-			// 修改vssId
-			//newCaption.vssId = `${obj1.vssId} ${obj2.vssId} ${type}`
-			newCaption.vssId = `${obj1.vssId}`
-			// 修改语言代码
-			//newCaption.languageCode = `${obj1.languageCode} ${obj2.languageCode} ${type}`
-			newCaption.languageCode = `${obj1.languageCode}`
-			// 修改链接
-			newCaption.baseUrl = (newCaption.baseUrl.includes("?")) ? `${newCaption.baseUrl}&dualsubs=${type}`
-				: `${newCaption.baseUrl}?dualsubs=${type}`
-			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newCaption: ${JSON.stringify(newCaption)}`, "");
-			return newCaption
-		})
-	};
-};
-
-/**
- * is Standard?
- * Determine whether Standard Media Player
- * @author VirgilClyne
- * @param {String} url - Request URL
- * @param {Object} headers - Request Headers
- * @param {String} platform - Steaming Media Platform
- * @return {Promise<*>}
- */
- async function isStandard(url, headers, platform) {
-	$.log(`⚠ ${$.name}, is Standard`, "");
-	let _url = URL.parse(url);
-	let standard = true;
-	if (platform == "HBO_Max") {
-		if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
-		else if (headers?.["X-Hbo-Device-Name"]?.includes("ios")) standard = false;
-		else if (_url.params["device-code"] === "iphone") standard = false;
-	} else if (platform == "Peacock_TV") {
-		if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("PeacockMobile")) standard = false;
-	} else if (platform == "Fubo_TV") {
-		if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
-	}
-	$.log(`🎉 ${$.name}, is Standard`, `standard: ${standard}`, "");
-	return standard
+	return { Platform, Verify, Advanced, Settings, Caches, Configs };
 };
 
 /***************** Env *****************/

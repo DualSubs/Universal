@@ -69,14 +69,14 @@ delete $request.headers["Range"]
 		switch (Type) {
 			case "Official":
 				// 找缓存
-				const Indices = await getCache(Type, Settings, Caches);
+				const Indices = await getCache($request.url, Type, Settings, Caches);
 				let Cache = Caches?.[Indices.Index] || {};
 				if (Indices.Index !== -1) {
 					// 创建缓存
 					// 获取VTT字幕地址数组
 					for await (var language of Settings.Languages) {
 						for await (var data of Cache[language]) {
-							data.VTTs = await getVTTs(Platform, data.URL);
+							data.VTTs = await getVTTs(data.URL, $request.headers, Platform);
 						}
 					}
 					$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
@@ -199,17 +199,18 @@ async function setENV(name, url, database) {
 /**
  * Get Cache
  * @author VirgilClyne
+ * @param {String} url - Request URL
  * @param {String} type - type
  * @param {Object} settings - settings
  * @param {Object} cache - cache
  * @return {Promise<*>}
  */
-async function getCache(type, settings, caches = {}) {
+async function getCache(url, type, settings, caches = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = {};
-	Indices.Index = await getIndex(settings, caches);
+	Indices.Index = await getIndex(url, settings, caches);
 	if (Indices.Index !== -1) {
-		for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+		for await (var language of settings.Languages) Indices[language] = await getDataIndex(url, Indices.Index, language)
 		if (type == "Official") {
 			// 修正缓存
 			if (Indices[settings.Languages[0]] !== -1) {
@@ -227,15 +228,15 @@ async function getCache(type, settings, caches = {}) {
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return Indices
 	/***************** Fuctions *****************/
-	async function getIndex(settings, caches) {
+	async function getIndex(url, settings, caches) {
 		return caches.findIndex(item => {
 			let URLs = [item?.URL];
 			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => $request.url.includes(URL || null));
+			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
 	};
-	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => $request.url.includes(URL || null))); };
+	async function getDataIndex(url, index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
 	function getURIs(item) { return [item?.URL, item?.VTTs] }
 };
 
@@ -261,13 +262,14 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 /**
  * Get Subtitle *.vtt URLs
  * @author VirgilClyne
- * @param {String} platform - index
- * @param {String} url - url
+ * @param {String} url - VTT URL
+ * @param {String} headers - Request Headers
+ * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-async function getVTTs(platform, url) {
+async function getVTTs(url, headers, platform) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
-	if (url) return await $.http.get({ url: url, headers: $request.headers }).then((response) => {
+	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
 		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let PlayList = M3U8.parse(response.body);
 		// 筛选字幕

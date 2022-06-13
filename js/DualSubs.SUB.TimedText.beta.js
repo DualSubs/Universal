@@ -185,7 +185,7 @@ async function setENV(name, url, database) {
 /**
  * Get TimedText URLs
  * @author VirgilClyne
- * @param {Object} url - url
+ * @param {Object} url - Parsed Request URL
  * @param {String} langcode - langcode
  * @param {Object} database - database
  * @return {Promise<*>}

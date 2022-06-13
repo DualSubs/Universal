@@ -73,19 +73,19 @@ delete $request.headers["Range"]
 			case "Official":
 				$.log(`🚧 ${$.name}`, "官方字幕", "");
 				// 找缓存
-				const Indices = await getCache(Type, Settings, Caches);
+				const Indices = await getCache($request.url, Type, Settings, Caches);
 				let Cache = Caches?.[Indices.Index] || {};
 				let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
 				else if (Platform == "Apple") {
 					let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
-					let requests = await getOfficialRequest(Platform, $request.url, VTTs, oVTTs);
+					let requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
 					for await (let request of requests) {
 						SecondSub = await getWebVTT(request);
 						DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 					};
 				} else {
-					let request = await getOfficialRequest(Platform, $request.url, VTTs);
+					let request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
 					SecondSub = await getWebVTT(request);
 					DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
 				}
@@ -110,7 +110,7 @@ delete $request.headers["Range"]
 			default:
 				$.log(`🚧 ${$.name}`, `翻译字幕`, "");
 				if (Platform == "YouTube") {
-					const { Format, Orig_Request, Tran_Request } = await getTimedTextRequest($request.url, Settings.Language);
+					const { Format, Orig_Request, Tran_Request } = await getTimedTextRequest($request.url, $request.headers, Settings.Language);
 					// 获取序列化字幕
 					if (Format == "vtt") {
 						OriginSub = await getWebVTT(Orig_Request);
@@ -236,17 +236,18 @@ async function setENV(name, url, database) {
 /**
  * Get Cache
  * @author VirgilClyne
+ * @param {String} url - Request URL
  * @param {String} type - type
  * @param {Object} settings - settings
  * @param {Object} cache - cache
  * @return {Promise<*>}
  */
-async function getCache(type, settings, caches = {}) {
+async function getCache(url, type, settings, caches = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = {};
-	Indices.Index = await getIndex(settings, caches);
+	Indices.Index = await getIndex(url, settings, caches);
 	if (Indices.Index !== -1) {
-		for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+		for await (var language of settings.Languages) Indices[language] = await getDataIndex(url, Indices.Index, language)
 		if (type == "Official") {
 			// 修正缓存
 			if (Indices[settings.Languages[0]] !== -1) {
@@ -264,15 +265,15 @@ async function getCache(type, settings, caches = {}) {
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return Indices
 	/***************** Fuctions *****************/
-	async function getIndex(settings, caches) {
+	async function getIndex(url, settings, caches) {
 		return caches.findIndex(item => {
 			let URLs = [item?.URL];
 			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => $request.url.includes(URL || null));
+			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
 	};
-	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => $request.url.includes(URL || null))); };
+	async function getDataIndex(url, index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
 	function getURIs(item) { return [item?.URL, item?.VTTs] }
 };
 
@@ -302,21 +303,21 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
  * @param {String} langcode - langcode
  * @return {Promise<*>}
  */
-async function getTimedTextRequest(url, langcode) {
+async function getTimedTextRequest(url, headers, langcode) {
 	$.log(`⚠ ${$.name}, Get TimedText Request`, `url: ${url}`, `langcode: ${langcode}`, "");
 	// 创建链接请求
-	let request = { "url": url, "headers": $request.headers };
+	let request = { "url": url, "headers": headers };
 	request.url = URL.parse(request.url);
 	const Format = request.url.params?.format || request.url.params?.fmt
 	$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
 	if (request.url.params?.tlang) { // 已选
-		Tran_Request = { "url": URL.stringify(request.url), "headers": $request.headers };
+		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
 		delete request.url.params?.tlang // 原字幕
-		Orig_Request = { "url": URL.stringify(request.url), "headers": $request.headers };
+		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
 	} else { // 未选
-		Orig_Request = { "url": URL.stringify(request.url), "headers": $request.headers };
+		Orig_Request = { "url": URL.stringify(request.url), "headers": headers };
 		request.url.params.tlang = langcode; // 翻译字幕
-		Tran_Request = { "url": URL.stringify(request.url), "headers": $request.headers };
+		Tran_Request = { "url": URL.stringify(request.url), "headers": headers };
 	};
 	$.log(`🚧 ${$.name}, Get TimedText Request`, `Orig_Request: ${JSON.stringify(Orig_Request)}`, "");
 	$.log(`🚧 ${$.name}, Get TimedText Request`, `Tran_Request: ${JSON.stringify(Tran_Request)}`, "");
@@ -326,11 +327,13 @@ async function getTimedTextRequest(url, langcode) {
 /**
  * Get Official Request
  * @author VirgilClyne
- * @param {String} platform - platform
+ * @param {String} url - Request URL
+ * @param {String} headers - Request Headers
+ * @param {String} platform - Steaming Media Platform
  * @param {Array} VTTs - VTTs
  * @return {Promise<*>}
  */
-async function getOfficialRequest(platform, url, VTTs = [], oVTTs = []) {
+async function getOfficialRequest(url, headers, platform, VTTs = [], oVTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, "");
 	$.log(`⚠ ${$.name}, Get Official Request`, `VTTs: ${VTTs}`, "");
 	let fileName = (platform == "Apple") ? url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple 片段分型序号不同
@@ -351,7 +354,7 @@ async function getOfficialRequest(platform, url, VTTs = [], oVTTs = []) {
 		let requests = nearlyVTTs.map(VTT => {
 			return {
 				"url": VTT,
-				"headers": $request.headers,
+				"headers": headers,
 			}
 		});
 		$.log(`🚧 ${$.name}, Get Official Request`, `requests: ${JSON.stringify(requests)}`, "");
@@ -359,7 +362,7 @@ async function getOfficialRequest(platform, url, VTTs = [], oVTTs = []) {
 	} else {
 		let request = {
 			"url": VTTs.find(item => item?.includes(fileName)) || VTTs[0],
-			"headers": $request.headers,
+			"headers": headers,
 		};
 		$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");
 		return request

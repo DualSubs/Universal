@@ -65,7 +65,7 @@ delete $request.headers["Range"]
 	const { Platform, Settings, Type, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
 		// 找缓存
-		const Indices = await getCache(Type, Settings, Caches);
+		const Indices = await getCache($request.url, Type, Settings, Caches);
 		let Cache = Caches?.[Indices.Index] || {};
 		// 序列化M3U8
 		let PlayList = M3U8.parse($response.body);
@@ -73,7 +73,7 @@ delete $request.headers["Range"]
 		Cache.URL = $request.url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
 		for await (var language of Settings.Languages) {
-			Cache[language] = await getMEDIA(PlayList, "SUBTITLES", language, Configs);
+			Cache[language] = await getMEDIA($request.url, PlayList, "SUBTITLES", language, Configs);
 			//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		};
 		// 写入缓存
@@ -177,17 +177,18 @@ async function setENV(name, url, database) {
 /**
  * Get Cache
  * @author VirgilClyne
+ * @param {String} url - Request URL
  * @param {String} type - type
  * @param {Object} settings - settings
  * @param {Object} cache - cache
  * @return {Promise<*>}
  */
-async function getCache(type, settings, caches = {}) {
+async function getCache(url, type, settings, caches = {}) {
 	$.log(`⚠ ${$.name}, Get Cache`, "");
 	let Indices = {};
-	Indices.Index = await getIndex(settings, caches);
+	Indices.Index = await getIndex(url, settings, caches);
 	if (Indices.Index !== -1) {
-		for await (var language of settings.Languages) Indices[language] = await getDataIndex(Indices.Index, language)
+		for await (var language of settings.Languages) Indices[language] = await getDataIndex(url, Indices.Index, language)
 		if (type == "Official") {
 			// 修正缓存
 			if (Indices[settings.Languages[0]] !== -1) {
@@ -205,15 +206,15 @@ async function getCache(type, settings, caches = {}) {
 	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
 	return Indices
 	/***************** Fuctions *****************/
-	async function getIndex(settings, caches) {
+	async function getIndex(url, settings, caches) {
 		return caches.findIndex(item => {
 			let URLs = [item?.URL];
 			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
 			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => $request.url.includes(URL || null));
+			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
 		})
 	};
-	async function getDataIndex(index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => $request.url.includes(URL || null))); };
+	async function getDataIndex(url, index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
 	function getURIs(item) { return [item?.URL, item?.VTTs] }
 };
 
@@ -239,13 +240,14 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 /**
  * Get EXT-X-MEDIA Data
  * @author VirgilClyne
- * @param {String} platform - platform
+ * @param {String} url - Request URL
+ * @param {String} platform - Steaming Media Platform
  * @param {Object} json - json
  * @param {String} type - type
  * @param {String} langCode - langCode
  * @return {Promise<*>}
  */
-async function getMEDIA(json = {}, type = "", langCode = "", database) {
+async function getMEDIA(url = "", json = {}, type = "", langCode = "", database) {
 	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
 	// 自动语言转换
 	let langcodes = await switchLangCode(langCode, database);
@@ -254,9 +256,9 @@ async function getMEDIA(json = {}, type = "", langCode = "", database) {
 	for await (var langcode of langcodes) {
 		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
 		if (datas.length !== 0) {
-			datas = await Promise.all(datas.map(async data => await setMEDIA(data, langcode)));
+			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcode)));
 			break;
-		} else datas = [await setMEDIA({}, langcodes[0])];
+		} else datas = [await setMEDIA(url, {}, langcodes[0])];
 	};
 	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
 	return datas
@@ -281,12 +283,12 @@ async function getMEDIA(json = {}, type = "", langCode = "", database) {
 	// Get Absolute Path
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 	// Set EXT-X-MEDIA Data
-	async function setMEDIA(data = {}, langCode = "") {
+	async function setMEDIA(url, data = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
 		let Data = { ...data };
 		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
 		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
-		Data.URL = aPath($request.url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
 		$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
 		return Data
 	};
@@ -402,12 +404,12 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
  * is Standard?
  * Determine whether Standard Media Player
  * @author VirgilClyne
- * @param {String} platform - platform
- * @param {String} url - url
- * @param {Object} headers - headers
+ * @param {String} url - Request URL
+ * @param {Object} headers - Request Headers
+ * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-async function isStandard(platform, url, headers) {
+async function isStandard(url, headers, platform) {
 	$.log(`⚠ ${$.name}, is Standard`, "");
 	let _url = URL.parse(url);
 	let standard = true;
@@ -429,6 +431,7 @@ async function isStandard(platform, url, headers) {
 	$.log(`🎉 ${$.name}, is Standard`, `standard: ${standard}`, "");
 	return standard
 };
+
 /***************** Env *****************/
 // prettier-ignore
 // https://github.com/chavyleung/scripts/blob/master/Env.min.js

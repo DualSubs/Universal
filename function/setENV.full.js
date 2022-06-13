@@ -1,3 +1,4 @@
+
 /**
  * Set Environment Variables
  * @author VirgilClyne
@@ -8,6 +9,13 @@
  */
 async function setENV(name, url, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	/***************** Verify *****************/
+	const { Settings: Verify } = await getENV(name, "Verify", database);
+	/***************** Advanced *****************/
+	let { Settings: Advanced } = await getENV(name, "Advanced", database);
+	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
+	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
+	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
 	/***************** Platform *****************/
 	const Platform = /\.apple\.com/i.test(url) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(url) ? "Disney_Plus"
@@ -18,14 +26,13 @@ async function setENV(name, url, database) {
 							: /dplus-ph-/i.test(url) ? "Discovery_Plus_Ph"
 								: /\.peacocktv\.com/i.test(url) ? "Peacock_TV"
 									: /\.uplynk\.com/i.test(url) ? "Discovery_Plus"
-										: /\.youtube\.com/i.test(url) ? "YouTube"
-											: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
-												: "Universal"
+										: /\.fubo\.tv/i.test(url) ? "Fubo_TV"
+											: /\.youtube\.com/i.test(url) ? "YouTube"
+												: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+													: "Universal"
 	$.log(`🚧 ${$.name}, Set Environment Variables`, `Platform: ${Platform}`, "");
-	/***************** Verify *****************/
-	const { Settings: Verify } = await getENV(name, "Verify", database);
 	/***************** Settings *****************/
-	let { Settings, Caches = [], Config } = await getENV(name, Platform, database);
+	let { Settings, Caches = [], Configs } = await getENV(name, Platform, database);
 	if (Platform == "Apple") {
 		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
 			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
@@ -50,16 +57,5 @@ async function setENV(name, url, database) {
 	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
-	/***************** Type *****************/
-	const Type = url.match(/[&\?]dualsubs=(\w+)$/)?.[1] || Settings.Type
-	$.log(`🚧 ${$.name}, Set Environment Variables`, `Type: ${Type}`, "");
-	/***************** Advanced *****************/
-	let { Settings: Advanced } = await getENV(name, "Advanced", database);
-	Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
-	Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
-	Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
-	/***************** Cache *****************/
-	$.log(`🚧 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${Caches}`, "");
-	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches类型: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	return { Platform, Settings, Caches, Config, Type, Verify, Advanced };
+	return { Platform, Verify, Advanced, Settings, Caches, Configs };
 };

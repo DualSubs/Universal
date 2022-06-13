@@ -77,7 +77,7 @@ delete $request.headers["Range"]
 		// PlayList.m3u8 URL
 		Cache.URL = $request.url;
 		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
-		for await (var language of Settings.Languages) {
+		for await (let language of Settings.Languages) {
 			Cache[language] = await getMEDIA($request.url, PlayList, "SUBTITLES", language, Configs);
 			//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 		};
@@ -252,8 +252,8 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 	let langcodes = await switchLangCode(langCode, database);
 	//查询是否有符合语言的字幕
 	let datas = [];
-	for await (var langcode of langcodes) {
-		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE == type && item?.OPTION?.LANGUAGE == langcode));
+	for await (let langcode of langcodes) {
+		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === langcode.toLowerCase()));
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcode)));
 			break;

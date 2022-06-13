@@ -69,10 +69,10 @@ delete $request.headers["Range"]
 		// 设置类型
 		const Type = url?.params?.dualsubs || Settings.Type;
 		$.log(`🚧 ${$.name}, Type: ${Type}`, "");
-		// 创建字幕JSON
+		// 创建字幕Object
 		let OriginSub = VTT.parse($response.body);
 		let SecondSub = {};
-		// 创建双语字幕JSON
+		// 创建双语字幕Object
 		let DualSub = {};
 		// 处理类型
 		switch (Type) {

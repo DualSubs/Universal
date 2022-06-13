@@ -67,36 +67,41 @@ delete $request.headers["Range"]
 	if (Settings.Switch) {
 		let url = URL.parse($request.url);
 		$.log(`⚠ ${$.name}, url.path=${url.path}`);
-		if (url.params?.kind !== "asr") {
-			// 设置格式
-			const Format = url.params?.format || url.params?.fmt;
-			$.log(`🚧 ${$.name}, Format: ${Format}`, "");
-			// 创建字幕Object
-			let { OriginSub, SecondSub } = await getTimedText(url, $request.headers, Settings.Language, Configs);
-			// 创建双语字幕Object
-			let DualSub = {};
-			// 处理格式
-			switch (Format) {
-				case "json3":
-					OriginSub = JSON.parse(OriginSub);
-					SecondSub = JSON.parse(SecondSub);
-					DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-					$response.body = JSON.stringify(DualSub);
-					break;
-				case "srv3":
-					OriginSub = XML.parse(OriginSub);
-					SecondSub = XML.parse(SecondSub);
-					DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-					$response.body = XML.stringify(DualSub);
-					break;
-				case "vtt":
-					OriginSub = VTT.parse(OriginSub);
-					SecondSub = VTT.parse(SecondSub);
-					DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-					$response.body = VTT.stringify(DualSub);
-				default:
-					break;
-			};
+		switch (url.params?.kind) {
+			case "asr":
+				break;
+			case "captions":
+			default:
+				// 设置格式
+				const Format = url.params?.format || url.params?.fmt;
+				$.log(`🚧 ${$.name}, Format: ${Format}`, "");
+				// 创建字幕Object
+				let { OriginSub, SecondSub } = await getTimedText(url, $request.headers, Settings.Language, Configs);
+				// 创建双语字幕Object
+				let DualSub = {};
+				// 处理格式
+				switch (Format) {
+					case "json3":
+						OriginSub = JSON.parse(OriginSub);
+						SecondSub = JSON.parse(SecondSub);
+						DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+						$response.body = JSON.stringify(DualSub);
+						break;
+					case "srv3":
+						OriginSub = XML.parse(OriginSub);
+						SecondSub = XML.parse(SecondSub);
+						DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+						$response.body = XML.stringify(DualSub);
+						break;
+					case "vtt":
+						OriginSub = VTT.parse(OriginSub);
+						SecondSub = VTT.parse(SecondSub);
+						DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+						$response.body = VTT.stringify(DualSub);
+					default:
+						break;
+				};
+				break;
 		}
 	};
 })()

@@ -71,12 +71,9 @@ delete $request.headers["Range"]
 			// 设置格式
 			const Format = url?.params?.dualsubs || Settings.Type;
 			$.log(`🚧 ${$.name}, Format: ${Format}`, "");
-			// 设置URL
-			const { Orig_URL, Tran_URL } = await getTimedTextURLs(url, Settings.Language, Configs);
-			// 创建字幕JSON
-			let OriginSub = await $.http.get({ "url": Orig_URL, "headers": $request.headers }).then(response => response.body);
-			let SecondSub = await $.http.get({ "url": Tran_URL, "headers": $request.headers }).then(response => response.body);
-			// 创建双语字幕JSON
+			// 创建字幕Object
+			let { OriginSub, SecondSub } = await getTimedText(url, $request.headers, Settings.Language, Configs);
+			// 创建双语字幕Object
 			let DualSub = {};
 			// 处理格式
 			switch (Format) {
@@ -183,29 +180,29 @@ async function setENV(name, url, database) {
 };
 
 /**
- * Get TimedText URLs
+ * Get TimedText
  * @author VirgilClyne
  * @param {Object} url - Parsed Request URL
+ * @param {Object} headers - Request Headers
  * @param {String} langcode - langcode
  * @param {Object} database - database
  * @return {Promise<*>}
  */
-async function getTimedTextURLs(url, langcode, database) {
+async function getTimedText(url, headers, langcode, database) {
 	$.log(`⚠ ${$.name}, Get TimedText URLs`, `url: ${JSON.stringify(url)}`, `langcode: ${langcode}`, "");
-	// 创建链接URL
-	let URLs = [];
+	// 创建字幕Object
+	let OriginSub = {};
+	let SecondSub = {};
 	if (url.params?.tlang) { // 已选
-		URLs[1] = URL.stringify(url);
+		SecondSub = $response.body;
 		delete url.params?.tlang // 原字幕
-		URLs[0] = URL.stringify(url);
+		OriginSub = await $.http.get({ "url": URL.stringify(url), "headers": headers }).then(response => response.body);
 	} else { // 未选
-		URLs[0] = URL.stringify(url);
+		OriginSub = $response.body;
 		url.params.tlang = database.Languages[langcode]; // 翻译字幕
-		URLs[1] = URL.stringify(url);
+		SecondSub = await $.http.get({ "url": URL.stringify(url), "headers": headers }).then(response => response.body);
 	};
-	$.log(`🚧 ${$.name}, Get TimedText URLs`, `Orig_URL: ${URLs[0]}`, "");
-	$.log(`🚧 ${$.name}, Get TimedText URLs`, `Tran_URL: ${URLs[1]}`, "");
-	return { Orig_URL: URLs[0], Tran_URL: URLs[1]};
+	return { OriginSub, SecondSub };
 };
 
 /** 

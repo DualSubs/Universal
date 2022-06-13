@@ -89,6 +89,25 @@ delete $request.headers["Range"]
 			case "DeepL":
 			default:
 				$.log(`🚧 ${$.name}`, `翻译字幕`, "");
+				DualSub = OriginSub;
+				if (Verify?.[Type]?.Method == "Row") { //逐行翻译
+					DualSub.tt.body.div.p = await Promise.all(DualSub.tt.body.div.p.map(async item => {
+						let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+						item.text = await combineText(item.text, text2[0], Settings.Position);
+						return item
+					}));
+				} else { // Part 逐段翻译
+					let Full = await Promise.all(DualSub.body.map(async item => item.text));
+					let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
+					let Parts = await chunk(Full, length);
+					Parts = await Promise.all(Parts.map(async Part => {
+						return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+					})).then(parts => parts.flat(Infinity));
+					DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
+						item.text = await combineText(item.text, Parts[i], Settings.Position);
+						return item
+					}));
+				};
 				break;
 		};
 		//$response.body = XML.stringify(DualSub);

@@ -58,10 +58,13 @@ DualSubs.Fubo_TV.HLS.Main.m3u8 = type=http-response, pattern=^https?:\/\/.*-vod\
 DualSubs.Fubo_TV.HLS.WebVTT.m3u8 = type=http-response, pattern=^https?:\/\/.*-vod\.fubo\.tv\/(.*)\/manifests\/subtitles\/(.*)\/media\.m3u8(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.WebVTT.m3u8.beta.js
 DualSubs.Fubo_TV.SUB.WebVTT = type=http-response, pattern=^https?:\/\/.*-vod\.fubo\.tv\/(.*)\/manifests\/subtitles\/(.*)\.vtt(\?.*dualsubs=\w+)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
 
+DualSubs.TED.HLS.Main.m3u8 = type=http-response, pattern=^https?:\/\/hls\.ted\.com\/(.*)\/manifest\.m3u8(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.Main.m3u8.beta.js
+DualSubs.TED.HLS.WebVTT.m3u8 = type=http-response, pattern=^https?:\/\/hls\.ted\.com\/(.*)\/subtitles\/(.*)\.m3u8(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.WebVTT.m3u8.beta.js
+DualSubs.TED.SUB.WebVTT = type=http-response, pattern=^https?:\/\/hls\.ted\.com\/(.*)\/subtitles\/(.*)\.vtt(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
+
 DualSubs.BBC.HLS.Main.m3u8 = type=http-response, pattern=^https?:\/\/vod-hls-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/(.*)_hls_master\.m3u8(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.HLS.Main.m3u8.beta.js
-DualSubs.BBC.SUB.WebVTT = type=http-response, pattern=^https?:\/\/vod-sub-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.*)\.cc\.vtt(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
-DualSubs.BBC.SUB.TTML = type=http-response, pattern=^https?:\/\/vod-sub-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.*)\.xml(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.XML.beta.js
-DualSubs.BBC.SUB.TTML = type=http-response, pattern=^https?:\/\/vod-sub-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.*)\.cc\.xml(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.XML.beta.js
+DualSubs.BBC.SUB.TTML = type=http-response, pattern=^https?:\/\/vod-sub-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.*)(\.cc)?\.xml(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.TTML.beta.js
+
 DualSubs.Britbox.SUB.WebVTT = type=http-response, pattern=^https?:\/\/api\.britbox\.com\/v1\/subtitles(\?.*)?$, requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
 
 [MITM]

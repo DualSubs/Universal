@@ -8,7 +8,7 @@
 	"apps": [
 		{
 			"id": "DualSubs.Universal.beta",
-			"name": "DualSubs: Universal β",
+			"name": "DualSubs: 通用 β",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -398,8 +398,7 @@
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
-				"@DualSubs.Verify.Settings",
-				"@DualSubs.Settings.Verify"
+				"@DualSubs.Verify.Settings"
 			],
 			"settings": [
 				{
@@ -778,7 +777,7 @@
 							"label": "第一行"
 						}
 					],
-					"desc": ""
+					"desc": "首选语言所在的行数"
 				},
 				{
 					"id": "@DualSubs.YouTube.Settings.CacheSize",
@@ -3606,11 +3605,11 @@
 					"desc": "是否启用此平台修改功能"
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.Types",
-					"name": "字幕类型",
-					"val": "Official,Google",
-					"type": "checkboxes",
-					"desc": "请选择要添加的字幕类型，会为标准播放器添加以下字幕选项",
+					"id": "@DualSubs.Netflix.Settings.Type",
+					"name": "字幕类型（兼容）",
+					"val": "Google",
+					"type": "selects",
+					"desc": "请选择要替换的字幕类型，会为不兼容的播放器替换为此字幕类型",
 					"items": [
 						{
 							"key": "Official",
@@ -3659,10 +3658,11 @@
 					]
 				},
 				{
-					"id": "@DualSubs.Netflix.Settings.Languages[0]",
-					"name": "首选语言：",
+					"id": "@DualSubs.Netflix.Settings.Language",
+					"name": "首选语言（兼容）：",
 					"val": "ZH",
 					"type": "selects",
+					"desc": "选择后会将此语言添加为额外的字幕语言",
 					"items": [
 						{
 							"key": "ZH",
@@ -3720,73 +3720,7 @@
 							"key": "KO",
 							"label": "韩文"
 						}
-					],
-					"desc": "选择后将为此语言添加额外字幕选项"
-				},
-				{
-					"id": "@DualSubs.Netflix.Settings.Languages[1]",
-					"name": "次选语言：",
-					"val": "EN",
-					"type": "selects",
-					"items": [
-						{
-							"key": "ZH",
-							"label": "中文（自动）"
-						},
-						{
-							"key": "ZH-HANS",
-							"label": "中文（简体）"
-						},
-						{
-							"key": "ZH-HK",
-							"label": "中文（香港）"
-						},
-						{
-							"key": "ZH-HANT",
-							"label": "中文（繁体）"
-						},
-						{
-							"key": "EN",
-							"label": "英语（自动）"
-						},
-						{
-							"key": "EN-US",
-							"label": "英语（美国）"
-						},
-						{
-							"key": "EN-US SDH",
-							"label": "英语（美国）[CC]"
-						},
-						{
-							"key": "ES",
-							"label": "西班牙语（自动）"
-						},
-						{
-							"key": "ES-ES",
-							"label": "西班牙语"
-						},
-						{
-							"key": "ES-ES SDH",
-							"label": "西班牙语[CC]"
-						},
-						{
-							"key": "ES-419",
-							"label": "西班牙语（拉丁美洲）"
-						},
-						{
-							"key": "ES-419 SDH",
-							"label": "西班牙语（拉丁美洲）[CC]"
-						},
-						{
-							"key": "JA",
-							"label": "日文"
-						},
-						{
-							"key": "KO",
-							"label": "韩文"
-						}
-					],
-					"desc": "选择后会将此语言添加为额外的字幕语言"
+					]
 				},
 				{
 					"id": "@DualSubs.Netflix.Settings.External.URL",

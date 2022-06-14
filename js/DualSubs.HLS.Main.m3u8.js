@@ -2,9 +2,9 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.4-hls-webvtt-beta");
+const $ = new Env("DualSubs v0.7.4-hls-main");
 const URL = new URLs();
-const M3U8 = new EXTM3U(["", "\n"]);
+const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
 	"Verify": {
 		"Settings":{"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},"DeepL":{"Method":"Part","Version":"Free","Auth":null}}
@@ -64,55 +64,26 @@ delete $request.headers["Range"]
 		// 设置类型
 		const Type = url?.params?.dualsubs || Settings.Type;
 		$.log(`🚧 ${$.name}, Type: ${Type}`, "");
-		// 处理类型
-		switch (Type) {
-			case "Official":
-				// 找缓存
-				const Indices = await getCache($request.url, Type, Settings, Caches);
-				let Cache = Caches?.[Indices.Index] || {};
-				if (Indices.Index !== -1) {
-					// 创建缓存
-					// 获取VTT字幕地址数组
-					for await (var language of Settings.Languages) {
-						for await (var data of Cache[language]) {
-							data.VTTs = await getVTTs(data.URL, $request.headers, Platform);
-						}
-					}
-					$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-					// 写入缓存
-					let newCaches = Caches;
-					newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-					$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
-				};
-				break;
-			case "External":
-			case "Google":
-			case "GoogleCloud":
-			case "Azure":
-			case "DeepL":
-			default:
-				break;
-		};
+		// 找缓存
+		const Indices = await getCache($request.url, Type, Settings, Caches);
+		let Cache = Caches?.[Indices.Index] || {};
 		// 序列化M3U8
 		let PlayList = M3U8.parse($response.body);
-		$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
-		// WebVTT.m3u8加参数
-		PlayList = PlayList.map(item => {
-			if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
-				const symbol = (item.URI.includes("?")) ? "&" : "?"
-				item.URI = item.URI + symbol + `dualsubs=${Type}`
-			}
-			return item;
-		})
-		if (Platform === "Prime_Video") {
-			// 删除BYTERANGE
-			//PlayList = PlayList.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
-			PlayList = PlayList.map((item, i) => {
-				if (item.TYPE === "EXT-X-BYTERANGE") PlayList[i - 1].URI = item.URI;
-				else return item;
-			}).filter(e => e);
-			$.log(`🚧 ${$.name}`, "PlayList.map", JSON.stringify(PlayList), "");
-		}
+		// PlayList.m3u8 URL
+		Cache.URL = $request.url;
+		// 提取数据 用遍历语法可以兼容自定义数量的语言查询
+		for await (let language of Settings.Languages) {
+			Cache[language] = await getMEDIA($request.url, PlayList, "SUBTITLES", language, Configs);
+			//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
+		};
+		// 写入缓存
+		let newCaches = Caches;
+		newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
+		$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
+		// 兼容性判断
+		const standard = await isStandard(Platform, $request.url, $request.headers);
+		// 写入选项
+		PlayList = await setOptions(Platform, PlayList, Cache[Settings.Languages[0]], Cache[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		$response.body = PlayList;
@@ -260,31 +231,204 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 };
 
 /**
- * Get Subtitle *.vtt URLs
+ * Get EXT-X-MEDIA Data
  * @author VirgilClyne
- * @param {String} url - VTT URL
- * @param {String} headers - Request Headers
+ * @param {String} url - Request URL
+ * @param {String} platform - Steaming Media Platform
+ * @param {Object} json - json
+ * @param {String} type - type
+ * @param {String} langCode - langCode
+ * @return {Promise<*>}
+ */
+async function getMEDIA(url = "", json = {}, type = "", langCode = "", database) {
+	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
+	// 自动语言转换
+	let langcodes = await switchLangCode(langCode, database);
+	//查询是否有符合语言的字幕
+	let datas = [];
+	for await (let langcode of langcodes) {
+		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === langcode.toLowerCase()));
+		if (datas.length !== 0) {
+			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcode)));
+			break;
+		} else datas = [await setMEDIA(url, {}, langcodes[0])];
+	};
+	//$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
+	return datas
+
+	/***************** Fuctions *****************/
+	// Switch Language Code
+	async function switchLangCode(langCode = "", database) {
+		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
+		// 自动语言转换
+		let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
+			: (langCode == "YUE") ? ["YUE", "YUE-HK", "ZH-HK"] // 粤语（自动）
+				: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
+					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
+						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
+							: [langCode]
+		langcodes = langcodes.map(langcode => database?.Languages?.[langcode].map(lc => `\"${lc}\"`))
+		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+		langcodes = [...new Set(langcodes.flat(Infinity))]
+		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+		return langcodes
+	};
+	// Get Absolute Path
+	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
+	// Set EXT-X-MEDIA Data
+	async function setMEDIA(url, data = {}, langCode = "") {
+		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
+		let Data = { ...data };
+		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
+		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
+		Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		//$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
+		return Data
+	};
+};
+
+/**
+ * Set DualSubs Subtitle Options
+ * @author VirgilClyne
+ * @param {String} Platform - Platform
+ * @param {Object} Json - Json
+ * @param {Array} Languages1 - Languages1
+ * @param {Array} Languages2 - Languages2
+ * @param {Array} Types - Types
+ * @param {String} Standard - Standard
+ * @param {String} Type - Type
+ * @return {Promise<*>}
+ */
+async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 = [], Types = [], Standard = true, Type = "") {
+	// 兼容性设置
+	Types = (Standard == true) ? Types : [Type];
+	$.log(`⚠ ${$.name}, Set DualSubs Subtitle Options`, `Types: ${Types}`, "");
+	for await (var obj1 of Languages1) {
+		for await (var obj2 of Languages2) {
+			// 无首选字幕时
+			if (!obj1?.TYPE) {
+				// 无首选语言时删除官方字幕选项
+				Types = Types.filter(e => e !== "Official");
+				Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+				if (Options.length !== 0) {
+					// 计算位置
+					let Index = await getIndex(Platform, Json, obj2);
+					// 插入字幕选项
+					await insertOptions(Json, Index, Options, Standard);
+				};
+			}
+			else if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
+				//$.log(`🚧 ${$.name}`, "obj2?.OPTION.FORCED", obj2?.OPTION.FORCED, "");
+				if (obj1?.OPTION?.["GROUP-ID"] == obj2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
+					//$.log(`🚧 ${$.name}`, "obj1?.OPTION[\"GROUP-ID\"]", obj1?.OPTION["GROUP-ID"], "");
+					//$.log(`🚧 ${$.name}`, "obj2?.OPTION[\"GROUP-ID\"]", obj2?.OPTION["GROUP-ID"], "");
+					// 创建字幕选项
+					let Options = [];
+					if (Platform == "Apple") { // Apple兼容
+						if (obj1?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+							Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+						}
+					} else {
+						Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+					};
+					$.log(`🎉 ${$.name}, Set DualSubs Subtitle Options`, `Options: ${JSON.stringify(Options)}`, "");
+					if (Options.length !== 0) {
+						// 计算位置
+						let Index = await getIndex(Platform, Json, obj1);
+						// 插入字幕选项
+						await insertOptions(Json, Index, Options, Standard);
+					};
+				};
+			};
+		}
+	};
+	return Json
+
+	/***************** Fuctions *****************/
+	// Get DualSubs Subtitle Options
+	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
+		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
+		return types.map(type => {
+			// 复制此语言选项
+			let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
+				: JSON.parse(JSON.stringify(obj2))
+			// 修改名称
+			newSub.OPTION.NAME = `\"${obj1.Name} / ${obj2.Name} [${type}]\"`
+			// 修改语言代码
+			newSub.OPTION.LANGUAGE = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language} / ${obj2.Language} [${type}]\"`
+			: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
+			// 增加副语言
+			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
+			// 修改链接
+			newSub.OPTION.URI = (newSub.URL.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
+				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`
+			// 自动选择
+			newSub.OPTION.AUTOSELECT = "YES"
+			//$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
+			return newSub
+		})
+	};
+	// Get Same Options Index
+	async function getIndex(platform, json, obj) {
+		$.log(`⚠ ${$.name}, Get Same Options Index`, "");
+		// 计算位置
+		let Index = json.findIndex(item => {
+			if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
+				&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
+				&& item?.OPTION?.CHARACTERISTICS == obj?.OPTION?.CHARACTERISTICS) {
+				if (platform == "Apple") {
+					if (item?.OPTION?.["STABLE-RENDITION-ID"] == obj?.OPTION?.["STABLE-RENDITION-ID"]) return true
+				} else return true
+			}
+		})
+		$.log(`🎉 ${$.name}, Get Same Options Index`, `Index: ${Index}`, "");
+		return Index
+	};
+	// Insert Options
+	async function insertOptions(json, index, options, standard) {
+		$.log(`⚠ ${$.name}, Insert Options`, "");
+		// 插入字幕选项
+		if (standard == true) json.splice(index + 1, 0, ...options)
+		else json.splice(index, 1, ...options); // 兼容性设置
+	};
+};
+
+/**
+ * is Standard?
+ * Determine whether Standard Media Player
+ * @author VirgilClyne
+ * @param {String} url - Request URL
+ * @param {Object} headers - Request Headers
  * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-async function getVTTs(url, headers, platform) {
-	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
-	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
-		let PlayList = M3U8.parse(response.body);
-		// 筛选字幕
-		PlayList = PlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
-		PlayList = PlayList.filter(({ URI }) => !/empty/.test(URI));
-		VTTs = PlayList.map(({ URI }) => aPath(url, URI))
-		if (platform == "Disney_Plus") {
-			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
-		};
-		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
-		return VTTs;
-	})
-	else return null;
-	/***************** Fuctions *****************/
-	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
+async function isStandard(platform, url, headers) {
+	$.log(`⚠ ${$.name}, is Standard`, "");
+	let _url = URL.parse(url);
+	let standard = true;
+	switch (platform) {
+		case "HBO_Max":
+			if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
+			else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
+			else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
+			else if (headers?.["X-Hbo-Device-Name"]?.includes("ios")) standard = false;
+			else if (_url.params["device-code"] === "iphone") standard = false;
+			break;
+		case "Peacock_TV":
+			if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
+			else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
+			else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
+			else if (headers?.["User-Agent"]?.includes("PeacockMobile")) standard = false;
+			break;
+		case "Fubo_TV":
+			if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
+			else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
+			break;
+		case "TED":
+			if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
+	}
+	$.log(`🎉 ${$.name}, is Standard`, `standard: ${standard}`, "");
+	return standard
 };
 
 /***************** Env *****************/
@@ -294,9 +438,6 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 
 // https://github.com/VirgilClyne/VirgilClyne/blob/main/function/URL/URLs.embedded.min.js
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
-
-// https://stackoverflow.com/posts/23329386/revisions
-function byteLength(t){for(var e=t.length,n=t.length-1;n>=0;n--){var r=t.charCodeAt(n);r>127&&r<=2047?e++:r>2047&&r<=65535&&(e+=2),r>=56320&&r<=57343&&n--}return e}
 
 // https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
 function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.7.1",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){const t=/^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;let s=n.replace(/\r\n/g,"\n").split(/[\r\n]#/).map((n=>n.match(t)?.groups??n));return s=s.map((n=>(/=/.test(n?.OPTION)&&this.opts.includes(n.TYPE)&&(n.OPTION=Object.fromEntries(n.OPTION.split(/,(?=[A-Z])/).map((n=>n.split(/=(.*)/))))),n))),s}stringify(n=new Array){n?.[0]?.includes("#EXTM3U")||n.unshift("#EXTM3U");let t=n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((n=>n.join("="))).join(",")),n?.URI?n.TYPE+":"+n.OPTION+this.newLine+n.URI:n?.OPTION?n.TYPE+":"+n.OPTION:n?.TYPE?n.TYPE:n)));return t=t.join(this.newLine+"#"),t}}(n)}

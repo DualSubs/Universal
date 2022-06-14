@@ -2,9 +2,9 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.4-hls-webvtt-beta");
+const $ = new Env("DualSubs v0.4.1-youtube-player");
 const URL = new URLs();
-const M3U8 = new EXTM3U(["", "\n"]);
+
 const DataBase = {
 	"Verify": {
 		"Settings":{"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},"DeepL":{"Method":"Part","Version":"Free","Auth":null}}
@@ -61,61 +61,46 @@ delete $request.headers["Range"]
 	if (Settings.Switch) {
 		let url = URL.parse($request.url);
 		$.log(`⚠ ${$.name}, url.path=${url.path}`);
-		// 设置类型
-		const Type = url?.params?.dualsubs || Settings.Type;
-		$.log(`🚧 ${$.name}, Type: ${Type}`, "");
-		// 处理类型
-		switch (Type) {
-			case "Official":
-				// 找缓存
-				const Indices = await getCache($request.url, Type, Settings, Caches);
-				let Cache = Caches?.[Indices.Index] || {};
-				if (Indices.Index !== -1) {
-					// 创建缓存
-					// 获取VTT字幕地址数组
-					for await (var language of Settings.Languages) {
-						for await (var data of Cache[language]) {
-							data.VTTs = await getVTTs(data.URL, $request.headers, Platform);
-						}
+		// 设置格式
+		//const Format = $request.headers["Content-Type"].match(/([^\/;]+)/g)[2];
+		const Format = $request.headers["Content-Type"].split("; ")[0].split("/")[1]
+		$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
+		switch (Format) {
+			case "json":
+				let data = JSON.parse($response.body);
+				// 找节点
+				let Captions = data?.captions
+				if (Captions) { // 有基础字幕
+					$.log(`⚠ ${$.name}, Captions`, "");
+					// 增补语言数据库
+					DataBase.translationLanguages = [{ "languageCode": "sq", "languageName": { "simpleText": "阿尔巴尼亚语" } }, { "languageCode": "ar", "languageName": { "simpleText": "阿拉伯语" } }, { "languageCode": "am", "languageName": { "simpleText": "阿姆哈拉语" } }, { "languageCode": "az", "languageName": { "simpleText": "阿塞拜疆语" } }, { "languageCode": "ga", "languageName": { "simpleText": "爱尔兰语" } }, { "languageCode": "et", "languageName": { "simpleText": "爱沙尼亚语" } }, { "languageCode": "or", "languageName": { "simpleText": "奥里亚语" } }, { "languageCode": "eu", "languageName": { "simpleText": "巴斯克语" } }, { "languageCode": "be", "languageName": { "simpleText": "白俄罗斯语" } }, { "languageCode": "bg", "languageName": { "simpleText": "保加利亚语" } }, { "languageCode": "is", "languageName": { "simpleText": "冰岛语" } }, { "languageCode": "pl", "languageName": { "simpleText": "波兰语" } }, { "languageCode": "bs", "languageName": { "simpleText": "波斯尼亚语" } }, { "languageCode": "fa", "languageName": { "simpleText": "波斯语" } }, { "languageCode": "tt", "languageName": { "simpleText": "鞑靼语" } }, { "languageCode": "da", "languageName": { "simpleText": "丹麦语" } }, { "languageCode": "de", "languageName": { "simpleText": "德语" } }, { "languageCode": "ru", "languageName": { "simpleText": "俄语" } }, { "languageCode": "fr", "languageName": { "simpleText": "法语" } }, { "languageCode": "fil", "languageName": { "simpleText": "菲律宾语" } }, { "languageCode": "fi", "languageName": { "simpleText": "芬兰语" } }, { "languageCode": "km", "languageName": { "simpleText": "高棉语" } }, { "languageCode": "ka", "languageName": { "simpleText": "格鲁吉亚语" } }, { "languageCode": "gu", "languageName": { "simpleText": "古吉拉特语" } }, { "languageCode": "kk", "languageName": { "simpleText": "哈萨克语" } }, { "languageCode": "ht", "languageName": { "simpleText": "海地克里奥尔语" } }, { "languageCode": "ko", "languageName": { "simpleText": "韩语" } }, { "languageCode": "ha", "languageName": { "simpleText": "豪萨语" } }, { "languageCode": "nl", "languageName": { "simpleText": "荷兰语" } }, { "languageCode": "gl", "languageName": { "simpleText": "加利西亚语" } }, { "languageCode": "ca", "languageName": { "simpleText": "加泰罗尼亚语" } }, { "languageCode": "cs", "languageName": { "simpleText": "捷克语" } }, { "languageCode": "kn", "languageName": { "simpleText": "卡纳达语" } }, { "languageCode": "ky", "languageName": { "simpleText": "柯尔克孜语" } }, { "languageCode": "xh", "languageName": { "simpleText": "科萨语" } }, { "languageCode": "co", "languageName": { "simpleText": "科西嘉语" } }, { "languageCode": "hr", "languageName": { "simpleText": "克罗地亚语" } }, { "languageCode": "ku", "languageName": { "simpleText": "库尔德语" } }, { "languageCode": "la", "languageName": { "simpleText": "拉丁语" } }, { "languageCode": "lv", "languageName": { "simpleText": "拉脱维亚语" } }, { "languageCode": "lo", "languageName": { "simpleText": "老挝语" } }, { "languageCode": "lt", "languageName": { "simpleText": "立陶宛语" } }, { "languageCode": "lb", "languageName": { "simpleText": "卢森堡语" } }, { "languageCode": "rw", "languageName": { "simpleText": "卢旺达语" } }, { "languageCode": "ro", "languageName": { "simpleText": "罗马尼亚语" } }, { "languageCode": "mt", "languageName": { "simpleText": "马耳他语" } }, { "languageCode": "mr", "languageName": { "simpleText": "马拉地语" } }, { "languageCode": "mg", "languageName": { "simpleText": "马拉加斯语" } }, { "languageCode": "ml", "languageName": { "simpleText": "马拉雅拉姆语" } }, { "languageCode": "ms", "languageName": { "simpleText": "马来语" } }, { "languageCode": "mk", "languageName": { "simpleText": "马其顿语" } }, { "languageCode": "mi", "languageName": { "simpleText": "毛利语" } }, { "languageCode": "mn", "languageName": { "simpleText": "蒙古语" } }, { "languageCode": "bn", "languageName": { "simpleText": "孟加拉语" } }, { "languageCode": "my", "languageName": { "simpleText": "缅甸语" } }, { "languageCode": "hmn", "languageName": { "simpleText": "苗语" } }, { "languageCode": "af", "languageName": { "simpleText": "南非荷兰语" } }, { "languageCode": "st", "languageName": { "simpleText": "南索托语" } }, { "languageCode": "ne", "languageName": { "simpleText": "尼泊尔语" } }, { "languageCode": "no", "languageName": { "simpleText": "挪威语" } }, { "languageCode": "pa", "languageName": { "simpleText": "旁遮普语" } }, { "languageCode": "pt", "languageName": { "simpleText": "葡萄牙语" } }, { "languageCode": "ps", "languageName": { "simpleText": "普什图语" } }, { "languageCode": "ny", "languageName": { "simpleText": "齐切瓦语" } }, { "languageCode": "ja", "languageName": { "simpleText": "日语" } }, { "languageCode": "sv", "languageName": { "simpleText": "瑞典语" } }, { "languageCode": "sm", "languageName": { "simpleText": "萨摩亚语" } }, { "languageCode": "sr", "languageName": { "simpleText": "塞尔维亚语" } }, { "languageCode": "si", "languageName": { "simpleText": "僧伽罗语" } }, { "languageCode": "sn", "languageName": { "simpleText": "绍纳语" } }, { "languageCode": "eo", "languageName": { "simpleText": "世界语" } }, { "languageCode": "sk", "languageName": { "simpleText": "斯洛伐克语" } }, { "languageCode": "sl", "languageName": { "simpleText": "斯洛文尼亚语" } }, { "languageCode": "sw", "languageName": { "simpleText": "斯瓦希里语" } }, { "languageCode": "gd", "languageName": { "simpleText": "苏格兰盖尔语" } }, { "languageCode": "ceb", "languageName": { "simpleText": "宿务语" } }, { "languageCode": "so", "languageName": { "simpleText": "索马里语" } }, { "languageCode": "tg", "languageName": { "simpleText": "塔吉克语" } }, { "languageCode": "te", "languageName": { "simpleText": "泰卢固语" } }, { "languageCode": "ta", "languageName": { "simpleText": "泰米尔语" } }, { "languageCode": "th", "languageName": { "simpleText": "泰语" } }, { "languageCode": "tr", "languageName": { "simpleText": "土耳其语" } }, { "languageCode": "tk", "languageName": { "simpleText": "土库曼语" } }, { "languageCode": "cy", "languageName": { "simpleText": "威尔士语" } }, { "languageCode": "ug", "languageName": { "simpleText": "维吾尔语" } }, { "languageCode": "ur", "languageName": { "simpleText": "乌尔都语" } }, { "languageCode": "uk", "languageName": { "simpleText": "乌克兰语" } }, { "languageCode": "uz", "languageName": { "simpleText": "乌兹别克语" } }, { "languageCode": "es", "languageName": { "simpleText": "西班牙语" } }, { "languageCode": "fy", "languageName": { "simpleText": "西弗里西亚语" } }, { "languageCode": "iw", "languageName": { "simpleText": "希伯来语" } }, { "languageCode": "el", "languageName": { "simpleText": "希腊语" } }, { "languageCode": "haw", "languageName": { "simpleText": "夏威夷语" } }, { "languageCode": "sd", "languageName": { "simpleText": "信德语" } }, { "languageCode": "hu", "languageName": { "simpleText": "匈牙利语" } }, { "languageCode": "su", "languageName": { "simpleText": "巽他语" } }, { "languageCode": "hy", "languageName": { "simpleText": "亚美尼亚语" } }, { "languageCode": "ig", "languageName": { "simpleText": "伊博语" } }, { "languageCode": "it", "languageName": { "simpleText": "意大利语" } }, { "languageCode": "yi", "languageName": { "simpleText": "意第绪语" } }, { "languageCode": "hi", "languageName": { "simpleText": "印地语" } }, { "languageCode": "id", "languageName": { "simpleText": "印度尼西亚语" } }, { "languageCode": "en", "languageName": { "simpleText": "英语" } }, { "languageCode": "yo", "languageName": { "simpleText": "约鲁巴语" } }, { "languageCode": "vi", "languageName": { "simpleText": "越南语" } }, { "languageCode": "jv", "languageName": { "simpleText": "爪哇语" } }, { "languageCode": "zh-Hant", "languageName": { "simpleText": "中文（繁体）" } }, { "languageCode": "zh-Hans", "languageName": { "simpleText": "中文（简体）" } }, { "languageCode": "zu", "languageName": { "simpleText": "祖鲁语" } }];
+					if (Captions.playerCaptionsRenderer) {
+						Captions.playerCaptionsRenderer.visibility = "ON" // 字幕选项按钮可见
+						Captions.playerCaptionsRenderer.showAutoCaptions = true; // 包含自动生成的字幕
 					}
-					$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-					// 写入缓存
-					let newCaches = Caches;
-					newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-					$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
+					let Tracklist = Captions?.playerCaptionsTracklistRenderer
+					if (Tracklist) { // 有轨道列表
+						$.log(`⚠ ${$.name}, Tracklist`, "");
+						if (Tracklist?.captionTracks) {
+							// 改翻译可用性
+							Tracklist.captionTracks = Tracklist.captionTracks.map(caption => {
+								caption.isTranslatable = true
+								return caption
+							});
+						};
+						// 加翻译语言
+						if (Tracklist?.translationLanguages) {
+							Tracklist.translationLanguages = Object.assign(Tracklist.translationLanguages, DataBase.translationLanguages);
+						} else Tracklist.translationLanguages = DataBase.translationLanguages;
+					};
 				};
+				$response.body = JSON.stringify(data);
 				break;
-			case "External":
-			case "Google":
-			case "GoogleCloud":
-			case "Azure":
-			case "DeepL":
+			case "xml":
+			case "x-protobuf":
 			default:
 				break;
 		};
-		// 序列化M3U8
-		let PlayList = M3U8.parse($response.body);
-		$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
-		// WebVTT.m3u8加参数
-		PlayList = PlayList.map(item => {
-			if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
-				const symbol = (item.URI.includes("?")) ? "&" : "?"
-				item.URI = item.URI + symbol + `dualsubs=${Type}`
-			}
-			return item;
-		})
-		if (Platform === "Prime_Video") {
-			// 删除BYTERANGE
-			//PlayList = PlayList.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
-			PlayList = PlayList.map((item, i) => {
-				if (item.TYPE === "EXT-X-BYTERANGE") PlayList[i - 1].URI = item.URI;
-				else return item;
-			}).filter(e => e);
-			$.log(`🚧 ${$.name}`, "PlayList.map", JSON.stringify(PlayList), "");
-		}
-		// 字符串M3U8
-		PlayList = M3U8.stringify(PlayList);
-		$response.body = PlayList;
 	};
 })()
 	.catch((e) => $.logErr(e))
@@ -196,97 +181,6 @@ async function setENV(name, url, database) {
 	return { Platform, Verify, Advanced, Settings, Caches, Configs };
 };
 
-/**
- * Get Cache
- * @author VirgilClyne
- * @param {String} url - Request URL
- * @param {String} type - type
- * @param {Object} settings - settings
- * @param {Object} cache - cache
- * @return {Promise<*>}
- */
-async function getCache(url, type, settings, caches = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let Indices = {};
-	Indices.Index = await getIndex(url, settings, caches);
-	if (Indices.Index !== -1) {
-		for await (var language of settings.Languages) Indices[language] = await getDataIndex(url, Indices.Index, language)
-		if (type == "Official") {
-			// 修正缓存
-			if (Indices[settings.Languages[0]] !== -1) {
-				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-					if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
-				});
-				if (Indices[settings.Languages[1]] == -1) {
-					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-						if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
-					});
-				};
-			};
-		};
-	}
-	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
-	return Indices
-	/***************** Fuctions *****************/
-	async function getIndex(url, settings, caches) {
-		return caches.findIndex(item => {
-			let URLs = [item?.URL];
-			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
-			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
-		})
-	};
-	async function getDataIndex(url, index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URL, item?.VTTs] }
-};
-
-/**
- * Set Cache
- * @author VirgilClyne
- * @param {Number} index - index
- * @param {Object} target - target
- * @param {Object} sources - sources
- * @param {Number} num - num
- * @return {Promise<*>}
- */
-async function setCache(index = -1, target = {}, sources = {}, num = 1) {
-	$.log(`⚠ ${$.name}, Set Cache`, "");
-	// 刷新播放记录，所以始终置顶
-	if (index !== -1) delete target[index] // 删除旧记录
-	target.unshift(sources) // 头部插入缓存
-	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
-	return target
-};
-
-/**
- * Get Subtitle *.vtt URLs
- * @author VirgilClyne
- * @param {String} url - VTT URL
- * @param {String} headers - Request Headers
- * @param {String} platform - Steaming Media Platform
- * @return {Promise<*>}
- */
-async function getVTTs(url, headers, platform) {
-	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
-	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
-		let PlayList = M3U8.parse(response.body);
-		// 筛选字幕
-		PlayList = PlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
-		PlayList = PlayList.filter(({ URI }) => !/empty/.test(URI));
-		VTTs = PlayList.map(({ URI }) => aPath(url, URI))
-		if (platform == "Disney_Plus") {
-			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
-		};
-		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
-		return VTTs;
-	})
-	else return null;
-	/***************** Fuctions *****************/
-	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
-};
-
 /***************** Env *****************/
 // prettier-ignore
 // https://github.com/chavyleung/scripts/blob/master/Env.min.js
@@ -294,9 +188,3 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 
 // https://github.com/VirgilClyne/VirgilClyne/blob/main/function/URL/URLs.embedded.min.js
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
-
-// https://stackoverflow.com/posts/23329386/revisions
-function byteLength(t){for(var e=t.length,n=t.length-1;n>=0;n--){var r=t.charCodeAt(n);r>127&&r<=2047?e++:r>2047&&r<=65535&&(e+=2),r>=56320&&r<=57343&&n--}return e}
-
-// https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
-function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.7.1",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){const t=/^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;let s=n.replace(/\r\n/g,"\n").split(/[\r\n]#/).map((n=>n.match(t)?.groups??n));return s=s.map((n=>(/=/.test(n?.OPTION)&&this.opts.includes(n.TYPE)&&(n.OPTION=Object.fromEntries(n.OPTION.split(/,(?=[A-Z])/).map((n=>n.split(/=(.*)/))))),n))),s}stringify(n=new Array){n?.[0]?.includes("#EXTM3U")||n.unshift("#EXTM3U");let t=n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((n=>n.join("="))).join(",")),n?.URI?n.TYPE+":"+n.OPTION+this.newLine+n.URI:n?.OPTION?n.TYPE+":"+n.OPTION:n?.TYPE?n.TYPE:n)));return t=t.join(this.newLine+"#"),t}}(n)}

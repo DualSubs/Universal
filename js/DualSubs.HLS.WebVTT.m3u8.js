@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.4-hls-webvtt-beta");
+const $ = new Env("DualSubs v0.7.4-hls-webvtt");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -95,7 +95,7 @@ delete $request.headers["Range"]
 		};
 		// 序列化M3U8
 		let PlayList = M3U8.parse($response.body);
-		$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
+		//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
 		// WebVTT.m3u8加参数
 		PlayList = PlayList.map(item => {
 			if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
@@ -111,7 +111,7 @@ delete $request.headers["Range"]
 				if (item.TYPE === "EXT-X-BYTERANGE") PlayList[i - 1].URI = item.URI;
 				else return item;
 			}).filter(e => e);
-			$.log(`🚧 ${$.name}`, "PlayList.map", JSON.stringify(PlayList), "");
+			//$.log(`🚧 ${$.name}`, "PlayList.map", JSON.stringify(PlayList), "");
 		}
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
@@ -279,7 +279,7 @@ async function getVTTs(url, headers, platform) {
 		if (platform == "Disney_Plus") {
 			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
 		};
-		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
+		//$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
 		return VTTs;
 	})
 	else return null;

@@ -176,7 +176,6 @@ async function setENV(name, url, database) {
 		$.log(`🚧 ${$.name}, Set Environment Variables`, `platform: ${platform}`, "");
 		Settings = await getENV(name, platform, database).then(v=> v.Settings);
 	};
-	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	if (Array.isArray(Settings.Types)) {

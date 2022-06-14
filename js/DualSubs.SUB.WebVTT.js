@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.4-sub-webvtt-beta");
+const $ = new Env("DualSubs v0.7.4-sub-webvtt");
 const URL = new URLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
@@ -317,14 +317,14 @@ async function getOfficialRequest(url, headers, platform, VTTs = [], oVTTs = [])
 				"headers": headers,
 			}
 		});
-		$.log(`🚧 ${$.name}, Get Official Request`, `requests: ${JSON.stringify(requests)}`, "");
+		//$.log(`🚧 ${$.name}, Get Official Request`, `requests: ${JSON.stringify(requests)}`, "");
 		return requests
 	} else {
 		let request = {
 			"url": VTTs.find(item => item?.includes(fileName)) || VTTs[0],
 			"headers": headers,
 		};
-		$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");
+		//$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	}
 };

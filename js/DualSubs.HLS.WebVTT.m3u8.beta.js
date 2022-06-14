@@ -95,8 +95,8 @@ delete $request.headers["Range"]
 		};
 		// 序列化M3U8
 		let PlayList = M3U8.parse($response.body);
+		$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
 		// WebVTT.m3u8加参数
-		//$response.body = await setWebVTTm3u8($response.body, Type);
 		PlayList = PlayList.map(item => {
 			if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
 				const symbol = (item.URI.includes("?")) ? "&" : "?"
@@ -104,9 +104,15 @@ delete $request.headers["Range"]
 			}
 			return item;
 		})
-		// 删除BYTERANGE
-		//$response.body = $response.body.replace(/#EXT-X-BYTERANGE:.*/m, "");
-		PlayList = PlayList.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
+		if (Platform === "Prime_Video") {
+			// 删除BYTERANGE
+			//PlayList = PlayList.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
+			PlayList = PlayList.map((item, i) => {
+				if (item.TYPE === "EXT-X-BYTERANGE") PlayList[i - 1].URI = item.URI;
+				else return item;
+			}).filter(e => e);
+			$.log(`🚧 ${$.name}`, "PlayList.map", JSON.stringify(PlayList), "");
+		}
 		// 字符串M3U8
 		PlayList = M3U8.stringify(PlayList);
 		$response.body = PlayList;
@@ -289,6 +295,9 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 
 // https://github.com/VirgilClyne/VirgilClyne/blob/main/function/URL/URLs.embedded.min.js
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
+
+// https://stackoverflow.com/posts/23329386/revisions
+function byteLength(t){for(var e=t.length,n=t.length-1;n>=0;n--){var r=t.charCodeAt(n);r>127&&r<=2047?e++:r>2047&&r<=65535&&(e+=2),r>=56320&&r<=57343&&n--}return e}
 
 // https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
 function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.7.0",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){const t=/^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;let s=n.replace(/\r\n/g,"\n").split(/[\r\n]#/).map((n=>n.match(t)?.groups??n));return s=s.map((n=>(/=/.test(n?.OPTION)&&this.opts.includes(n.TYPE)&&(n.OPTION=Object.fromEntries(n.OPTION.split(/,(?=[A-Z])/).map((n=>n.split(/=(.*)/))))),n))),s}stringify(n=new Array){n?.[0]?.includes("#EXTM3U")||n.unshift("#EXTM3U");let t=n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((n=>n.join("="))).join(",")),n.URI?n.TYPE+":"+n.OPTION+this.newLine+n.URI:n=n.OPTION?n.TYPE+":"+n.OPTION:n.TYPE?n.TYPE:n)));return t=t.join(this.newLine+"#"),t}}(n)}

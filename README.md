@@ -79,23 +79,16 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 
 ## 安装链接
 ### 🍿️ DualSubs for HLS Media Platform
-  * 🆕V0.7版，结构性较大更新，与之前版本不兼容，更加通用，未来会增加更多字幕格式支持
-    * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
-    * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
-    * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
-    * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
-  * V0.6版，不再更新，老用户可继续使用，同时保留V0.6版boxjs配置面板
-    * BoxJs: [DualSubs.box.json](./archive/v0.6/DualSubs.box.json?raw=true "🍿️ DualSubs")
-    * Loon: [DualSubs.plugin](./archive/v0.6/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
-    * Quantumult X: [DualSubs.qxrewrite](./archive/v0.6/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
-    * Surge (Shadowrocket): [DualSubs.sgmodule](./archive/v0.6/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
-    * Stash: [DualSubs.stoverride](./archive/v0.6/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
+  * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
 
 ### 🍿️ DualSubs for YouTube
-  * 当前仅支持Web端有字幕视频的`自动翻译`(不是`自动生成`)及全翻译语言解锁及双语言
+  * 当前仅支持`Web端`和`移动端`有字幕视频的`自动翻译`(不支持`自动生成`的听译字幕)及全翻译语言解锁及双语言
     * 当选择任意语言`普通字幕`时，双语字幕`首选语言`均为BoxJs中设置的`首选语言`且为翻译字幕（暂未做官方字幕查询）
     * 当选择`自动翻译`中的`翻译字幕`时，双语字幕分别为`原语言`及`目标语言`
-  * 注：本插件不适用于tvOS上的YouTube app，对`www.youtube.com`的MitM会破坏tvOS上YouTube的链接
+  * 注：本插件不适用于`tvOS`上的YouTube app（无法MitM`tvOS`上的`www.youtube.com`）
   * Loon: [DualSubs.YouTube.plugin](./plugin/DualSubs.YouTube.plugin?raw=true "🍿️ DualSubs for YouTube")
   * Quantumult X: [DualSubs.YouTube.qxrewrite](./qxrewrite/DualSubs.YouTube.qxrewrite?raw=true "🍿️ DualSubs for YouTube")
   * Surge (Shadowrocket): [DualSubs.YouTube.sgmodule](./sgmodule/DualSubs.YouTube.sgmodule?raw=true "🍿️ DualSubs for YouTube")
@@ -118,17 +111,20 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 
 |  供应商  |iOS/iPadOS|  tvOS  |  macOS  | Appx | Android | Web | 备注 |
 |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
-| YouTube |   🔜[^7]   |   ❌[^8]   |   N/A   |   N/A   |   ❓   |   ✅   |        |
+| YouTube |   ☑️[^7]   |   ❌[^8]   |   N/A   |   N/A   |   ❓   |   ✅   |        |
 |Apple TV+|   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   ✅[^5]   |   N/A   |   ❓   |   [✅](https://tv.apple.com/)[^2]   |   指Apple TV app中的订阅内容   |
 |Apple TV |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   ✅[^2][^5]   |   N/A   |   ❓   |   N/A   |   指Apple TV app中的买断或租借内容[^1]   |
 |Apple Fitness| [✅](https://apps.apple.com/cn/app/fitness/id1208224953)[^2] |   ✅[^2]   |   N/A   |   N/A   |   ❓   |   N/A   | [^1] |
 | Disney+ |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   N/A   |   [✅](https://www.microsoft.com/zh-cn/p/disney/9nxqxxlfst89)   |   ✅   |   [✅](https://www.disneyplus.com/)   |        |
-|Prime Video|   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^5]   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [🔜](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^3]   |   [🔜](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)[^3]   |   🔜[^3]   |   [🔜](https://www.primevideo.com)[^3]   |   包含Prime Video Channel   |
+|Prime Video|   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^5]   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [🔜](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)[^3]   |   🔜[^3]   |   [🔜](https://www.primevideo.com)[^3]   |   包含Prime Video Channel   |
 | HBO Max |   [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4]   |   [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   |   ❓   |   [☑️](https://play.hbomax.com)[^4]   |        |
 |  Hulu   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   N/A   |   N/A   |   ❓   |   [🔜](https://www.hulu.com/)[^6]   |        |
 |Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   N/A   |   ❓   |   ❓   |   [✅](https://www.paramountplus.com/)   | 包含部分Live TV |
 |Discovery+<br>Philippines|   [✅](https://apps.apple.com/ph/app/discovery-stream-tv-shows/id1574345720)   |   ❓   |   ❓   |   ❓   |   ❓   |   [✅](https://www.discoveryplus.com/ph/)   |        |
 |Peacock TV|   [☑️](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)[^4]   |   [❓](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/peacocktv/9pl67r4p9pg5?activetab=pivot:overviewtab)   |   ❓   |   [☑️](https://www.peacocktv.com/)[^4]   |        |
+| Fubo TV |   ✅   |   ✅   |   N/A   |   ❓   |   ❓   |   ✅   |        |
+|   TED   |   ☑️   |   ✅   |   N/A   |   ❓   |   ❓   |   ☑️   |        |
+|   BBC   |         |         |         |         |         |        | 包含iPlayer和BritBox |
 |         |         |         |         |         |         |        |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。

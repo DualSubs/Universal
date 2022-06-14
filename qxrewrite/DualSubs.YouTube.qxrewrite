@@ -1,13 +1,16 @@
-#!name= 🍿️ DualSubs for YouTube
-#!desc= (0.3.x) YouTube字幕增强及双语模块
+#!name=🍿️ DualSubs for YouTube
+#!desc=(V0.4.x) YouTube字幕增强及双语模块
+#!openUrl=http://boxjs.com/#/app/DualSubs.YouTube
+#!author=VirgilClyne
+#!homepage=https://github.com/VirgilClyne
+#!manual=https://github.com/DualSubs/DualSubs
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
 
 #[Script]
 # DualSubs.YouTube.Player
 ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
 # DualSubs.YouTube.TimedText
-^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(?!vtt).*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
-# DualSubs.YouTube.TimedText.vtt
-^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*(format|fmt)=(vtt).*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.VTT.js
+^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
 
 #[MITM]
 hostname = www.youtube.com, m.youtube.com

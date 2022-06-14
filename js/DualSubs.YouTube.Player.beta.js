@@ -112,14 +112,45 @@ delete $request.headers["Range"]
 /***************** Async Function *****************/
 /**
  * Get Environment Variables
- * https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
+ * @link https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
  * @author VirgilClyne
- * @param {String} t - Persistent Store Key
- * @param {String} e - Platform Name
- * @param {Object} n - Default DataBase
+ * @param {String} key - Persistent Store Key
+ * @param {String} name - Platform Name
+ * @param {Object} database - Default Database
  * @return {Promise<*>}
  */
-async function getENV(t,e,n){let i=$.getjson(t,n),s=i?.[e]?.Settings||n?.[e]?.Settings||n?.Default?.Settings,g=i?.[e]?.Configs||n?.[e]?.Configs||n?.Default?.Configs,f=i?.[e]?.Caches||void 0;if("string"==typeof f&&(f=JSON.parse(f)),"undefined"!=typeof $argument){if($argument){let t=Object.fromEntries($argument.split("&").map((t=>t.split("=")))),e={};for(var a in t)o(e,a,t[a]);Object.assign(s,e)}function o(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}return{Settings:s,Caches:f,Configs:g}}
+async function getENV(key, name, database) {
+	$.log(`⚠ ${$.name}, Get Environment Variables`, "");
+	/***************** BoxJs *****************/
+	// 包装为局部变量，用完释放内存
+	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
+	let BoxJs = $.getjson(key, database);
+	$.log(`🚧 ${$.name}, Get Environment Variables`, `BoxJs类型: ${typeof BoxJs}`, `BoxJs内容: ${JSON.stringify(BoxJs)}`, "");
+	/***************** Argument *****************/
+	let Argument = {};
+	if (typeof $argument !== "undefined"){
+		if (Boolean($argument)) {
+			$.log(`🎉 ${$.name}, $Argument`);
+			let arg = Object.fromEntries($argument.split("&").map((item) => item.split("=")));
+			$.log(JSON.stringify(arg));
+			for (let item in arg) setPath(Argument, item, arg[item]);
+			$.log(JSON.stringify(Argument));
+		};
+	};
+	$.log(`🎉 ${$.name}, Get Environment Variables`, `Argument类型: ${typeof Argument}`, `Argument内容: ${JSON.stringify(Argument)}`, "");
+	/***************** Settings *****************/
+	let Settings = { ...database?.Default?.Settings, ...database?.[name]?.Settings, ...BoxJs?.[name]?.Settings, ...Argument };
+	$.log(`🎉 ${$.name}, Get Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	let Configs = { ...database?.Default?.Configs, ...database?.[name]?.Configs, ...BoxJs?.[name]?.Configs };
+	$.log(`🎉 ${$.name}, Get Environment Variables`, `Configs: ${typeof Configs}`, `Config内容: ${JSON.stringify(Configs)}`, "");
+	let Caches = BoxJs?.[name]?.Caches || undefined;
+	if (typeof Caches === "string") Caches = JSON.parse(Caches)
+	$.log(`🎉 ${$.name}, Get Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	return { Settings, Caches, Configs };
+	/***************** setPath *****************/
+	function setPath(object, path, value) { path.split(".").reduce((o, p, i) => o[p] = path.split(".").length === ++i ? value : o[p] || {}, object) }
+};
+
 
 /**
  * Set Environment Variables
@@ -166,19 +197,17 @@ async function setENV(name, url, database) {
 		$.log(`🚧 ${$.name}, Set Environment Variables`, `platform: ${platform}`, "");
 		Settings = await getENV(name, platform, database).then(v=> v.Settings);
 	};
-	Settings.Switch = JSON.parse(Settings?.Switch) //  BoxJs字符串转Boolean
+	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	if (Array.isArray(Settings.Types)) {
 		if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
 		if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
 		if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	}
-	Settings.External = {
-		"Offset": parseInt(Settings?.External?.Offset, 10), // BoxJs字符串转数字
-		"ShowOnly": JSON.parse(Settings?.External?.ShowOnly ?? false) //  BoxJs字符串转Boolean
-	};
-	Settings.CacheSize = parseInt(Settings?.CacheSize, 10) // BoxJs字符串转数字
-	Settings.Tolerance = parseInt(Settings?.Tolerance, 10) // BoxJs字符串转数字
+	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
+	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
+	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
+	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Platform, Verify, Advanced, Settings, Caches, Configs };
 };

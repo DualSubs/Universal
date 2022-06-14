@@ -16,7 +16,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
     - [安装说明](#安装说明)
     - [配置说明](#配置说明)
   - [安装链接](#安装链接)
-    - [🍿️ DualSubs for HLS Media Platform](#️-dualsubs-for-hls-media-platform)
+    - [🍿️ DualSubs for Streaming Media Platform](#️-dualsubs-for-streaming-media-platform)
     - [🍿️ DualSubs for YouTube](#️-dualsubs-for-youtube)
   - [How To](#how-to)
   - [支持列表](#支持列表)
@@ -78,14 +78,16 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
     5. (可选)在`DualSubs: Advanced Options`中配置高级设置
 
 ## 安装链接
-### 🍿️ DualSubs for HLS Media Platform
+### 🍿️ DualSubs for Streaming Media Platform
+  * 因v0.7版结构升级，旧版用户请清空[`DualSubs在BoxJs的全部设置`](https://github.com/DualSubs/DualSubs/wiki/在BoxJs中清除DualSubs的储存数据#清除全部储存数据)后重新设置
   * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
 
 ### 🍿️ DualSubs for YouTube
-  * 当前仅支持`Web端`和`移动端`有字幕视频的`自动翻译`(不支持`自动生成`的听译字幕)及全翻译语言解锁及双语言
+  * 支持`Web端`的`播放器`全翻译语言选项解锁及双语言
+  * 支持`Web端`和`移动端`有字幕视频的`自动翻译`(不支持`自动生成`的听译字幕)
     * 当选择任意语言`普通字幕`时，双语字幕`首选语言`均为BoxJs中设置的`首选语言`且为翻译字幕（暂未做官方字幕查询）
     * 当选择`自动翻译`中的`翻译字幕`时，双语字幕分别为`原语言`及`目标语言`
   * 注：本插件不适用于`tvOS`上的YouTube app（无法MitM`tvOS`上的`www.youtube.com`）
@@ -112,19 +114,20 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 |  供应商  |iOS/iPadOS|  tvOS  |  macOS  | Appx | Android | Web | 备注 |
 |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |   :-:   |
 | YouTube |   ☑️[^7]   |   ❌[^8]   |   N/A   |   N/A   |   ❓   |   ✅   |        |
-|Apple TV+|   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   ✅[^5]   |   N/A   |   ❓   |   [✅](https://tv.apple.com/)[^2]   |   指Apple TV app中的订阅内容   |
-|Apple TV |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   ✅[^2][^5]   |   N/A   |   ❓   |   N/A   |   指Apple TV app中的买断或租借内容[^1]   |
+|Apple TV+|   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549?platform=appleTV)   |   ✅[^5]   |   N/A   |   ❓   |   [✅](https://tv.apple.com/)[^2]   |   Apple TV app中的订阅内容   |
+|Apple TV |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549)[^2]   |   [✅](https://apps.apple.com/hk/app/apple-tv/id1174078549?platform=appleTV)[^2]   |   ✅[^2][^5]   |   N/A   |   ❓   |   N/A   |   Apple TV app中的购买与租借内容[^1]   |
 |Apple Fitness| [✅](https://apps.apple.com/cn/app/fitness/id1208224953)[^2] |   ✅[^2]   |   N/A   |   N/A   |   ❓   |   N/A   | [^1] |
-| Disney+ |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   N/A   |   [✅](https://www.microsoft.com/zh-cn/p/disney/9nxqxxlfst89)   |   ✅   |   [✅](https://www.disneyplus.com/)   |        |
-|Prime Video|   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)[^5]   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [🔜](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)[^3]   |   🔜[^3]   |   [🔜](https://www.primevideo.com)[^3]   |   包含Prime Video Channel   |
-| HBO Max |   [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4]   |   [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   |   ❓   |   [☑️](https://play.hbomax.com)[^4]   |        |
-|  Hulu   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   N/A   |   N/A   |   ❓   |   [🔜](https://www.hulu.com/)[^6]   |        |
-|Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   N/A   |   ❓   |   ❓   |   [✅](https://www.paramountplus.com/)   | 包含部分Live TV |
+| Disney+ |   [✅](https://apps.apple.com/hk/app/disney/id1446075923)   |   [✅](https://apps.apple.com/hk/app/disney/id1446075923?platform=appleTV)   |   N/A   |   [✅](https://www.microsoft.com/zh-cn/p/disney/9nxqxxlfst89)   |   ✅   |   [✅](https://www.disneyplus.com/)   |        |
+|Prime Video|   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333?platform=appleTV)   |   [✅](https://apps.apple.com/hk/app/amazon-prime-video/id545519333)   |   [🔜](https://www.microsoft.com/zh-cn/p/amazon-prime-video-for-windows/9p6rc76msmmj?activetab=pivot:overviewtab)[^3]   |   🔜[^3]   |   [🔜](https://www.primevideo.com)[^3]   |   包含Prime Video Channel   |
+| HBO Max |   [☑️](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422)[^4]   |   [✅](https://apps.apple.com/us/app/hbo-max-stream-tv-movies/id971265422?platform=appleTV)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/hbo-max/9pjj1k9dzmrs)   |   ❓   |   [☑️](https://play.hbomax.com)[^4]   |        |
+|  Hulu   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438)   |   [✅](https://apps.apple.com/us/app/hulu-watch-tv-series-movies/id376510438?platform=appleTV)   |   N/A   |   N/A   |   ❓   |   [🔜](https://www.hulu.com/)[^6]   |        |
+|Paramount+|   [✅](https://apps.apple.com/us/app/paramount/id530168168)   |   [✅](https://apps.apple.com/us/app/paramount/id530168168?platform=appleTV)   |   N/A   |   ❓   |   ❓   |   [✅](https://www.paramountplus.com/)   | 包含部分Live TV |
 |Discovery+<br>Philippines|   [✅](https://apps.apple.com/ph/app/discovery-stream-tv-shows/id1574345720)   |   ❓   |   ❓   |   ❓   |   ❓   |   [✅](https://www.discoveryplus.com/ph/)   |        |
-|Peacock TV|   [☑️](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)[^4]   |   [❓](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/peacocktv/9pl67r4p9pg5?activetab=pivot:overviewtab)   |   ❓   |   [☑️](https://www.peacocktv.com/)[^4]   |        |
-| Fubo TV |   ✅   |   ✅   |   N/A   |   ❓   |   ❓   |   ✅   |        |
-|   TED   |   ☑️   |   ✅   |   N/A   |   ❓   |   ❓   |   ☑️   |        |
-|   BBC   |         |         |         |         |         |        | 包含iPlayer和BritBox |
+|Peacock TV|   [☑️](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)[^4]   |   [❓](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374?platform=appleTV)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/peacocktv/9pl67r4p9pg5?activetab=pivot:overviewtab)   |   ❓   |   [☑️](https://www.peacocktv.com/)[^4]   |        |
+|  fuboTV  |   [✅](https://apps.apple.com/us/app/fubotv-watch-live-sports-tv/id905401434)   |   [✅](https://apps.apple.com/us/app/fubotv-watch-live-sports-tv/id905401434?platform=appleTV)   |   N/A   |   ❓   |   ❓   |   [✅](https://www.fubo.tv/)   | 仅点播(On Demand)节目 |
+|   TED   |   [☑️](https://apps.apple.com/hk/app/ted/id376183339)   |   [✅](https://apps.apple.com/hk/app/ted/id376183339?platform=appleTV)   |   N/A   |   ❓   |   ❓   |   [☑️](https://www.ted.com)   |        |
+| BBC iPlayer |   🔜[^3]   |   🔜[^3]   |         |         |         |   🔜[^3]   | iPlayer与BritBox共用资源 |
+| BBC BritBox |   🔜[^3]   |   ✅   |         |         |         |   🔜[^3]   | iPlayer与BritBox共用资源 |
 |         |         |         |         |         |         |        |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。

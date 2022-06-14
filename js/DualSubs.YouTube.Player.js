@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.4.1-youtube-player");
+const $ = new Env("DualSubs v0.4.2-youtube-player");
 const URL = new URLs();
 
 const DataBase = {
@@ -166,17 +166,19 @@ async function setENV(name, url, database) {
 		$.log(`🚧 ${$.name}, Set Environment Variables`, `platform: ${platform}`, "");
 		Settings = await getENV(name, platform, database).then(v=> v.Settings);
 	};
-	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	Settings.Switch = JSON.parse(Settings?.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	if (Array.isArray(Settings.Types)) {
 		if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
 		if (!Verify.Azure.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
 		if (!Verify.DeepL.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	}
-	Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
-	Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
-	Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
-	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
+	Settings.External = {
+		"Offset": parseInt(Settings?.External?.Offset, 10), // BoxJs字符串转数字
+		"ShowOnly": JSON.parse(Settings?.External?.ShowOnly ?? false) //  BoxJs字符串转Boolean
+	};
+	Settings.CacheSize = parseInt(Settings?.CacheSize, 10) // BoxJs字符串转数字
+	Settings.Tolerance = parseInt(Settings?.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Platform, Verify, Advanced, Settings, Caches, Configs };
 };

@@ -276,8 +276,12 @@ async function getVTTs(url, headers, platform) {
 		PlayList = PlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
 		PlayList = PlayList.filter(({ URI }) => !/empty/.test(URI));
 		VTTs = PlayList.map(({ URI }) => aPath(url, URI))
-		if (platform == "Disney_Plus") {
-			if (VTTs.some(item => /\/.+-DUB_CARD\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+		switch (platform) {
+			case "Disney_Plus":
+				if (VTTs.some(item => /\/.+-MAIN\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+				break;
+			default:
+				break;
 		};
 		//$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
 		return VTTs;

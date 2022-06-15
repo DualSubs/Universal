@@ -37,32 +37,12 @@
 							"label": "官方"
 						},
 						{
-							"key": "Baidu",
-							"label": "百度翻译"
-						},
-						{
-							"key": "BaiduFanyi",
-							"label": "百度 翻译开放平台"
-						},
-						{
-							"key": "Youdao",
-							"label": "有道翻译"
-						},
-						{
-							"key": "YoudaoAI",
-							"label": "有道智云 AI开放平台"
-						},
-						{
 							"key": "Google",
 							"label": "Google Translate"
 						},
 						{
 							"key": "GoogleCloud",
 							"label": "Google Cloud Translate API"
-						},
-						{
-							"key": "Bing",
-							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",
@@ -155,32 +135,12 @@
 							"label": "官方"
 						},
 						{
-							"key": "Baidu",
-							"label": "百度翻译"
-						},
-						{
-							"key": "BaiduFanyi",
-							"label": "百度 翻译开放平台"
-						},
-						{
-							"key": "Youdao",
-							"label": "有道翻译"
-						},
-						{
-							"key": "YoudaoAI",
-							"label": "有道智云 AI开放平台"
-						},
-						{
 							"key": "Google",
 							"label": "Google Translate"
 						},
 						{
 							"key": "GoogleCloud",
 							"label": "Google Cloud Translate API"
-						},
-						{
-							"key": "Bing",
-							"label": "Bing Microsoft Translator"
 						},
 						{
 							"key": "Azure",

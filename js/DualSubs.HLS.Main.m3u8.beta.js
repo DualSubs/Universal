@@ -241,6 +241,7 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 	//查询是否有符合语言的字幕
 	let datas = [];
 	for await (let langcode of langcodes) {
+		$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, `langcode: ${langcode}`, "");
 		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === langcode.toLowerCase()));
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcode)));
@@ -261,9 +262,11 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
 						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
 							: [langCode]
-		langcodes = langcodes.map(langcode => database?.Languages?.[langcode].map(lc => `\"${lc}\"`))
+		langcodes = langcodes.map(langcode => database?.Languages?.[langcode])
 		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		langcodes = [...new Set(langcodes.flat(Infinity))]
+		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+		langcodes = langcodes.map(e => `\"${e}\"`)
 		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		return langcodes
 	};
@@ -347,12 +350,13 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
-			newSub.OPTION.NAME = `\"${obj1.Name} / ${obj2.Name} [${type}]\"`
+			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
 			// 修改语言代码
 			newSub.OPTION.LANGUAGE = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language} / ${obj2.Language} [${type}]\"`
-			: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
+				: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
+			newSub.OPTION["ASSOC-LANGUAGE"] = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj2.Language} [${type}]\"`
+				: (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
 			// 修改链接
 			newSub.OPTION.URI = (newSub.URL.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
 				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`

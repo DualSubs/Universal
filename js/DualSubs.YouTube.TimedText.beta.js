@@ -111,42 +111,12 @@ delete $request.headers["Range"]
  * Get Environment Variables
  * @link https://github.com/VirgilClyne/VirgilClyne/blob/main/function/getENV/getENV.min.js
  * @author VirgilClyne
- * @param {String} key - Persistent Store Key
- * @param {String} name - Platform Name
- * @param {Object} database - Default Database
+ * @param {String} t - Persistent Store Key
+ * @param {String} e - Platform Name
+ * @param {Object} n - Default Database
  * @return {Promise<*>}
  */
-async function getENV(key, name, database) {
-	$.log(`⚠ ${$.name}, Get Environment Variables`, "");
-	/***************** BoxJs *****************/
-	// 包装为局部变量，用完释放内存
-	// BoxJs的清空操作返回假值空字符串, 逻辑或操作符会在左侧操作数为假值时返回右侧操作数。
-	let BoxJs = $.getjson(key, database);
-	$.log(`🚧 ${$.name}, Get Environment Variables`, `BoxJs类型: ${typeof BoxJs}`, `BoxJs内容: ${JSON.stringify(BoxJs)}`, "");
-	/***************** Argument *****************/
-	let Argument = {};
-	if (typeof $argument !== "undefined") {
-		if (Boolean($argument)) {
-			$.log(`🎉 ${$.name}, $Argument`);
-			let arg = Object.fromEntries($argument.split("&").map((item) => item.split("=")));
-			$.log(JSON.stringify(arg));
-			for (let item in arg) setPath(Argument, item, arg[item]);
-			$.log(JSON.stringify(Argument));
-		};
-	};
-	$.log(`🎉 ${$.name}, Get Environment Variables`, `Argument类型: ${typeof Argument}`, `Argument内容: ${JSON.stringify(Argument)}`, "");
-	/***************** Settings *****************/
-	let Settings = { ...database?.Default?.Settings, ...database?.[name]?.Settings, ...BoxJs?.[name]?.Settings, ...Argument };
-	$.log(`🎉 ${$.name}, Get Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
-	let Configs = { ...database?.Default?.Configs, ...database?.[name]?.Configs, ...BoxJs?.[name]?.Configs };
-	$.log(`🎉 ${$.name}, Get Environment Variables`, `Configs: ${typeof Configs}`, `Configs内容: ${JSON.stringify(Configs)}`, "");
-	let Caches = BoxJs?.[name]?.Caches || undefined;
-	if (typeof Caches === "string") Caches = JSON.parse(Caches)
-	$.log(`🎉 ${$.name}, Get Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	return { Settings, Caches, Configs };
-	/***************** setPath *****************/
-	function setPath(object, path, value) { path.split(".").reduce((o, p, i) => o[p] = path.split(".").length === ++i ? value : o[p] || {}, object) }
-};
+async function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $argument&&Boolean($argument)){let t=Object.fromEntries($argument.split("&").map((t=>t.split("="))));for(let e in t)f(s,e,t[e])}let g={...n?.Default?.Settings,...n?.[e]?.Settings,...i?.[e]?.Settings,...s},o={...n?.Default?.Configs,...n?.[e]?.Configs,...i?.[e]?.Configs},a=i?.[e]?.Caches||void 0;return"string"==typeof a&&(a=JSON.parse(a)),{Settings:g,Caches:a,Configs:o};function f(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}
 
 /**
  * Set Environment Variables

@@ -324,7 +324,7 @@ function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","s
 function XMLs(opts) {
 	return new (class {
 		constructor(opts) {
-			this.name = "XML v0.1.1";
+			this.name = "XML v0.1.2";
 			this.opts = opts;
 		};
 
@@ -550,8 +550,14 @@ function XMLs(opts) {
 			function toXml(v, name, ind) {
 				let xml = "";
 				if (Array.isArray(v)) {
+					xml = v.reduce(
+						(prevXML, currXML) => prevXML += ind + toXml(currXML, name, ind + "\t") + "\n",
+						""
+					)
+					/*
 					for (let i = 0, n = v.length; i < n; i++)
 						xml += ind + toXml(v[i], name, ind + "\t") + "\n";
+					*/
 				} else if (typeof (v) == "object") {
 					let hasChild = false;
 					xml += ind + "<" + name;

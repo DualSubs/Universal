@@ -240,8 +240,9 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 	let langcodes = await switchLangCode(langCode, database);
 	//查询是否有符合语言的字幕
 	let datas = [];
+	$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, `json: ${JSON.stringify(json)}`, "");
 	for await (let langcode of langcodes) {
-		$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, `langcode: ${langcode}`, "");
+		$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, `langcode: ${langcode}`, "");
 		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === langcode.toLowerCase()));
 		if (datas.length !== 0) {
 			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcode)));
@@ -263,11 +264,11 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
 							: [langCode]
 		langcodes = langcodes.map(langcode => database?.Languages?.[langcode])
-		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+		$.log(`🚧 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		langcodes = [...new Set(langcodes.flat(Infinity))]
-		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+		$.log(`🚧 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		langcodes = langcodes.map(e => `\"${e}\"`)
-		$.log(`🎉 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
+		$.log(`🚧 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
 		return langcodes
 	};
 	// Get Absolute Path
@@ -279,7 +280,7 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
 		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
 		Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
-		$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
+		//$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
 		return Data
 	};
 };

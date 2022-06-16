@@ -8,9 +8,9 @@
 
 #[Script]
 # DualSubs.YouTube.Player
-^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
+^https?:\/\/((www|m)\.youtube|youtubei\.googleapis)\.com\/youtubei\/v1\/player(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
 # DualSubs.YouTube.TimedText
 ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
 
 #[MITM]
-hostname = www.youtube.com, m.youtube.com
+hostname = www.youtube.com, m.youtube.com, youtubei.googleapis.com

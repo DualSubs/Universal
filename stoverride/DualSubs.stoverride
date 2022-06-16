@@ -42,13 +42,20 @@ http:
     - "vod-*.cbsaavideo.com"
     - "vod-*.cbsivideo.com"
     - "*.airspace-*.cbsivideo.com"
+    - "content-discovery.uplynk.com"
+    - "x-default-stgec.uplynk.com"
+    - "*-discovery1.uplynk.com"
     - "dplus-ph-prod-vod.akamaized.net"
     - "dplus-ph-google-v2.prod-vod.h264.io"
     - "*.stream.peacocktv.com"
     - "*.cdn.peacocktv.com"
-    - "content-discovery.uplynk.com"
-    - "x-default-stgec.uplynk.com"
-    - "*-discovery1.uplynk.com"
+    - "*-vod.fubo.tv"
+    - "hls.ted.com"
+    - "pubads.g.doubleclick.net"
+    - "vod-*.live.cf.md.bbci.co.uk"
+    - "vod-*-live.akamaized.net"
+    - "api.britbox.com"
+    - "*.content.britbox.co.uk"
   script:
     - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(.\?*)
       name: DualSubs.HLS.Main.m3u8
@@ -155,17 +162,17 @@ http:
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/(vod-.*|(.+)\.airspace-.*|.*-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(master|manifest)\.m3u8(\?.*)?$
+    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(master|manifest)\.m3u8(\?.*)?$
       name: DualSubs.HLS.Main.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(vod-.*|(.+)\.airspace-.*|.*-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(stream_vtt|manifest_.*)\.m3u8(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(stream_vtt|manifest_.*)\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.HLS.WebVTT.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(vod-.*|(.+)\.airspace-.*|.*-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\.vtt(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\.vtt(\?.*dualsubs=\w+)$
       name: DualSubs.SUB.WebVTT
       type: response
       require-body: true
@@ -210,17 +217,17 @@ http:
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/.*-vod\.fubo\.tv\/(.+)\/manifests\/master\.m3u8(\?.*)?$
+    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/master\.m3u8(\?.*)?$
       name: DualSubs.HLS.Main.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/.*-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\/media\.m3u8(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\/media\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs.HLS.WebVTT.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/.*-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\.vtt(\?.*dualsubs=\w+)?$
+    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\.vtt(\?.*dualsubs=\w+)?$
       name: DualSubs.SUB.WebVTT
       type: response
       require-body: true
@@ -260,13 +267,28 @@ http:
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/vod-hls-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/(.+)_hls_master\.m3u8(\?.*)?$
+    - match: ^https?:\/\/vod-hls-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/(.+)_hls_master\.m3u8(\?.*)?$
       name: DualSubs.HLS.Main.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/vod-sub-.*(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.+)(\.cc)?\.xml(\?.*)?$
+    - match: ^https?:\/\/vod-sub-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.+)(\.cc)?\.xml(\?.*)?$
       name: DualSubs.SUB.TTML
+      type: response
+      require-body: true
+      timeout: 30
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/\.m3u8(\?.*)?$
+      name: DualSubs.HLS.Main.m3u8
+      type: response
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.m3u8(\?.*dualsubs=\w+)$
+      name: DualSubs.HLS.WebVTT.m3u8
+      type: response
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.webvtt(\?.*dualsubs=\w+)?$
+      name: DualSubs.SUB.WebVTT
       type: response
       require-body: true
       timeout: 30

@@ -127,7 +127,8 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 |  fuboTV  |   [✅](https://apps.apple.com/us/app/fubotv-watch-live-sports-tv/id905401434)   |   [✅](https://apps.apple.com/us/app/fubotv-watch-live-sports-tv/id905401434?platform=appleTV)   |   N/A   |   ❓   |   ❓   |   [✅](https://www.fubo.tv/)   | 仅点播(On Demand)节目 |
 |   TED   |   [☑️](https://apps.apple.com/hk/app/ted/id376183339)   |   [✅](https://apps.apple.com/hk/app/ted/id376183339?platform=appleTV)   |   N/A   |   ❓   |   ❓   |   [☑️](https://www.ted.com)   |        |
 | BBC iPlayer |   🔜[^3]   |   🔜[^3]   |         |         |         |   🔜[^3]   | iPlayer与BritBox共用资源 |
-| BBC BritBox |   🔜[^3]   |   ✅   |         |         |         |   🔜[^3]   | iPlayer与BritBox共用资源 |
+|  BritBox  |   🔜[^3]   |   ✅   |   N/A   |         |         |   🔜[^3]   | iPlayer与BritBox共用资源 |
+| BritBox UK |   ☑️   |   ✅   |   N/A   |         |         |   ❓   | BritBox与BritBox UK并非同一APP |
 |         |         |         |         |         |         |        |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。

@@ -352,7 +352,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
-			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
+			newSub.OPTION.NAME = `\"${obj1.Name} / ${obj2.Name} [${type}]\"`
 			// 修改语言代码
 			newSub.OPTION.LANGUAGE = (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
@@ -362,14 +362,20 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`
 			// 自动选择
 			newSub.OPTION.AUTOSELECT = "YES"
+			// 兼容性修正
 			switch (platform) {
 				case "Apple":
+					newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
 					newSub.OPTION.LANGUAGE = `\"${obj1.Language}/${obj2.Language} [${type}]\"`
 					break;
 				case "Disney_Plus":
+					newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
+					newSub.OPTION.LANGUAGE = `\"${obj1.Language} / ${obj2.Language} [${type}]\"`
+					break;
 				case "Hulu":
 				case "Paramount_Plus":
 				case "Discovery_Plus_Ph":
+					newSub.OPTION.NAME = `\"${obj1.Name} / ${obj2.Name} [${type}]\"`
 					newSub.OPTION.LANGUAGE = `\"${obj1.Language} / ${obj2.Language} [${type}]\"`
 					//newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} [${type}]\"`
 					break;

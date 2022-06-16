@@ -113,12 +113,14 @@
 # DualSubs.BBC.SUB.TTML
 # ^https?:\/\/vod-sub-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.+)(\.cc)?\.xml(\?.*)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.TTML.js
 
-# DualSubs.Britbox.HLS.Main.m3u8
+# DualSubs.Britbox_UK.HLS.Main.m3u8
 ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/\.m3u8(\?.*)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.Main.m3u8.js
-# DualSubs.Britbox.HLS.WebVTT.m3u8
+# DualSubs.Britbox_UK.HLS.WebVTT.m3u8
 ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.WebVTT.m3u8.js
-# DualSubs.Britbox.SUB.WebVTT
+# DualSubs.Britbox_UK.SUB.WebVTT
 ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.webvtt(\?.*dualsubs=\w+)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js
+^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\/Subtitles\/(.+)\.vtt(\?.*dualsubs=\w+)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js
+# DualSubs.Britbox.SUB.WebVTT
 ^https?:\/\/api\.britbox\.com\/v1\/subtitles(\?.*)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js
 
 #[MITM]

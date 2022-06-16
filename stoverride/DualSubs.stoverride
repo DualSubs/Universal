@@ -292,6 +292,11 @@ http:
       type: response
       require-body: true
       timeout: 30
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\/Subtitles\/(.+)\.vtt(\?.*dualsubs=\w+)?$
+      name: DualSubs.SUB.WebVTT
+      type: response
+      require-body: true
+      timeout: 30
     - match: ^https?:\/\/api\.britbox\.com\/v1\/subtitles(\?.*)?$
       name: DualSubs.SUB.WebVTT
       type: response

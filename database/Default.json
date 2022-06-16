@@ -71,8 +71,8 @@
 			"ZH-HK": ["zh-HK", "yue-Hant", "yue", "zho"],
 			"ZH-TW": ["zh-TW", "zh-Hant", "cmn-Hant", "zho"],
 			"ZH-HANT": ["zh-Hant", "cmn-Hant", "zh-TW", "zho"],
-			"YUE": ["yue", "yue-Hant", "zho"],
-			"YUE-HK": ["yue-Hant", "yue", "zho"]
+			"YUE": ["yue", "yue-Hant", "zh-HK", "zho"],
+			"YUE-HK": ["yue-Hant", "yue", "zh-HK", "zho"]
 		}
 	}
 }

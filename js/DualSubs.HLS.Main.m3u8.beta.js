@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.5-hls-main-beta");
+const $ = new Env("DualSubs v0.7.6-hls-main-beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -233,54 +233,66 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
  * @param {String} platform - Steaming Media Platform
  * @param {Object} json - Parsed WebVTT
  * @param {String} type - Content Type
- * @param {String} langcode - Language Code in Settings
+ * @param {String} langCode - Language Code in Settings
  * @return {Promise<*>}
  */
-async function getMEDIA(url = "", json = {}, type = "", langcode = "", database) {
-	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, `langcode: ${langcode}`, "");
+async function getMEDIA(url = "", json = {}, type = "", langCode = "", database) {
+	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, `langcode: ${langCode}`, "");
 	// 自动语言转换
-	//let langcodes = await switchLangCode(langCode, database);
-	let langcodes = database?.Languages?.[langcode]
+	let langcodes = database?.Languages?.[langCode]
 	//查询是否有符合语言的字幕
 	let datas = [];
-	for await (let lc of langcodes) {
-		$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, `lc: ${lc}`, "");
-		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === `\"${lc.toLowerCase()}\"`));
+	for (let langcode of langcodes) {
+		$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
+		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === `\"${langcode.toLowerCase()}\"`));
+		if (datas.length !== 0) break;
+		/*
 		if (datas.length !== 0) {
-			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, lc)));
+			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcode)));
 			break;
 		} else datas = [await setMEDIA(url, {}, langcodes[0])];
+		*/
 	};
-	$.log(`🎉 ${$.name}, 调试信息`, "Get EXT-X-MEDIA Data", `datas: ${JSON.stringify(datas)}`, "");
+	//datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcodes[0])));
+	if (datas.length === 0) {
+		datas = [
+			{
+				"OPTION": {
+					"NAME": `\"${langCode}\"`,
+					"LANGUAGE": `\"${langCode}\"`,
+				},
+				"URL": aPath(url, null)
+			}
+		]
+		$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, "未找到匹配语言", "");
+	} else {
+		datas = datas.map(data => {
+			data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+			return data;
+		})
+		$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, "已找到匹配语言", "");
+	}
+	$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, `datas: ${JSON.stringify(datas)}`, "");
 	return datas
 
 	/***************** Fuctions *****************/
-	// Switch Language Code
-	async function switchLangCode(langCode = "", database) {
-		$.log(`⚠ ${$.name}, Switch Language Code`, `langCode: ${langCode}`, "");
-		// 自动语言转换
-		let langcodes = (langCode == "ZH") ? ["ZH", "ZH-HANS", "ZH-HANT", "ZH-HK"] // 中文（自动）
-			: (langCode == "YUE") ? ["YUE", "YUE-HK", "ZH-HK"] // 粤语（自动）
-				: (langCode == "EN") ? ["EN", "EN-US SDH", "EN-US", "EN-GB"] // 英语（自动）
-					: (langCode == "ES") ? ["ES", "ES-419 SDH", "ES-419", "ES-ES SDH", "ES-ES"] // 西班牙语（自动）
-						: (langCode == "PT") ? ["PT", "PT-PT", "PT-BR"] // 葡萄牙语（自动）
-							: [langCode]
-		langcodes = langcodes.map(langcode => database?.Languages?.[langcode])
-		$.log(`🚧 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
-		langcodes = [...new Set(langcodes.flat(Infinity))]
-		$.log(`🚧 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
-		langcodes = langcodes.map(e => `\"${e}\"`)
-		$.log(`🚧 ${$.name}, Switch Language Code`, `langcodes: ${langcodes}`, "");
-		return langcodes
-	};
 	// Get Absolute Path
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 	// Set EXT-X-MEDIA Data
 	async function setMEDIA(url, data = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
 		let Data = { ...data };
-		Data.Name = data?.OPTION?.NAME?.replace(/\"/g, "") ?? langCode;
-		Data.Language = data?.OPTION?.LANGUAGE?.replace(/\"/g, "") ?? langCode;
+		if (data?.OPTION) {
+			Data.OPTION.NAME = data.OPTION.NAME ?? `\"${langCode}\"`;
+			Data.OPTION.LANGUAGE = data.OPTION.LANGUAGE ?? `\"${langCode}\"`;
+		} else {
+			Data.OPTION = {
+				"NAME": `\"${langCode}\"`,
+				"LANGUAGE": `\"${langCode}\"`,
+			};
+		}
+		//Data.Name = data?.OPTION?.NAME?.replace(/\"/g, "") ?? langCode;
+		//Data.Language = data?.OPTION?.LANGUAGE?.replace(/\"/g, "") ?? langCode;
 		Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
 		//$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
 		return Data
@@ -348,37 +360,44 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 	// Get DualSubs Subtitle Options
 	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
 		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
+		const NAME1 = obj1?.OPTION?.NAME?.replace(/\"/g, ""), NAME2 = obj2?.OPTION?.NAME?.replace(/\"/g, "")
+		const LANGUAGE1 = obj1?.OPTION?.LANGUAGE?.replace(/\"/g, ""), LANGUAGE2 = obj2?.OPTION?.LANGUAGE?.replace(/\"/g, "")
 		return types.map(type => {
 			// 复制此语言选项
 			let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
-			newSub.OPTION.NAME = `\"${obj1.Name} / ${obj2.Name} [${type}]\"`
+			//newSub.OPTION.NAME = `\"${obj1.Name} / ${obj2.Name} [${type}]\"`
+			newSub.OPTION.NAME = `\"${NAME1} / ${NAME2} [${type}]\"`
 			// 修改语言代码
-			newSub.OPTION.LANGUAGE = (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
+			//newSub.OPTION.LANGUAGE = (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
+			newSub.OPTION.LANGUAGE = (standard) ? `\"${LANGUAGE1}\"` : `\"${LANGUAGE2}\"`
 			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
+			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${LANGUAGE2}\"` : `\"${LANGUAGE1}\"`
 			// 修改链接
-			newSub.OPTION.URI = (newSub.URL.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
-				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`
+			newSub.OPTION.URI = (newSub?.OPTION?.URI?.includes("?")) ? `\"${newSub?.OPTION?.URI?.replace(/\"/g, "")}&dualsubs=${type}\"`
+				: `\"${newSub?.OPTION?.URI?.replace(/\"/g, "")}?dualsubs=${type}\"`
 			// 自动选择
 			newSub.OPTION.AUTOSELECT = "YES"
 			// 兼容性修正
 			switch (platform) {
 				case "Apple":
-					newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
-					newSub.OPTION.LANGUAGE = `\"${obj1.Language}/${obj2.Language} [${type}]\"`
+					newSub.OPTION.NAME = `\"${NAME1}/${NAME2}[${type}]\"`
+					newSub.OPTION.LANGUAGE = `\"${LANGUAGE1}/${LANGUAGE2} [${type}]\"`
 					break;
 				case "Disney_Plus":
-					newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
-					newSub.OPTION.LANGUAGE = `\"${obj1.Language} / ${obj2.Language} [${type}]\"`
+					newSub.OPTION.NAME = `\"${NAME1}/${NAME2}[${type}]\"`
+					newSub.OPTION.LANGUAGE = `\"${LANGUAGE1} / ${LANGUAGE2} [${type}]\"`
+					break;
+				case "Prime_Video":
+					newSub.OPTION.NAME = `\"${NAME1}/${NAME2}[${type}]\"`
 					break;
 				case "Hulu":
 				case "Paramount_Plus":
 				case "Discovery_Plus_Ph":
-					newSub.OPTION.NAME = `\"${obj1.Name} / ${obj2.Name} [${type}]\"`
-					newSub.OPTION.LANGUAGE = `\"${obj1.Language} / ${obj2.Language} [${type}]\"`
-					//newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} [${type}]\"`
+					//newSub.OPTION.NAME = `\"${NAME1} / ${NAME2} [${type}]\"`
+					newSub.OPTION.LANGUAGE = `\"${LANGUAGE1} / ${LANGUAGE2} [${type}]\"`
+					//newSub.OPTION["ASSOC-LANGUAGE"] = `\"${LANGUAGE2} [${type}]\"`
 					break;
 			};
 			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");

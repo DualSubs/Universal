@@ -230,23 +230,23 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
  * @author VirgilClyne
  * @param {String} url - Request URL
  * @param {String} platform - Steaming Media Platform
- * @param {Object} json - json
- * @param {String} type - type
- * @param {String} langCode - langCode
+ * @param {Object} json - Parsed WebVTT
+ * @param {String} type - Content Type
+ * @param {String} langcode - Language Code in Settings
  * @return {Promise<*>}
  */
-async function getMEDIA(url = "", json = {}, type = "", langCode = "", database) {
-	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, "");
+async function getMEDIA(url = "", json = {}, type = "", langcode = "", database) {
+	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, `langcode: ${langcode}`, "");
 	// 自动语言转换
-	let langcodes = await switchLangCode(langCode, database);
+	//let langcodes = await switchLangCode(langCode, database);
+	let langcodes = database?.Languages?.[langcode]
 	//查询是否有符合语言的字幕
 	let datas = [];
-	$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, `json: ${JSON.stringify(json)}`, "");
-	for await (let langcode of langcodes) {
-		$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, `langcode: ${langcode}`, "");
-		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === langcode.toLowerCase()));
+	for await (let lc of langcodes) {
+		$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, `lc: ${lc}`, "");
+		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === `\"${lc.toLowerCase()}\"`));
 		if (datas.length !== 0) {
-			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcode)));
+			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, lc)));
 			break;
 		} else datas = [await setMEDIA(url, {}, langcodes[0])];
 	};
@@ -278,8 +278,8 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 	async function setMEDIA(url, data = {}, langCode = "") {
 		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
 		let Data = { ...data };
-		Data.Name = (data?.OPTION?.NAME ?? langCode).replace(/\"/g, "");
-		Data.Language = (data?.OPTION?.LANGUAGE ?? langCode).replace(/\"/g, "");
+		Data.Name = data?.OPTION?.NAME?.replace(/\"/g, "") ?? langCode;
+		Data.Language = data?.OPTION?.LANGUAGE?.replace(/\"/g, "") ?? langCode;
 		Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
 		//$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
 		return Data

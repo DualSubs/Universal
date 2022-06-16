@@ -352,16 +352,26 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			// 修改名称
 			newSub.OPTION.NAME = `\"${obj1.Name}/${obj2.Name}[${type}]\"`
 			// 修改语言代码
-			newSub.OPTION.LANGUAGE = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj1.Language} / ${obj2.Language} [${type}]\"`
-				: (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
+			newSub.OPTION.LANGUAGE = (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
 			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = (platform == "Apple" || platform == "Disney_Plus" || platform == "Hulu" || platform == "Paramount_Plus" || platform == "Discovery_Plus_Ph") ? `\"${obj2.Language} [${type}]\"`
-				: (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
+			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${obj2.Language}\"` : `\"${obj1.Language}\"`
 			// 修改链接
 			newSub.OPTION.URI = (newSub.URL.includes("?")) ? `\"${newSub.OPTION.URI.replace(/\"/g, "")}&dualsubs=${type}\"`
 				: `\"${newSub.OPTION.URI.replace(/\"/g, "")}?dualsubs=${type}\"`
 			// 自动选择
 			newSub.OPTION.AUTOSELECT = "YES"
+			switch (platform) {
+				case "Apple":
+					newSub.OPTION.LANGUAGE = `\"${obj1.Language}/${obj2.Language} [${type}]\"`
+					break;
+				case "Disney_Plus":
+				case "Hulu":
+				case "Paramount_Plus":
+				case "Discovery_Plus_Ph":
+					newSub.OPTION.LANGUAGE = `\"${obj1.Language} / ${obj2.Language} [${type}]\"`
+					//newSub.OPTION["ASSOC-LANGUAGE"] = `\"${obj2.Language} [${type}]\"`
+					break;
+			};
 			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
 			return newSub
 		})

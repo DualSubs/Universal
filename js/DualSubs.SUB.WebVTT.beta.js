@@ -74,17 +74,23 @@ delete $request.headers["Range"]
 				let Cache = Caches?.[Indices.Index] || {};
 				let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
 				if (!VTTs) $.done();
-				else if (Platform == "Apple") {
-					let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
-					let requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
-					for await (let request of requests) {
+				switch (Platform) {
+					case "Apple":
+					case "Apple_TV":
+					case "Apple_TV_Plus":
+					case "Apple_Fitness":
+						let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
+						let requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
+						for await (let request of requests) {
+							SecondSub = await getWebVTT(request);
+							DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+						};
+						break;
+					default:
+						let request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
 						SecondSub = await getWebVTT(request);
 						DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-					};
-				} else {
-					let request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
-					SecondSub = await getWebVTT(request);
-					DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+						break;
 				}
 				break;
 			case "External":

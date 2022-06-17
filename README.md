@@ -13,7 +13,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 - [🍿️ DualSubs](#️-dualsubs)
   - [功能列表](#功能列表)
   - [使用说明](#使用说明)
-    - [安装说明](#安装说明)
+    - [配置方法](#配置方法)
     - [配置说明](#配置说明)
   - [安装链接](#安装链接)
     - [🍿️ DualSubs for Streaming Media Platform](#️-dualsubs-for-streaming-media-platform)
@@ -46,22 +46,22 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
      * `逐段翻译`对于大分段的字幕文件的平台（如：HBO Max）响应更快，翻译效果更好，利于限制使用频率的翻译API。
 
 ## 使用说明
-### 安装说明
-  * 直接使用
+### 配置方法
+  * 方法1: 直接使用
     * 采用默认配置
       * 默认主语言`中文（自动）`，副语言`英文（自动）`
       * 提供官方中文的平台的语言选项为`官方字幕`和`Google翻译`
       * 未提供中文的平台的语言选项为`Google翻译`
       * 不兼容[^4]平台的替换语言选项为`Google翻译`
-  * 配合`BoxJs`及订阅使用
+  * 方法2: 配合`BoxJs`及订阅使用
     1. 安装`BoxJs`插件并更新引用资源或脚本:
        * Loon: [boxjs.rewrite.loon.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.plugin "BoxJs")
        * Quantumult X: [boxjs.rewrite.quanx.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf "BoxJs")
        * Surge (Shadowrocket): [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
        * Stash: [boxjs.rewrite.stash.stoverride](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.stoverride "BoxJs")
     2. 浏览器访问[BoxJs.com](http://boxjs.com)，在[`订阅`](http://boxjs.com/#/sub)页面点击`+`添加本项目订阅:
-       * 🆕V0.7版: [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
-       * [DualSubs.box.json](./archive/v0.6/DualSubs.box.json?raw=true "🍿️ DualSubs")
+       * [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
+
 ### 配置说明
   * 配合`BoxJs`及订阅使用
     1. 浏览器访问[BoxJs.com](http://boxjs.com)
@@ -80,6 +80,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 ## 安装链接
 ### 🍿️ DualSubs for Streaming Media Platform
   * 因v0.7版结构升级，旧版用户请清空[`DualSubs在BoxJs的全部设置`](https://github.com/DualSubs/DualSubs/wiki/在BoxJs中清除DualSubs的储存数据#清除全部储存数据)后重新设置
+  * 本模块不含YouTube平台支持，如需要请单独下载
   * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
   * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
@@ -126,9 +127,9 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 |Peacock TV|   [☑️](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374)[^4]   |   [❓](https://apps.apple.com/us/app/peacock-tv-stream-tv-movies/id1508186374?platform=appleTV)   |   N/A   |   [❓](https://www.microsoft.com/zh-cn/p/peacocktv/9pl67r4p9pg5?activetab=pivot:overviewtab)   |   ❓   |   [☑️](https://www.peacocktv.com/)[^4]   |        |
 |  fuboTV  |   [✅](https://apps.apple.com/us/app/fubotv-watch-live-sports-tv/id905401434)   |   [✅](https://apps.apple.com/us/app/fubotv-watch-live-sports-tv/id905401434?platform=appleTV)   |   N/A   |   ❓   |   ❓   |   [✅](https://www.fubo.tv/)   | 仅点播(On Demand)节目 |
 |   TED   |   [☑️](https://apps.apple.com/hk/app/ted/id376183339)   |   [✅](https://apps.apple.com/hk/app/ted/id376183339?platform=appleTV)   |   N/A   |   ❓   |   ❓   |   [☑️](https://www.ted.com)   |        |
-| BBC iPlayer |   🔜[^3]   |   🔜[^3]   |         |         |         |   🔜[^3]   | iPlayer与BritBox共用资源 |
-|  BritBox  |   🔜[^3]   |   ✅   |   N/A   |         |         |   🔜[^3]   | iPlayer与BritBox共用资源 |
-| BritBox UK |   ☑️   |   ✅   |   N/A   |         |         |   ❓   | BritBox与BritBox UK并非同一APP |
+| BBC iPlayer |   [🔜](https://apps.apple.com/gb/app/bbc-iplayer/id416580485)[^3]   |   [🔜](https://apps.apple.com/gb/app/bbc-iplayer/id416580485?platform=appleTV)[^3]   |         |         |         |   [🔜](https://www.bbc.co.uk/iplayer)[^3]   | iPlayer与BritBox共用资源 |
+|  BritBox  |   [🔜](https://apps.apple.com/us/app/britbox-by-bbc-itv/id1206838907)[^3]   |   [✅](https://apps.apple.com/us/app/britbox-by-bbc-itv/id1206838907?platform=appleTV)   |   N/A   |         |         |   [🔜](https://www.britbox.com/)[^3]   | iPlayer与BritBox共用资源 |
+| BritBox UK |   [☑️](https://apps.apple.com/gb/app/britbox-uk/id1459650701)   |   [✅](https://apps.apple.com/gb/app/britbox-uk/id1459650701?platform=appleTV)   |   N/A   |         |         |   [❓](https://www.britbox.co.uk)   | BritBox与BritBox UK并非同一APP |
 |         |         |         |         |         |         |        |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。

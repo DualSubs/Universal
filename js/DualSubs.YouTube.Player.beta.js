@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.4.2-youtube-player-beta");
+const $ = new Env("DualSubs v0.4.3-youtube-player-beta");
 const URL = new URLs();
 
 const DataBase = {
@@ -58,8 +58,7 @@ delete $request.headers["Range"]
 		let url = URL.parse($request.url);
 		$.log(`⚠ ${$.name}, url.path=${url.path}`);
 		// 设置格式
-		//const Format = $request.headers["Content-Type"].match(/([^\/;]+)/g)[2];
-		const Format = $request.headers["Content-Type"].split("; ")[0].split("/")[1]
+		const Format = $response?.headers?.["Content-Type"]?.split("; ")?.[0]?.split("/")?.[1]
 		$.log(`🚧 ${$.name}`, `Format: ${Format}`, "");
 		switch (Format) {
 			case "json":

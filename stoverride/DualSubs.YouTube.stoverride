@@ -7,7 +7,12 @@ http:
     - "m.youtube.com"
     - "youtubei.googleapis.com"
   script:
-    - match: ^https?:\/\/((www|m)\.youtube|youtubei\.googleapis)\.com\/youtubei\/v1\/player(\?.*)$
+    - match: ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$
+      name: DualSubs.YouTube.Player
+      type: response
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/player(\?.*)$
       name: DualSubs.YouTube.Player
       type: response
       require-body: true

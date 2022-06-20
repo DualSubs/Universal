@@ -327,6 +327,13 @@
 					"desc": "选择后会将此语言添加为额外的字幕语言"
 				},
 				{
+					"id": "@DualSubs.Universal.Settings.Translate.ShowOnly",
+					"name": "翻译字幕: 只显示翻译字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示翻译字幕，不做字幕合并操作"
+				},
+				{
 					"id": "@DualSubs.Universal.Settings.External.URL",
 					"name": "外挂字幕: URL",
 					"val": null,
@@ -738,6 +745,13 @@
 							"label": "外挂字幕"
 						}
 					]
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.Translate.ShowOnly",
+					"name": "翻译字幕: 只显示翻译字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示翻译字幕，不做字幕合并操作"
 				},
 				{
 					"id": "@DualSubs.YouTube.Settings.External.URL",

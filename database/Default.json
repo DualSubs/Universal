@@ -14,6 +14,9 @@
 			"EN"
 		],
 		"Language": "ZH",
+		"Translate": {
+			"ShowOnly": false
+		},
 		"External": {
 			"URL": null,
 			"Offset": 0,

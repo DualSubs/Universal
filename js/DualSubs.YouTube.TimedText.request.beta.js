@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.3-youtube-timedtext-beta");
+const $ = new Env("DualSubs v0.5.4-youtube-timedtext-request-beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -47,10 +47,6 @@ const DataBase = {
 };
 
 if ($request.method == "OPTIONS") $.done();
-if ($response.status != 200 && $response.statusCode != 200) $.done();
-delete $request.headers["Host"]
-delete $request.headers["Connection"]
-delete $request.headers["Range"]
 
 /***************** Processing *****************/
 !(async () => {
@@ -58,53 +54,21 @@ delete $request.headers["Range"]
 	if (Settings.Switch) {
 		let url = URL.parse($request.url);
 		$.log(`⚠ ${$.name}, url.path=${url.path}`, "");
-		if (url?.params?.lang?.includes(Settings?.Language?.toLowerCase())) $.log(`⚠ ${$.name}, 语言相同，跳过`, "");
-		else if (Settings.Translate.ShowOnly) url.params.tlang = Configs.Languages[Settings.Language]; // 翻译字幕
-		else {
-			switch (url.params?.kind) {
-				case "asr":
-					url.params.tlang = Configs.Languages[Settings.Language]; // 翻译字幕
-					break;
-				case "captions":
-				default:
-					// 设置格式
-					const Format = url.params?.format || url.params?.fmt;
-					$.log(`🚧 ${$.name}, Format: ${Format}`, "");
-					// 创建字幕Object
-					let { OriginSub, SecondSub } = await getTimedText(url, $request.headers, Settings.Language, Configs);
-					// 创建双语字幕Object
-					let DualSub = {};
-					// 处理格式
-					switch (Format) {
-						case "json3":
-							OriginSub = JSON.parse(OriginSub);
-							SecondSub = JSON.parse(SecondSub);
-							DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-							$response.body = JSON.stringify(DualSub);
-							break;
-						case "srv3":
-							OriginSub = XML.parse(OriginSub);
-							SecondSub = XML.parse(SecondSub);
-							DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-							$response.body = XML.stringify(DualSub);
-							break;
-						case "vtt":
-							OriginSub = VTT.parse(OriginSub);
-							SecondSub = VTT.parse(SecondSub);
-							DualSub = await CombineDualSubs(Format, OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-							$response.body = VTT.stringify(DualSub);
-						default:
-							break;
-					};
-					break;
-			};
+		switch (Settings.Translate.ShowOnly) {
+			case true:
+				url.params.tlang = Configs.Languages[Settings.Language]; // 翻译字幕
+				break;
+			case false:
+			default:
+				break;
 		}
+		$request.url = URL.stringify(url);
 	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX()) $.done({ headers: $response.headers, body: $response.body })
-		else $.done($response)
+		if ($.isQuanX()) $.done({ url: $request.url })
+		else $.done($request)
 	})
 
 /***************** Async Function *****************/

@@ -19,7 +19,7 @@ http:
       timeout: 10
     - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$
       name: DualSubs.YouTube.TimedText.request
-      type: response
+      type: request
       require-body: false
       timeout: 10
     - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$

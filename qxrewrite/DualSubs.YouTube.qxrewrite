@@ -11,7 +11,8 @@
 ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
 # ^https?:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/player(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
 # DualSubs.YouTube.TimedText
-^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
+^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ url script-request-header https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.request.js
+^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.response.js
 
 #[MITM]
 hostname = www.youtube.com, m.youtube.com, youtubei.googleapis.com

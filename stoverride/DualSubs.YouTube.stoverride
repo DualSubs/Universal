@@ -18,7 +18,12 @@ http:
       require-body: true
       timeout: 10
     - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$
-      name: DualSubs.YouTube.TimedText
+      name: DualSubs.YouTube.TimedText.request
+      type: response
+      require-body: false
+      timeout: 10
+    - match: ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$
+      name: DualSubs.YouTube.TimedText.response
       type: response
       require-body: true
       timeout: 10
@@ -27,6 +32,9 @@ script-providers:
   DualSubs.YouTube.Player:
     url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js
     interval: 86400
-  DualSubs.YouTube.TimedText:
-    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.js
+  DualSubs.YouTube.TimedText.request:
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.request.js
+    interval: 86400
+  DualSubs.YouTube.TimedText.response:
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.response.js
     interval: 86400

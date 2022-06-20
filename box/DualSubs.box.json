@@ -660,6 +660,13 @@
 					]
 				},
 				{
+					"id": "@DualSubs.YouTube.Settings.Translate.ShowOnly",
+					"name": "翻译字幕: 只显示翻译字幕",
+					"val": false,
+					"type": "boolean",
+					"desc": "开启后仅显示翻译字幕，不做字幕合并操作"
+				},
+				{
 					"id": "@DualSubs.YouTube.Settings.Position",
 					"name": "双语字幕位置",
 					"val": "Forward",

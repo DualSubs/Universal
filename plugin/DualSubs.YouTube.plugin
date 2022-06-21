@@ -7,10 +7,10 @@
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
 
 [Script]
-http-response ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$ requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js, tag=DualSubs.YouTube.Player
-# http-response ^https?:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/player(\?.*)$ requires-body=1, binary-body-mode=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js, tag=DualSubs.YouTube.Player
-http-request ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ requires-body=0, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.request.js, tag=DualSubs.YouTube.TimedText
-http-response ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.response.js, tag=DualSubs.YouTube.TimedText
+http-response ^https?:\/\/(www|m)\.youtube\.com\/youtubei\/v1\/player(\?.*)$ requires-body=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js, tag=DualSubs.YouTube.Player, argument=
+# http-response ^https?:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/player(\?.*)$ requires-body=1, binary-body-mode=1, max-size=0, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.Player.js, tag=DualSubs.YouTube.Player, argument=
+http-request ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ requires-body=0, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.request.js, tag=DualSubs.YouTube.TimedText, argument=
+http-response ^https?:\/\/(www|m)\.youtube\.com\/api\/timedtext(\?.*)$ requires-body=1, max-size=0, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.YouTube.TimedText.response.js, tag=DualSubs.YouTube.TimedText, argument=
 
 [MITM]
 hostname = www.youtube.com, m.youtube.com, youtubei.googleapis.com

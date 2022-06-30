@@ -263,21 +263,11 @@ http:
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/ttml\/(.+)\.ttml(\?.*dualsubs=\w+)?$
-      name: DualSubs.SUB.TTML
-      type: response
-      require-body: true
-      timeout: 30
     - match: ^https?:\/\/vod-hls-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/(.+)_hls_master\.m3u8(\?.*)?$
       name: DualSubs.HLS.Main.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/vod-sub-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.+)(\.cc)?\.xml(\?.*)?$
-      name: DualSubs.SUB.TTML
-      type: response
-      require-body: true
-      timeout: 30
     - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/\.m3u8(\?.*)?$
       name: DualSubs.HLS.Main.m3u8
       type: response
@@ -313,7 +303,4 @@ script-providers:
     interval: 86400
   DualSubs.SUB.WebVTT:
     url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js
-    interval: 86400
-  DualSubs.SUB.TTML:
-    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.TTML.js
     interval: 86400

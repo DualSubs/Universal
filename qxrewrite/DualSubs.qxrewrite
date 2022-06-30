@@ -53,8 +53,6 @@
 
 # DualSubs.Hulu.HLS.Main.m3u8
 ^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8(\?.*) url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.Main.m3u8.js
-# DualSubs.Hulu.JSON.playlist
-# ^https?:\/\/play\.hulu\.com\/(v\d)\/playlist url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.JSON.playlist.js
 # DualSubs.Hulu.HLS.WebVTT.m3u8
 ^https?:\/\/manifest-dp\.hulustream\.com\/webvtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.WebVTT.m3u8.js
 # DualSubs.Hulu.SUB.WebVTT
@@ -105,13 +103,9 @@
 ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/media\/tt-(.+)\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.WebVTT.m3u8.js
 # DualSubs.Google_Display_Network.SUB.WebVTT
 ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/(hls-webvtt|vtt)\/(.+)\.vtt(\?.*dualsubs=\w+)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js
-# DualSubs.Google_Display_Network.SUB.TTML
-# ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/ttml\/(.+)\.ttml(\?.*dualsubs=\w+)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.TTML.js
 
 # DualSubs.BBC.HLS.Main.m3u8
 ^https?:\/\/vod-hls-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/(.+)_hls_master\.m3u8(\?.*)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.Main.m3u8.js
-# DualSubs.BBC.SUB.TTML
-# ^https?:\/\/vod-sub-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.+)(\.cc)?\.xml(\?.*)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.TTML.js
 
 # DualSubs.Britbox_UK.HLS.Main.m3u8
 ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/\.m3u8(\?.*)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.Main.m3u8.js

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.2.1-netflix-manifest-beta");
+const $ = new Env("DualSubs v0.2.2-netflix-manifest-beta");
 const URL = new URLs();
 
 const DataBase = {
@@ -416,24 +416,34 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
  * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-async function isStandard(url, headers, platform) {
+async function isStandard(platform, url, headers) {
 	$.log(`⚠ ${$.name}, is Standard`, "");
 	let _url = URL.parse(url);
 	let standard = true;
-	if (platform == "HBO_Max") {
-		if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
-		else if (headers?.["X-Hbo-Device-Name"]?.includes("ios")) standard = false;
-		else if (_url.params["device-code"] === "iphone") standard = false;
-	} else if (platform == "Peacock_TV") {
-		if (headers?.["User-Agent"]?.includes("Mozilla/5.0")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("PeacockMobile")) standard = false;
-	} else if (platform == "Fubo_TV") {
-		if (headers?.["User-Agent"]?.includes("iPhone")) standard = false;
-		else if (headers?.["User-Agent"]?.includes("iPad")) standard = false;
+	for (const [key, value] of Object.entries(headers)) {
+		delete headers[key]
+		headers[key.toLowerCase()] = value
+	}
+	switch (platform) {
+		case "HBO_Max":
+			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
+			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
+			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
+			else if (headers?.["x-hbo-device-name"]?.includes("ios")) standard = false;
+			else if (_url.params["device-code"] === "iphone") standard = false;
+			break;
+		case "Peacock_TV":
+			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
+			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
+			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
+			else if (headers?.["user-agent"]?.includes("PeacockMobile")) standard = false;
+			break;
+		case "Fubo_TV":
+			if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
+			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
+			break;
+		case "TED":
+			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
 	}
 	$.log(`🎉 ${$.name}, is Standard`, `standard: ${standard}`, "");
 	return standard

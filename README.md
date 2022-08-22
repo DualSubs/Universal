@@ -131,6 +131,7 @@ Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 |  BritBox  |   [🔜](https://apps.apple.com/us/app/britbox-by-bbc-itv/id1206838907)[^3]   |   [✅](https://apps.apple.com/us/app/britbox-by-bbc-itv/id1206838907?platform=appleTV)   |   N/A   |         |         |   [🔜](https://www.britbox.com/)[^3]   | iPlayer与BritBox共用资源<br>无专用面板，请使用通用面板 |
 | BritBox UK |   [☑️](https://apps.apple.com/gb/app/britbox-uk/id1459650701)   |   [✅](https://apps.apple.com/gb/app/britbox-uk/id1459650701?platform=appleTV)   |   N/A   |         |         |   [❓](https://www.britbox.co.uk)   | BritBox与BritBox UK非同一APP<br>无专用面板，请使用通用面板 |
 |  StarZ  |   ☑️   |   ❓   |   ❓   |   ❓   |   ❓   |   ✅   | 无专用面板，请使用通用面板 |
+|  AMC+   |   ❓   |   [✅](https://apps.apple.com/us/app/amc-tv-shows-movies/id1578728899)   |   N/A   |   ❓   |   ❓   |   [✅](https://www.amcplus.com/)   | 无专用面板，请使用通用面板 |
 |         |         |         |         |         |         |        |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。

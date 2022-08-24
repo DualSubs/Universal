@@ -1,6 +1,6 @@
 {
 	"id": "DualSubs.app.sub",
-	"name": "DualSubs",
+	"name": "🍿️ DualSubs",
 	"author": "@DualSubs",
 	"description": "流媒体平台字幕增强及双语模块",
 	"icon": "https://avatars.githubusercontent.com/u/100578089?&v=4",
@@ -8,7 +8,7 @@
 	"apps": [
 		{
 			"id": "DualSubs.Universal",
-			"name": "DualSubs: 通用",
+			"name": "🍿️ DualSubs: 通用",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -352,7 +352,7 @@
 		},
 		{
 			"id": "DualSubs.Verify",
-			"name": "DualSubs: Verify",
+			"name": "🍿️ DualSubs: Verify",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -522,7 +522,7 @@
 		},
 		{
 			"id": "DualSubs.Advanced",
-			"name": "DualSubs: Advanced Options",
+			"name": "🍿️ DualSubs: Advanced Options",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -564,7 +564,7 @@
 		},
 		{
 			"id": "DualSubs.YouTube",
-			"name": "DualSubs: YouTube",
+			"name": "🍿️ DualSubs: YouTube",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -693,7 +693,7 @@
 		},
 		{
 			"id": "DualSubs.Apple_TV",
-			"name": "DualSubs: Apple TV",
+			"name": "🍿️ DualSubs: Apple TV",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -939,7 +939,7 @@
 		},
 		{
 			"id": "DualSubs.Apple_TV_Plus",
-			"name": "DualSubs: Apple TV+",
+			"name": "🍿️ DualSubs: Apple TV+",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -1185,7 +1185,7 @@
 		},
 		{
 			"id": "DualSubs.Apple_Fitness",
-			"name": "DualSubs: Apple Fitness",
+			"name": "🍿️ DualSubs: Apple Fitness",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -1431,7 +1431,7 @@
 		},
 		{
 			"id": "DualSubs.Disney_Plus",
-			"name": "DualSubs: Disney+",
+			"name": "🍿️ DualSubs: Disney+",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -1677,7 +1677,7 @@
 		},
 		{
 			"id": "DualSubs.Prime_Video",
-			"name": "DualSubs: Prime Video",
+			"name": "🍿️ DualSubs: Prime Video",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -1923,7 +1923,7 @@
 		},
 		{
 			"id": "DualSubs.HBO_Max",
-			"name": "DualSubs: HBO Max",
+			"name": "🍿️ DualSubs: HBO Max",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -2218,7 +2218,7 @@
 		},
 		{
 			"id": "DualSubs.Hulu",
-			"name": "DualSubs: Hulu",
+			"name": "🍿️ DualSubs: Hulu",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -2464,7 +2464,7 @@
 		},
 		{
 			"id": "DualSubs.Paramount_Plus",
-			"name": "DualSubs: Paramount+",
+			"name": "🍿️ DualSubs: Paramount+",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -2710,7 +2710,7 @@
 		},
 		{
 			"id": "DualSubs.Discovery_Plus_Ph",
-			"name": "DualSubs: Discovery+ Philippines",
+			"name": "🍿️ DualSubs: Discovery+ Philippines",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -2956,7 +2956,7 @@
 		},
 		{
 			"id": "DualSubs.Peacock_TV",
-			"name": "DualSubs: Peacock TV",
+			"name": "🍿️ DualSubs: Peacock TV",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
@@ -3235,7 +3235,7 @@
 		},
 		{
 			"id": "DualSubs.Netflix",
-			"name": "DualSubs: Netflix",
+			"name": "🍿️ DualSubs: Netflix",
 			"descs_html": [
 				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"

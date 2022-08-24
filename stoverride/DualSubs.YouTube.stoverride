@@ -3,7 +3,7 @@ desc: (V0.4.x) YouTube字幕增强及双语模块
 openUrl: http://boxjs.com/#/app/DualSubs.YouTube
 author: VirgilClyne
 homepage: https://github.com/VirgilClyne
-manual: https://github.com/DualSubs/DualSubs
+#!manual=https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs-for-▶-YouTube
 icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
 
 http:

@@ -1,107 +1,55 @@
 # 🍿️ DualSubs
-Dual Subtitles for Streaming Media  
-流媒体平台字幕增强及双语模块  
-
-<font size=3>**Powered by [Chavy](https://github.com/chavyleung)‘s [Env.js](https://github.com/chavyleung/scripts/blob/master/Env.js) and [BoxJs](https://chavyleung.gitbook.io/boxjs/)**</font>
-
-需要启用`重写`、`脚本`、`MitM`功能  
-有问题请至Issue页面反馈  
-Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries) 
+  * Dual Subtitles for Streaming Media
+  * 流媒体平台字幕增强及双语模块
+  * **Powered by [Chavy](https://github.com/chavyleung)‘s [Env.js](https://github.com/chavyleung/scripts/blob/master/Env.js) and [BoxJs](https://chavyleung.gitbook.io/boxjs/)**
+  * 需要启用`重写`、`脚本`、`MitM`功能
+  * 有问题请至Issue页面反馈
+  * Telegram讨论组:[🍟 整点薯条](https://t.me/GetSomeFries)
 
 ---
+# 快速导航
+  * 支持 🎈Loon(推荐), Surge(推荐), Stash, Shadowrocket, Quantumult X
+  * macOS 12.5.1, iOS 16.0, tvOS 15.6.1 测试通过
+  * 需要启用`重写`、`脚本`、`MitM`功能
+  * 本项目可视化配置面板订阅及使用方法详见[🧰BoxJs](../../wiki/🧰BoxJs)
+  * 点击下方链接直达详细说明
+  * 手机等竖屏设备可以👈左右👉划动下列表格查看更多模块
 
-- [🍿️ DualSubs](#️-dualsubs)
-  - [功能列表](#功能列表)
-  - [使用说明](#使用说明)
-    - [配置方法](#配置方法)
-    - [配置说明](#配置说明)
-  - [安装链接](#安装链接)
-    - [🍿️ DualSubs for Streaming Media Platform](#️-dualsubs-for-streaming-media-platform)
-    - [🍿️ DualSubs for YouTube](#️-dualsubs-for-youtube)
-  - [How To](#how-to)
-  - [支持列表](#支持列表)
+| [🍿️ DualSubs<br>for<br>🎦 Streaming Media Platform](../../wiki/🍿%EF%B8%8F-DualSubs-for-🎦-Streaming-Media-Platform) | [🍿️ DualSubs<br>for<br>🇳 Netflix](../../wiki/🍿%EF%B8%8F-DualSubs-for-🇳-Netflix) | [🍿️ DualSubs<br>for<br>▶️ YouTube](../../wiki/🍿%EF%B8%8F-DualSubs-for-▶%EF%B8%8F-YouTube) |
+| :---: | :---: | :---: |
+| [简介](../../wiki/🍿%EF%B8%8F-DualSubs-for-🎦-Streaming-Media-Platform#简介) | [简介](../../wiki/🍿%EF%B8%8F-DualSubs-for-🇳-Netflix#简介) | [简介](../../wiki/🍿%EF%B8%8F-DualSubs-for-▶%EF%B8%8F-YouTube#简介) |
+| [使用说明](../../wiki/🍿%EF%B8%8F-DualSubs-for-🎦-Streaming-Media-Platform#使用说明) | [使用说明](../../wiki/🍿%EF%B8%8F-DualSubs-for-🇳-Netflix#使用说明) | [使用说明](../../wiki/🍿%EF%B8%8F-DualSubs-for-▶%EF%B8%8F-YouTube#使用说明) |
+| [功能列表](../../wiki/🍿%EF%B8%8F-DualSubs-for-🎦-Streaming-Media-Platform#功能列表) | [功能列表](../../wiki/🍿%EF%B8%8F-DualSubs-for-🇳-Netflix#功能列表) | [功能列表](../../wiki/🍿%EF%B8%8F-DualSubs-for-▶%EF%B8%8F-YouTube#功能列表) |
+| [安装链接](../../wiki/🍿%EF%B8%8F-DualSubs-for-🎦-Streaming-Media-Platform#安装链接) | [安装链接](../../wiki/🍿%EF%B8%8F-DualSubs-for-🇳-Netflix#安装链接) | [安装链接](../../wiki/🍿%EF%B8%8F-DualSubs-for-▶%EF%B8%8F-YouTube#安装链接) |
+| 🆕新版<br>v0.7.x | 未发布 | 🆕新版<br>v0.5.x |
+| [更新日志](../../wiki/🍿%EF%B8%8F-DualSubs-for-🎦-Streaming-Media-Platform#更新日志) | [更新日志](../../wiki/🍿%EF%B8%8F-DualSubs-for-🇳-Netflix#更新日志) | [更新日志](../../wiki/🍿%EF%B8%8F-DualSubs-for-▶%EF%B8%8F-YouTube#更新日志) |
+| [说明/讨论](https://t.me/GetSomeFriesChannel/121) | [说明/讨论](https://t.me/GetSomeFriesChannel/) | [说明/讨论](https://t.me/GetSomeFriesChannel/122/) |
 
 ---
+# 鸣谢
+* 排名不分先后
+  * [@chavyleung](https://github.com/chavyleung)
+  * [@NobyDa](https://github.com/NobyDa)
+  * [@zZPiglet](https://github.com/zZPiglet)
+  * [@yichahucha](https://github.com/yichahucha)
+  * [@Peng-YM](https://github.com/Peng-YM)
+  * [@app2smile](https://github.com/app2smile)
+  * [@MuTu](https://github.com/githubdulong)
+  * [@fengchang](https://github.com/fengchang)
+  * [@Loon0x00](https://github.com/Loon0x00)
+  * [@Tartarus2014](https://github.com/Tartarus2014)
+  * [@Hackl0us](https://github.com/Hackl0us)
+  * [@Koolson](https://github.com/Koolson)
+  * [@LucaLin](https://github.com/LucaLin233)
+  * [@Shawn](https://github.com/KOP-XIAO)
 
-## 功能列表
-  1. 官方播放器内提供自定义字幕选项
-     * 对于不兼容的播放器，提供了一个字幕选项，用来强制替换字幕为指定字幕类型。
-  2. 自定义启用的第三方字幕种类
-  3. 双语官方字幕
-  4. 双语翻译字幕
-     1. Google翻译
-     2. [Google Cloud Translate API](https://cloud.google.com/translate)
-     3. Azure/Azure.cn Translator
-        1. [国际版](https://azure.microsoft.com/zh-cn/services/cognitive-services/translator/)
-        2. [中国版](https://www.azure.cn)
-     4. [DeepL Free/Pro](https://www.deepl.com/pro-api)
-  5. 双语外挂字幕
-  6. 中文，英文，西班牙文自动回退
-     * `中文（自动）`回退顺序为`中文（简体）`-`中文（繁體）`-`中文（香港）/粤语（廣東話）`
-     * `英文（自动）`回退顺序为`English (US) [CC]`-`English (US)`-`English (UK)`
-     * `西班牙文（自动）`回退顺序为`Español (Latinoamérica) [CC]`-`Español (Latinoamérica)`-`Español (España) [CC]`-`Español (España)`
-  7. 自定义字幕匹配时间戳容差值
-  8. 自定义外挂字幕时间戳偏移量
-  9. 翻译字幕模式支持`逐段翻译`（默认）和`逐行翻译`
-     * `逐段翻译`对于大分段的字幕文件的平台（如：HBO Max）响应更快，翻译效果更好，利于限制使用频率的翻译API。
-
-## 使用说明
-### 配置方法
-  * 方法1: 直接使用
-    * 采用默认配置
-      * 默认主语言`中文（自动）`，副语言`英文（自动）`
-      * 提供官方中文的平台的语言选项为`官方字幕`和`Google翻译`
-      * 未提供中文的平台的语言选项为`Google翻译`
-      * 不兼容[^4]平台的替换语言选项为`Google翻译`
-  * 方法2: 配合`BoxJs`及订阅使用
-    1. 安装`BoxJs`插件并更新引用资源或脚本:
-       * Loon: [boxjs.rewrite.loon.plugin](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.loon.plugin "BoxJs")
-       * Quantumult X: [boxjs.rewrite.quanx.conf](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.quanx.conf "BoxJs")
-       * Surge (Shadowrocket): [boxjs.rewrite.surge.sgmodule](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.surge.sgmodule "BoxJs")
-       * Stash: [boxjs.rewrite.stash.stoverride](https://github.com/chavyleung/scripts/raw/master/box/rewrite/boxjs.rewrite.stash.stoverride "BoxJs")
-    2. 浏览器访问[BoxJs.com](http://boxjs.com)，在[`订阅`](http://boxjs.com/#/sub)页面点击`+`添加本项目订阅:
-       * [DualSubs.box.json](./box/DualSubs.box.json?raw=true "🍿️ DualSubs")
-
-### 配置说明
-  * 配合`BoxJs`及订阅使用
-    1. 浏览器访问[BoxJs.com](http://boxjs.com)
-    2. 在[`应用`](http://boxjs.com/#/app)页面点开`DualSubs`折叠
-    3. 根据需要配置每个流媒体平台的设置
-       1. `字幕类型`为多选框，多选保存后，对应APP中的`字幕`选项也会增加对应的字幕选项
-       2. `首选语言`为主语言，对应第一行字幕语言
-       3. `次选语言`为副语言，对应第二行字幕语言
-       4. 需在`字幕类型`中勾选`外部字幕`,`外部字幕文件URL`中填写的字幕文件才会生效（需要为绝对路径，支持WebVTT, SRT）
-       5. `外部字幕偏移量`为内置字幕时间轴矫正功能，时间单位为毫秒，正负整数，可以用来省略第三方字幕转换器
-       6. `播放记录缓存数量`提供设置数量的复数缓存空间，当你的设备同时为局域网内多个设备提供流媒体平台字幕增强功能时，保证字幕数据不会错乱，同时对于`Disney+`这种自带长期缓存的流媒体平台，提供更好的兼容性
-       7. `时间戳公差`为`官方字幕`或`外部字幕`匹配时，每句字幕匹配时的时间容差，因同平台同视频不同语言字幕往往交付不同翻译人员进行翻译，相同台词的时间戳可能有0.5秒-1.5秒乃至更多的误差，或者一句台词对应另外一种语言多句台词的情况，`时间戳公差`值会将此误差范围的台词视为同一句台词进行合并，且支持一句台词对多句台词合并
-    4. (可选)在`DualSubs: Verify`中配置第三方API验证信息
-    5. (可选)在`DualSubs: Advanced Options`中配置高级设置
-
-## 安装链接
-### 🍿️ DualSubs for Streaming Media Platform
-  * 因v0.7版结构升级，旧版用户请清空[`DualSubs在BoxJs的全部设置`](https://github.com/DualSubs/DualSubs/wiki/在BoxJs中清除DualSubs的储存数据#清除全部储存数据)后重新设置
-  * 本模块不含YouTube平台支持，如需要请单独下载
-  * Loon: [DualSubs.plugin](./plugin/DualSubs.plugin?raw=true "🍿️ DualSubs for Streaming Media Platform")
-  * Quantumult X: [DualSubs.qxrewrite](./qxrewrite/DualSubs.qxrewrite?raw=true "🍿️ DualSubs for Streaming Media Platform")
-  * Surge (Shadowrocket): [DualSubs.sgmodule](./sgmodule/DualSubs.sgmodule?raw=true "🍿️ DualSubs for Streaming Media Platform")
-  * Stash: [DualSubs.stoverride](./stoverride/DualSubs.stoverride?raw=true "🍿️ DualSubs for Streaming Media Platform")
-
-### 🍿️ DualSubs for YouTube
-  * 支持`Web端`的`播放器`全翻译语言选项解锁及双语言
-  * 支持`Web端`和`移动端`有字幕视频的`自动翻译`(不支持`自动生成`的听译字幕)
-    * 当选择任意语言`普通字幕`时，双语字幕`首选语言`均为BoxJs中设置的`首选语言`且为翻译字幕（暂未做官方字幕查询）
-    * 当选择`自动翻译`中的`翻译字幕`时，双语字幕分别为`原语言`及`目标语言`
-  * 注：本插件不适用于`tvOS`上的YouTube app（无法MitM`tvOS`上的`www.youtube.com`）
-  * Loon: [DualSubs.YouTube.plugin](./plugin/DualSubs.YouTube.plugin?raw=true "🍿️ DualSubs for YouTube")
-  * Quantumult X: [DualSubs.YouTube.qxrewrite](./qxrewrite/DualSubs.YouTube.qxrewrite?raw=true "🍿️ DualSubs for YouTube")
-  * Surge (Shadowrocket): [DualSubs.YouTube.sgmodule](./sgmodule/DualSubs.YouTube.sgmodule?raw=true "🍿️ DualSubs for YouTube")
-  * Stash: [DualSubs.YouTube.stoverride](./stoverride/DualSubs.YouTube.stoverride?raw=true "🍿️ DualSubs for YouTube")
-
+---
 ## How To
   * [快速创建拥有代理服务器设置及MitM证书的描述文件](https://github.com/DualSubs/DualSubs/wiki/快速创建拥有代理服务器设置及MitM证书的描述文件)
   * [在Apple TV (tvOS) 上添加描述文件或MitM证书](https://github.com/DualSubs/DualSubs/wiki/在Apple-TV-(tvOS)-上添加描述文件或MitM证书)
   * [在BoxJs中清除DualSubs的设置或缓存](https://github.com/DualSubs/DualSubs/wiki/在BoxJs中清除DualSubs的储存数据)
 
+---
 ## 支持列表
   * 图例:
     * 完全支持: ✅

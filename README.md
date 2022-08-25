@@ -18,8 +18,8 @@
 | [🍿️ DualSubs<br>for<br>🎦 Streaming Media Platform](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform) | [🍿️ DualSubs<br>for<br>🇳 Netflix](../../wiki/🍿-DualSubs-for-🇳-Netflix) | [🍿️ DualSubs<br>for<br>▶️ YouTube](../../wiki/🍿-DualSubs-for-▶-YouTube) |
 | :---: | :---: | :---: |
 | [简介](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#简介) | [简介](../../wiki/🍿-DualSubs-for-🇳-Netflix#简介) | [简介](../../wiki/🍿-DualSubs-for-▶-YouTube#简介) |
-| [使用说明](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#使用说明) | [使用说明](../../wiki/🍿-DualSubs-for-🇳-Netflix#使用说明) | [使用说明](../../wiki/🍿-DualSubs-for-▶-YouTube#使用说明) |
 | [功能列表](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#功能列表) | [功能列表](../../wiki/🍿-DualSubs-for-🇳-Netflix#功能列表) | [功能列表](../../wiki/🍿-DualSubs-for-▶-YouTube#功能列表) |
+| [使用说明](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#使用说明) | [使用说明](../../wiki/🍿-DualSubs-for-🇳-Netflix#使用说明) | [使用说明](../../wiki/🍿-DualSubs-for-▶-YouTube#使用说明) |
 | [安装链接](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#安装链接) | [安装链接](../../wiki/🍿-DualSubs-for-🇳-Netflix#安装链接) | [安装链接](../../wiki/🍿-DualSubs-for-▶-YouTube#安装链接) |
 | 🆕新版<br>v0.7.x | 未发布 | 🆕新版<br>v0.5.x |
 | [更新日志](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#更新日志) | [更新日志](../../wiki/🍿-DualSubs-for-🇳-Netflix#更新日志) | [更新日志](../../wiki/🍿-DualSubs-for-▶-YouTube#更新日志) |

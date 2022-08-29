@@ -1,10 +1,10 @@
 name: 🍿️ DualSubs for 🎦 Streaming Media Platform
 desc: (V0.7.x) 流媒体平台字幕增强及双语模块
-openUrlc: http://boxjs.com/#/app/DualSubs.Universal
-authorc: VirgilClyne
-homepagec: https://github.com/VirgilClyne
-#!manual=https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform
-iconc: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Streaming.png
+openUrl: http://boxjs.com/#/app/DualSubs.Universal
+author: VirgilClyne
+homepage: https://github.com/VirgilClyne
+manual: https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform
+icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Streaming.png
 
 http:
   force-http-engine:
@@ -67,7 +67,7 @@ http:
     - "ssaimanifest.prod.boltdns.net"
     - "amcplus-?.akamaized.net"
     - "redirector.playback.*.prod.deploys.brightcove.com"
-    - "ap-hls-vod.dynamic.showtime.com
+    - "ap-hls-vod.dynamic.showtime.com"
     - "ap-hls-live.cdn?.showtime.com"
   script:
     - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(\?.+)?$

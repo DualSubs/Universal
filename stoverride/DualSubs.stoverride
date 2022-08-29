@@ -67,6 +67,8 @@ http:
     - "ssaimanifest.prod.boltdns.net"
     - "amcplus-?.akamaized.net"
     - "redirector.playback.*.prod.deploys.brightcove.com"
+    - "ap-hls-vod.dynamic.showtime.com
+    - "ap-hls-live.cdn?.showtime.com"
   script:
     - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(\?.+)?$
       name: DualSubs.HLS.Main.m3u8
@@ -338,6 +340,16 @@ http:
       type: response
       require-body: true
       timeout: 30
+    - match: ^https?:\/\/ap-hls-vod\.dynamic\.showtime\.com/(.+)\/(tv|mobile)_master\.m3u8(\?.+)?$
+      name: DualSubs.HLS.Main.m3u8
+      type: response
+      require-body: true
+      timeout: 10
+    - match: ^https?:\/\/ap-hls-vod\.cdn\d\.showtime.com\/live\/sho(e|w)ast\/showtime.isml//\.m3u8(\?.+)?$
+      name: DualSubs.HLS.Main.m3u8
+      type: response
+      require-body: true
+      timeout: 10
 
 script-providers:
   DualSubs.HLS.Main.m3u8:

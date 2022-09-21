@@ -1,0 +1,259 @@
+[Script Info]
+Title: English
+Original Script: tvtm  [http://www.crunchyroll.com/user/tvtm]
+Original Translation: 
+Original Editing: 
+Original Timing: 
+Synch Point: 
+Script Updated By: 
+Update Details: 
+ScriptType: v4.00+
+Collisions: Normal
+PlayResX: 624
+PlayResY: 480
+Timer: 0.0000
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,Strikeout,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Default,Arial,26,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,2,2,0030,0030,0030,0
+
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+Dialogue: 0,0:00:30.87,0:00:31.93,Default,NTP,0000,0000,0000,,He's not in here.
+Dialogue: 0,0:00:38.87,0:00:40.43,Default,NTP,0000,0000,0000,,He's not in here, either!
+Dialogue: 0,0:00:47.50,0:00:48.63,Default,NTP,0000,0000,0000,,He's not in here, either!
+Dialogue: 0,0:00:55.63,0:00:58.10,Default,NTP,0000,0000,0000,,Where the heck...are you?!
+Dialogue: 0,0:00:59.23,0:01:02.10,Default,NTP,0000,0000,0000,,We've finally...made it this far!
+Dialogue: 0,0:01:03.77,0:01:04.87,Default,NTP,0000,0000,0000,,Where are you...?!
+Dialogue: 0,0:01:06.10,0:01:07.33,Default,NTP,0000,0000,0000,,Where are you?
+Dialogue: 0,0:01:08.93,0:01:10.67,Default,NTP,0000,0000,0000,,Sasuke!
+Dialogue: 0,0:01:40.37,0:01:41.43,Default,NTP,0000,0000,0000,,Sakura, huh?
+Dialogue: 0,0:01:53.77,0:01:56.47,Default,NTP,0000,0000,0000,,Sa...su...ke.
+Dialogue: 0,0:02:33.23,0:02:34.40,Default,NTP,0000,0000,0000,,Sasuke...
+Dialogue: 0,0:02:36.43,0:02:37.67,Default,NTP,0000,0000,0000,,So it's you, Naruto...?
+Dialogue: 0,0:02:43.17,0:02:45.60,Default,NTP,0000,0000,0000,,{\i1}You don't even have\Nparents or siblings...{\i0}
+Dialogue: 0,0:02:46.43,0:02:48.60,Default,NTP,0000,0000,0000,,{\i1}What do you know about me?!{\i0}
+Dialogue: 0,0:02:49.13,0:02:51.50,Default,NTP,0000,0000,0000,,{\i1}You've been alone from the start!{\i0}
+Dialogue: 0,0:02:51.83,0:02:54.47,Default,NTP,0000,0000,0000,,{\i1}What do you know about me?! Huh?!{\i0}
+Dialogue: 0,0:02:57.37,0:02:59.77,Default,NTP,0000,0000,0000,,{\i1}It's having the bond that\Nmakes it painful!{\i0}
+Dialogue: 0,0:03:00.53,0:03:05.83,Default,NTP,0000,0000,0000,,{\i1}You've no idea\Nwhat it's like to lose that...!{\i0}
+Dialogue: 0,0:03:06.67,0:03:07.73,Default,NTP,0000,0000,0000,,{\i1}You're right.{\i0}
+Dialogue: 0,0:03:08.03,0:03:12.23,Default,NTP,0000,0000,0000,,{\i1}I don't know about having\Nreal parents or siblings...{\i0}
+Dialogue: 0,0:03:14.17,0:03:15.40,Default,NTP,0000,0000,0000,,{\i1}If that's the case...{\i0}
+Dialogue: 0,0:03:16.33,0:03:17.90,Default,NTP,0000,0000,0000,,{\i1}Why Naruto...?{\i0}
+Dialogue: 0,0:03:19.37,0:03:21.77,Default,NTP,0000,0000,0000,,{\i1}Why do you go so far for me...?{\i0}
+Dialogue: 0,0:03:23.67,0:03:27.03,Default,NTP,0000,0000,0000,,{\i1}To me, it's a bond...\NI've finally been able to establish.{\i0}
+Dialogue: 0,0:03:28.20,0:03:31.97,Default,NTP,0000,0000,0000,,{\i1}That's why I'll stop you!{\i0}
+Dialogue: 0,0:03:33.40,0:03:36.80,Default,NTP,0000,0000,0000,,If that's the case,\Nthen why didn't you...?
+Dialogue: 0,0:03:39.40,0:03:42.67,Default,NTP,0000,0000,0000,,{\i1}Then I'll just break that bond!{\i0}
+Dialogue: 0,0:03:43.80,0:03:45.77,Default,NTP,0000,0000,0000,,Why didn't you kill me\Nback then?!
+Dialogue: 0,0:03:46.30,0:03:48.53,Default,NTP,0000,0000,0000,,Is that how you wanted\Nto break the bond?!
+Dialogue: 0,0:03:49.53,0:03:50.67,Default,NTP,0000,0000,0000,,Sasuke!
+Dialogue: 0,0:03:52.97,0:03:54.37,Default,NTP,0000,0000,0000,,The reason's simple...
+Dialogue: 0,0:03:56.57,0:03:59.97,Default,NTP,0000,0000,0000,,It's not that I couldn't break\Nthe bond with you...
+Dialogue: 0,0:04:00.80,0:04:03.37,Default,NTP,0000,0000,0000,,{\i1}You're one who might be able{\i0}
+Dialogue: 0,0:04:03.40,0:04:05.80,Default,NTP,0000,0000,0000,,{\i1}to use the same Mangekyo\NSharingan as mine...{\i0}
+Dialogue: 0,0:04:08.30,0:04:11.20,Default,NTP,0000,0000,0000,,{\i1}However, there is one condition...{\i0}
+Dialogue: 0,0:04:15.10,0:04:17.13,Default,NTP,0000,0000,0000,,{\i1}You must kill...{\i0}
+Dialogue: 0,0:04:18.63,0:04:19.80,Default,NTP,0000,0000,0000,,{\i1}your closest friend.{\i0}
+Dialogue: 0,0:04:20.67,0:04:22.33,Default,NTP,0000,0000,0000,,It was just irritating to me.
+Dialogue: 0,0:04:22.37,0:04:26.27,Default,NTP,0000,0000,0000,,Obtaining power according to\Nthe method I heard about from him.
+Dialogue: 0,0:04:28.07,0:04:33.00,Default,NTP,0000,0000,0000,,You're only alive because\Nof my passing whim.
+Dialogue: 0,0:04:49.83,0:04:51.00,Default,NTP,0000,0000,0000,,When did he...?!
+Dialogue: 0,0:04:51.73,0:04:53.23,Default,NTP,0000,0000,0000,,Come to think of it,
+Dialogue: 0,0:04:53.27,0:04:56.60,Default,NTP,0000,0000,0000,,didn't you have a dream\Nof becoming the Hokage...?
+Dialogue: 0,0:04:58.20,0:05:00.30,Default,NTP,0000,0000,0000,,If you had the time to\Nchase after me,
+Dialogue: 0,0:05:00.33,0:05:02.83,Default,NTP,0000,0000,0000,,you should've spent that\Ntime training or something...
+Dialogue: 0,0:05:03.80,0:05:05.40,Default,NTP,0000,0000,0000,,Right... Naruto?
+Dialogue: 0,0:05:07.57,0:05:09.37,Default,NTP,0000,0000,0000,,And that's why this time around...
+Dialogue: 0,0:05:09.47,0:05:11.27,Default,NTP,0000,0000,0000,,You'll lose your life...
+Dialogue: 0,0:05:14.17,0:05:16.80,Default,NTP,0000,0000,0000,,because of my passing whim.
+Dialogue: 0,0:05:24.93,0:05:27.53,Default,NTP,0000,0000,0000,,There's no way a guy\Nwho can't even save one friend...
+Dialogue: 0,0:05:27.57,0:05:29.27,Default,NTP,0000,0000,0000,,can ever become the Hokage.
+Dialogue: 0,0:05:31.87,0:05:33.93,Default,NTP,0000,0000,0000,,Isn't that right...Sasuke?
+Dialogue: 0,0:05:41.77,0:05:42.87,Default,NTP,0000,0000,0000,,Sasuke...!
+Dialogue: 0,0:05:58.63,0:06:00.33,Default,NTP,0000,0000,0000,,Naruto...
+Dialogue: 0,0:06:04.17,0:06:11.13,Default,NTP,0000,0000,0000,,Show him...our...powers.
+Dialogue: 0,0:06:16.50,0:06:17.90,Default,NTP,0000,0000,0000,,What's the matter...?
+Dialogue: 0,0:06:29.23,0:06:31.60,Default,NTP,0000,0000,0000,,Why do you hesitate...?
+Dialogue: 0,0:06:34.73,0:06:38.33,Default,NTP,0000,0000,0000,,You need my power, don't you?
+Dialogue: 0,0:06:44.67,0:06:46.47,Default,NTP,0000,0000,0000,,Now then...
+Dialogue: 0,0:06:50.23,0:06:52.77,Default,NTP,0000,0000,0000,,Who do you want to kill...?
+Dialogue: 0,0:06:55.70,0:06:58.30,Default,NTP,0000,0000,0000,,You should know.
+Dialogue: 0,0:06:58.97,0:07:02.40,Default,NTP,0000,0000,0000,,That you can't do anything\Non your own.
+Dialogue: 0,0:07:04.20,0:07:06.73,Default,NTP,0000,0000,0000,,SEAL\N\N\N\N\NBreak the seal completely!
+Dialogue: 0,0:07:07.07,0:07:11.77,Default,NTP,0000,0000,0000,,I'll grant you all of my powers\Nif you do.
+Dialogue: 0,0:07:21.30,0:07:22.43,Default,NTP,0000,0000,0000,,How...?!
+Dialogue: 0,0:07:24.13,0:07:25.73,Default,NTP,0000,0000,0000,,I can see it now...
+Dialogue: 0,0:07:26.67,0:07:29.23,Default,NTP,0000,0000,0000,,So this is your unknown power, huh...?
+Dialogue: 0,0:07:30.53,0:07:31.97,Default,NTP,0000,0000,0000,,Who would've thought...
+Dialogue: 0,0:07:32.00,0:07:35.23,Default,NTP,0000,0000,0000,,you'd have something like this\Ninside of you...
+Dialogue: 0,0:07:36.27,0:07:39.37,Default,NTP,0000,0000,0000,,I see...\NSo you're an Uchiha...
+Dialogue: 0,0:07:39.90,0:07:42.90,Default,NTP,0000,0000,0000,,My how you've grown...
+Dialogue: 0,0:07:43.87,0:07:48.10,Default,NTP,0000,0000,0000,,To think you'd be able\Nto see me within Naruto...
+Dialogue: 0,0:07:49.03,0:07:51.43,Default,NTP,0000,0000,0000,,That loathsome Sharingan...
+Dialogue: 0,0:07:51.63,0:07:55.57,Default,NTP,0000,0000,0000,,So that's the power of\Nthe cursed clan, huh?
+Dialogue: 0,0:07:58.03,0:08:02.30,Default,NTP,0000,0000,0000,,It seems this isn't the first time\Nyou've seen the Sharingan.
+Dialogue: 0,0:08:03.60,0:08:07.47,Default,NTP,0000,0000,0000,,Then...you must be\Nthe Nine-Tailed Fox, huh...?
+Dialogue: 0,0:08:10.63,0:08:15.20,Default,NTP,0000,0000,0000,,That vision, and Chakra\Nmore ominous than mine...
+Dialogue: 0,0:08:15.90,0:08:19.90,Default,NTP,0000,0000,0000,,It's just like...\NMadara Uchiha, from long ago...
+Dialogue: 0,0:08:27.60,0:08:30.73,Default,NTP,0000,0000,0000,,Heck if I know...that person.
+Dialogue: 0,0:10:07.67,0:10:08.93,Default,NTP,0000,0000,0000,,{\i1}Homecoming\N\N\NDid you find it?{\i0}
+Dialogue: 0,0:10:09.83,0:10:11.57,Default,NTP,0000,0000,0000,,{\i1}All clear here.{\i0}
+Dialogue: 0,0:10:12.30,0:10:13.67,Default,NTP,0000,0000,0000,,{\i1}Target acquired!{\i0}
+Dialogue: 0,0:10:23.30,0:10:26.00,Default,NTP,0000,0000,0000,,Uh-oh! It'll get into the village!
+Dialogue: 0,0:10:26.60,0:10:28.37,Default,NTP,0000,0000,0000,,No way will we let it get away!
+Dialogue: 0,0:10:40.93,0:10:42.10,Default,NTP,0000,0000,0000,,What the--?!
+Dialogue: 0,0:10:42.83,0:10:44.07,Default,NTP,0000,0000,0000,,Where'd it go?
+Dialogue: 0,0:10:44.37,0:10:45.27,Default,NTP,0000,0000,0000,,That way!
+Dialogue: 0,0:10:46.70,0:10:48.13,Default,NTP,0000,0000,0000,,Hey, you squirts!
+Dialogue: 0,0:10:50.00,0:10:51.07,Default,NTP,0000,0000,0000,,Hey!
+Dialogue: 0,0:10:51.47,0:10:52.67,Default,NTP,0000,0000,0000,,W-We're sorry!
+Dialogue: 0,0:10:52.97,0:10:54.60,Default,NTP,0000,0000,0000,,What're you doing?!
+Dialogue: 0,0:10:54.63,0:10:55.70,Default,NTP,0000,0000,0000,,Sorry!
+Dialogue: 0,0:10:58.83,0:10:59.80,Default,NTP,0000,0000,0000,,Sorry about that.
+Dialogue: 0,0:11:00.73,0:11:02.20,Default,NTP,0000,0000,0000,,Ichiraku Ramen
+Dialogue: 0,0:11:02.23,0:11:03.80,Default,NTP,0000,0000,0000,,I'm going out for a small delivery.
+Dialogue: 0,0:11:05.23,0:11:06.67,Default,NTP,0000,0000,0000,,Whoa! Outta the way!
+Dialogue: 0,0:11:13.13,0:11:14.30,Default,NTP,0000,0000,0000,,Sorry, pops!
+Dialogue: 0,0:11:14.50,0:11:16.30,Default,NTP,0000,0000,0000,,Hey, Naruto!
+Dialogue: 0,0:11:18.60,0:11:20.27,Default,NTP,0000,0000,0000,,No, I mean...
+Dialogue: 0,0:11:20.67,0:11:22.50,Default,NTP,0000,0000,0000,,Konohamaru!
+Dialogue: 0,0:11:34.43,0:11:37.00,Default,NTP,0000,0000,0000,,Konohamaru!\NWe've cornered the target.
+Dialogue: 0,0:11:39.00,0:11:40.03,Default,NTP,0000,0000,0000,,Hurry up.
+Dialogue: 0,0:11:40.70,0:11:42.27,Default,NTP,0000,0000,0000,,It'll get away!
+Dialogue: 0,0:11:43.67,0:11:44.57,Default,NTP,0000,0000,0000,,No problem!
+Dialogue: 0,0:11:50.13,0:11:51.60,Default,NTP,0000,0000,0000,,Why you--!
+Dialogue: 0,0:11:51.63,0:11:53.17,Default,NTP,0000,0000,0000,,- Give it up already!\N- Konohamaru!
+Dialogue: 0,0:11:57.50,0:11:59.63,Default,NTP,0000,0000,0000,,I got him!
+Dialogue: 0,0:12:00.43,0:12:03.70,Default,NTP,0000,0000,0000,,A ribbon on the right ear...\NNo doubt about it.
+Dialogue: 0,0:12:04.00,0:12:08.07,Default,NTP,0000,0000,0000,,Ebisu Sensei, we captured\Nthe lost pet target "Dora."
+Dialogue: 0,0:12:08.27,0:12:10.80,Default,NTP,0000,0000,0000,,Heh-heh... Mission complete!
+Dialogue: 0,0:12:18.30,0:12:20.97,Default,NTP,0000,0000,0000,,Oh, my adorable Dora!
+Dialogue: 0,0:12:21.67,0:12:25.30,Default,NTP,0000,0000,0000,,I was worried to death about you.\NWhere were you?
+Dialogue: 0,0:12:25.93,0:12:27.90,Default,NTP,0000,0000,0000,,I'd want to run away too,
+Dialogue: 0,0:12:27.93,0:12:29.90,Default,NTP,0000,0000,0000,,if an old lady like that\Nwere my owner...
+Dialogue: 0,0:12:30.30,0:12:31.57,Default,NTP,0000,0000,0000,,Konohamaru!
+Dialogue: 0,0:12:33.27,0:12:35.33,Default,NTP,0000,0000,0000,,All right, here is the reward.
+Dialogue: 0,0:12:36.40,0:12:38.47,Default,NTP,0000,0000,0000,,Now then, let's go home, Dora.
+Dialogue: 0,0:12:43.93,0:12:47.47,Default,NTP,0000,0000,0000,,How many hours did it take\Nyou guys to catch a simple lost cat?!
+Dialogue: 0,0:12:47.93,0:12:51.57,Default,NTP,0000,0000,0000,,But that cat was incredibly quick...
+Dialogue: 0,0:12:51.73,0:12:53.43,Default,NTP,0000,0000,0000,,And he seemed accustomed\Nto running away...
+Dialogue: 0,0:12:53.47,0:12:54.87,Default,NTP,0000,0000,0000,,I don't want to hear\Nany excuses!
+Dialogue: 0,0:12:55.00,0:13:00.20,Default,NTP,0000,0000,0000,,A mission like this must be carried out\Nmore quickly and properly!
+Dialogue: 0,0:13:00.40,0:13:01.90,Default,NTP,0000,0000,0000,,You guys are not good enough!
+Dialogue: 0,0:13:02.07,0:13:06.30,Default,NTP,0000,0000,0000,,I can't display my true strength\Non a lame mission like this!
+Dialogue: 0,0:13:07.13,0:13:08.80,Default,NTP,0000,0000,0000,,Say, Iruka Sensei.
+Dialogue: 0,0:13:08.83,0:13:10.83,Default,NTP,0000,0000,0000,,Don't you have more of\Nan awesome mission for me?
+Dialogue: 0,0:13:11.30,0:13:13.30,Default,NTP,0000,0000,0000,,Listen... Konohamaru...
+Dialogue: 0,0:13:13.33,0:13:17.57,Default,NTP,0000,0000,0000,,Konohamaru, you guys just\Nbecame Genin.
+Dialogue: 0,0:13:17.60,0:13:20.80,Default,NTP,0000,0000,0000,,There's no way I can give missions\Nlike that to you right off the bat, right?!
+Dialogue: 0,0:13:21.10,0:13:23.20,Default,NTP,0000,0000,0000,,It'll be D-rank missions\Nuntil further notice.
+Dialogue: 0,0:13:23.60,0:13:25.87,Default,NTP,0000,0000,0000,,I can't be satisfied with that!
+Dialogue: 0,0:13:26.10,0:13:27.33,Default,NTP,0000,0000,0000,,After all, in the future
+Dialogue: 0,0:13:27.37,0:13:28.83,Default,NTP,0000,0000,0000,,I'm going to become\Nthe Seventh Hokage.
+Dialogue: 0,0:13:29.37,0:13:32.13,Default,NTP,0000,0000,0000,,Seventh? Not the Sixth?
+Dialogue: 0,0:13:32.60,0:13:35.23,Default,NTP,0000,0000,0000,,Brother Naruto's going to be the Sixth.
+Dialogue: 0,0:13:44.37,0:13:46.37,Default,NTP,0000,0000,0000,,Brother Naruto, huh...?
+Dialogue: 0,0:13:46.97,0:13:49.07,Default,NTP,0000,0000,0000,,I wonder where he is right now...
+Dialogue: 0,0:13:49.90,0:13:53.27,Default,NTP,0000,0000,0000,,I bet he'll return having become\Nan awesome Shinobi.
+Dialogue: 0,0:13:53.93,0:13:55.87,Default,NTP,0000,0000,0000,,I have faith in him!
+Dialogue: 0,0:14:00.07,0:14:04.27,Default,NTP,0000,0000,0000,,He's more of a Second Naruto\Nthan a Seventh Hokage...
+Dialogue: 0,0:14:06.00,0:14:08.83,Default,NTP,0000,0000,0000,,{\i1}Naruto... Are you holding up okay?{\i0}
+Dialogue: 0,0:14:10.13,0:14:14.93,Default,NTP,0000,0000,0000,,{\i1}No matter what, I'll get strong\Nand bring Sasuke back!{\i0}
+Dialogue: 0,0:14:16.83,0:14:19.50,Default,NTP,0000,0000,0000,,Quite a bit of time has passed\Nsince he said that
+Dialogue: 0,0:14:19.53,0:14:22.30,Default,NTP,0000,0000,0000,,and went off for real training\Nwith Master Jiraiya...
+Dialogue: 0,0:14:22.63,0:14:26.30,Default,NTP,0000,0000,0000,,Yes. Isn't it just about the time\Nhe should be returning?
+Dialogue: 0,0:14:28.47,0:14:30.57,Default,NTP,0000,0000,0000,,We need him to return.
+Dialogue: 0,0:14:32.77,0:14:35.13,Default,NTP,0000,0000,0000,,After all, there will probably be\Nsignificant developments sometime soon.
+Dialogue: 0,0:14:56.43,0:14:59.10,Default,NTP,0000,0000,0000,,Hey... Could that be...?
+Dialogue: 0,0:14:59.50,0:15:01.50,Default,NTP,0000,0000,0000,,Yeah... No doubt about it.
+Dialogue: 0,0:15:05.17,0:15:06.47,Default,NTP,0000,0000,0000,,Miss Sakura!
+Dialogue: 0,0:15:09.60,0:15:11.07,Default,NTP,0000,0000,0000,,Oh, Konohamaru!
+Dialogue: 0,0:15:11.13,0:15:12.57,Default,NTP,0000,0000,0000,,Where are you off to?
+Dialogue: 0,0:15:12.93,0:15:14.43,Default,NTP,0000,0000,0000,,The main village gate.
+Dialogue: 0,0:15:14.57,0:15:18.63,Default,NTP,0000,0000,0000,,I have to pick up the morning pedestrian\Ntraffic ledger for Lady Tsunade.
+Dialogue: 0,0:15:19.17,0:15:20.23,Default,NTP,0000,0000,0000,,You want to come?
+Dialogue: 0,0:15:21.40,0:15:23.47,Default,NTP,0000,0000,0000,,It's been about two and a half years.
+Dialogue: 0,0:15:23.83,0:15:25.70,Default,NTP,0000,0000,0000,,Yeah, it has...
+Dialogue: 0,0:15:27.40,0:15:30.80,Default,NTP,0000,0000,0000,,And then that Dora cat suddenly\Nstarts scratching me like crazy!
+Dialogue: 0,0:15:31.83,0:15:35.17,Default,NTP,0000,0000,0000,,We had missions like that, too.\NIt kind of takes me back.
+Dialogue: 0,0:15:35.70,0:15:36.70,Default,NTP,0000,0000,0000,,Come to think of it,
+Dialogue: 0,0:15:36.73,0:15:39.23,Default,NTP,0000,0000,0000,,have you heard anything\Nfrom Brother Naruto?!
+Dialogue: 0,0:15:39.47,0:15:41.67,Default,NTP,0000,0000,0000,,Nothing...yet.
+Dialogue: 0,0:15:42.07,0:15:43.13,Default,NTP,0000,0000,0000,,I see...
+Dialogue: 0,0:15:44.57,0:15:47.20,Default,NTP,0000,0000,0000,,He should be coming back soon, though...
+Dialogue: 0,0:15:51.77,0:15:54.80,Default,NTP,0000,0000,0000,,Hello, Izumo, Kotetsu.
+Dialogue: 0,0:15:55.17,0:15:56.53,Default,NTP,0000,0000,0000,,Oh, look who's here...
+Dialogue: 0,0:15:57.47,0:15:59.20,Default,NTP,0000,0000,0000,,Why don't you head on into town?
+Dialogue: 0,0:15:59.23,0:16:01.20,Default,NTP,0000,0000,0000,,You'll see something interesting.
+Dialogue: 0,0:16:01.60,0:16:03.03,Default,NTP,0000,0000,0000,,Something interesting...?
+Dialogue: 0,0:16:05.17,0:16:06.30,Default,NTP,0000,0000,0000,,Don't tell me!
+Dialogue: 0,0:16:13.30,0:16:15.00,Default,NTP,0000,0000,0000,,He's having a ball...
+Dialogue: 0,0:16:17.90,0:16:22.77,Default,NTP,0000,0000,0000,,This takes me back!\NThe village hasn't changed a bit!
+Dialogue: 0,0:16:23.40,0:16:29.90,Default,NTP,0000,0000,0000,,Everyone! Naruto Uzumaki's back!
+Dialogue: 0,0:16:32.93,0:16:36.27,Default,NTP,0000,0000,0000,,It's all so nostalgic...!
+Dialogue: 0,0:16:36.60,0:16:37.93,Default,NTP,0000,0000,0000,,Yup! Yup!
+Dialogue: 0,0:16:41.23,0:16:43.97,Default,NTP,0000,0000,0000,,They added GrandmaTsunade's\NMountainside Image!
+Dialogue: 0,0:16:49.30,0:16:50.50,Default,NTP,0000,0000,0000,,For real...?
+Dialogue: 0,0:16:50.87,0:16:51.87,Default,NTP,0000,0000,0000,,For real!
+Dialogue: 0,0:16:53.50,0:16:56.53,Default,NTP,0000,0000,0000,,Naruto? Is that you, Naruto?
+Dialogue: 0,0:16:58.67,0:17:01.00,Default,NTP,0000,0000,0000,,When did you get back, Naruto?!
+Dialogue: 0,0:17:01.63,0:17:03.43,Default,NTP,0000,0000,0000,,Just now!
+Dialogue: 0,0:17:05.70,0:17:08.20,Default,NTP,0000,0000,0000,,Long time no see, Sakura!
+Dialogue: 0,0:17:14.53,0:17:17.73,Default,NTP,0000,0000,0000,,You've gotten taller than me,\Nhaven't you?
+Dialogue: 0,0:17:17.93,0:17:18.73,Default,NTP,0000,0000,0000,,Huh...?
+Dialogue: 0,0:17:19.43,0:17:21.13,Default,NTP,0000,0000,0000,,Oh! You're right.
+Dialogue: 0,0:17:22.37,0:17:26.33,Default,NTP,0000,0000,0000,,{\i1}He kind of...got\Na build since I saw him last...{\i0}
+Dialogue: 0,0:17:27.67,0:17:31.53,Default,NTP,0000,0000,0000,,So? You think I've become\Na bit womanly?
+Dialogue: 0,0:17:31.80,0:17:34.87,Default,NTP,0000,0000,0000,,You're fine!\NYou haven't changed a bit.
+Dialogue: 0,0:17:38.50,0:17:43.30,Default,NTP,0000,0000,0000,,{\i1}You just don't understand\Nthe heart of a woman...{\i0}
+Dialogue: 0,0:17:43.37,0:17:44.70,Default,NTP,0000,0000,0000,,Brother Naruto!
+Dialogue: 0,0:17:49.20,0:17:50.60,Default,NTP,0000,0000,0000,,Sexy Jutsu!
+Dialogue: 0,0:17:50.77,0:17:51.93,Default,NTP,0000,0000,0000,,Ohh!
+Dialogue: 0,0:17:52.13,0:17:53.27,Default,NTP,0000,0000,0000,,Wha--?!
+Dialogue: 0,0:17:55.20,0:17:58.80,Default,NTP,0000,0000,0000,,How about that?!\NPretty nice waist, hips and bust, huh?!
+Dialogue: 0,0:18:03.17,0:18:07.43,Default,NTP,0000,0000,0000,,Konohamaru...\NI'm not a kid anymore.
+Dialogue: 0,0:18:08.07,0:18:11.87,Default,NTP,0000,0000,0000,,And you too, shouldn't be using Jutsu...\Nlike that...
+Dialogue: 0,0:18:16.40,0:18:20.73,Default,NTP,0000,0000,0000,,{\i1}That's right. It isn't just\Nyour appearance that's matured...{\i0}
+Dialogue: 0,0:18:22.17,0:18:24.93,Default,NTP,0000,0000,0000,,{\i1}I kind of feel a bit lonesome,{\i0}
+Dialogue: 0,0:18:24.97,0:18:27.43,Default,NTP,0000,0000,0000,,{\i1}but you've turned out quite admirable,\Nhaven't you, Naruto?{\i0}
+Dialogue: 0,0:18:27.87,0:18:32.50,Default,NTP,0000,0000,0000,,{\i1}Knowing you, I bet you came back\Nhaving acquired some incredible Jutsu.{\i0}
+Dialogue: 0,0:18:33.30,0:18:36.00,Default,NTP,0000,0000,0000,,That's such a boring Jutsu!
+Dialogue: 0,0:18:36.03,0:18:40.53,Default,NTP,0000,0000,0000,,Check out my freshly\Ndeveloped New Pervy Ninjutsu!
+Dialogue: 0,0:18:40.60,0:18:43.00,Default,NTP,0000,0000,0000,,{\i1}Right... Like the New Pervy Ninjutsu...{\i0}
+Dialogue: 0,0:18:43.03,0:18:44.67,Default,NTP,0000,0000,0000,,Here we go!
+Dialogue: 0,0:18:47.90,0:18:49.83,Default,NTP,0000,0000,0000,,Hey, you idiot!
+Dialogue: 0,0:19:01.63,0:19:04.50,Default,NTP,0000,0000,0000,,You haven't changed at all,\Nhave you, you jerk?!
+Dialogue: 0,0:19:04.53,0:19:06.63,Default,NTP,0000,0000,0000,,After seeing each other for\Nthe first time in like two years!
+Dialogue: 0,0:19:06.67,0:19:08.97,Default,NTP,0000,0000,0000,,You make me do this\Nin barely two minutes!
+Dialogue: 0,0:19:09.40,0:19:11.10,Default,NTP,0000,0000,0000,,What am I supposed to do
+Dialogue: 0,0:19:11.13,0:19:13.03,Default,NTP,0000,0000,0000,,with the feelings of admiration\NI had for you earlier, huh?!
+Dialogue: 0,0:19:13.17,0:19:15.90,Default,NTP,0000,0000,0000,,{\i1}- That short temper and incredible strength.\N- I'm not the least bit lonesome!{\i0}
+Dialogue: 0,0:19:16.07,0:19:18.53,Default,NTP,0000,0000,0000,,{\i1}- She's a second-generation Tsunade.\N- Huh? God, I'm mad at myself!{\i0}
+Dialogue: 0,0:19:19.00,0:19:21.90,Default,NTP,0000,0000,0000,,{\i1}Just like I thought,\NSakura hasn't changed at all...{\i0}
+Dialogue: 0,0:19:21.93,0:19:25.03,Default,NTP,0000,0000,0000,,{\i1}In fact, I get the feeling she's\Neven more vicious than before...{\i0}
+Dialogue: 0,0:19:25.33,0:19:27.13,Default,NTP,0000,0000,0000,,Huh? Did you say something?
+Dialogue: 0,0:19:29.60,0:19:31.47,Default,NTP,0000,0000,0000,,It's been a long time, you two.
+Dialogue: 0,0:19:32.40,0:19:34.60,Default,NTP,0000,0000,0000,,I'm sure your training produced\Ngood results, right?
+Dialogue: 0,0:19:35.03,0:19:38.47,Default,NTP,0000,0000,0000,,Do you think we came back\Nwithout making progress?
+Dialogue: 0,0:19:38.63,0:19:40.37,Default,NTP,0000,0000,0000,,It went perfectly!
+Dialogue: 0,0:19:40.70,0:19:43.97,Default,NTP,0000,0000,0000,,Then show me those\Nresults immediately.
+Dialogue: 0,0:19:44.20,0:19:45.37,Default,NTP,0000,0000,0000,,Show you...?
+Dialogue: 0,0:19:45.93,0:19:47.63,Default,NTP,0000,0000,0000,,You will take on a particular man.
+Dialogue: 0,0:19:48.13,0:19:51.03,Default,NTP,0000,0000,0000,,I didn't send him on any missions\Nfor the past several days
+Dialogue: 0,0:19:51.07,0:19:52.70,Default,NTP,0000,0000,0000,,and had him standby\Nfor this very purpose.
+Dialogue: 0,0:19:54.23,0:19:55.80,Default,NTP,0000,0000,0000,,Your opponent will be...
+Dialogue: 0,0:19:58.10,0:19:59.00,Default,NTP,0000,0000,0000,,Come in!
+Dialogue: 0,0:20:03.97,0:20:04.90,Default,NTP,0000,0000,0000,,Oh!
+Dialogue: 0,0:21:37.47,0:21:39.40,Default,NTP,0000,0000,0000,,Today at around five\Nin the afternoon,
+Dialogue: 0,0:21:39.43,0:21:41.60,Default,NTP,0000,0000,0000,,Security Ninja were found collapsed
+Dialogue: 0,0:21:41.63,0:21:43.90,Default,NTP,0000,0000,0000,,at the fortress of\Nthe Village Hidden in the Sand.
+Dialogue: 0,0:21:44.00,0:21:47.60,Default,NTP,0000,0000,0000,,No signs of dispute were found\Nwithin the scene of the crime;
+Dialogue: 0,0:21:47.63,0:21:49.87,Default,NTP,0000,0000,0000,,leading officials to believe\Nthe crime might have been committed
+Dialogue: 0,0:21:49.90,0:21:52.43,Default,NTP,0000,0000,0000,,by someone in the village,\Nor a skilled intruder.
+Dialogue: 0,0:21:52.63,0:21:55.40,Default,NTP,0000,0000,0000,,Around the same time,\Nthere have been reported sightings
+Dialogue: 0,0:21:55.43,0:21:58.93,Default,NTP,0000,0000,0000,,of two men dressed in black clothing\Nwith red cloud patterns.
+Dialogue: 0,0:21:58.97,0:22:01.47,Default,NTP,0000,0000,0000,,They are likely connected\Nto the incident.
+Dialogue: 0,0:22:01.90,0:22:04.47,Default,NTP,0000,0000,0000,,Next time:\N"The Akatsuki Makes Its Move"

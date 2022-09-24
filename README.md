@@ -11,7 +11,7 @@
   * 支持 🎈Loon(推荐), Surge(推荐), Stash, Shadowrocket, Quantumult X
   * macOS 12.5.1, iOS 16.0, tvOS 15.6.1 测试通过
   * 需要启用`重写`、`脚本`、`MitM`功能
-  * 本项目可视化配置面板订阅及使用方法详见[🧰BoxJs](../../wiki/🧰BoxJs)
+  * 本项目可视化配置面板订阅及使用方法详见[🧰 BoxJs](../../wiki/🧰-BoxJs)
   * 点击下方链接直达详细说明
   * 手机等竖屏设备可以👈左右👉划动下列表格查看更多模块
 
@@ -85,7 +85,7 @@
 |         |         |         |         |         |         |        |        |
 
   [^1]: 此平台部分字幕为[隐藏字幕[CC]](https://zh.wikipedia.org/wiki/隱藏字幕)，整合于视频流无法提取，其他语言字幕正常。
-  [^2]: 此平台资源使用的域名`play.itunes.apple.com`与`App Store`登陆、验证、购买等功能共用域名，MitM可能造成无法访问，故默认未添加此域名，需要此平台双语的用户请自行添加`play.itunes.apple.com`至MitM域名列表。
+  [^2]: 此平台资源使用的域名`play.itunes.apple.com`与`App Store`登陆、验证、购买等功能共用域名，MitM可能造成无法访问，故默认未添加此域名，需要此平台双语的用户请自行添加`play.itunes.apple.com`至MitM域名列表，⚠️注意！首次播放时会先请求`play.itunes.apple.com`验证购买或订阅，此时`play.itunes.apple.com`不可`MitM`，需等到正常播放后，再将`play.itunes.apple.com`加入`MitM`列表。
   [^3]: 此平台字幕采用[TTML2](https://www.w3.org/TR/2018/REC-ttml2-20181108/)格式字幕，暂不支持
   [^4]: 此平台字幕选项为硬编码，需要在BoxJs中对应平台的`字幕类型（兼容）`选项选择一个替换用字幕类型
   [^5]: 采用旧版`AVPlayerViewController`播放器UI界面，自定义字幕名称会被强制显示为固定名称，比如多个名称为`简体中文`的选项，依次为原始字幕选项及BoxJs中开启的字幕选项，除显示的名称固定外，字幕选项功能正常。

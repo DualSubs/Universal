@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs v0.5.9-youtube-timedtext-response-beta");
+const $ = new Env("🍿️ DualSubs v0.5.10-youtube-timedtext-response-beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -78,7 +78,7 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 							const Format = url.params?.format || url.params?.fmt;
 							$.log(`🚧 ${$.name}, Format: ${Format}`, "");
 							// 创建字幕Object
-							let { OriginSub, SecondSub } = await getTimedText(url, { ...$request.headers ?? {}, "x-surge-skip-scripting": "true" }, Settings.Language, Configs);
+							let { OriginSub, SecondSub } = await getTimedText(url, { ...$request.headers ?? {}, "x-surge-skip-scripting": "true" }, Configs.Languages[Settings.Language]);
 							// 创建双语字幕Object
 							let DualSub = {};
 							// 处理格式
@@ -195,10 +195,9 @@ async function setENV(name, url, database) {
  * @param {Object} url - Parsed Request URL
  * @param {Object} headers - Request Headers
  * @param {String} langcode - langcode
- * @param {Object} database - database
  * @return {Promise<*>}
  */
-async function getTimedText(url, headers, langcode, database) {
+async function getTimedText(url, headers, langcode) {
 	$.log(`⚠ ${$.name}, Get TimedText URLs`, `url: ${JSON.stringify(url)}`, `langcode: ${langcode}`, "");
 	// 创建字幕Object
 	let OriginSub = {};
@@ -209,7 +208,7 @@ async function getTimedText(url, headers, langcode, database) {
 		OriginSub = await $.http.get({ "url": URL.stringify(url), "headers": headers }).then(response => response.body);
 	} else { // 未选
 		OriginSub = $response.body;
-		url.params.tlang = database.Languages[langcode]; // 翻译字幕
+		url.params.tlang = langcode; // 翻译字幕
 		SecondSub = await $.http.get({ "url": URL.stringify(url), "headers": headers }).then(response => response.body);
 	};
 	return { OriginSub, SecondSub };

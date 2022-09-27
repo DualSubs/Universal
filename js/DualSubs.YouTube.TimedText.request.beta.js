@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs v0.5.5-youtube-timedtext-request-beta");
+const $ = new Env("🍿️ DualSubs v0.5.6-youtube-timedtext-request-beta");
 const URL = new URLs();
 const DataBase = {
 	"Verify": {
@@ -52,14 +52,20 @@ if ($request.method == "OPTIONS") $.done();
 	if (Settings.Switch) {
 		let url = URL.parse($request.url);
 		$.log(`⚠ ${$.name}, url.path=${url.path}`, "");
-		switch (Settings.Translate.ShowOnly) {
-			case true:
-				url.params.tlang = Configs.Languages[Settings.Language]; // 翻译字幕
+		switch (url.params.cplatform) {
+			case "DESKTOP":
 				break;
-			case false:
+			case "MOBILE":
 			default:
-				break;
-		}
+				switch (Settings.Translate.ShowOnly) {
+					case true:
+						url.params.tlang = Configs.Languages[Settings.Language]; // 翻译字幕
+						break;
+					case false:
+					default:
+						break;
+				};
+		};
 		$request.url = URL.stringify(url);
 	};
 })()

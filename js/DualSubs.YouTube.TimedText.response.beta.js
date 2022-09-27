@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.4-youtube-timedtext-response-beta");
+const $ = new Env("DualSubs v0.5.5-youtube-timedtext-response-beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -48,9 +48,9 @@ const DataBase = {
 
 if ($request.method == "OPTIONS") $.done();
 if ($response.status != 200 && $response.statusCode != 200) $.done();
-delete $request.headers["Host"]
-delete $request.headers["Connection"]
-delete $request.headers["Range"]
+//delete $request.headers["Host"]
+//delete $request.headers["Connection"]
+//delete $request.headers["Range"]
 
 /***************** Processing *****************/
 !(async () => {

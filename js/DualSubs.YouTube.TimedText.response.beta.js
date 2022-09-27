@@ -74,13 +74,13 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 							break;
 						case "captions":
 						default:
-							// 设置格式
-							const Format = url.params?.format || url.params?.fmt;
-							$.log(`🚧 ${$.name}, Format: ${Format}`, "");
 							// 创建字幕Object
 							let { OriginSub, SecondSub } = await getTimedText(url, { ...$request.headers ?? {}, "x-surge-skip-scripting": "true" }, Configs.Languages[Settings.Language]);
 							// 创建双语字幕Object
 							let DualSub = {};
+							// 设置格式
+							const Format = url.params?.format || url.params?.fmt;
+							$.log(`🚧 ${$.name}, Format: ${Format}`, "");
 							// 处理格式
 							switch (Format) {
 								case "json3":

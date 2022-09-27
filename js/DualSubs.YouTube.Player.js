@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs v0.4.5-youtube-player");
+const $ = new Env("🍿️ DualSubs v0.4.6-youtube-player");
 const URL = new URLs();
 
 const DataBase = {
@@ -53,7 +53,7 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 //delete $request.headers["Range"]
 
 /***************** Processing *****************/
-!(async () => {
+(async () => {
 	const { Platform, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
 		let url = URL.parse($request.url);

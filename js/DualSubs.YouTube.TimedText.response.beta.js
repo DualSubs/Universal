@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs v0.5.8-youtube-timedtext-response-beta");
+const $ = new Env("🍿️ DualSubs v0.5.9-youtube-timedtext-response-beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -53,17 +53,17 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 //delete $request.headers["Range"]
 
 /***************** Processing *****************/
-!(async () => {
+(async () => {
 	const { Platform, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
 	if (Settings.Switch) {
+		let url = URL.parse($request.url);
+		$.log(`⚠ ${$.name}, url.path=${url.path}`, "");
 		switch (Settings.Translate.ShowOnly) {
 			case true:
-				$.log(`⚠ ${$.name}, 单语言模式，跳过`, "");
+				$.log(`⚠ ${$.name}, 仅显示翻译后字幕，跳过`, "");
 				break;
 			case false:
 			default:
-				let url = URL.parse($request.url);
-				$.log(`⚠ ${$.name}, url.path=${url.path}`, "");
 				if (url?.params?.lang?.includes(Settings?.Language?.toLowerCase())) $.log(`⚠ ${$.name}, 语言相同，跳过`, "");
 				else if (url?.params?.lang?.includes(url?.params?.tlang?.toLowerCase())) $.log(`⚠ ${$.name}, 语言相同，跳过`, "");
 				else if (!url?.params?.tlang && url?.params?.cplatform === "DESKTOP") $.log(`⚠ ${$.name}, 桌面版未选择翻译语言，跳过`, "");

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.5.5-youtube-timedtext-response-beta");
+const $ = new Env("🍿️ DualSubs v0.5.6-youtube-timedtext-response-beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -71,7 +71,7 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 					const Format = url.params?.format || url.params?.fmt;
 					$.log(`🚧 ${$.name}, Format: ${Format}`, "");
 					// 创建字幕Object
-					let { OriginSub, SecondSub } = await getTimedText(url, $request.headers, Settings.Language, Configs);
+					let { OriginSub, SecondSub } = await getTimedText(url, { ...$request.headers ?? {}, "x-surge-skip-scripting": "true" }, Settings.Language, Configs);
 					// 创建双语字幕Object
 					let DualSub = {};
 					// 处理格式

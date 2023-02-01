@@ -1,0 +1,16 @@
+#!name=🍿️ DualSubs for 🇳 Netflix
+#!desc=(BETA) Netflix字幕增强及双语模块
+#!openUrl=http://boxjs.com/#/app/DualSubs.Netflix.beta
+#!author=VirgilClyne
+#!homepage=https://github.com/VirgilClyne
+#!manual=https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs-for-🇳-Netflix
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png
+
+[Script]
+DualSubs.Netflix.Manifest.json = type=http-response, pattern=^https?:\/\/www\.netflix\.com\/playapi\/cadmium\/manifest\/(.*)(\?.*), requires-body=1, max-size=0, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Netflix.Manifest.beta.js
+DualSubs.Netflix.PBO_Manifest.json = type=http-response, pattern=^https?:\/\/(ios|win10)\.prod\.(ftl|http1)\.netflix\.com\/nq(\/msl|msl_v1)?(\/cadmium)?(\/iosplatform)?\/pbo_manifest\/~1\.0\.0\/router, requires-body=1, max-size=0, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Netflix.Manifest.beta.js
+DualSubs.Netflix.SUB.WebVTT = type=http-response, pattern=https?:\/\/.+\.nflxvideo.net\/(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.WebVTT.beta.js
+DualSubs.Netflix.SUB.TTML = type=http-response, pattern=https?:\/\/.+\.nflxvideo.net\/(\?.*dualsubs=\w+)$, requires-body=1, max-size=0, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.SUB.TTML.beta.js
+
+[MITM]
+hostname = %APPEND% www.netflix.com, *.prod.ftl.netflix.com, *.prod.http1.netflix.com, *.nflxvideo.net

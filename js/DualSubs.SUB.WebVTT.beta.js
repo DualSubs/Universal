@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.5-sub-webvtt-beta");
+const $ = new Env("DualSubs v0.7.6-sub-webvtt-beta");
 const URL = new URLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
@@ -54,90 +54,96 @@ delete $request.headers["Range"]
 /***************** Processing *****************/
 !(async () => {
 	const { Platform, Verify, Advanced, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
-	if (Settings.Switch) {
-		let url = URL.parse($request.url);
-		$.log(`⚠ ${$.name}, url.path=${url.path}`);
-		// 设置类型
-		const Type = url?.params?.dualsubs || Settings.Type;
-		$.log(`🚧 ${$.name}, Type: ${Type}`, "");
-		// 创建字幕Object
-		let OriginSub = VTT.parse($response.body);
-		let SecondSub = {};
-		// 创建双语字幕Object
-		let DualSub = {};
-		// 处理类型
-		switch (Type) {
-			case "Official":
-				$.log(`🚧 ${$.name}`, "官方字幕", "");
-				// 找缓存
-				const Indices = await getCache($request.url, Type, Settings, Caches);
-				let Cache = Caches?.[Indices.Index] || {};
-				let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
-				if (!VTTs) $.done();
-				switch (Platform) {
-					case "Apple":
-					case "Apple_TV":
-					case "Apple_TV_Plus":
-					case "Apple_Fitness":
-						let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
-						let requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
-						for await (let request of requests) {
+	$.log(`⚠ ${$.name}, Settings.Switch=${Settings.Switch}`);
+	switch (Settings.Switch) {
+		case true:
+		default:
+			let url = URL.parse($request.url);
+			$.log(`⚠ ${$.name}, url.path=${url.path}`);
+			// 设置类型
+			const Type = url?.params?.dualsubs || Settings.Type;
+			$.log(`🚧 ${$.name}, Type: ${Type}`, "");
+			// 创建字幕Object
+			let OriginSub = VTT.parse($response.body);
+			let SecondSub = {};
+			// 创建双语字幕Object
+			let DualSub = {};
+			// 处理类型
+			switch (Type) {
+				case "Official":
+					$.log(`🚧 ${$.name}`, "官方字幕", "");
+					// 找缓存
+					const Indices = await getCache($request.url, Type, Settings, Caches);
+					let Cache = Caches?.[Indices.Index] || {};
+					let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
+					if (!VTTs) $.done();
+					switch (Platform) {
+						case "Apple":
+						case "Apple_TV":
+						case "Apple_TV_Plus":
+						case "Apple_Fitness":
+							let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
+							let requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
+							for await (let request of requests) {
+								SecondSub = await getWebVTT(request);
+								DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+							};
+							break;
+						default:
+							let request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
 							SecondSub = await getWebVTT(request);
 							DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-						};
-						break;
-					default:
-						let request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
-						SecondSub = await getWebVTT(request);
-						DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-						break;
-				}
-				break;
-			case "External":
-				$.log(`🚧 ${$.name}, 外挂字幕`, "");
-				let request = {
-					"url": Settings.External.URL,
-					"headers": {
-						"Accept": "*/*",
-						"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+							break;
 					}
-				};
-				SecondSub = await getWebVTT(request);
-				$.log(`🚧 ${$.name}, 外挂字幕`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, Settings.External.Offset, Settings.Tolerance, [(Settings.External.ShowOnly) ? "ShowOnly" : Settings.Position]);
-				break;
-			case "Google":
-			case "GoogleCloud":
-			case "Azure":
-			case "DeepL":
-			default:
-				$.log(`🚧 ${$.name}`, `翻译字幕`, "");
-				DualSub = OriginSub;
-				switch (Verify?.[Type]?.Method) {
-					default:
-					case "Part": // Part 逐段翻译
-						let Full = await Promise.all(DualSub.body.map(async item => item.text));
-						let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
-						let Parts = await chunk(Full, length);
-						Parts = await Promise.all(Parts.map(async Part => {
-							return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
-						})).then(parts => parts.flat(Infinity));
-						DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
-							item.text = await combineText(item.text, Parts[i], Settings.Position);
-							return item
-						}));
-						break;
-					case "Row": // Row 逐行翻译
-						DualSub.body = await Promise.all(DualSub.body.map(async item => {
-							let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
-							item.text = await combineText(item.text, text2[0], Settings.Position);
-							return item
-						}));
-						break;
-				};
-				break;
-		};
-		$response.body = VTT.stringify(DualSub);
+					break;
+				case "External":
+					$.log(`🚧 ${$.name}, 外挂字幕`, "");
+					let request = {
+						"url": Settings.External.URL,
+						"headers": {
+							"Accept": "*/*",
+							"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+						}
+					};
+					SecondSub = await getWebVTT(request);
+					$.log(`🚧 ${$.name}, 外挂字幕`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+					DualSub = await CombineDualSubs(OriginSub, SecondSub, Settings.External.Offset, Settings.Tolerance, [(Settings.External.ShowOnly) ? "ShowOnly" : Settings.Position]);
+					break;
+				case "Google":
+				case "GoogleCloud":
+				case "Azure":
+				case "DeepL":
+				default:
+					$.log(`🚧 ${$.name}`, `翻译字幕`, "");
+					DualSub = OriginSub;
+					switch (Verify?.[Type]?.Method) {
+						default:
+						case "Part": // Part 逐段翻译
+							let Full = await Promise.all(DualSub.body.map(async item => item.text));
+							let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
+							let Parts = await chunk(Full, length);
+							Parts = await Promise.all(Parts.map(async Part => {
+								return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+							})).then(parts => parts.flat(Infinity));
+							DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
+								item.text = await combineText(item.text, Parts[i], Settings.Position);
+								return item
+							}));
+							break;
+						case "Row": // Row 逐行翻译
+							DualSub.body = await Promise.all(DualSub.body.map(async item => {
+								let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+								item.text = await combineText(item.text, text2[0], Settings.Position);
+								return item
+							}));
+							break;
+					};
+					break;
+			};
+			$response.body = VTT.stringify(DualSub);
+			break;
+		case false:
+			break;
 	};
 })()
 	.catch((e) => $.logErr(e))

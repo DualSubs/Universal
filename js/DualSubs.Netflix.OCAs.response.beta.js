@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs v0.1.6-netflix-response-beta");
+const $ = new Env("🍿️ DualSubs v0.1.7-netflix-response-beta");
 const URL = new URLs();
 const DataBase = {
 	"Verify": {
@@ -76,17 +76,20 @@ if ($request.method == "OPTIONS") $.done();
 				case "application/x-subrip":
 					url.params.fmt = "subrip";
 					break;
+				case "application/octet-stream":
+					break;
 				default:
 					break;
 			};
 			$request.url = URL.stringify(url);
+			$response = await GetData($request);
 		case false:
 			break;
 	};
 })()
 	.catch((e) => $.logErr(e))
 	.finally(() => {
-		if ($.isQuanX()) $.done({ url: $request.url })
+		if ($.isQuanX()) $.done({ url: $request.url, headers: $response.headers, body: $response.body })
 		else $.done($response)
 	})
 
@@ -161,6 +164,22 @@ async function setENV(name, url, database) {
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Platform, Verify, Advanced, Settings, Caches, Configs };
+};
+
+// Get Data
+function GetData(request) {
+	$.log(`⚠ ${$.name}, Get Data`, "");
+	return new Promise(resolve => {
+		$.get(request, (error, response, data) => {
+			try {
+				if (error) throw new Error(error)
+				else if (data) resolve(data);
+				else throw new Error(response);
+			} catch (e) {
+				throw e;
+			}
+		});
+	});
 };
 
 /***************** Env *****************/

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs v0.1.7-netflix-response-beta");
+const $ = new Env("🍿️ DualSubs v0.1.16-netflix-response-beta");
 const URL = new URLs();
 const DataBase = {
 	"Verify": {
@@ -65,6 +65,7 @@ if ($request.method == "OPTIONS") $.done();
 			switch (Format) {
 				case "text/vtt":
 					url.params.fmt = "webvtt";
+					break;
 				case "text/xml":
 				case "application/ttml+xml":
 					url.params.fmt = "ttml";
@@ -81,8 +82,15 @@ if ($request.method == "OPTIONS") $.done();
 				default:
 					break;
 			};
-			$request.url = URL.stringify(url);
-			$response = await GetData($request);
+			if (url.params.fmt) {
+				$request.url = URL.stringify(url);
+				$.log(`⚠ ${$.name}, $request.url=${$request.url}`, "");
+				$request.headers["x-surge-skip-scripting"] = "false";
+				$.log(`⚠ ${$.name}, $request.headers=${JSON.stringify($request.headers)}`, "");
+				//$response = await GetData($request);
+				$response.body = await $.http.get($request).then(response => response.body);
+				$.log(`⚠ ${$.name}, $response.body=${$response.body}`, "");
+			};
 		case false:
 			break;
 	};
@@ -164,22 +172,6 @@ async function setENV(name, url, database) {
 	Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	return { Platform, Verify, Advanced, Settings, Caches, Configs };
-};
-
-// Get Data
-function GetData(request) {
-	$.log(`⚠ ${$.name}, Get Data`, "");
-	return new Promise(resolve => {
-		$.get(request, (error, response, data) => {
-			try {
-				if (error) throw new Error(error)
-				else if (data) resolve(data);
-				else throw new Error(response);
-			} catch (e) {
-				throw e;
-			}
-		});
-	});
 };
 
 /***************** Env *****************/

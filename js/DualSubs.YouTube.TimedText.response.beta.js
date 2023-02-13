@@ -49,9 +49,6 @@ const DataBase = {
 
 if ($request.method == "OPTIONS") $.done();
 if ($response.status != 200 && $response.statusCode != 200) $.done();
-//delete $request.headers["Host"]
-//delete $request.headers["Connection"]
-//delete $request.headers["Range"]
 
 /***************** Processing *****************/
 (async () => {

@@ -15,14 +15,14 @@
   * 点击下方链接直达详细说明
   * 手机等竖屏设备可以👈左右👉划动下列表格查看更多模块
 
-| [🍿️ DualSubs<br>for<br>🎦 Streaming Media Platform](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform) | [🍿️ DualSubs<br>for<br>🇳 Netflix](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix) | [🍿️ DualSubs<br>for<br>▶️ YouTube](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube) |
+| [🍿️ DualSubs<br>for<br>🎦 Streaming Media](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media) | [🍿️ DualSubs<br>for<br>🇳 Netflix](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix) | [🍿️ DualSubs<br>for<br>▶️ YouTube](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube) |
 | :---: | :---: | :---: |
-| [简介](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#简介) | [简介](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#简介) | [简介](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#简介) |
-| [功能列表](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#功能列表) | [功能列表](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#功能列表) | [功能列表](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#功能列表) |
-| [使用说明](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#使用说明) | [使用说明](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#使用说明) | [使用说明](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#使用说明) |
-| [安装链接](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#安装链接) | [安装链接](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#安装链接) | [安装链接](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#安装链接) |
+| [简介](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media#简介) | [简介](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#简介) | [简介](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#简介) |
+| [功能列表](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media#功能列表) | [功能列表](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#功能列表) | [功能列表](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#功能列表) |
+| [使用说明](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media#使用说明) | [使用说明](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#使用说明) | [使用说明](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#使用说明) |
+| [安装链接](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media#安装链接) | [安装链接](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#安装链接) | [安装链接](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#安装链接) |
 | 🆕新版<br>v0.7.x | 未发布 | 🆕新版<br>v0.5.x |
-| [更新日志](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform#更新日志) | [更新日志](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#更新日志) | [更新日志](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#更新日志) |
+| [更新日志](../../wiki/🍿-DualSubs-for-🎦-Streaming-Media#更新日志) | [更新日志](../../../DualSubs-Netflix/wiki/🍿-DualSubs-for-🇳-Netflix#更新日志) | [更新日志](../../../DualSubs-YouTube/wiki/🍿-DualSubs-for-▶-YouTube#更新日志) |
 | [说明/讨论](https://t.me/GetSomeFriesChannel/121) | 说明/讨论 | [说明/讨论](https://t.me/GetSomeFriesChannel/122/) |
 
 ---

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.2-sub-ttml-beta");
+const $ = new Env("DualSubs v0.7.3-sub-ttml-beta");
 const URL = new URLs();
 const XML = new XMLs();
 const DataBase = {
@@ -341,152 +341,163 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 			"Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
 		];
 		let request = {};
-		if (type == "Google") {
-			const BaseRequest = [
-				{ // Google API
-					"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t",
-					"headers": {
-						"Accept": "*/*",
-						"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
+		let BaseURL = "";
+		let texts = "";
+		switch (type) {
+			default:
+			case "Google":
+				const BaseRequest = [
+					{ // Google API
+						"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t",
+						"headers": {
+							"Accept": "*/*",
+							"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
+						}
+					},
+					{ // Google Translate App
+						"url": "https://translate.google.com/translate_a/single?client=it&dt=qca&dt=t&dt=rmt&dt=bd&dt=rms&dt=sos&dt=md&dt=gt&dt=ld&dt=ss&dt=ex&otf=2&dj=1&hl=en&ie=UTF-8&oe=UTF-8",
+						"headers": {
+							"Accept": "*/*",
+							"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
+						}
+					},
+					{ // Google Translate App
+						"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dj=1&source=bubble&dt=t&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at",
+						"headers": {
+							"Accept": "*/*",
+							"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
+						}
+					},
+					{// Google Dictionary Chrome extension https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja
+						"url": "https://clients5.google.com/translate_a/t?client=dict-chrome-ex",
+						"headers": {
+							"Accept": "*/*",
+							"User-Agent": ""
+						}
 					}
-				},
-				{ // Google Translate App
-					"url": "https://translate.google.com/translate_a/single?client=it&dt=qca&dt=t&dt=rmt&dt=bd&dt=rms&dt=sos&dt=md&dt=gt&dt=ld&dt=ss&dt=ex&otf=2&dj=1&hl=en&ie=UTF-8&oe=UTF-8",
-					"headers": {
-						"Accept": "*/*",
-						"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
-					}
-				},
-				{ // Google Translate App
-					"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dj=1&source=bubble&dt=t&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at",
-					"headers": {
-						"Accept": "*/*",
-						"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
-					}
-				},
-				{// Google Dictionary Chrome extension https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja
-					"url": "https://clients5.google.com/translate_a/t?client=dict-chrome-ex",
-					"headers": {
-						"Accept": "*/*",
-						"User-Agent": ""
-					}
-				}
-			]
-			request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 3))] // 随机Request, 排除最后三项
-			text = (Array.isArray(text)) ? text.join("\n\n") : text;
-			request.url = request.url + `&sl=${DataBase.Google.Configs.Languages[source]}&tl=${DataBase.Google.Configs.Languages[target]}&q=${encodeURIComponent(text)}`;
-		} else if (type == "GoogleCloud") {
-			request.url = `https://translation.googleapis.com/language/translate/v2/?key=${verify.GoogleCloud?.Auth}`;
-			request.headers = {
-				//"Authorization": `Bearer ${verify.GoogleCloud?.Auth}`,
-				"User-Agent": "DualSubs",
-				"Content-Type": "application/json; charset=utf-8"
-			};
-			request.body = JSON.stringify({
-				"q": text,
-				"source": DataBase.Google.Configs.Languages[source],
-				"target": DataBase.Google.Configs.Languages[target],
-				"format": "html",
-				//"key": verify.GoogleCloud?.Key
-			});
-		} else if (type == "Bing") {
-			// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
-			const BaseURL = (verify.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
-				: (verify.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
-					: "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
-			request.url = `${BaseURL}`;
-			request.headers = {
-				"Accept": "*/*",
-				"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)], // 随机UA
-				"Content-type": "application/x-www-form-urlencoded",
-				"Refer": "https://www.bing.com/",
-			};
-			request.body = JSON.stringify({
-				"fromLang": "auto-detect",
-				//"text": '%s' % trans,
-				"text": text,
-				//"from": DataBase.Microsoft.Configs.Languages[source],
-				"to": DataBase.Microsoft.Configs.Languages[target]
-			});
-		} else if (type == "Azure") {
-			// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
-			// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-			const BaseURL = (verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
-				: (verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
-					: "https://api.cognitive.microsofttranslator.com"
-			request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Microsoft.Configs.Languages[target]}&from=${DataBase.Microsoft.Configs.Languages[source]}`;
-			request.headers = {
-				"Content-Type": "application/json; charset=UTF-8",
-				"Accept": "application/json, text/javascript, */*; q=0.01",
-				"Accept-Language": "zh-hans"
-				//"Authorization": `Bearer ${verify.Azure?.Auth}`,
-				//"Ocp-Apim-Subscription-Key": verify.Azure?.Auth,
-				//"Ocp-Apim-Subscription-Region": verify.Azure?.Region, // chinanorth, chinaeast2
-				//"X-ClientTraceId": uuidv4().toString()
-			};
-			if (verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = verify.Azure.Region;
-			if (verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = verify.Azure.Auth;
-			else if (verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${verify.Azure.Auth}`;
-			text = (Array.isArray(text)) ? text : [text];
-			let texts = await Promise.all(text?.map(async item => { return { "text": item } }))
-			request.body = JSON.stringify(texts);
-			/*
-			request.body = JSON.stringify([{
-				"text": text
-			}]);
-			*/
-		} else if (type == "DeepL") {
-			const BaseURL = (verify.DeepL.Version == "Free") ? "https://api-free.deepl.com"
-				: (verify.DeepL.Version == "Pro") ? "https://api.deepl.com"
-					: "https://api-free.deepl.com"
-			request.url = `${BaseURL}/v2/translate`
-			request.headers = {
-				"Accept": "*/*",
-				"User-Agent": "DualSubs",
-				"Content-Type": "application/x-www-form-urlencoded"
-			};
-			const source_lang = (DataBase.DeepL.Configs.Languages[source].includes("EN")) ? "EN"
-				: (DataBase.DeepL.Configs.Languages[source].includes("PT")) ? "PT"
-					: DataBase.DeepL.Configs.Languages[source];
-			const target_lang = (DataBase.DeepL.Configs.Languages[target] == "EN") ? "EN-US"
-				: (DataBase.DeepL.Configs.Languages[target] == "PT") ? "PT-PT"
-					: DataBase.DeepL.Configs.Languages[target];
-			const BaseBody = `auth_key=${verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
-			text = (Array.isArray(text)) ? text : [text];
-			let texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
-			request.body = BaseBody + texts.join("");
-		} else if (type == "BaiduFanyi") {
-			// https://fanyi-api.baidu.com/doc/24
-			request.url = `https://fanyi-api.baidu.com/api/trans/vip/language`;
-			request.headers = {
-				"User-Agent": "DualSubs",
-				"Content-Type": "application/x-www-form-urlencoded"
-			};
-			request.body = {
-				"q": text,
-				"from": DataBase.Baidu.Configs.Languages[source],
-				"to": DataBase.Baidu.Configs.Languages[target],
-				"appid": verify.BaiduFanyi?.Key,
-				"salt": uuidv4().toString(),
-				"sign": "",
-			};
-		} else if (type == "YoudaoAI") {
-			// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
-			request.url = `https://openapi.youdao.com/api`;
-			request.headers = {
-				"User-Agent": "DualSubs",
-				"Content-Type": "application/json; charset=utf-8"
-			};
-			request.body = {
-				"q": text,
-				"from": DataBase.Youdao.Configs.Languages[source],
-				"to": DataBase.Youdao.Configs.Languages[target],
-				"appKey": verify.YoudaoAI?.Key,
-				"salt": uuidv4().toString(),
-				"signType": "v3",
-				"sign": "",
-				"curtime": Math.floor(+new Date() / 1000)
-			};
+				]
+				request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 3))] // 随机Request, 排除最后三项
+				text = (Array.isArray(text)) ? text.join("\n\n") : text;
+				request.url = request.url + `&sl=${DataBase.Google.Configs.Languages[source]}&tl=${DataBase.Google.Configs.Languages[target]}&q=${encodeURIComponent(text)}`;
+				break;
+			case "GoogleCloud":
+				request.url = `https://translation.googleapis.com/language/translate/v2/?key=${verify.GoogleCloud?.Auth}`;
+				request.headers = {
+					//"Authorization": `Bearer ${verify.GoogleCloud?.Auth}`,
+					"User-Agent": "DualSubs",
+					"Content-Type": "application/json; charset=utf-8"
+				};
+				request.body = JSON.stringify({
+					"q": text,
+					"source": DataBase.Google.Configs.Languages[source],
+					"target": DataBase.Google.Configs.Languages[target],
+					"format": "html",
+					//"key": verify.GoogleCloud?.Key
+				});
+				break;
+			case "Bing":
+				// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
+				BaseURL = (verify.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+					: (verify.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
+						: "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+				request.url = `${BaseURL}`;
+				request.headers = {
+					"Accept": "*/*",
+					"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)], // 随机UA
+					"Content-type": "application/x-www-form-urlencoded",
+					"Refer": "https://www.bing.com/",
+				};
+				request.body = JSON.stringify({
+					"fromLang": "auto-detect",
+					//"text": '%s' % trans,
+					"text": text,
+					//"from": DataBase.Microsoft.Configs.Languages[source],
+					"to": DataBase.Microsoft.Configs.Languages[target]
+				});
+				break;
+			case "Azure":
+				// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
+				// https://docs.azure.cn/zh-cn/cognitive-services/translator/
+				BaseURL = (verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
+					: (verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
+						: "https://api.cognitive.microsofttranslator.com"
+				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Microsoft.Configs.Languages[target]}&from=${DataBase.Microsoft.Configs.Languages[source]}`;
+				request.headers = {
+					"Content-Type": "application/json; charset=UTF-8",
+					"Accept": "application/json, text/javascript, */*; q=0.01",
+					"Accept-Language": "zh-hans"
+					//"Authorization": `Bearer ${verify.Azure?.Auth}`,
+					//"Ocp-Apim-Subscription-Key": verify.Azure?.Auth,
+					//"Ocp-Apim-Subscription-Region": verify.Azure?.Region, // chinanorth, chinaeast2
+					//"X-ClientTraceId": uuidv4().toString()
+				};
+				if (verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = verify.Azure.Region;
+				if (verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = verify.Azure.Auth;
+				else if (verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${verify.Azure.Auth}`;
+				text = (Array.isArray(text)) ? text : [text];
+				texts = await Promise.all(text?.map(async item => { return { "text": item } }))
+				request.body = JSON.stringify(texts);
+				/*
+				request.body = JSON.stringify([{
+					"text": text
+				}]);
+				*/
+				break;
+			case "DeepL":
+				BaseURL = (verify.DeepL.Version == "Free") ? "https://api-free.deepl.com"
+					: (verify.DeepL.Version == "Pro") ? "https://api.deepl.com"
+						: "https://api-free.deepl.com"
+				request.url = `${BaseURL}/v2/translate`
+				request.headers = {
+					"Accept": "*/*",
+					"User-Agent": "DualSubs",
+					"Content-Type": "application/x-www-form-urlencoded"
+				};
+				const source_lang = (DataBase.DeepL.Configs.Languages[source].includes("EN")) ? "EN"
+					: (DataBase.DeepL.Configs.Languages[source].includes("PT")) ? "PT"
+						: DataBase.DeepL.Configs.Languages[source];
+				const target_lang = (DataBase.DeepL.Configs.Languages[target] == "EN") ? "EN-US"
+					: (DataBase.DeepL.Configs.Languages[target] == "PT") ? "PT-PT"
+						: DataBase.DeepL.Configs.Languages[target];
+				const BaseBody = `auth_key=${verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+				text = (Array.isArray(text)) ? text : [text];
+				texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
+				request.body = BaseBody + texts.join("");
+				break;
+			case "BaiduFanyi":
+				// https://fanyi-api.baidu.com/doc/24
+				request.url = `https://fanyi-api.baidu.com/api/trans/vip/language`;
+				request.headers = {
+					"User-Agent": "DualSubs",
+					"Content-Type": "application/x-www-form-urlencoded"
+				};
+				request.body = {
+					"q": text,
+					"from": DataBase.Baidu.Configs.Languages[source],
+					"to": DataBase.Baidu.Configs.Languages[target],
+					"appid": verify.BaiduFanyi?.Key,
+					"salt": uuidv4().toString(),
+					"sign": "",
+				};
+				break;
+			case "YoudaoAI":
+				// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
+				request.url = `https://openapi.youdao.com/api`;
+				request.headers = {
+					"User-Agent": "DualSubs",
+					"Content-Type": "application/json; charset=utf-8"
+				};
+				request.body = {
+					"q": text,
+					"from": DataBase.Youdao.Configs.Languages[source],
+					"to": DataBase.Youdao.Configs.Languages[target],
+					"appKey": verify.YoudaoAI?.Key,
+					"salt": uuidv4().toString(),
+					"signType": "v3",
+					"sign": "",
+					"curtime": Math.floor(+new Date() / 1000)
+				};
+				break;
 		}
 		//$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
@@ -502,11 +513,14 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 						else if (data) {
 							const _data = JSON.parse(data)
 							let texts = [];
-							if (type == "Google") {
-								if (Array.isArray(_data)) texts = _data?.[0]?.map(item => item?.[0]);
-								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans);
+							switch (type) {
+								default:
+								case "Google":
+									if (Array.isArray(_data)) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+									else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
+									break;
 							}
-							texts = texts.join("").split(/\n\n/);
+							texts = texts?.join("")?.split(/\n\n/);
 							resolve(texts);
 						} else throw new Error(response);
 					} catch (e) {
@@ -520,10 +534,22 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 						else if (data) {
 							const _data = JSON.parse(data)
 							let texts = [];
-							if (type == "Google") texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
-							else if (type == "GoogleCloud") texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
-							else if (type == "Bing" || type == "Azure") texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
-							else if (type == "DeepL") texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+							switch (type) {
+								default:
+								case "Google":
+									texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
+									break;
+								case "GoogleCloud":
+									texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+									break;
+								case "Bing":
+								case "Azure":
+									texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+									break;
+								case "DeepL":
+									texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+									break;
+							}
 							resolve(texts);
 						} else throw new Error(response);
 					} catch (e) {

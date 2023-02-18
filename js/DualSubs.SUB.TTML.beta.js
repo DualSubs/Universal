@@ -84,7 +84,7 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 					switch (Verify?.[Type]?.Method) {
 						default:
 						case "Part": // Part 逐段翻译
-							let Full = await Promise.all(DualSub.tt.body.div.p.map(async item => { Array.isArray(item.span["#"]) ? item.span["#"].join("\n") : item.span["#"] }));
+							let Full = await Promise.all(DualSub.tt.body.div.p.map(async item => Array.isArray(item.span["#"]) ? item.span["#"].join("\n") : item.span["#"]));
 							let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
 							let Parts = await chunk(Full, length);
 							Parts = await Promise.all(Parts.map(async Part => {
@@ -106,6 +106,7 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 					};
 					break;
 			};
+			$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
 			$response.body = XML.stringify(DualSub);
 			break;
 		case false:

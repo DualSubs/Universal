@@ -1,9 +1,9 @@
-#!name=🍿️ DualSubs for 🎦 Streaming Media Platform
-#!desc=(V0.7.x) 流媒体平台字幕增强及双语模块
+#!name=🍿️ DualSubs for 🎦 Streaming Media
+#!desc=(V0.7) 流媒体平台字幕增强及双语模块
 #!openUrl=http://boxjs.com/#/app/DualSubs.Universal
 #!author=VirgilClyne
-#!homepage=https://github.com/VirgilClyne
-#!manual=https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs-for-🎦-Streaming-Media-Platform
+#!homepage=https://github.com/DualSubs
+#!manual=https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs-for-🎦-Streaming-Media
 #!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Streaming.png
 
 #[General]

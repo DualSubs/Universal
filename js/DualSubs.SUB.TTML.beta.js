@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.0-sub-ttml-beta");
+const $ = new Env("DualSubs v0.7.1-sub-ttml-beta");
 const URL = new URLs();
 const XML = new XMLs();
 const DataBase = {
@@ -99,12 +99,7 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 				};
 				break;
 		};
-		//$response.body = XML.stringify(DualSub);
-		if ($response.headers["Content-Range"]) {
-			let length = byteLength($response.body);
-			$.log(`🚧 ${$.name}, Content-Range`, `length: ${length}`, "")
-			$response.headers["Content-Range"] = `bytes 0-${length - 1}/${length}`
-		};
+		$response.body = XML.stringify(DualSub);
 	};
 })()
 	.catch((e) => $.logErr(e))
@@ -644,9 +639,6 @@ function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==
 
 // https://github.com/VirgilClyne/VirgilClyne/blob/main/function/URL/URLs.embedded.min.js
 function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.0",this.opts=s,this.json={url:{scheme:"",host:"",path:""},params:{}}}parse(s){let t=s.match(/(?<scheme>.+):\/\/(?<host>[^/]+)\/?(?<path>[^?]+)?\??(?<params>.*)?/)?.groups??null;return t?.params&&(t.params=Object.fromEntries(t.params.split("&").map((s=>s.split("="))))),t}stringify(s=this.json){return s?.params?s.scheme+"://"+s.host+"/"+s.path+"?"+Object.entries(s.params).map((s=>s.join("="))).join("&"):s.scheme+"://"+s.host+"/"+s.path}}(s)}
-
-// https://stackoverflow.com/posts/23329386/revisions
-function byteLength(t){for(var e=t.length,n=t.length-1;n>=0;n--){var r=t.charCodeAt(n);r>127&&r<=2047?e++:r>2047&&r<=65535&&(e+=2),r>=56320&&r<=57343&&n--}return e}
 
 // refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
 // refer: https://goessner.net/download/prj/jsonxml/json2xml.js

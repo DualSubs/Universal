@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.4-sub-xml-beta");
+const $ = new Env("DualSubs v0.7.0-sub-ttml-beta");
 const URL = new URLs();
 const XML = new XMLs();
 const DataBase = {
@@ -80,19 +80,20 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 				DualSub = OriginSub;
 				if (Verify?.[Type]?.Method == "Row") { //逐行翻译
 					DualSub.tt.body.div.p = await Promise.all(DualSub.tt.body.div.p.map(async item => {
-						let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
-						item.text = await combineText(item.text, text2[0], Settings.Position);
+						let text2 = Array.isArray(item.span["#"]) ? await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.span["#"].join("\n"), Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential) // 3, 100, true
+							: await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.span["#"], Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+						item.span["#"] = await combineText(item.span["#"], span["#"][0], Settings.Position);
 						return item
 					}));
 				} else { // Part 逐段翻译
-					let Full = await Promise.all(DualSub.body.map(async item => item.text));
+					let Full = await Promise.all(DualSub.tt.body.div.p.map(async item => { Array.isArray(item.span["#"]) ? item.span["#"].join("\n") : item.span["#"]}));
 					let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
 					let Parts = await chunk(Full, length);
 					Parts = await Promise.all(Parts.map(async Part => {
 						return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
 					})).then(parts => parts.flat(Infinity));
-					DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
-						item.text = await combineText(item.text, Parts[i], Settings.Position);
+					DualSub.body = await Promise.all(DualSub.tt.body.div.p.map(async (item, i) => {
+						item.span["#"] = await combineText(item.span["#"], Parts[i], Settings.Position);
 						return item
 					}));
 				};

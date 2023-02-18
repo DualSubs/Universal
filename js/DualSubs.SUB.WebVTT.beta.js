@@ -62,6 +62,7 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 			$.log(`🚧 ${$.name}, Type: ${Type}`, "");
 			// 创建字幕Object
 			let OriginSub = VTT.parse($response.body);
+			//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 			let SecondSub = {};
 			// 创建双语字幕Object
 			let DualSub = {};
@@ -137,6 +138,7 @@ if ($response.status != 200 && $response.statusCode != 200) $.done();
 					};
 					break;
 			};
+			//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
 			$response.body = VTT.stringify(DualSub);
 			break;
 		case false:

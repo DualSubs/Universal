@@ -564,9 +564,9 @@
 		},
 		{
 			"id": "DualSubs.YouTube",
-			"name": "🍿️ DualSubs: YouTube",
+			"name": "🍿️ DualSubs: ▶ YouTube",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs-YouTube\">DualSubs-YouTube</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [
@@ -584,65 +584,13 @@
 				{
 					"id": "@DualSubs.YouTube.Settings.Language",
 					"name": "首选语言（兼容）：",
-					"val": "ZH",
+					"val": "AUTO",
 					"type": "selects",
 					"desc": "选择后会将此语言添加为额外的字幕语言",
 					"items": [
 						{
-							"key": "ZH",
-							"label": "中文（自动）"
-						},
-						{
-							"key": "ZH-HANS",
-							"label": "中文（简体）"
-						},
-						{
-							"key": "ZH-HK",
-							"label": "中文（香港）"
-						},
-						{
-							"key": "ZH-HANT",
-							"label": "中文（繁体）"
-						},
-						{
-							"key": "EN",
-							"label": "英语（自动）"
-						},
-						{
-							"key": "EN-US",
-							"label": "英语（美国）"
-						},
-						{
-							"key": "EN-US SDH",
-							"label": "英语（美国）[CC]"
-						},
-						{
-							"key": "ES",
-							"label": "西班牙语（自动）"
-						},
-						{
-							"key": "ES-ES",
-							"label": "西班牙语"
-						},
-						{
-							"key": "ES-ES SDH",
-							"label": "西班牙语[CC]"
-						},
-						{
-							"key": "ES-419",
-							"label": "西班牙语（拉丁美洲）"
-						},
-						{
-							"key": "ES-419 SDH",
-							"label": "西班牙语（拉丁美洲）[CC]"
-						},
-						{
-							"key": "JA",
-							"label": "日文"
-						},
-						{
-							"key": "KO",
-							"label": "韩文"
+							"key": "AUTO",
+							"label": "自动"
 						}
 					]
 				},
@@ -3235,9 +3183,9 @@
 		},
 		{
 			"id": "DualSubs.Netflix",
-			"name": "🍿️ DualSubs: Netflix",
+			"name": "🍿️ DualSubs: 🇳 Netflix",
 			"descs_html": [
-				"请参照<a href=\"https://github.com/DualSubs/DualSubs\">DualSubs</a>的使用说明进行配置",
+				"请参照<a href=\"https://github.com/DualSubs/DualSubs-Netflix\">DualSubs-Netflix</a>的使用说明进行配置",
 				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
 			],
 			"keys": [

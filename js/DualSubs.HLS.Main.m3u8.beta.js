@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.7-hls-main-beta");
+const $ = new Env("🍿️ DualSubs for 🎦 Streaming Media v0.7.8(1) hls.main.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -325,20 +325,23 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 					// 插入字幕选项
 					await insertOptions(Json, Index, Options, Standard);
 				};
-			}
-			else if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
+			} else if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
 				//$.log(`🚧 ${$.name}`, "obj2?.OPTION.FORCED", obj2?.OPTION.FORCED, "");
 				if (obj1?.OPTION?.["GROUP-ID"] == obj2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
 					//$.log(`🚧 ${$.name}`, "obj1?.OPTION[\"GROUP-ID\"]", obj1?.OPTION["GROUP-ID"], "");
 					//$.log(`🚧 ${$.name}`, "obj2?.OPTION[\"GROUP-ID\"]", obj2?.OPTION["GROUP-ID"], "");
 					// 创建字幕选项
 					let Options = [];
-					if (Platform == "Apple") { // Apple兼容
-						if (obj1?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+					// 兼容性修正
+					switch (Platform) {
+						case "Apple":
+							if (obj1?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+								Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+							}
+							break;
+						default:
 							Options = await getOptions(Platform, obj1, obj2, Types, Standard);
-						}
-					} else {
-						Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+							break;
 					};
 					$.log(`🎉 ${$.name}, Set DualSubs Subtitle Options`, `Options: ${JSON.stringify(Options)}`, "");
 					if (Options.length !== 0) {

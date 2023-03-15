@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.5-sub-webvtt");
+const $ = new Env("🍿️ DualSubs for 🎦 Streaming Media v0.7.6(1) SUB.WebVTT.beta");
 const URL = new URLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
@@ -13,7 +13,7 @@ const DataBase = {
 		"Settings":{"Translator":{"Times":3,"Interval":100,"Exponential":true}}
 	},
 	"Default": {
-		"Settings":{"Switch":true,"Types":["Official","Google","GoogleCloud","Azure","DeepL"],"Type":"Google","Languages":["ZH","EN"],"Language":"ZH","External":{"URL":null,"Offset":0,"ShowOnly":false},"Position":"Forward","CacheSize":6,"Tolerance":1000},
+		"Settings":{"Switch":"true","Types":["Official","Google","GoogleCloud","Azure","DeepL"],"Type":"Google","Languages":["ZH","EN"],"Language":"ZH","External":{"URL":null,"Offset":0,"ShowOnly":false},"Position":"Forward","CacheSize":6,"Tolerance":1000},
 		"Configs": {
 			"Languages":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]}
 		}
@@ -61,90 +61,97 @@ for (const [key, value] of Object.entries($response.headers)) {
 /***************** Processing *****************/
 !(async () => {
 	const { Platform, Verify, Advanced, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
-	if (Settings.Switch) {
-		let url = URL.parse($request.url);
-		$.log(`⚠ ${$.name}, url.path=${url.path}`);
-		// 设置类型
-		const Type = url?.params?.dualsubs || Settings.Type;
-		$.log(`🚧 ${$.name}, Type: ${Type}`, "");
-		// 创建字幕Object
-		let OriginSub = VTT.parse($response.body);
-		let SecondSub = {};
-		// 创建双语字幕Object
-		let DualSub = {};
-		// 处理类型
-		switch (Type) {
-			case "Official":
-				$.log(`🚧 ${$.name}`, "官方字幕", "");
-				// 找缓存
-				const Indices = await getCache($request.url, Type, Settings, Caches);
-				let Cache = Caches?.[Indices.Index] || {};
-				let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
-				if (!VTTs) $.done();
-				switch (Platform) {
-					case "Apple":
-					case "Apple_TV":
-					case "Apple_TV_Plus":
-					case "Apple_Fitness":
-						let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
-						let requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
-						for await (let request of requests) {
+	switch (Settings.Switch) {
+		case "true":
+		default:
+			$.log(`⚠ ${$.name}, 功能开启`, "");
+			let url = URL.parse($request.url);
+			$.log(`⚠ ${$.name}, url.path=${url.path}`, "");
+			// 设置类型
+			const Type = url?.params?.dualsubs || Settings.Type;
+			$.log(`🚧 ${$.name}, Type: ${Type}`, "");
+			// 创建字幕Object
+			let OriginSub = VTT.parse($response.body);
+			let SecondSub = {};
+			// 创建双语字幕Object
+			let DualSub = {};
+			// 处理类型
+			switch (Type) {
+				case "Official":
+					$.log(`🚧 ${$.name}`, "官方字幕", "");
+					// 找缓存
+					const Indices = await getCache($request.url, Type, Settings, Caches);
+					let Cache = Caches?.[Indices.Index] || {};
+					let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
+					if (!VTTs) $.done();
+					switch (Platform) {
+						case "Apple":
+						case "Apple_TV":
+						case "Apple_TV_Plus":
+						case "Apple_Fitness":
+							let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
+							let requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
+							for await (let request of requests) {
+								SecondSub = await getWebVTT(request);
+								DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
+							};
+							break;
+						default:
+							let request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
 							SecondSub = await getWebVTT(request);
 							DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-						};
-						break;
-					default:
-						let request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
-						SecondSub = await getWebVTT(request);
-						DualSub = await CombineDualSubs(OriginSub, SecondSub, 0, Settings.Tolerance, [Settings.Position]);
-						break;
-				}
-				break;
-			case "External":
-				$.log(`🚧 ${$.name}, 外挂字幕`, "");
-				let request = {
-					"url": Settings.External.URL,
-					"headers": {
-						"Accept": "*/*",
-						"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+							break;
 					}
-				};
-				SecondSub = await getWebVTT(request);
-				$.log(`🚧 ${$.name}, 外挂字幕`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-				DualSub = await CombineDualSubs(OriginSub, SecondSub, Settings.External.Offset, Settings.Tolerance, [(Settings.External.ShowOnly) ? "ShowOnly" : Settings.Position]);
-				break;
-			case "Google":
-			case "GoogleCloud":
-			case "Azure":
-			case "DeepL":
-			default:
-				$.log(`🚧 ${$.name}`, `翻译字幕`, "");
-				DualSub = OriginSub;
-				switch (Verify?.[Type]?.Method) {
-					default:
-					case "Part": // Part 逐段翻译
-						let Full = await Promise.all(DualSub.body.map(async item => item.text));
-						let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
-						let Parts = await chunk(Full, length);
-						Parts = await Promise.all(Parts.map(async Part => {
-							return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
-						})).then(parts => parts.flat(Infinity));
-						DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
-							item.text = await combineText(item.text, Parts[i], Settings.Position);
-							return item
-						}));
-						break;
-					case "Row": // Row 逐行翻译
-						DualSub.body = await Promise.all(DualSub.body.map(async item => {
-							let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
-							item.text = await combineText(item.text, text2[0], Settings.Position);
-							return item
-						}));
-						break;
-				};
-				break;
-		};
-		$response.body = VTT.stringify(DualSub);
+					break;
+				case "External":
+					$.log(`🚧 ${$.name}, 外挂字幕`, "");
+					let request = {
+						"url": Settings.External.URL,
+						"headers": {
+							"Accept": "*/*",
+							"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+						}
+					};
+					SecondSub = await getWebVTT(request);
+					$.log(`🚧 ${$.name}, 外挂字幕`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+					DualSub = await CombineDualSubs(OriginSub, SecondSub, Settings.External.Offset, Settings.Tolerance, [(Settings.External.ShowOnly) ? "ShowOnly" : Settings.Position]);
+					break;
+				case "Google":
+				case "GoogleCloud":
+				case "Azure":
+				case "DeepL":
+				default:
+					$.log(`🚧 ${$.name}`, `翻译字幕`, "");
+					DualSub = OriginSub;
+					switch (Verify?.[Type]?.Method) {
+						default:
+						case "Part": // Part 逐段翻译
+							let Full = await Promise.all(DualSub.body.map(async item => item.text));
+							let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
+							let Parts = await chunk(Full, length);
+							Parts = await Promise.all(Parts.map(async Part => {
+								return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+							})).then(parts => parts.flat(Infinity));
+							DualSub.body = await Promise.all(DualSub.body.map(async (item, i) => {
+								item.text = await combineText(item.text, Parts[i], Settings.Position);
+								return item
+							}));
+							break;
+						case "Row": // Row 逐行翻译
+							DualSub.body = await Promise.all(DualSub.body.map(async item => {
+								let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Verify], Advanced.Translator.Times, Advanced.Translator.Interval, Advanced.Translator.Exponential); // 3, 100, true
+								item.text = await combineText(item.text, text2[0], Settings.Position);
+								return item
+							}));
+							break;
+					};
+					break;
+			};
+			$response.body = VTT.stringify(DualSub);
+			break;
+		case "false":
+			$.log(`⚠ ${$.name}, 功能关闭`, "");
+			break;
 	};
 })()
 	.catch((e) => $.logErr(e))
@@ -210,7 +217,7 @@ async function setENV(name, url, database) {
 		$.log(`🚧 ${$.name}, Set Environment Variables`, `platform: ${platform}`, "");
 		Settings = await getENV(name, platform, database).then(v=> v.Settings);
 	};
-	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	//Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	if (Array.isArray(Settings.Types)) {
 		if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型

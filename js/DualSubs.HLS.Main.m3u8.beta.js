@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs for 🎦 Streaming Media v0.7.8(1) hls.main.beta");
+const $ = new Env("🍿️ DualSubs for 🎦 Streaming Media v0.7.8(2) HLS.main.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -451,6 +451,7 @@ async function isStandard(platform, url, headers) {
 			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
 			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
 			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
+			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
 			else if (headers?.["x-hbo-device-name"]?.includes("ios")) standard = false;
 			else if (_url.params["device-code"] === "iphone") standard = false;
 			break;
@@ -458,11 +459,13 @@ async function isStandard(platform, url, headers) {
 			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
 			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
 			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
+			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
 			else if (headers?.["user-agent"]?.includes("PeacockMobile")) standard = false;
 			break;
 		case "Fubo_TV":
 			if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
 			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
+			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
 			break;
 		case "TED":
 			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;

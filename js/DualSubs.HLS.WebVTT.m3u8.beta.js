@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("DualSubs v0.7.4-hls-webvtt-beta");
+const $ = new Env("🍿️ DualSubs for 🎦 Streaming Media v0.7.4(1) HLS.WebVTT.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -13,7 +13,7 @@ const DataBase = {
 		"Settings":{"Translator":{"Times":3,"Interval":100,"Exponential":true}}
 	},
 	"Default": {
-		"Settings":{"Switch":true,"Types":["Official","Google","GoogleCloud","Azure","DeepL"],"Type":"Google","Languages":["ZH","EN"],"Language":"ZH","External":{"URL":null,"Offset":0,"ShowOnly":false},"Position":"Forward","CacheSize":6,"Tolerance":1000},
+		"Settings":{"Switch":"true","Types":["Official","Google","GoogleCloud","Azure","DeepL"],"Type":"Google","Languages":["ZH","EN"],"Language":"ZH","External":{"URL":null,"Offset":0,"ShowOnly":false},"Position":"Forward","CacheSize":6,"Tolerance":1000},
 		"Configs": {
 			"Languages":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]}
 		}
@@ -61,64 +61,71 @@ for (const [key, value] of Object.entries($response.headers)) {
 /***************** Processing *****************/
 !(async () => {
 	const { Platform, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
-	if (Settings.Switch) {
-		let url = URL.parse($request.url);
-		$.log(`⚠ ${$.name}, url.path=${url.path}`);
-		// 设置类型
-		const Type = url?.params?.dualsubs || Settings.Type;
-		$.log(`🚧 ${$.name}, Type: ${Type}`, "");
-		// 处理类型
-		switch (Type) {
-			case "Official":
-				// 找缓存
-				const Indices = await getCache($request.url, Type, Settings, Caches);
-				let Cache = Caches?.[Indices.Index] || {};
-				if (Indices.Index !== -1) {
-					// 创建缓存
-					// 获取VTT字幕地址数组
-					for await (var language of Settings.Languages) {
-						for await (var data of Cache[language]) {
-							data.VTTs = await getVTTs(data.URL, $request.headers, Platform);
+	switch (Settings.Switch) {
+		case "true":
+		default:
+			$.log(`⚠ ${$.name}, 功能开启`, "");
+			let url = URL.parse($request.url);
+			$.log(`⚠ ${$.name}, url.path=${url.path}`, "");
+			// 设置类型
+			const Type = url?.params?.dualsubs || Settings.Type;
+			$.log(`🚧 ${$.name}, Type: ${Type}`, "");
+			// 处理类型
+			switch (Type) {
+				case "Official":
+					// 找缓存
+					const Indices = await getCache($request.url, Type, Settings, Caches);
+					let Cache = Caches?.[Indices.Index] || {};
+					if (Indices.Index !== -1) {
+						// 创建缓存
+						// 获取VTT字幕地址数组
+						for await (var language of Settings.Languages) {
+							for await (var data of Cache[language]) {
+								data.VTTs = await getVTTs(data.URL, $request.headers, Platform);
+							}
 						}
-					}
-					$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
-					// 写入缓存
-					let newCaches = Caches;
-					newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-					$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
-				};
-				break;
-			case "External":
-			case "Google":
-			case "GoogleCloud":
-			case "Azure":
-			case "DeepL":
-			default:
-				break;
-		};
-		// 序列化M3U8
-		let PlayList = M3U8.parse($response.body);
-		$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
-		// WebVTT.m3u8加参数
-		PlayList = PlayList.map(item => {
-			if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
-				const symbol = (item.URI.includes("?")) ? "&" : "?"
-				item.URI = item.URI + symbol + `dualsubs=${Type}`
+						$.log(`🚧 ${$.name}`, "Cache.stringify", JSON.stringify(Cache), "");
+						// 写入缓存
+						let newCaches = Caches;
+						newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
+						$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
+					};
+					break;
+				case "External":
+				case "Google":
+				case "GoogleCloud":
+				case "Azure":
+				case "DeepL":
+				default:
+					break;
+			};
+			// 序列化M3U8
+			let PlayList = M3U8.parse($response.body);
+			$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
+			// WebVTT.m3u8加参数
+			PlayList = PlayList.map(item => {
+				if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
+					const symbol = (item.URI.includes("?")) ? "&" : "?"
+					item.URI = item.URI + symbol + `dualsubs=${Type}`
+				}
+				return item;
+			})
+			if (Platform === "Prime_Video") {
+				// 删除BYTERANGE
+				//PlayList = PlayList.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
+				PlayList = PlayList.map((item, i) => {
+					if (item.TYPE === "EXT-X-BYTERANGE") PlayList[i - 1].URI = item.URI;
+					else return item;
+				}).filter(e => e);
+				$.log(`🚧 ${$.name}`, "PlayList.map", JSON.stringify(PlayList), "");
 			}
-			return item;
-		})
-		if (Platform === "Prime_Video") {
-			// 删除BYTERANGE
-			//PlayList = PlayList.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
-			PlayList = PlayList.map((item, i) => {
-				if (item.TYPE === "EXT-X-BYTERANGE") PlayList[i - 1].URI = item.URI;
-				else return item;
-			}).filter(e => e);
-			$.log(`🚧 ${$.name}`, "PlayList.map", JSON.stringify(PlayList), "");
-		}
-		// 字符串M3U8
-		PlayList = M3U8.stringify(PlayList);
-		$response.body = PlayList;
+			// 字符串M3U8
+			PlayList = M3U8.stringify(PlayList);
+			$response.body = PlayList;
+			break;
+		case "false":
+			$.log(`⚠ ${$.name}, 功能关闭`, "");
+			break;
 	};
 })()
 	.catch((e) => $.logErr(e))
@@ -184,7 +191,7 @@ async function setENV(name, url, database) {
 		$.log(`🚧 ${$.name}, Set Environment Variables`, `platform: ${platform}`, "");
 		Settings = await getENV(name, platform, database).then(v=> v.Settings);
 	};
-	Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	//Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	if (typeof Settings.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	if (Array.isArray(Settings.Types)) {
 		if (!Verify.GoogleCloud.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型

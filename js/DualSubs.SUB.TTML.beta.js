@@ -48,6 +48,16 @@ const DataBase = {
 if ($request.method == "OPTIONS") $.done();
 if ($response.status != 200 && $response.statusCode != 200) $.done();
 
+// headers转小写
+for (const [key, value] of Object.entries($request.headers)) {
+	delete $request.headers[key]
+	$request.headers[key.toLowerCase()] = value
+};
+for (const [key, value] of Object.entries($response.headers)) {
+	delete $response.headers[key]
+	$response.headers[key.toLowerCase()] = value
+};
+
 /***************** Processing *****************/
 !(async () => {
 	const { Platform, Verify, Advanced, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);

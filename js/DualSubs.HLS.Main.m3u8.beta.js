@@ -48,6 +48,16 @@ const DataBase = {
 if ($request.method == "OPTIONS") $.done();
 if ($response.status != 200 && $response.statusCode != 200) $.done();
 
+// headers转小写
+for (const [key, value] of Object.entries($request.headers)) {
+	delete $request.headers[key]
+	$request.headers[key.toLowerCase()] = value
+};
+for (const [key, value] of Object.entries($response.headers)) {
+	delete $response.headers[key]
+	$response.headers[key.toLowerCase()] = value
+};
+
 /***************** Processing *****************/
 !(async () => {
 	const { Platform, Settings, Caches, Configs } = await setENV("DualSubs", $request.url, DataBase);
@@ -442,10 +452,6 @@ async function isStandard(platform, url, headers) {
 	$.log(`⚠ ${$.name}, is Standard`, "");
 	let _url = URL.parse(url);
 	let standard = true;
-	for (const [key, value] of Object.entries(headers)) {
-		delete headers[key]
-		headers[key.toLowerCase()] = value
-	}
 	switch (platform) {
 		case "HBO_Max":
 			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;

@@ -1,0 +1,23 @@
+#!name=🍿️ DualSubs: TV & Fitness
+#!desc=(V0.7) TV 及 Fitness 字幕增强及双语模块
+#!openUrl=http://boxjs.com/#/app/DualSubs.TV.beta
+#!author=VirgilClyne
+#!homepage=https://github.com/DualSubs
+#!manual=https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs:-🎦-Streaming-Media
+#!icon=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/TV.png
+
+[Script]
+http-response ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(\?.+)?$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.Main.m3u8.js, tag=DualSubs.TV.HLS.Main.m3u8
+http-response ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles\.m3u8(\?.*dualsubs=\w+)$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.WebVTT.m3u8.js, tag=DualSubs.TV.HLS.WebVTT.m3u8
+http-response ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)?$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js, tag=DualSubs.TV.SUB.WebVTT
+
+http-response ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.+)?$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.Main.m3u8.js, tag=DualSubs.TV+.HLS.Main.m3u8
+http-response ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*dualsubs=\w+)$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.WebVTT.m3u8.js, tag=DualSubs.TV+.HLS.WebVTT.m3u8
+http-response ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)?$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js, tag=DualSubs.TV+.SUB.WebVTT
+
+http-response ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\/playlist\.m3u8(\?.+)?$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.Main.m3u8.js, tag=DualSubs.Fitness.HLS.Main.m3u8
+http-response ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.m3u8(\?.*dualsubs=\w+)$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.WebVTT.m3u8.js, tag=DualSubs.Fitness.HLS.WebVTT.m3u8
+http-response ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)?$ requires-body=1, timeout=30, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js, tag=DualSubs.Fitness.SUB.WebVTT
+
+[MITM]
+hostname = hls.itunes.apple.com, hls-svod.itunes.apple.com, vod-*.tv.apple.com

@@ -1,10 +1,10 @@
-name: 🍿️ DualSubs for 🎦 Streaming Media
-desc: (V0.7) 流媒体平台字幕增强及双语模块
-openUrl: http://boxjs.com/#/app/DualSubs.Universal
-author: VirgilClyne
-homepage: https://github.com/DualSubs
-manual: https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs-for-🎦-Streaming-Media
-icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Streaming.png
+name: "🍿️ DualSubs: 🎦 Streaming Media"
+desc: "(V0.7) 流媒体平台字幕增强及双语模块"
+openUrl: "http://boxjs.com/#/app/DualSubs.Universal"
+author: "VirgilClyne"
+homepage: "https://github.com/DualSubs"
+manual: "https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs:-🎦-Streaming-Media"
+icon: "https://raw.githubusercontent.com/DualSubs/DualSubs/main/database/icon_rounded.png"
 
 http:
   force-http-engine:
@@ -19,10 +19,6 @@ http:
     - "vod-*.live.cf.md.bbci.co.uk"
     - "vod-*-live.akamaized.net"
   mitm:
-    - "play-edge.itunes.apple.com"
-    - "hls.itunes.apple.com"
-    - "hls-svod.itunes.apple.com"
-    - "vod-*.tv.apple.com"
     - "*.media.dssott.com"
     - "*.media.starott.com"
     - "atv-ps.amazon.com"
@@ -71,51 +67,6 @@ http:
     - "ap-hls-live.cdn?.showtime.com"
     - "*.cssott.com"
   script:
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(\?.+)?$
-      name: DualSubs.HLS.Main.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles\.m3u8(\?.*dualsubs=\w+)$
-      name: DualSubs.HLS.WebVTT.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)$
-      name: DualSubs.SUB.WebVTT
-      type: response
-      require-body: true
-      timeout: 30
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.+)?$
-      name: DualSubs.HLS.Main.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*dualsubs=\w+)$
-      name: DualSubs.HLS.WebVTT.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)$
-      name: DualSubs.SUB.WebVTT
-      type: response
-      require-body: true
-      timeout: 30
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\/playlist\.m3u8(\?.+)?$
-      name: DualSubs.HLS.Main.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.m3u8(\?.*dualsubs=\w+)$
-      name: DualSubs.HLS.WebVTT.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)$
-      name: DualSubs.SUB.WebVTT
-      type: response
-      require-body: true
-      timeout: 30
     - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(cbcs|ctr)-all-(.+)\.m3u8(\?.+)?$
       name: DualSubs.HLS.Main.m3u8
       type: response

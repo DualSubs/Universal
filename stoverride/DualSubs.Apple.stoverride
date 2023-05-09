@@ -17,12 +17,12 @@ http:
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles\.m3u8(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)_subtitles\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs..HLS.WebVTT.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)?$
+    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
       name: DualSubs..SUB.WebVTT
       type: response
       require-body: true
@@ -37,7 +37,7 @@ http:
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)?$
+    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
       name: DualSubs..SUB.WebVTT
       type: response
       require-body: true
@@ -47,12 +47,12 @@ http:
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.m3u8(\?.*dualsubs=\w+)$
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\.m3u8(\?.*dualsubs=\w+)$
       name: DualSubs..HLS.WebVTT.m3u8
       type: response
       require-body: true
       timeout: 10
-    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)?$
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
       name: DualSubs..SUB.WebVTT
       type: response
       require-body: true

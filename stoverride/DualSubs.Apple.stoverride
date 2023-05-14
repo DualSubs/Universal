@@ -1,5 +1,5 @@
 name: "🍿️ DualSubs: TV & Fitness"
-desc: "(V0.7) TV 及 Fitness 字幕增强及双语模块"
+desc: "(V0.7) TV 及 Fitness 字幕增强及双语模块，此模块为兼容模式版，始终强制启用字幕翻译功能"
 openUrl: "http://boxjs.com/#/app/DualSubs.TV.beta"
 author: "VirgilClyne"
 homepage: "https://github.com/DualSubs"
@@ -12,46 +12,16 @@ http:
     - "hls-svod.itunes.apple.com"
     - "vod-*.tv.apple.com"
   script:
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8(\?.+)?$
-      name: DualSubs..HLS.Main.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)_subtitles\.m3u8(\?.*dualsubs=\w+)$
-      name: DualSubs..HLS.WebVTT.m3u8
-      type: response
-      require-body: true
-      timeout: 10
     - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
       name: DualSubs..SUB.WebVTT
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8(\?.+)?$
-      name: DualSubs..HLS.Main.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*dualsubs=\w+)$
-      name: DualSubs..HLS.WebVTT.m3u8
-      type: response
-      require-body: true
-      timeout: 10
     - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
       name: DualSubs..SUB.WebVTT
       type: response
       require-body: true
       timeout: 30
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\/playlist\.m3u8(\?.+)?$
-      name: DualSubs..HLS.Main.m3u8
-      type: response
-      require-body: true
-      timeout: 10
-    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\.m3u8(\?.*dualsubs=\w+)$
-      name: DualSubs..HLS.WebVTT.m3u8
-      type: response
-      require-body: true
-      timeout: 10
     - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
       name: DualSubs..SUB.WebVTT
       type: response
@@ -59,12 +29,6 @@ http:
       timeout: 30
 
 script-providers:
-  DualSubs..HLS.Main.m3u8:
-    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.Main.m3u8.js
-    interval: 86400
-  DualSubs..HLS.WebVTT.m3u8:
-    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.HLS.WebVTT.m3u8.js
-    interval: 86400
   DualSubs..SUB.WebVTT:
     url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js
     interval: 86400

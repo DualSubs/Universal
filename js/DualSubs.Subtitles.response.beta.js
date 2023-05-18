@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(17) SUB.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(18) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -125,7 +125,6 @@ const DataBase = {
 			};
 			// 创建第二字幕Object
 			let SecondSub = {};
-			// 合成双语字幕
 			// 格式判断
 			switch (Format || FORMAT) {
 				case undefined: // 视为无body
@@ -135,6 +134,12 @@ const DataBase = {
 				case "text/html":
 				default:
 					break;
+				case "m3u8":
+				case "application/x-mpegurl":
+				case "application/vnd.apple.mpegurl":
+					//body = M3U8.parse($response.body);
+					//$.log(body);
+					//$response.body = M3U8.stringify(PlayList);
 				case "srv3":
 				case "text/xml":
 				case "application/xml":
@@ -249,15 +254,21 @@ const DataBase = {
 						case "application/x-www-form-urlencoded":
 						case "text/plain":
 						case "text/html":
+						case "srv3":
 						case "text/xml":
 						case "application/xml":
 						case "text/plist":
 						case "application/plist":
 						case "application/x-plist":
+						case "vtt":
+						case "webvtt":
 						case "text/vtt":
 						case "application/vtt":
+						case "json3":
 						case "text/json":
 						case "application/json":
+						case "m3u8":
+						case "application/x-mpegurl":
 						case "application/vnd.apple.mpegurl":
 						default:
 							// 返回普通数据

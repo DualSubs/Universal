@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(13) SUB.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(16) SUB.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -76,7 +76,7 @@ const DataBase = {
 			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Type, Languages = url?.params?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 获取字幕格式
-			const Format = url.params?.fmt || url.params?.format, Kind = url.params?.kind;
+			const Format = url.params?.fmt || url.params?.format || PATHs?.[PATHs?.length - 1]?.split(".")?.[1], Kind = url.params?.kind;
 			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
 			// 创建请求
 			let request = {};
@@ -127,7 +127,7 @@ const DataBase = {
 			let SecondSub = {};
 			// 合成双语字幕
 			// 格式判断
-			switch (FORMAT) {
+			switch (Format || FORMAT) {
 				case undefined: // 视为无body
 					break;
 				case "application/x-www-form-urlencoded":
@@ -137,6 +137,7 @@ const DataBase = {
 					break;
 				case "text/xml":
 				case "application/xml":
+				case "srv3":
 					body = XML.parse($response.body);
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
@@ -154,6 +155,8 @@ const DataBase = {
 					break;
 				case "text/vtt":
 				case "application/vtt":
+				case "vtt":
+				case "webvtt":
 					body = VTT.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					// 处理类型
@@ -202,6 +205,7 @@ const DataBase = {
 					break;
 				case "text/json":
 				case "application/json":
+				case "json3":
 					body = JSON.parse($response.body);
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
@@ -254,6 +258,7 @@ const DataBase = {
 						case "application/vtt":
 						case "text/json":
 						case "application/json":
+						case "application/vnd.apple.mpegurl":
 						default:
 							// 返回普通数据
 							$.done({ headers: $response.headers, body: $response.body });

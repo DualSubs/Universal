@@ -2,14 +2,20 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(6) SUB.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(12) SUB.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default": {
 		"Settings":{
-			"Switch":"true","Types":["Official","Google","GoogleCloud","Azure","DeepL"],"Type":"Google","Languages":["ZH","EN"],"Language":"AUTO","Translate":{"ShowOnly":false},"External":{"URL":null,"Offset":0,"ShowOnly":false},"Position":"Forward","CacheSize":20,"Tolerance":1000,
+			"Switch":"true","Types":["Official","Google","GoogleCloud","Azure","DeepL"],"Type":"Google","Languages":["ZH","EN"],"Language":"AUTO","Position":"Forward","CacheSize":20,"Tolerance":1000,
+			"Translate":{
+				"ShowOnly":false
+			},
+			"External":{
+				"URL":null,"Offset":0,"ShowOnly":false
+			},
 			"Verify": {
 				"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},
 				"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},
@@ -50,10 +56,11 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings, Caches, Configs } = setENV("DualSubs", "Universal", DataBase);
+	const Platform = getPlatform($request?.url);
+	const { Settings, Caches, Configs } = setENV("DualSubs", Platform, DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings?.Switch) {
-		case "true":
+		case true:
 		default:
 			let url = URL.parse($request?.url);
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = PATH.split("/");
@@ -63,7 +70,7 @@ const DataBase = {
 			// 创建空数据
 			let body = {};
 			// 获取平台
-			const Platform = getPlatform(HOST);
+			//const Platform = getPlatform(HOST);
 			$.log(`⚠ ${$.name}`, `Platform: ${Platform}`, "");
 			// 设置自定义参数
 			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Type, Languages = url?.params?.sublang || Settings.Languages;
@@ -83,15 +90,12 @@ const DataBase = {
 					let Cache = Caches?.[Indices.Index] || {};
 					let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
 					if (!VTTs) $.done();
-					switch (Platform) {
-						case "Apple":
-						case "Apple_TV":
-						case "Apple_TV_Plus":
-						case "Apple_Fitness":
+					switch (PATHs?.[0]) {
+						case "itunes-assets": // iTunes Assets
 							let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
 							requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
 							break;
-						default:
+						default: // Others
 							request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
 							requests.push(request);
 							break;
@@ -219,7 +223,7 @@ const DataBase = {
 					break;
 			};
 			break;
-		case "false":
+		case false:
 			break;
 	};
 })()
@@ -274,7 +278,7 @@ const DataBase = {
 
 /***************** Function *****************/
 function getPlatform(host) {
-		/***************** Platform *****************/
+	/***************** Platform *****************/
 	let Platform = /\.apple\.com/i.test(host) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(host) ? "Disney_Plus"
 			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(host) ? "Prime_Video"
@@ -314,7 +318,13 @@ function setENV(name, platform, database) {
 		({ Settings } = getENV(name, platform, database));
 	};
 	/***************** Settings *****************/
-	if (typeof Settings?.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	traverseObject(Settings, (key, value) => {
+		if (value === "true" && value === "false") value = JSON.parse(value); // BoxJs字符串转Boolean
+		if (typeof value === "string") value = value?.includes(",") ? value?.split(",") : value; // BoxJs字符串转数组
+		return value;
+	});
+	//Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
+	//if (typeof Settings?.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	if (Array.isArray(Settings?.Types)) {
 		if (!Settings?.Verify?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
 		if (!Settings?.Verify?.Azure?.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
@@ -323,16 +333,19 @@ function setENV(name, platform, database) {
 	if (Settings?.CacheSize) Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
 	if (Settings?.Tolerance) Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
 	if (Settings?.External?.Offset) Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
-	if (Settings?.External?.ShowOnly) Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
-	if (Settings?.Advanced?.Translator?.Times) Settings?.Advanced.Translator.Times = parseInt(Advanced.Translator?.Times, 10) // BoxJs字符串转数字
-	if (Settings?.Advanced?.Translator?.Interval) Settings?.Advanced.Translator.Interval = parseInt(Advanced.Translator?.Interval, 10) // BoxJs字符串转数字
-	if (Settings?.Advanced?.Translator?.Exponential) Settings?.Advanced.Translator.Exponential = JSON.parse(Advanced.Translator?.Exponential) //  BoxJs字符串转Boolean
+	//if (Settings?.External?.ShowOnly) Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
+	if (Settings?.Advanced?.Translator?.Times) Settings.Advanced.Translator.Times = parseInt(Settings?.Advanced?.Translator?.Times, 10) // BoxJs字符串转数字
+	if (Settings?.Advanced?.Translator?.Interval) Settings.Advanced.Translator.Interval = parseInt(Settings?.Advanced?.Translator?.Interval, 10) // BoxJs字符串转数字
+	//if (Settings?.Advanced?.Translator?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Advanced?.Translator?.Exponential) //  BoxJs字符串转Boolean
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	Caches.map = new Map(Caches?.map ?? []); // Array转Map
+	//Caches.map = new Map(Caches?.map ?? []); // Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
+
+	function traverseObject(o,c){for(var t in o){var n=o[t];o[t]="object"==typeof n&&null!==n?traverseObject(n,c):c(t,n)}return o}
+
 };
 
 /**

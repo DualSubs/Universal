@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(12) SUB.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(13) SUB.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -306,17 +306,6 @@ function getPlatform(host) {
 function setENV(name, platform, database) {
 	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
 	let { Settings, Caches, Configs } = getENV(name, platform, database);
-	if (platform == "Apple") {
-		let platform = /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\//i.test(url) ? "Apple_TV_Plus"
-			: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\//i.test(url) ? "Apple_Fitness"
-				: /\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\//i.test(url) ? "Apple_TV"
-					: /vod-.*-aoc\.tv\.apple\.com/i.test(url) ? "Apple_TV_Plus"
-						: /vod-.*-amt\.tv\.apple\.com/i.test(url) ? "Apple_TV"
-							: /(hls|hls-svod)\.itunes\.apple\.com/i.test(url) ? "Apple_Fitness"
-								: "Apple"
-		$.log(`🚧 ${$.name}, Set Environment Variables`, `platform: ${platform}`, "");
-		({ Settings } = getENV(name, platform, database));
-	};
 	/***************** Settings *****************/
 	traverseObject(Settings, (key, value) => {
 		if (value === "true" && value === "false") value = JSON.parse(value); // BoxJs字符串转Boolean

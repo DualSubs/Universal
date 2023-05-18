@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(1) HLS.WebVTT.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(2) HLS.WebVTT.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -112,7 +112,7 @@ const DataBase = {
 					break;
 			};
 			// 格式判断
-			switch (FORMAT) {
+			switch (Format || FORMAT) {
 				case undefined: // 视为无body
 					break;
 				case "application/x-www-form-urlencoded":
@@ -121,6 +121,7 @@ const DataBase = {
 				default:
 					break;
 				case "application/vnd.apple.mpegurl":
+				case "m3u8":
 					// 序列化M3U8
 					let PlayList = M3U8.parse($response.body);
 					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
@@ -129,6 +130,7 @@ const DataBase = {
 						if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
 							const symbol = (item.URI.includes("?")) ? "&" : "?"
 							item.URI = item.URI + symbol + `dualsubs=${Type}`
+							//item.URI = item.URI + symbol + `dualsubs=${Type}&format=${"vtt"}`
 						}
 						return item;
 					})

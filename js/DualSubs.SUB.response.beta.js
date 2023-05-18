@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(16) SUB.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(17) SUB.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -135,9 +135,9 @@ const DataBase = {
 				case "text/html":
 				default:
 					break;
+				case "srv3":
 				case "text/xml":
 				case "application/xml":
-				case "srv3":
 					body = XML.parse($response.body);
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
@@ -153,10 +153,10 @@ const DataBase = {
 					//$.log(body);
 					//$request.body = await PLIST("json2plist", body);
 					break;
-				case "text/vtt":
-				case "application/vtt":
 				case "vtt":
 				case "webvtt":
+				case "text/vtt":
+				case "application/vtt":
 					body = VTT.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					// 处理类型
@@ -203,9 +203,9 @@ const DataBase = {
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					$response.body = VTT.stringify(body);
 					break;
+				case "json3":
 				case "text/json":
 				case "application/json":
-				case "json3":
 					body = JSON.parse($response.body);
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
@@ -746,9 +746,9 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 	let index0 = 0, index1 = 0, index2 = 0;
 	// 双指针法查找两个数组中的相同元素
 	switch (Format) {
+		case "json3":
 		case "text/json":
-		case "application/json":
-		case "json3": {
+		case "application/json": {
 			const length1 = Sub1?.events?.length, length2 = Sub2?.events?.length;
 			switch (Kind) {
 				case "asr":
@@ -794,9 +794,9 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 			};
 			break;
 		};
+		case "srv3":
 		case "text/xml":
-		case "application/xml":
-		case "srv3": {
+		case "application/xml": {
 			const length1 = Sub1?.timedtext?.body?.p?.length, length2 = Sub2?.timedtext?.body?.p?.length;
 			switch (Kind) {
 				case "asr":
@@ -844,9 +844,10 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 			};
 			break;
 		};
+		case "vtt":
+		case "webvtt":
 		case "text/vtt":
-		case "application/vtt":
-		case "vtt": {
+		case "application/vtt": {
 			const length1 = Sub1?.body?.length, length2 = Sub2?.body?.length;
 			switch (Kind) {
 				case "asr":

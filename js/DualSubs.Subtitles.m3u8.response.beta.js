@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(2) HLS.WebVTT.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(3) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -75,7 +75,7 @@ const DataBase = {
 			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Type, Languages = url?.params?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 获取字幕格式
-			const Format = url.params?.fmt || url.params?.format, Kind = url.params?.kind;
+			const Format = url.params?.fmt || url.params?.format || PATHs?.[PATHs?.length - 1]?.split(".")?.[1], Kind = url.params?.kind;
 			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
 			// 处理类型
 			switch (Type) {
@@ -120,13 +120,14 @@ const DataBase = {
 				case "text/html":
 				default:
 					break;
-				case "application/vnd.apple.mpegurl":
 				case "m3u8":
+				case "application/x-mpegurl":
+				case "application/vnd.apple.mpegurl":
 					// 序列化M3U8
-					let PlayList = M3U8.parse($response.body);
-					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(PlayList), "");
+					body = M3U8.parse($response.body);
+					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// WebVTT.m3u8加参数
-					PlayList = PlayList.map(item => {
+					body = body.map(item => {
 						if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
 							const symbol = (item.URI.includes("?")) ? "&" : "?"
 							item.URI = item.URI + symbol + `dualsubs=${Type}`
@@ -136,16 +137,15 @@ const DataBase = {
 					})
 					if (Platform === "Prime_Video") {
 						// 删除BYTERANGE
-						//PlayList = PlayList.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
-						PlayList = PlayList.map((item, i) => {
-							if (item.TYPE === "EXT-X-BYTERANGE") PlayList[i - 1].URI = item.URI;
+						//body = body.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
+						body = body.map((item, i) => {
+							if (item.TYPE === "EXT-X-BYTERANGE") body[i - 1].URI = item.URI;
 							else return item;
 						}).filter(e => e);
-						$.log(`🚧 ${$.name}`, "PlayList.map", JSON.stringify(PlayList), "");
+						$.log(`🚧 ${$.name}`, "body.map", JSON.stringify(body), "");
 					}
 					// 字符串M3U8
-					PlayList = M3U8.stringify(PlayList);
-					$response.body = PlayList;
+					$response.body = M3U8.stringify(body);
 					break;
 			};
 			break;
@@ -171,15 +171,21 @@ const DataBase = {
 						case "application/x-www-form-urlencoded":
 						case "text/plain":
 						case "text/html":
+						case "srv3":
 						case "text/xml":
 						case "application/xml":
 						case "text/plist":
 						case "application/plist":
 						case "application/x-plist":
+						case "vtt":
+						case "webvtt":
 						case "text/vtt":
 						case "application/vtt":
+						case "json3":
 						case "text/json":
 						case "application/json":
+						case "m3u8":
+						case "application/x-mpegurl":
 						case "application/vnd.apple.mpegurl":
 						default:
 							// 返回普通数据

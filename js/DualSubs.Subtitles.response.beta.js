@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.0(19) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(1) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -84,7 +84,31 @@ const DataBase = {
 			switch (Type) {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
-					// 找缓存
+					// 查找字幕文件地址vtt缓存（map）
+					let subtitlesURIsObj = undefined;
+					// 获取字幕文件地址vtt缓存（map）
+					Caches?.Subtitles?.forEach((subtitlesPlaylist, subtitlesURIs) => {
+						for await (let language of Settings?.Languages) {
+							if (subtitlesURIs?.[language]?.some(URI => $request.url.includes(URI || null))) {
+								subtitlesURIsObj = subtitlesURIs;
+								$.log(`🚧 ${$.name}, subtitlesPlaylist: ${subtitlesPlaylist}`, `subtitlesURIsObj: ${JSON.stringify(subtitlesURIsObj)}`, "");
+							};
+						};
+					});
+					let VTTs = subtitlesURIsObj[Settings.Languages[1]] || [];
+					if (VTTs.length) {
+						switch (PATHs?.[0]) {
+							case "itunes-assets": // iTunes Assets
+								let oVTTs = subtitlesURIsObj[Settings.Languages[0]] || [];
+								requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
+								break;
+							default: // Others
+								request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
+								requests.push(request);
+								break;
+						};
+					};
+					/*
 					const Indices = await getCache($request.url, Type, Settings, Caches);
 					let Cache = Caches?.[Indices.Index] || {};
 					let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
@@ -99,6 +123,7 @@ const DataBase = {
 							requests.push(request);
 							break;
 					};
+					*/
 					// 设置参数
 					Settings.External.Offset = 0;
 					break;

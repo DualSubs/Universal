@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.0(4) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(1) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -80,7 +80,34 @@ const DataBase = {
 			switch (Type) {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
-					// 找缓存
+					// 查找字幕播放列表m3u8缓存（map）
+					let subtitlesPlaylistObj = undefined;
+					// 获取字幕播放列表m3u8缓存（map）
+					Caches?.Playlists?.forEach((masterPlaylist, subtitlesPlaylist) => {
+						for await (let language of Settings?.Languages) {
+							if (subtitlesPlaylist?.[language]?.some(URI => $request.url.includes(URI || null))) {
+								subtitlesPlaylistObj = subtitlesPlaylist;
+								$.log(`🚧 ${$.name}, masterPlaylist: ${masterPlaylist}`, `subtitlesPlaylistObj: ${JSON.stringify(subtitlesPlaylistObj)}`, "");
+							};
+						};
+					});
+					// 写入字幕文件地址vtt缓存（map）
+					if (subtitlesPlaylistObj) {
+						for await (let language of Settings?.Languages) {
+							for await (let subtitlesPlaylistURL of subtitlesPlaylistObj[language]) {
+								// 查找字幕文件地址vtt缓存（map）
+								let subtitlesURIsObj = Caches?.Subtitles?.get(subtitlesPlaylistURL) ?? {};
+								// 获取字幕文件地址vtt缓存（按语言）
+								subtitlesURIsObj[language] = await getVTTs(subtitlesPlaylistURL, $request.headers, Platform);
+								// 写入字幕文件地址vtt缓存到map
+								Caches.Subtitles.set(subtitlesPlaylistURL, subtitlesURIsObj);
+							};
+						};
+					};
+					// 写入缓存
+					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
+
+					/*
 					const Indices = await getCache($request.url, Type, Settings, Caches);
 					let Cache = Caches?.[Indices.Index] || {};
 					if (Indices.Index !== -1) {
@@ -98,6 +125,7 @@ const DataBase = {
 						//$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
 						$.setjson(newCaches, `@DualSubs.${"Universal"}.Caches`);
 					};
+					*/
 					break;
 				case "External":
 					$.log(`🚧 ${$.name}, 外挂字幕`, "");
@@ -262,7 +290,8 @@ function setENV(name, platform, database) {
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	//Caches.map = new Map(Caches?.map ?? []); // Array转Map
+	Caches.Playlists = new Map(Caches?.Playlists ?? []); // Array转Map
+	Caches.Subtitles = new Map(Caches?.Subtitles ?? []); // Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.0(3) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(1) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -76,9 +76,6 @@ const DataBase = {
 			// 获取字幕格式
 			const Format = url.params?.fmt || url.params?.format || PATHs?.[PATHs?.length - 1]?.split(".")?.[1], Kind = url.params?.kind;
 			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
-			// 找缓存
-			const Indices = await getCache($request.url, Type, Settings, Caches);
-			let Cache = Caches?.[Indices.Index] || {};
 			// 格式判断
 			switch (Format || FORMAT) {
 				case undefined: // 视为无body
@@ -94,9 +91,26 @@ const DataBase = {
 					// 序列化M3U8
 					body = M3U8.parse($response.body);
 					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
+					// 查找字幕播放列表m3u8缓存（map）
+					let subtitlesPlaylistObj = Caches?.Playlists?.get($request.url) || {};
+					// 获取字幕播放列表m3u8缓存（map）
+					for await (let language of Settings?.Languages) {
+						// 获取字幕播放列表m3u8缓存（按语言）
+						subtitlesPlaylistObj[language] = await getMEDIA($request.url, body, "SUBTITLES", language, Configs);
+						//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
+						// 写入字幕播放列表m3u8缓存到map
+						Caches.Playlists.set($request.url, cache);
+					};
+					// 写入缓存
+					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
+
+					/*
+					const Indices = await getCache($request.url, Type, Settings, Caches);
+					let Cache = Caches?.[Indices.Index] || {};
 					// PlayList.m3u8 URL
 					Cache.URL = $request.url;
 					// 提取数据 用遍历语法可以兼容自定义数量的语言查询
+					
 					for await (let language of Settings.Languages) {
 						Cache[language] = await getMEDIA($request.url, body, "SUBTITLES", language, Configs);
 						//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
@@ -106,6 +120,7 @@ const DataBase = {
 					newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
 					//$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
 					$.setjson(newCaches, `@DualSubs.${"Universal"}.Caches`);
+					*/
 					// 兼容性判断
 					const standard = await isStandard(Platform, $request.url, $request.headers);
 					// 写入选项
@@ -228,7 +243,8 @@ function setENV(name, platform, database) {
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	//Caches.map = new Map(Caches?.map ?? []); // Array转Map
+	Caches.Playlists = new Map(Caches?.Playlists ?? []); // Array转Map
+	Caches.Subtitles = new Map(Caches?.Subtitles ?? []); // Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 

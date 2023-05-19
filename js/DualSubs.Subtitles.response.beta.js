@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(1) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(5) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -87,11 +87,11 @@ const DataBase = {
 					// 查找字幕文件地址vtt缓存（map）
 					let subtitlesURIsObj = undefined;
 					// 获取字幕文件地址vtt缓存（map）
-					Caches?.Subtitles?.forEach((subtitlesPlaylist, subtitlesURIs) => {
-						for await (let language of Settings?.Languages) {
+					Caches?.Subtitles?.forEach((subtitlesURIs, subtitlesPlaylist) => {
+						for (let language of Settings?.Languages) {
 							if (subtitlesURIs?.[language]?.some(URI => $request.url.includes(URI || null))) {
 								subtitlesURIsObj = subtitlesURIs;
-								$.log(`🚧 ${$.name}, subtitlesPlaylist: ${subtitlesPlaylist}`, `subtitlesURIsObj: ${JSON.stringify(subtitlesURIsObj)}`, "");
+								$.log(`🚧 ${$.name}, subtitlesPlaylist: ${subtitlesPlaylist}`, `subtitlesURIs: ${JSON.stringify(subtitlesURIs)}`, "");
 							};
 						};
 					});
@@ -369,7 +369,8 @@ function setENV(name, platform, database) {
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	//Caches.map = new Map(Caches?.map ?? []); // Array转Map
+	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
+	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 

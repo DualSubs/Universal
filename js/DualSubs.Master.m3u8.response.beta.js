@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(1) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(5) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -99,8 +99,14 @@ const DataBase = {
 						subtitlesPlaylistObj[language] = await getMEDIA($request.url, body, "SUBTITLES", language, Configs);
 						//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 						// 写入字幕播放列表m3u8缓存到map
-						Caches.Playlists.set($request.url, cache);
+						Caches.Playlists.set($request.url, subtitlesPlaylistObj);
 					};
+					Caches.Playlists = Array.from(Caches?.Playlists || []); // Map转Array
+					Caches.Subtitles = Array.from(Caches?.Subtitles || []); // Map转Array
+					Caches.Playlists = Caches.Playlists.slice(-Settings.CacheSize); // 限制缓存大小
+					Caches.Subtitles = Caches.Subtitles.slice(-Settings.CacheSize); // 限制缓存大小
+					console.log(Caches.Playlists);
+					console.log(Caches.Subtitles);
 					// 写入缓存
 					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
 
@@ -124,7 +130,7 @@ const DataBase = {
 					// 兼容性判断
 					const standard = await isStandard(Platform, $request.url, $request.headers);
 					// 写入选项
-					body = await setOptions(Platform, body, Cache[Settings.Languages[0]], Cache[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
+					body = await setOptions(Platform, body, subtitlesPlaylistObj[Settings.Languages[0]], subtitlesPlaylistObj[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -243,8 +249,8 @@ function setENV(name, platform, database) {
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	Caches.Playlists = new Map(Caches?.Playlists ?? []); // Array转Map
-	Caches.Subtitles = new Map(Caches?.Subtitles ?? []); // Array转Map
+	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
+	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 

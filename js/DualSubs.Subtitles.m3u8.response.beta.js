@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(1) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(18) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -81,29 +81,53 @@ const DataBase = {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 查找字幕播放列表m3u8缓存（map）
-					let subtitlesPlaylistObj = undefined;
+					let subtitlesPlaylistObj = getPlaylistCaches(Caches?.Playlists, Settings?.Languages);
 					// 获取字幕播放列表m3u8缓存（map）
-					Caches?.Playlists?.forEach((masterPlaylist, subtitlesPlaylist) => {
-						for await (let language of Settings?.Languages) {
-							if (subtitlesPlaylist?.[language]?.some(URI => $request.url.includes(URI || null))) {
-								subtitlesPlaylistObj = subtitlesPlaylist;
-								$.log(`🚧 ${$.name}, masterPlaylist: ${masterPlaylist}`, `subtitlesPlaylistObj: ${JSON.stringify(subtitlesPlaylistObj)}`, "");
-							};
-						};
-					});
-					// 写入字幕文件地址vtt缓存（map）
-					if (subtitlesPlaylistObj) {
-						for await (let language of Settings?.Languages) {
-							for await (let subtitlesPlaylistURL of subtitlesPlaylistObj[language]) {
-								// 查找字幕文件地址vtt缓存（map）
-								let subtitlesURIsObj = Caches?.Subtitles?.get(subtitlesPlaylistURL) ?? {};
-								// 获取字幕文件地址vtt缓存（按语言）
-								subtitlesURIsObj[language] = await getVTTs(subtitlesPlaylistURL, $request.headers, Platform);
-								// 写入字幕文件地址vtt缓存到map
-								Caches.Subtitles.set(subtitlesPlaylistURL, subtitlesURIsObj);
-							};
-						};
+					function getPlaylistCaches(playlistCaches, languages) {
+						$.log(`☑️ ${$.name}`, "getPlaylistCaches", "");
+						let subtitlesPlaylistObj = {};
+						playlistCaches?.forEach((subtitlesPlaylist, masterPlaylist, map) => {
+							languages?.forEach(language => {
+								let subtitlesPlaylistArray = subtitlesPlaylist?.[language];
+								if (subtitlesPlaylistArray?.some(subtitlesPlaylistDATA => $request.url.includes(subtitlesPlaylistDATA?.URL || null))) {
+									subtitlesPlaylistObj = subtitlesPlaylist;
+									$.log(`🚧 ${$.name}, masterPlaylist: ${masterPlaylist}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+								};
+							});
+						});
+						$.log(`✅ ${$.name}, subtitlesPlaylistObj: ${JSON.stringify(subtitlesPlaylistObj)}`, "");
+						return subtitlesPlaylistObj;
 					};
+					
+					// 写入字幕文件地址vtt缓存（map）
+					Caches.Subtitles = await setPlaylistCaches(subtitlesPlaylistObj, Settings?.Languages, Caches?.Subtitles);
+					async function setPlaylistCaches(subtitlesPlaylistCaches, languages, subtitlesCacheMap) {
+						$.log(`☑️ ${$.name}`, "setPlaylistCaches", "");
+						await languages?.map(async language => {
+							$.log(`🚧 ${$.name}, language: ${language}`, "");
+							await subtitlesPlaylistCaches?.[language]?.map(async subtitlesPlaylistDATA => {
+								$.log(`🚧 ${$.name}, subtitlesPlaylistDATA: ${JSON.stringify(subtitlesPlaylistDATA)}`, "");
+								// 查找字幕文件地址vtt缓存（map）
+								let subtitlesURIArray = subtitlesCacheMap.get(subtitlesPlaylistDATA.URL) ?? [];
+								$.log(`🚧 ${$.name}, subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
+								$.log(`🚧 ${$.name}, subtitlesPlaylistDATA?.URL: ${subtitlesPlaylistDATA?.URL}`, "");
+								// 获取字幕文件地址vtt缓存（按语言）
+								subtitlesURIArray = await getVTTs(subtitlesPlaylistDATA?.URL, $request.headers, Platform);
+								$.log(`🚧 ${$.name}, subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
+								// 写入字幕文件地址vtt缓存到map
+								subtitlesCacheMap = subtitlesCacheMap.set(subtitlesPlaylistDATA.URL, subtitlesURIArray);
+								$.log(`✅ ${$.name}, subtitlesURIArray: ${JSON.stringify(subtitlesCacheMap.get(subtitlesPlaylistDATA.URL))}`, "");
+							});
+						});
+						return subtitlesCacheMap;
+					};
+
+					Caches.Playlists = Array.from(Caches?.Playlists || []); // Map转Array
+					Caches.Subtitles = Array.from(Caches?.Subtitles || []); // Map转Array
+					Caches.Playlists = Caches.Playlists.slice(-Settings.CacheSize); // 限制缓存大小
+					Caches.Subtitles = Caches.Subtitles.slice(-Settings.CacheSize); // 限制缓存大小
+					//console.log(Caches.Playlists);
+					//console.log(Caches.Subtitles);
 					// 写入缓存
 					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
 
@@ -153,7 +177,7 @@ const DataBase = {
 				case "application/vnd.apple.mpegurl":
 					// 序列化M3U8
 					body = M3U8.parse($response.body);
-					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
+					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// WebVTT.m3u8加参数
 					body = body.map(item => {
 						if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
@@ -290,8 +314,8 @@ function setENV(name, platform, database) {
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	Caches.Playlists = new Map(Caches?.Playlists ?? []); // Array转Map
-	Caches.Subtitles = new Map(Caches?.Subtitles ?? []); // Array转Map
+	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
+	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 
@@ -373,7 +397,7 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
 async function getVTTs(url, headers, platform) {
 	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
 	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
-		//$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
+		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
 		let PlayList = M3U8.parse(response.body);
 		// 筛选字幕
 		PlayList = PlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));

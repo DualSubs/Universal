@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(2) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.0(3) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -55,8 +55,7 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const Platform = getPlatform($request?.url);
-	const { Settings, Caches, Configs } = setENV("DualSubs", Platform, DataBase);
+	const { Settings, Caches, Configs } = setENV("DualSubs", "Universal", DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings?.Switch) {
 		case true:
@@ -69,7 +68,7 @@ const DataBase = {
 			// 创建空数据
 			let body = {};
 			// 获取平台
-			//const Platform = getPlatform(HOST);
+			const Platform = getPlatform(HOST);
 			$.log(`⚠ ${$.name}`, `Platform: ${Platform}`, "");
 			// 设置自定义参数
 			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Type, Languages = url?.params?.sublang || Settings.Languages;
@@ -105,7 +104,8 @@ const DataBase = {
 					// 写入缓存
 					let newCaches = Caches;
 					newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-					$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
+					//$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
+					$.setjson(newCaches, `@DualSubs.${"Universal"}.Caches`);
 					// 兼容性判断
 					const standard = await isStandard(Platform, $request.url, $request.headers);
 					// 写入选项

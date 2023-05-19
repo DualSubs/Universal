@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Streaming v0.8.0(18) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.0(19) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -56,8 +56,7 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const Platform = getPlatform($request?.url);
-	const { Settings, Caches, Configs } = setENV("DualSubs", Platform, DataBase);
+	const { Settings, Caches, Configs } = setENV("DualSubs", "Universal", DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings?.Switch) {
 		case true:
@@ -70,7 +69,7 @@ const DataBase = {
 			// 创建空数据
 			let body = {};
 			// 获取平台
-			//const Platform = getPlatform(HOST);
+			const Platform = getPlatform(HOST);
 			$.log(`⚠ ${$.name}`, `Platform: ${Platform}`, "");
 			// 设置自定义参数
 			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Type, Languages = url?.params?.sublang || Settings.Languages;

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(18) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(1) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -395,25 +395,22 @@ async function setCache(index = -1, target = {}, sources = {}, num = 1) {
  * @return {Promise<*>}
  */
 async function getVTTs(url, headers, platform) {
-	$.log(`⚠ ${$.name}, Get Subtitle *.vtt URLs`, "");
-	if (url) return await $.http.get({ url: url, headers: headers }).then((response) => {
-		$.log(`🚧 ${$.name}, 调试信息`, "Get Subtitle *.vtt URLs", `response.body: ${response.body}`, "");
-		let PlayList = M3U8.parse(response.body);
-		// 筛选字幕
-		PlayList = PlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
-		PlayList = PlayList.filter(({ URI }) => !/empty/.test(URI));
-		VTTs = PlayList.map(({ URI }) => aPath(url, URI))
-		switch (platform) {
-			case "Disney_Plus":
-				if (VTTs.some(item => /\/.+-MAIN\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
-				break;
-			default:
-				break;
-		};
-		$.log(`🎉 ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
-		return VTTs;
-	})
-	else return null;
+	$.log(`☑️ ${$.name}, Get Subtitle *.vtt URLs`, "");
+	let response = await $.http.get({ url: url, headers: headers });
+	$.log(`🚧 ${$.name}, Get Subtitle *.vtt URLs`, `response: ${JSON.stringify(response)}`, "");
+	let subtitlePlayList = M3U8.parse(response.body);
+	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
+	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/empty/.test(URI));
+	let VTTs = subtitlePlayList.map(({ URI }) => aPath(url, URI));
+	switch (platform) {
+		case "Disney_Plus":
+			if (VTTs.some(item => /\/.+-MAIN\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+			break;
+		default:
+			break;
+	};
+	$.log(`✅ ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
+	return VTTs;
 	/***************** Fuctions *****************/
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 };

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(1) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(4) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -81,21 +81,21 @@ const DataBase = {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 查找字幕播放列表m3u8缓存（map）
-					let subtitlesPlaylistObj = getPlaylistCaches(Caches?.Playlists, Settings?.Languages);
+					let subtitlesPlaylistObj = getPlaylistCaches($request.url, Caches?.Playlists, Settings?.Languages);
 					// 获取字幕播放列表m3u8缓存（map）
-					function getPlaylistCaches(playlistCaches, languages) {
-						$.log(`☑️ ${$.name}`, "getPlaylistCaches", "");
+					function getPlaylistCaches(URL, playlistCaches, languages) {
+						$.log(`☑️ ${$.name}, getPlaylistCaches`, "");
 						let subtitlesPlaylistObj = {};
-						playlistCaches?.forEach((subtitlesPlaylist, masterPlaylist, map) => {
+						playlistCaches?.forEach((subtitlesPlaylist, masterPlaylist) => {
 							languages?.forEach(language => {
 								let subtitlesPlaylistArray = subtitlesPlaylist?.[language];
-								if (subtitlesPlaylistArray?.some(subtitlesPlaylistDATA => $request.url.includes(subtitlesPlaylistDATA?.URL || null))) {
+								if (subtitlesPlaylistArray?.some(subtitlesPlaylistDATA => URL.includes(subtitlesPlaylistDATA?.URL || null))) {
 									subtitlesPlaylistObj = subtitlesPlaylist;
-									$.log(`🚧 ${$.name}, masterPlaylist: ${masterPlaylist}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+									$.log(`🚧 ${$.name}, getPlaylistCaches`, `masterPlaylist: ${masterPlaylist}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
 								};
 							});
 						});
-						$.log(`✅ ${$.name}, subtitlesPlaylistObj: ${JSON.stringify(subtitlesPlaylistObj)}`, "");
+						$.log(`✅ ${$.name}, getPlaylistCaches`, `subtitlesPlaylistObj: ${JSON.stringify(subtitlesPlaylistObj)}`, "");
 						return subtitlesPlaylistObj;
 					};
 					
@@ -103,9 +103,9 @@ const DataBase = {
 					Caches.Subtitles = await setPlaylistCaches(subtitlesPlaylistObj, Settings?.Languages, Caches?.Subtitles);
 					async function setPlaylistCaches(subtitlesPlaylistCaches, languages, subtitlesCacheMap) {
 						$.log(`☑️ ${$.name}`, "setPlaylistCaches", "");
-						await languages?.map(async language => {
+						await Promise.all(languages?.map(async language => {
 							$.log(`🚧 ${$.name}, language: ${language}`, "");
-							await subtitlesPlaylistCaches?.[language]?.map(async subtitlesPlaylistDATA => {
+							await Promise.all(subtitlesPlaylistCaches?.[language]?.map(async subtitlesPlaylistDATA => {
 								$.log(`🚧 ${$.name}, subtitlesPlaylistDATA: ${JSON.stringify(subtitlesPlaylistDATA)}`, "");
 								// 查找字幕文件地址vtt缓存（map）
 								let subtitlesURIArray = subtitlesCacheMap.get(subtitlesPlaylistDATA.URL) ?? [];
@@ -117,8 +117,8 @@ const DataBase = {
 								// 写入字幕文件地址vtt缓存到map
 								subtitlesCacheMap = subtitlesCacheMap.set(subtitlesPlaylistDATA.URL, subtitlesURIArray);
 								$.log(`✅ ${$.name}, subtitlesURIArray: ${JSON.stringify(subtitlesCacheMap.get(subtitlesPlaylistDATA.URL))}`, "");
-							});
-						});
+							}));
+						}));
 						return subtitlesCacheMap;
 					};
 

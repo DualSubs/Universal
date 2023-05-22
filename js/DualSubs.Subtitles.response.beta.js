@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(14) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(15) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -84,10 +84,9 @@ const DataBase = {
 			switch (Type) {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
-					// 查找字幕文件地址vtt缓存（map）
-					const { subtitlesPlaylistKey: subtitlesPlaylistURL } = getSubtitlesCaches($request.url, Caches?.Subtitles);
 					// 获取字幕文件地址vtt缓存（map）
-					function getSubtitlesCaches(URL, playlistCaches) {
+					const { subtitlesPlaylistKey: subtitlesPlaylistURL } = getSubtitlesCaches($request.url, Caches?.Subtitles, Settings?.Languages);
+					function getSubtitlesCaches(URL, playlistCaches, languages) {
 						$.log(`☑️ ${$.name}, getSubtitlesCaches`, "");
 						let subtitlesPlaylistKey = "";
 						let subtitlesURLValue = [];
@@ -109,9 +108,8 @@ const DataBase = {
 						return { subtitlesPlaylistKey, subtitlesURLValue, subtitlesURLIndex };
 					};
 
-					// 查找字幕播放列表m3u8缓存（map）
-					const { masterPlaylistKey, subtitlesPlaylistIndex } = getPlaylistCaches(subtitlesPlaylistURL, Caches?.Playlists, Settings?.Languages);
 					// 获取字幕播放列表m3u8缓存（map）
+					const { masterPlaylistKey: masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCaches(subtitlesPlaylistURL, Caches?.Playlists, Settings?.Languages);
 					function getPlaylistCaches(URL, playlistCaches, languages) {
 						$.log(`☑️ ${$.name}, getPlaylistCaches`, "");
 						let masterPlaylistKey = "";
@@ -137,7 +135,8 @@ const DataBase = {
 						return { masterPlaylistKey, subtitlesPlaylistValue, subtitlesPlaylistIndex };
 					};
 
-					let { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistKey, subtitlesPlaylistIndex, Caches?.Playlists, Caches?.Subtitles, Settings?.Languages);
+					// 获取字幕文件地址vtt缓存（map）
+					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches?.Playlists, Caches?.Subtitles, Settings?.Languages);
 					function getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, playlistsCacheMap, subtitlesCacheMap, languages) {
 						$.log(`☑️ ${$.name}, getSubtitlesArray`, "");
 						const subtitlesPlaylistValue = playlistsCacheMap?.get(masterPlaylistURL) || {};
@@ -150,7 +149,7 @@ const DataBase = {
 						$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
 						return { subtitlesURIArray0, subtitlesURIArray1 };
 					};
-					
+
 					if (subtitlesURIArray1.length) {
 						switch (PATHs?.[0]) {
 							case "itunes-assets": // iTunes Assets
@@ -162,7 +161,7 @@ const DataBase = {
 								break;
 						};
 					};
-					
+
 					/*
 					const Indices = await getCache($request.url, Type, Settings, Caches);
 					let Cache = Caches?.[Indices.Index] || {};

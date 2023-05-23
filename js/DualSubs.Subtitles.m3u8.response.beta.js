@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.3(3) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.3(4) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -303,9 +303,10 @@ function getPlaylistCache(url, cache, languages) {
  * @param {Object} playlist - Subtitles Playlist Cache
  * @param {Map} cache - Subtitles Cache
  * @param {Array} languages - Languages
+ * @param {String} platform - Steaming Media Platform
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
-async function setSubtitlesCache(playlist, cache, languages) {
+async function setSubtitlesCache(playlist, cache, languages, platform) {
 	$.log(`☑️ ${$.name}, setSubtitlesCache`, "");
 	await Promise.all(languages?.map(async language => {
 		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `language: ${language}`, "");
@@ -316,7 +317,7 @@ async function setSubtitlesCache(playlist, cache, languages) {
 			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
 			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA?.URL: ${subtitlesPlaylistDATA?.URL}`, "");
 			// 获取字幕文件地址vtt缓存（按语言）
-			subtitlesURIArray = await getVTTs(subtitlesPlaylistDATA?.URL, $request.headers, Platform);
+			subtitlesURIArray = await getVTTs(subtitlesPlaylistDATA?.URL, $request.headers, platform);
 			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
 			// 写入字幕文件地址vtt缓存到map
 			cache = cache.set(subtitlesPlaylistDATA.URL, subtitlesURIArray);

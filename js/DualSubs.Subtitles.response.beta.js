@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(15) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(16) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -85,33 +85,33 @@ const DataBase = {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 获取字幕文件地址vtt缓存（map）
-					const { subtitlesPlaylistKey: subtitlesPlaylistURL } = getSubtitlesCaches($request.url, Caches?.Subtitles, Settings?.Languages);
-					function getSubtitlesCaches(URL, playlistCaches, languages) {
-						$.log(`☑️ ${$.name}, getSubtitlesCaches`, "");
+					const { subtitlesPlaylistKey: subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches?.Subtitles, Settings?.Languages);
+					function getSubtitlesCache(URL, playlistCache, languages) {
+						$.log(`☑️ ${$.name}, getSubtitlesCache`, "");
 						let subtitlesPlaylistKey = "";
 						let subtitlesURLValue = [];
 						let subtitlesURLIndex = 0;
-						playlistCaches?.forEach((subtitlesURLArray, subtitlesPlaylistURL) => {
+						playlistCache?.forEach((subtitlesURLArray, subtitlesPlaylistURL) => {
 							if (subtitlesURLArray?.some((subtitlesURL, index) => {
 								if (URL.includes(subtitlesURL || null)) {
 									subtitlesURLIndex = index;
-									$.log(`🚧 ${$.name}, getSubtitlesCaches`, `subtitlesURLIndex: ${subtitlesURLIndex}`, "");
+									$.log(`🚧 ${$.name}, getSubtitlesCache`, `subtitlesURLIndex: ${subtitlesURLIndex}`, "");
 									return true;
 								} else return false;
 							})) {
 								subtitlesPlaylistKey = subtitlesPlaylistURL;
 								subtitlesURLValue = subtitlesURLArray;
-								//$.log(`🚧 ${$.name}, getSubtitlesCaches, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
+								//$.log(`🚧 ${$.name}, getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
 							};
 						});
-						$.log(`✅ ${$.name}, getSubtitlesCaches, subtitlesPlaylistKey: ${JSON.stringify(subtitlesPlaylistKey)}`, "");
+						$.log(`✅ ${$.name}, getSubtitlesCache, subtitlesPlaylistKey: ${JSON.stringify(subtitlesPlaylistKey)}`, "");
 						return { subtitlesPlaylistKey, subtitlesURLValue, subtitlesURLIndex };
 					};
 
 					// 获取字幕播放列表m3u8缓存（map）
-					const { masterPlaylistKey: masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCaches(subtitlesPlaylistURL, Caches?.Playlists, Settings?.Languages);
-					function getPlaylistCaches(URL, playlistCaches, languages) {
-						$.log(`☑️ ${$.name}, getPlaylistCaches`, "");
+					const { masterPlaylistKey: masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches?.Playlists, Settings?.Languages);
+					function getPlaylistCache(URL, playlistCaches, languages) {
+						$.log(`☑️ ${$.name}, getPlaylistCache`, "");
 						let masterPlaylistKey = "";
 						let subtitlesPlaylistValue = {};
 						let subtitlesPlaylistIndex = 0;
@@ -121,17 +121,17 @@ const DataBase = {
 								if (subtitlesPlaylistArray?.some((subtitlesPlaylistDATA, index) => {
 									if (URL.includes(subtitlesPlaylistDATA?.URL || null)) {
 										subtitlesPlaylistIndex = index;
-										$.log(`🚧 ${$.name}, getPlaylistCaches`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+										$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
 										return true;
 									} else return false;
 								})) {
 									masterPlaylistKey = masterPlaylistURL;
 									subtitlesPlaylistValue = subtitlesPlaylist;
-									//$.log(`🚧 ${$.name}, getPlaylistCaches`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+									//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
 								};
 							});
 						});
-						$.log(`✅ ${$.name}, getPlaylistCaches`, `masterPlaylistKey: ${JSON.stringify(masterPlaylistKey)}`, "");
+						$.log(`✅ ${$.name}, getPlaylistCache`, `masterPlaylistKey: ${JSON.stringify(masterPlaylistKey)}`, "");
 						return { masterPlaylistKey, subtitlesPlaylistValue, subtitlesPlaylistIndex };
 					};
 
@@ -161,23 +161,6 @@ const DataBase = {
 								break;
 						};
 					};
-
-					/*
-					const Indices = await getCache($request.url, Type, Settings, Caches);
-					let Cache = Caches?.[Indices.Index] || {};
-					let VTTs = Cache[Settings.Languages[1]][Indices[Settings.Languages[1]]].VTTs ?? null;
-					if (!VTTs) $.done();
-					switch (PATHs?.[0]) {
-						case "itunes-assets": // iTunes Assets
-							let oVTTs = Cache[Settings.Languages[0]][Indices[Settings.Languages[0]]].VTTs ?? null;
-							requests = await getOfficialRequest($request.url, $request.headers, Platform, VTTs, oVTTs);
-							break;
-						default: // Others
-							request = await getOfficialRequest($request.url, $request.headers, Platform, VTTs);
-							requests.push(request);
-							break;
-					};
-					*/
 					// 设置参数
 					Settings.External.Offset = 0;
 					break;

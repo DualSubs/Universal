@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(5) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(7) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -91,46 +91,35 @@ const DataBase = {
 					// 序列化M3U8
 					body = M3U8.parse($response.body);
 					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
-					// 查找字幕播放列表m3u8缓存（map）
-					let subtitlesPlaylistObj = Caches?.Playlists?.get($request.url) || {};
-					// 获取字幕播放列表m3u8缓存（map）
-					for await (let language of Settings?.Languages) {
-						// 获取字幕播放列表m3u8缓存（按语言）
-						subtitlesPlaylistObj[language] = await getMEDIA($request.url, body, "SUBTITLES", language, Configs);
-						//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
+					// 写入字幕播放列表m3u8缓存（map）
+					const { subtitlesPlaylistValue } = await setPlaylistCache($request.url, body, Caches?.Playlists, Settings?.Languages);
+					async function setPlaylistCache(masterPlaylistURL, masterPlaylistBody, playlistCacheMap, languages) {
+						$.log(`☑️ ${$.name}, setPlaylistCache`, "");
+						let masterPlaylistKey = masterPlaylistURL;
+						let subtitlesPlaylistValue = playlistCacheMap?.get(masterPlaylistKey) || {};
+						let subtitlesPlaylistIndex = 0;
+						// 查找字幕播放列表m3u8缓存（map）
+						await Promise.all(languages?.map(async language => {
+							//$.log(`🚧 ${$.name}, setPlaylistCache`, `language: ${language}`, "");
+							// 获取字幕播放列表m3u8缓存（按语言）
+							subtitlesPlaylistValue[language] = await getMEDIA(masterPlaylistKey, masterPlaylistBody, "SUBTITLES", language, Configs);
+							//$.log(`🚧 ${$.name}, setPlaylistCache`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
+						}));
 						// 写入字幕播放列表m3u8缓存到map
-						Caches.Playlists.set($request.url, subtitlesPlaylistObj);
+						playlistCacheMap = playlistCacheMap.set(masterPlaylistKey, subtitlesPlaylistValue);
+						$.log(`✅ ${$.name}, setPlaylistCache`, `masterPlaylistKey: ${masterPlaylistKey}`, "");
+						return { masterPlaylistKey, subtitlesPlaylistValue, subtitlesPlaylistIndex };
 					};
 					Caches.Playlists = Array.from(Caches?.Playlists || []); // Map转Array
 					Caches.Subtitles = Array.from(Caches?.Subtitles || []); // Map转Array
 					Caches.Playlists = Caches.Playlists.slice(-Settings.CacheSize); // 限制缓存大小
 					Caches.Subtitles = Caches.Subtitles.slice(-Settings.CacheSize); // 限制缓存大小
-					console.log(Caches.Playlists);
-					console.log(Caches.Subtitles);
 					// 写入缓存
 					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
-
-					/*
-					const Indices = await getCache($request.url, Type, Settings, Caches);
-					let Cache = Caches?.[Indices.Index] || {};
-					// PlayList.m3u8 URL
-					Cache.URL = $request.url;
-					// 提取数据 用遍历语法可以兼容自定义数量的语言查询
-					
-					for await (let language of Settings.Languages) {
-						Cache[language] = await getMEDIA($request.url, body, "SUBTITLES", language, Configs);
-						//$.log(`🚧 ${$.name}`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
-					};
-					// 写入缓存
-					let newCaches = Caches;
-					newCaches = await setCache(Indices.Index, newCaches, Cache, Settings.CacheSize);
-					//$.setjson(newCaches, `@DualSubs.${Platform}.Caches`);
-					$.setjson(newCaches, `@DualSubs.${"Universal"}.Caches`);
-					*/
 					// 兼容性判断
 					const standard = await isStandard(Platform, $request.url, $request.headers);
 					// 写入选项
-					body = await setOptions(Platform, body, subtitlesPlaylistObj[Settings.Languages[0]], subtitlesPlaylistObj[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
+					body = await setOptions(Platform, body, subtitlesPlaylistValue[Settings.Languages[0]], subtitlesPlaylistValue[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;

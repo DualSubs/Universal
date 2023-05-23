@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(2) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(3) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -93,8 +93,10 @@ const DataBase = {
 					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches?.Playlists, Caches?.Subtitles, Settings?.Languages);
 					// 获取官方字幕请求
 					if (subtitlesURIArray1.length) {
+						$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
 						// 获取字幕文件名
-						let fileName = getSubtitlesFileName($request.url, Platform);
+						let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, Platform);
+						$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
 						// 构造请求队列
 						requests = constructSubtitlesQueue(fileName, subtitlesURIArray1, subtitlesURIArray0);
 					};

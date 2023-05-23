@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.3(1) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.3(2) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -445,20 +445,16 @@ function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages
 /**
  * Set Cache
  * @author VirgilClyne
- * @param {Number} index - index
- * @param {Object} target - target
- * @param {Object} sources - sources
- * @param {Number} num - num
- * @return {Promise<*>}
+ * @param {Map} cache - Playlists Cache / Subtitles Cache
+ * @param {Number} cacheSize - Cache Size
+ * @return {Boolean} isSaved
  */
-async function setCache(index = -1, target = {}, sources = {}, num = 1) {
-	$.log(`⚠ ${$.name}, Set Cache`, "");
-	// 刷新播放记录，所以始终置顶
-	if (index !== -1) delete target[index] // 删除旧记录
-	target.unshift(sources) // 头部插入缓存
-	target = target.filter(Boolean).slice(0, num) // 设置缓存数量
-	//$.log(`🎉 ${$.name}, Set Cache`, `target: ${JSON.stringify(target)}`, "");
-	return target
+function setCache(cache, cacheSize = 100) {
+	$.log(`☑️ ${$.name}, Set Cache, cacheSize: ${cacheSize}`, "");
+	cache = Array.from(cache || []); // Map转Array
+	cache = cache.slice(-cacheSize); // 限制缓存大小
+	$.log(`✅ ${$.name}, Set Cache`, "");
+	return cache;
 };
 
 /**

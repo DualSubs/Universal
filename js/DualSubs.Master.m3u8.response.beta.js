@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(2) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(3) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -92,7 +92,7 @@ const DataBase = {
 					body = M3U8.parse($response.body);
 					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// 写入字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylist } = await setPlaylistCache($request.url, body, Caches?.Playlists, Settings?.Languages);
+					const { subtitlesPlaylist } = await setPlaylistCache($request.url, body, Caches?.Playlists, Settings?.Languages, Configs);
 					// 格式化缓存
 					setCache(Caches?.Playlists, Settings?.CacheSize);
 					setCache(Caches?.Subtitles, Settings?.CacheSize);
@@ -236,9 +236,10 @@ function setENV(name, platform, database) {
  * @param {Object} body - Response Body / Master Playlist Body
  * @param {Map} cache - Playlist Cache
  * @param {Array} languages - Languages
+ * @param {Object} configs - Configs
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist }
  */
-async function setPlaylistCache(url, body, cache, languages) {
+async function setPlaylistCache(url, body, cache, languages, configs) {
 	$.log(`☑️ ${$.name}, setPlaylistCache`, "");
 	let masterPlaylistURL = url;
 	let masterPlaylistBody = body;
@@ -248,7 +249,7 @@ async function setPlaylistCache(url, body, cache, languages) {
 	await Promise.all(languages?.map(async language => {
 		//$.log(`🚧 ${$.name}, setPlaylistCache`, `language: ${language}`, "");
 		// 获取字幕播放列表m3u8缓存（按语言）
-		subtitlesPlaylist[language] = await getMEDIA(masterPlaylistURL, masterPlaylistBody, "SUBTITLES", language, Configs);
+		subtitlesPlaylist[language] = await getMEDIA(masterPlaylistURL, masterPlaylistBody, "SUBTITLES", language, configs);
 		//$.log(`🚧 ${$.name}, setPlaylistCache`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 	}));
 	// 写入字幕播放列表m3u8缓存到map

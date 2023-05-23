@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(10) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.2(1) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -93,24 +93,6 @@ const DataBase = {
 					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// 写入字幕播放列表m3u8缓存（map）
 					const { subtitlesPlaylist } = await setPlaylistCache($request.url, body, Caches?.Playlists, Settings?.Languages);
-					async function setPlaylistCache(url, body, cache, languages) {
-						$.log(`☑️ ${$.name}, setPlaylistCache`, "");
-						let masterPlaylistURL = url;
-						let masterPlaylistBody = body;
-						let subtitlesPlaylist = cache?.get(masterPlaylistURL) || {};
-						//let subtitlesPlaylistIndex = 0;
-						// 查找字幕播放列表m3u8缓存（map）
-						await Promise.all(languages?.map(async language => {
-							//$.log(`🚧 ${$.name}, setPlaylistCache`, `language: ${language}`, "");
-							// 获取字幕播放列表m3u8缓存（按语言）
-							subtitlesPlaylist[language] = await getMEDIA(masterPlaylistURL, masterPlaylistBody, "SUBTITLES", language, Configs);
-							//$.log(`🚧 ${$.name}, setPlaylistCache`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
-						}));
-						// 写入字幕播放列表m3u8缓存到map
-						cache = cache.set(masterPlaylistURL, subtitlesPlaylist);
-						$.log(`✅ ${$.name}, setPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, "");
-						return { masterPlaylistURL, subtitlesPlaylist };
-					};
 					Caches.Playlists = Array.from(Caches?.Playlists || []); // Map转Array
 					Caches.Subtitles = Array.from(Caches?.Subtitles || []); // Map转Array
 					Caches.Playlists = Caches.Playlists.slice(-Settings.CacheSize); // 限制缓存大小
@@ -249,47 +231,31 @@ function setENV(name, platform, database) {
 };
 
 /**
- * Get Cache
+ * Set Playlist Cache
  * @author VirgilClyne
- * @param {String} url - Request URL
- * @param {String} type - type
- * @param {Object} settings - settings
- * @param {Object} cache - cache
- * @return {Promise<*>}
+ * @param {String} url - Request URL / Master Playlist URL
+ * @param {Object} body - Response Body / Master Playlist Body
+ * @param {Map} cache - Playlist Cache
+ * @param {Array} languages - Languages
+ * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist }
  */
-async function getCache(url, type, settings, caches = {}) {
-	$.log(`⚠ ${$.name}, Get Cache`, "");
-	let Indices = {};
-	Indices.Index = await getIndex(url, settings, caches);
-	if (Indices.Index !== -1) {
-		for await (var language of settings.Languages) Indices[language] = await getDataIndex(url, Indices.Index, language)
-		if (type == "Official") {
-			// 修正缓存
-			if (Indices[settings.Languages[0]] !== -1) {
-				Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-					if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"] && data.OPTION.CHARACTERISTICS == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION.CHARACTERISTICS) return true;
-				});
-				if (Indices[settings.Languages[1]] == -1) {
-					Indices[settings.Languages[1]] = caches[Indices.Index][settings.Languages[1]].findIndex(data => {
-						if (data.OPTION["GROUP-ID"] == caches[Indices.Index][settings.Languages[0]][Indices[settings.Languages[0]]].OPTION["GROUP-ID"]) return true;
-					});
-				};
-			};
-		};
-	}
-	$.log(`🎉 ${$.name}, Get Cache`, `Indices: ${JSON.stringify(Indices)}`, "");
-	return Indices
-	/***************** Fuctions *****************/
-	async function getIndex(url, settings, caches) {
-		return caches.findIndex(item => {
-			let URLs = [item?.URL];
-			for (var language of settings.Languages) URLs.push(item?.[language]?.map(d => getURIs(d)));
-			//$.log(`🎉 ${$.name}, 调试信息`, " Get Index", `URLs: ${URLs}`, "");
-			return URLs.flat(Infinity).some(URL => url.includes(URL || null));
-		})
-	};
-	async function getDataIndex(url, index, lang) { return caches?.[index]?.[lang]?.findIndex(item => getURIs(item).flat(Infinity).some(URL => url.includes(URL || null))); };
-	function getURIs(item) { return [item?.URL, item?.VTTs] }
+async function setPlaylistCache(url, body, cache, languages) {
+	$.log(`☑️ ${$.name}, setPlaylistCache`, "");
+	let masterPlaylistURL = url;
+	let masterPlaylistBody = body;
+	let subtitlesPlaylist = cache?.get(masterPlaylistURL) || {};
+	//let subtitlesPlaylistIndex = 0;
+	// 查找字幕播放列表m3u8缓存（map）
+	await Promise.all(languages?.map(async language => {
+		//$.log(`🚧 ${$.name}, setPlaylistCache`, `language: ${language}`, "");
+		// 获取字幕播放列表m3u8缓存（按语言）
+		subtitlesPlaylist[language] = await getMEDIA(masterPlaylistURL, masterPlaylistBody, "SUBTITLES", language, Configs);
+		//$.log(`🚧 ${$.name}, setPlaylistCache`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
+	}));
+	// 写入字幕播放列表m3u8缓存到map
+	cache = cache.set(masterPlaylistURL, subtitlesPlaylist);
+	$.log(`✅ ${$.name}, setPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, "");
+	return { masterPlaylistURL, subtitlesPlaylist };
 };
 
 /**

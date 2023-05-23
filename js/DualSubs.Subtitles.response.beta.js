@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(7) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(8) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -342,7 +342,7 @@ function setENV(name, platform, database) {
 	//if (Settings?.Advanced?.Translator?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Advanced?.Translator?.Exponential) //  BoxJs字符串转Boolean
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
 	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/
@@ -434,7 +434,8 @@ function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages
 	// 查找字幕文件地址vtt缓存（map）
 	let subtitlesURIArray0 = subtitlesCache.get(subtitlesPlaylistURL0) || [];
 	let subtitlesURIArray1 = subtitlesCache.get(subtitlesPlaylistURL1) || [];
-	$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
+	//$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
+	$.log(`✅ ${$.name}, getSubtitlesArray`, "");
 	return { subtitlesURIArray0, subtitlesURIArray1 };
 };
 
@@ -540,7 +541,7 @@ function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
 			break;
 		};
 	};
-	$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `requests: ${JSON.stringify(requests)}`, "");
+	//$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `requests: ${JSON.stringify(requests)}`, "");
 	$.log(`✅ ${$.name}, Construct Subtitles Queue`, "");
 	return requests;
 };

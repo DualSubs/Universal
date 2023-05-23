@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.3(2) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(1) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -469,10 +469,23 @@ function setCache(cache, cacheSize = 100) {
 async function getOfficialRequest(url, headers, platform, VTTs = [], oVTTs = []) {
 	$.log(`⚠ ${$.name}, Get Official Request`, "");
 	$.log(`⚠ ${$.name}, Get Official Request`, `VTTs: ${VTTs}`, "");
-	let fileName = (platform == "Apple") ? url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1] // Apple 片段分型序号不同
-		: (platform == "Disney_Plus") ? url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Disney+ 片段名称相同
-			: (platform == "Hulu") ? url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1] // Hulu 片段分型序号相同
-				: null; // Amazon Prime Video HBO_Max不拆分字幕片段
+	let fileName = undefined;
+	switch (platform) {
+		case "Apple":
+			fileName = url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1]; // Apple 片段分型序号不同
+			break;
+		case "Disney_Plus":
+			fileName = url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Disney+ 片段名称相同
+			break;
+		case "Hulu":
+			fileName = url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Hulu 片段分型序号相同
+			break;
+		case "Prime_Video":
+		case "HBO_Max":
+		default:
+			fileName = null; // Amazon Prime Video HBO_Max不拆分字幕片段
+			break;
+	};
 	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
 
 	if (platform == "Apple") {

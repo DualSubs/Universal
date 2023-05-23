@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(1) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(2) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -77,13 +77,14 @@ const DataBase = {
 			// 获取字幕格式
 			const Format = url.params?.fmt || url.params?.format || PATHs?.[PATHs?.length - 1]?.split(".")?.[1], Kind = url.params?.kind;
 			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
-			// 创建请求
-			let request = {};
+			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
 			switch (Type) {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
+					// 设置字幕偏移参数
+					Settings.External.Offset = 0;
 					// 获取字幕文件地址vtt缓存（map）
 					const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches?.Subtitles, Settings?.Languages);
 					// 获取字幕播放列表m3u8缓存（map）
@@ -92,22 +93,15 @@ const DataBase = {
 					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches?.Playlists, Caches?.Subtitles, Settings?.Languages);
 					// 获取官方字幕请求
 					if (subtitlesURIArray1.length) {
-						switch (PATHs?.[0]) {
-							case "itunes-assets": // iTunes Assets
-								requests = await getOfficialRequest($request.url, $request.headers, Platform, subtitlesURIArray1, subtitlesURIArray0);
-								break;
-							default: // Others
-								request = await getOfficialRequest($request.url, $request.headers, Platform, subtitlesURIArray1);
-								requests.push(request);
-								break;
-						};
+						// 获取字幕文件名
+						let fileName = getSubtitlesFileName($request.url, Platform);
+						// 构造请求队列
+						requests = constructSubtitlesQueue(fileName, subtitlesURIArray1, subtitlesURIArray0);
 					};
-					// 设置参数
-					Settings.External.Offset = 0;
 					break;
 				case "External":
 					$.log(`🚧 ${$.name}, 外挂字幕`, "");
-					request = {
+					let request = {
 						"url": Settings.External.URL,
 						"headers": {
 							"Accept": "*/*",
@@ -458,27 +452,24 @@ function setCache(cache, cacheSize = 100) {
 };
 
 /**
- * Get Official Request
+ * Get Subtitles FileName
  * @author VirgilClyne
- * @param {String} url - Request URL
- * @param {String} headers - Request Headers
- * @param {String} platform - Steaming Media Platform
- * @param {Array} VTTs - VTTs
- * @return {Promise<*>}
+ * @param {String} url - Request URL / Subtitles URL
+ * @param {String} platform - Platform Name
+ * @return {String<*>} fileName
  */
-async function getOfficialRequest(url, headers, platform, VTTs = [], oVTTs = []) {
-	$.log(`⚠ ${$.name}, Get Official Request`, "");
-	$.log(`⚠ ${$.name}, Get Official Request`, `VTTs: ${VTTs}`, "");
+function getSubtitlesFileName(url, platform) {
+	$.log(`☑️ ${$.name}, Get Subtitles FileName`, `url: ${url}`, "");
 	let fileName = undefined;
 	switch (platform) {
 		case "Apple":
-			fileName = url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1]; // Apple 片段分型序号不同
+			fileName = request.url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1]; // Apple 片段分型序号不同
 			break;
 		case "Disney_Plus":
-			fileName = url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Disney+ 片段名称相同
+			fileName = request.url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Disney+ 片段名称相同
 			break;
 		case "Hulu":
-			fileName = url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Hulu 片段分型序号相同
+			fileName = request.url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Hulu 片段分型序号相同
 			break;
 		case "Prime_Video":
 		case "HBO_Max":
@@ -486,42 +477,45 @@ async function getOfficialRequest(url, headers, platform, VTTs = [], oVTTs = [])
 			fileName = null; // Amazon Prime Video HBO_Max不拆分字幕片段
 			break;
 	};
-	$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `fileName: ${fileName}`, "")
-
-	if (platform == "Apple") {
-		let oIndex = oVTTs.findIndex(item => item?.includes(fileName));
-		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_oIndex: ${oIndex}`, "")
-		let oPosition = oIndex / oVTTs.length;
-		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_oPosition: ${oPosition}`, "")
-		//let Index = VTTs.findIndex(item => item.includes(fileName));
-		let Index = Math.round(oPosition * VTTs.length);
-		$.log(`🚧 ${$.name}, Get Official Subtitles URL`, `Apple_Index: ${Index}`, "")
-		nearlyVTTs = VTTs.slice((Index - 2 < 0) ? 0 : Index - 2, Index + 2);
-		let requests = nearlyVTTs.map(VTT => {
-			return {
-				"url": VTT,
-				"headers": headers,
-			}
-		});
-		$.log(`🚧 ${$.name}, Get Official Request`, `requests: ${JSON.stringify(requests)}`, "");
-		return requests
-	} else {
-		let request = {
-			"url": VTTs.find(item => item?.includes(fileName)) || VTTs[0],
-			"headers": headers,
-		};
-		$.log(`🚧 ${$.name}, Get Official Request`, `request: ${JSON.stringify(request)}`, "");
-		return request
-	}
+	$.log(`✅ ${$.name}, Get Subtitles FileName`, `fileName: ${fileName}`, "");
+	return fileName;
 };
 
 /**
- * getWebVTT
+ * Construct Subtitles Queue
  * @author VirgilClyne
- * @param {object} request - request
- * @return {Promise<*>}
+ * @param {String} fileName - Request URL
+ * @param {Array} VTTs0 - First Language Subtitles Array
+ * @param {Array} VTTs1 - Second Language Subtitles Array
+ * @return {Array<*>} Subtitles Requests Queue
  */
-async function getWebVTT(request) { return await $.http.get(request).then(response => VTT.parse(response.body)); }
+function constructSubtitlesQueue(fileName, VTTs0 = [], VTTs1 = []) {
+	let requests = [];
+	if (VTTs0.length === VTTs1.length) { // 长度相等，一一对应，无须计算
+		request.url = VTTs1.find(item => item?.includes(fileName)) || VTTs1[0];
+		requests = [request];
+	} else {
+		// 查询当前字幕在原字幕队列中的位置
+		let Index0 = VTTs0.findIndex(item => item?.includes(fileName));
+		$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index0: ${Index0}`, "")
+		// 计算当前字幕在原字幕队列中的百分比
+		let Position0 = Index0 / VTTs0.length;
+		$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Position0: ${Position0}`, "");
+		// 根据百分比计算当前字幕在新字幕队列中的位置
+		//let Index1 = VTTs1.findIndex(item => item.includes(fileName));
+		let Index1 = Math.round(Position0 * VTTs1.length);
+		$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index1: ${Index1}`, "");
+		// 获取当前字幕在新字幕队列中的前后4个字幕
+		nearlyVTTs = VTTs1.slice((Index1 - 2 < 0) ? 0 : Index1 - 2, Index1 + 2);
+		requests = nearlyVTTs.map(url => {
+			request.url = url;
+			return request;
+		});
+	};
+	//$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `requests: ${JSON.stringify(requests)}`, "");
+	$.log(`✅ ${$.name}, Construct Subtitles Queue`, "");
+	return requests;
+};
 
 /**
  * combineText

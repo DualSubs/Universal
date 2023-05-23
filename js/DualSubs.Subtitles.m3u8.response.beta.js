@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.3(2) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.3(3) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["", "\n"]);
 const DataBase = {
@@ -85,8 +85,8 @@ const DataBase = {
 					// 写入字幕文件地址vtt缓存（map）
 					Caches.Subtitles = await setSubtitlesCache(subtitlesPlaylist, Caches?.Subtitles, Settings?.Languages);
 					// 格式化缓存
-					setCache(Caches?.Playlists, Settings?.CacheSize);
-					setCache(Caches?.Subtitles, Settings?.CacheSize);
+					Caches.Playlists = setCache(Caches?.Playlists, Settings?.CacheSize);
+					Caches.Subtitles = setCache(Caches?.Subtitles, Settings?.CacheSize);
 					// 写入缓存
 					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
 					break;

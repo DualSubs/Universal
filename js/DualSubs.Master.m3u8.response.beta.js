@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(7) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.1(10) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -92,23 +92,24 @@ const DataBase = {
 					body = M3U8.parse($response.body);
 					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// 写入字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylistValue } = await setPlaylistCache($request.url, body, Caches?.Playlists, Settings?.Languages);
-					async function setPlaylistCache(masterPlaylistURL, masterPlaylistBody, playlistCacheMap, languages) {
+					const { subtitlesPlaylist } = await setPlaylistCache($request.url, body, Caches?.Playlists, Settings?.Languages);
+					async function setPlaylistCache(url, body, cache, languages) {
 						$.log(`☑️ ${$.name}, setPlaylistCache`, "");
-						let masterPlaylistKey = masterPlaylistURL;
-						let subtitlesPlaylistValue = playlistCacheMap?.get(masterPlaylistKey) || {};
-						let subtitlesPlaylistIndex = 0;
+						let masterPlaylistURL = url;
+						let masterPlaylistBody = body;
+						let subtitlesPlaylist = cache?.get(masterPlaylistURL) || {};
+						//let subtitlesPlaylistIndex = 0;
 						// 查找字幕播放列表m3u8缓存（map）
 						await Promise.all(languages?.map(async language => {
 							//$.log(`🚧 ${$.name}, setPlaylistCache`, `language: ${language}`, "");
 							// 获取字幕播放列表m3u8缓存（按语言）
-							subtitlesPlaylistValue[language] = await getMEDIA(masterPlaylistKey, masterPlaylistBody, "SUBTITLES", language, Configs);
+							subtitlesPlaylist[language] = await getMEDIA(masterPlaylistURL, masterPlaylistBody, "SUBTITLES", language, Configs);
 							//$.log(`🚧 ${$.name}, setPlaylistCache`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
 						}));
 						// 写入字幕播放列表m3u8缓存到map
-						playlistCacheMap = playlistCacheMap.set(masterPlaylistKey, subtitlesPlaylistValue);
-						$.log(`✅ ${$.name}, setPlaylistCache`, `masterPlaylistKey: ${masterPlaylistKey}`, "");
-						return { masterPlaylistKey, subtitlesPlaylistValue, subtitlesPlaylistIndex };
+						cache = cache.set(masterPlaylistURL, subtitlesPlaylist);
+						$.log(`✅ ${$.name}, setPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, "");
+						return { masterPlaylistURL, subtitlesPlaylist };
 					};
 					Caches.Playlists = Array.from(Caches?.Playlists || []); // Map转Array
 					Caches.Subtitles = Array.from(Caches?.Subtitles || []); // Map转Array
@@ -119,7 +120,7 @@ const DataBase = {
 					// 兼容性判断
 					const standard = await isStandard(Platform, $request.url, $request.headers);
 					// 写入选项
-					body = await setOptions(Platform, body, subtitlesPlaylistValue[Settings.Languages[0]], subtitlesPlaylistValue[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
+					body = await setOptions(Platform, body, subtitlesPlaylist[Settings.Languages[0]], subtitlesPlaylist[Settings.Languages[1]], Settings.Types, standard, Settings.Type);
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;

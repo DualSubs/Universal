@@ -252,7 +252,7 @@ function setENV(name, platform, database) {
 	//if (Settings?.Advanced?.Translator?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Advanced?.Translator?.Exponential) //  BoxJs字符串转Boolean
 	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
 	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/

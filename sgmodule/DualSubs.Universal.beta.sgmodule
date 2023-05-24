@@ -3,8 +3,8 @@
 #!openUrl=http://boxjs.com/#/app/DualSubs.Universal.beta
 #!author=VirgilClyne
 #!homepage=https://github.com/DualSubs
-#!manual=https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs:-🎦-Universal
-#!icon=https://raw.githubusercontent.com/DualSubs/DualSubs/main/database/icon_rounded.png
+#!manual=https://github.com/DualSubs/Universal/wiki/🍿-DualSubs:-🎦-Universal
+#!icon=https://raw.githubusercontent.com/DualSubs/Universal/main/database/icon_rounded.png
 
 [General]
 force-http-engine-hosts = %APPEND% *.hls.row.aiv-cdn.net, *avodhlss3ww-a.akamaihd.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, assets.huluim.com, vod-*.live.cf.md.bbci.co.uk, vod-*-live.akamaized.net
@@ -37,7 +37,7 @@ DualSubs.HBO_Max.Subtitles.m3u8.response = type=http-response, pattern=^https?:\
 DualSubs.HBO_Max.Subtitles.webvtt.response = type=http-response, pattern=^https?:\/\/(.+)\.hbomaxcdn\.com\/videos\/(.+)\.vtt(\?.*dualsubs=\w+)$, requires-body=1, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Subtitles.response.beta.js
 
 DualSubs.Hulu.Master.m3u8.response = type=http-response, pattern=^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8(\?.+)?$, requires-body=1, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Master.m3u8.response.beta.js
-# DualSubs.Hulu.Playlist.json.response = type=http-response, pattern=^https?:\/\/play\.hulu\.com\/(v\d)\/playlist, requires-body=1, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.JSON.playlist.beta.js
+# DualSubs.Hulu.Playlist.json.response = type=http-response, pattern=^https?:\/\/play\.hulu\.com\/(v\d)\/playlist, requires-body=1, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Playlist.json.response.beta.js
 DualSubs.Hulu.Subtitles.m3u8.response = type=http-response, pattern=^https?:\/\/manifest-dp\.hulustream\.com\/webvtt(\?.*dualsubs=\w+)$, requires-body=1, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Subtitles.m3u8.response.beta.js
 DualSubs.Hulu.Subtitles.webvtt.response = type=http-response, pattern=^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt(\?.*dualsubs=\w+)$, requires-body=1, timeout=30, debug=1, script-path=https://raw.githubusercontent.com/DualSubs/DualSubs/beta/js/DualSubs.Subtitles.response.beta.js
 

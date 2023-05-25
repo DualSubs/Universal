@@ -30,5 +30,5 @@ http:
 
 script-providers:
   DualSubs..SUB.WebVTT:
-    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/DualSubs.SUB.WebVTT.js
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/archive/v0.7/DualSubs.SUB.WebVTT.js
     interval: 86400

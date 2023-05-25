@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(1) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(2) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -11,49 +11,51 @@ const DataBase = {
 		"Settings": {"Switch":true},
 	},
 	"Universal": {
-		"Switch": true,
-		"Types": ["Official", "Translate"],
-		"Languages": ["ZH", "EN"],
-		"Official": {
-			"CacheSize": 100,
-			"Position": "Forward",
-			"Offset": 0,
-			"Tolerance": 1000
-		},
-		"Translate": {
-			"Type": "Google",
-			"Types": ["Google", "GoogleCloud", "Azure", "DeepL"],
-			"ShowOnly": false,
-			"Position": "Forward",
-			"CacheSize": 10,
-			"Method": "Part",
-			"Times": 3,
-			"Interval": 100,
-			"Exponential": true
-		},
-		"External": {
-			"URL": null,
-			"ShowOnly": false,
-			"Position": "Forward",
-			"Offset": 0,
-			"Tolerance": 1000
-		},
-		"API": {
-			"GoogleCloud": {
-				"Mode": "Key",
-				"Auth": null
+		"Settings": {
+			"Switch": true,
+			"Types": ["Official", "Translate"],
+			"Languages": ["ZH", "EN"],
+			"Official": {
+				"CacheSize": 100,
+				"Position": "Forward",
+				"Offset": 0,
+				"Tolerance": 1000
 			},
-			"Azure": {
-				"Version": "Azure",
-				"Region": null,
-				"Mode": "Key",
-				"Auth": null
+			"Translate": {
+				"Type": "Google",
+				"Types": ["Google", "GoogleCloud", "Azure", "DeepL"],
+				"ShowOnly": false,
+				"Position": "Forward",
+				"CacheSize": 10,
+				"Method": "Part",
+				"Times": 3,
+				"Interval": 100,
+				"Exponential": true
 			},
-			"DeepL": {
-				"Version": "Free",
-				"Auth": null
+			"External": {
+				"URL": null,
+				"ShowOnly": false,
+				"Position": "Forward",
+				"Offset": 0,
+				"Tolerance": 1000
+			},
+			"API": {
+				"GoogleCloud": {
+					"Mode": "Key",
+					"Auth": null
+				},
+				"Azure": {
+					"Version": "Azure",
+					"Region": null,
+					"Mode": "Key",
+					"Auth": null
+				},
+				"DeepL": {
+					"Version": "Free",
+					"Auth": null
+				}
 			}
-		}
+		},
 	},
 	"YouTube": {
 		"Configs": {

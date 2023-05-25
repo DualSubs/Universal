@@ -2,31 +2,57 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(8) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(1) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default": {
-		"Settings":{
-			"Switch":"true","Types":["Official","Google","GoogleCloud","Azure","DeepL"],"Type":"Google","Languages":["ZH","EN"],"Language":"AUTO","Position":"Forward","CacheSize":20,"Tolerance":1000,
-			"Translate":{
-				"ShowOnly":false
-			},
-			"External":{
-				"URL":null,"Offset":0,"ShowOnly":false
-			},
-			"Verify": {
-				"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},
-				"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},
-				"DeepL":{"Method":"Part","Version":"Free","Auth":null},
-			},
-			"Advanced": {
-				"Translator":{"Times":3,"Interval":100,"Exponential":true}
-			}
+		"Settings": {"Switch":true},
+	},
+	"Universal": {
+		"Switch": true,
+		"Types": ["Official", "Translate"],
+		"Languages": ["ZH", "EN"],
+		"Official": {
+			"CacheSize": 100,
+			"Position": "Forward",
+			"Offset": 0,
+			"Tolerance": 1000
 		},
-		"Configs": {
-			"Languages":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]}
+		"Translate": {
+			"Type": "Google",
+			"Types": ["Google", "GoogleCloud", "Azure", "DeepL"],
+			"ShowOnly": false,
+			"Position": "Forward",
+			"CacheSize": 10,
+			"Method": "Part",
+			"Times": 3,
+			"Interval": 100,
+			"Exponential": true
+		},
+		"External": {
+			"URL": null,
+			"ShowOnly": false,
+			"Position": "Forward",
+			"Offset": 0,
+			"Tolerance": 1000
+		},
+		"API": {
+			"GoogleCloud": {
+				"Mode": "Key",
+				"Auth": null
+			},
+			"Azure": {
+				"Version": "Azure",
+				"Region": null,
+				"Mode": "Key",
+				"Auth": null
+			},
+			"DeepL": {
+				"Version": "Free",
+				"Auth": null
+			}
 		}
 	},
 	"YouTube": {
@@ -72,7 +98,7 @@ const DataBase = {
 			const Platform = getPlatform(HOST);
 			$.log(`⚠ ${$.name}`, `Platform: ${Platform}`, "");
 			// 设置自定义参数
-			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Type, Languages = url?.params?.sublang || Settings.Languages;
+			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Translate.Type, Languages = url?.params?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 获取字幕格式
 			const Format = url.params?.fmt || url.params?.format || PATHs?.[PATHs?.length - 1]?.split(".")?.[1], Kind = url.params?.kind;
@@ -84,13 +110,15 @@ const DataBase = {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 设置字幕偏移参数
-					Settings.External.Offset = 0;
+					//Settings.Offset = Settings.Official.Offset || 0;
+					//Settings.Tolerance = Settings.Official.Tolerance || 1000;
+					//Settings.Position = Settings.Official.Position || "Forward";
 					// 获取字幕文件地址vtt缓存（map）
-					const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches?.Subtitles, Settings?.Languages);
+					const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Subtitles, Settings.Languages);
 					// 获取字幕播放列表m3u8缓存（map）
-					const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches?.Playlists, Settings?.Languages);
+					const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches?.Playlists, Settings.Languages);
 					// 获取字幕文件地址vtt缓存（map）
-					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches?.Playlists, Caches?.Subtitles, Settings?.Languages);
+					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists, Caches.Subtitles, Settings.Languages);
 					// 获取官方字幕请求
 					if (subtitlesURIArray1.length) {
 						$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
@@ -101,8 +129,16 @@ const DataBase = {
 						requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
 					};
 					break;
+				case "Translate":
+				default:
+					$.log(`🚧 ${$.name}, 翻译字幕`, "");
+					//Settings.Position = Settings.Translate.Position || "Forward";
+					break;
 				case "External":
 					$.log(`🚧 ${$.name}, 外挂字幕`, "");
+					//Settings.Offset = Settings.External.Offset || 0;
+					//Settings.Tolerance = Settings.External.Tolerance || 1000;
+					//Settings.Position = Settings.External.Position || "Forward";
 					let request = {
 						"url": Settings.External.URL,
 						"headers": {
@@ -111,14 +147,6 @@ const DataBase = {
 						}
 					};
 					requests.push(request);
-					break;
-				case "Translate":
-				case "Google":
-				case "GoogleCloud":
-				case "Azure":
-				case "DeepL":
-				default:
-					$.log(`🚧 ${$.name}, 翻译字幕`, "");
 					break;
 			};
 			// 创建第二字幕Object
@@ -145,7 +173,7 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = XML.parse(SecondSub);
-						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.External.Offset, Settings.Tolerance, [Settings.Position]);
+						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$response.body = XML.stringify(body);
 					break;
@@ -165,41 +193,58 @@ const DataBase = {
 					// 处理类型
 					switch (Type) {
 						case "Official":
-						case "External":
+							$.log(`🚧 ${$.name}`, "官方字幕", "");
 							for await (let request of requests) {
 								SecondSub = await $.http.get(request).then(response => response.body);
 								SecondSub = VTT.parse(SecondSub);
-								body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.External.Offset, Settings.Tolerance, [Settings.Position]);
+								body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Official.Offset, Settings.Official.Tolerance, [Settings.Official.Position]);
 							};
 							break;
 						case "Translate":
-						case "Google":
-						case "GoogleCloud":
-						case "Azure":
-						case "DeepL":
 						default:
 							$.log(`🚧 ${$.name}`, `翻译字幕`, "");
-							switch (Settings?.Verify?.[Type]?.Method) {
+							switch (Settings?.Translate?.Method) {
 								default:
 								case "Part": // Part 逐段翻译
 									let Full = await Promise.all(body.body.map(async item => item.text));
-									let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
+									let length = 127;
+									switch (Settings.Translate.Type) {
+										case "Google":
+										case "GoogleCloud":
+										default:
+											length = 127;
+											break;
+										case "Azure":
+											length = 99;
+											break;
+										case "DeepL":
+											length = 49;
+											break;
+									};
 									let Parts = await chunk(Full, length);
 									Parts = await Promise.all(Parts.map(async Part => {
-										return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Settings?.Verify], Settings?.Advanced?.Translator?.Times, Settings?.Advanced?.Translator?.Interval, Settings?.Advanced?.Translator?.Exponential); // 3, 100, true
+										return await retry(Translator, [Settings.Translate.Type, Settings.Languages[1], Settings.Languages[0], Part, Settings?.API], Settings?.Translate?.Times, Settings?.Translate?.Interval, Settings?.Translate?.Exponential); // 3, 100, true
 									})).then(parts => parts.flat(Infinity));
 									body.body = await Promise.all(body.body.map(async (item, i) => {
-										item.text = await combineText(item.text, Parts[i], Settings.Position);
+										item.text = await combineText(item.text, Parts[i], Settings?.Translate?.Position);
 										return item
 									}));
 									break;
 								case "Row": // Row 逐行翻译
 									body.body = await Promise.all(body.body.map(async item => {
-										let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Settings?.Verify], Settings?.Advanced?.Translator?.Times, Settings?.Advanced?.Translator?.Interval, Settings?.Advanced?.Translator?.Exponential); // 3, 100, true
-										item.text = await combineText(item.text, text2[0], Settings.Position);
+										let text2 = await retry(Translator, [Settings.Translate.Type, Settings.Languages[1], Settings.Languages[0], item.text, Settings?.API], Settings?.Translate?.Times, Settings?.Translate?.Interval, Settings?.Translate?.Exponential); // 3, 100, true
+										item.text = await combineText(item.text, text2[0], Settings?.Translate?.Position);
 										return item
 									}));
 									break;
+							};
+							break;
+						case "External":
+							$.log(`🚧 ${$.name}, 外挂字幕`, "");
+							for await (let request of requests) {
+								SecondSub = await $.http.get(request).then(response => response.body);
+								SecondSub = VTT.parse(SecondSub);
+								body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.External.Offset, Settings.External.Tolerance, [Settings.External.Position]);
 							};
 							break;
 					};
@@ -213,7 +258,7 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = JSON.parse(SecondSub);
-						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.External.Offset, Settings.Tolerance, [Settings.Position]);
+						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$response.body = JSON.stringify(body);
 					break;
@@ -318,31 +363,36 @@ function getPlatform(host) {
  * @return {Object} { Settings, Caches, Configs }
  */
 function setENV(name, platform, database) {
-	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	$.log(`☑️ ${$.name}, Set Environment Variables`, "");
 	let { Settings, Caches, Configs } = getENV(name, platform, database);
 	/***************** Settings *****************/
 	traverseObject(Settings, (key, value) => {
-		if (value === "true" && value === "false") value = JSON.parse(value); // BoxJs字符串转Boolean
-		if (typeof value === "string") value = value?.includes(",") ? value?.split(",") : value; // BoxJs字符串转数组
+		if (value === "true" && value === "false") value = JSON.parse(value); // 字符串转Boolean
+		else if (typeof value === "string") {
+			if (value?.includes(",")) value = value.split(","); // 字符串转数组
+			else if (!isNaN(value)) value = parseInt(value, 10) // 字符串转数字
+		};
 		return value;
 	});
 	//Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
 	//if (typeof Settings?.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	/*
 	if (Array.isArray(Settings?.Types)) {
-		if (!Settings?.Verify?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
-		if (!Settings?.Verify?.Azure?.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
-		if (!Settings?.Verify?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+		if (!Settings?.API?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+		if (!Settings?.API?.Azure?.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+		if (!Settings?.API?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	}
-	if (Settings?.CacheSize) Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
-	if (Settings?.Tolerance) Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
-	if (Settings?.External?.Offset) Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
+	*/
+	//if (Settings?.CacheSize) Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
+	//if (Settings?.Tolerance) Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
+	//if (Settings?.External?.Offset) Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
 	//if (Settings?.External?.ShowOnly) Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
-	if (Settings?.Advanced?.Translator?.Times) Settings.Advanced.Translator.Times = parseInt(Settings?.Advanced?.Translator?.Times, 10) // BoxJs字符串转数字
-	if (Settings?.Advanced?.Translator?.Interval) Settings.Advanced.Translator.Interval = parseInt(Settings?.Advanced?.Translator?.Interval, 10) // BoxJs字符串转数字
-	//if (Settings?.Advanced?.Translator?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Advanced?.Translator?.Exponential) //  BoxJs字符串转Boolean
-	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	//if (Settings?.Translate?.Times) Settings.Advanced.Translator.Times = parseInt(Settings?.Translate?.Times, 10) // BoxJs字符串转数字
+	//if (Settings?.Translate?.Interval) Settings.Advanced.Translator.Interval = parseInt(Settings?.Translate?.Interval, 10) // BoxJs字符串转数字
+	//if (Settings?.Translate?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Translate?.Exponential) //  BoxJs字符串转Boolean
+	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
 	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/

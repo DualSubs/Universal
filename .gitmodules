@@ -1,0 +1,3 @@
+[submodule "BoxJs"]
+	path = BoxJs
+	url = https://github.com/DualSubs/BoxJs.git

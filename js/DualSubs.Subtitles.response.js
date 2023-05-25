@@ -2,31 +2,67 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(8) Subtitles.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(4) Subtitles.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default": {
-		"Settings":{
-			"Switch":"true","Types":["Official","Google","GoogleCloud","Azure","DeepL"],"Type":"Google","Languages":["ZH","EN"],"Language":"AUTO","Position":"Forward","CacheSize":20,"Tolerance":1000,
-			"Translate":{
-				"ShowOnly":false
+		"Settings": {"Switch":true},
+	},
+	"Universal": {
+		"Settings": {
+			"Switch": true,
+			"Types": ["Official", "Translate"],
+			"Languages": ["ZH", "EN"],
+			"Official": {
+				"CacheSize": 100,
+				"Position": "Forward",
+				"Offset": 0,
+				"Tolerance": 1000
 			},
-			"External":{
-				"URL":null,"Offset":0,"ShowOnly":false
+			"Translate": {
+				"Type": "Google",
+				"Types": ["Google", "GoogleCloud", "Azure", "DeepL"],
+				"ShowOnly": false,
+				"Position": "Forward",
+				"CacheSize": 10,
+				"Method": "Part",
+				"Times": 3,
+				"Interval": 100,
+				"Exponential": true
 			},
-			"Verify": {
-				"GoogleCloud":{"Method":"Part","Mode":"Key","Auth":null},
-				"Azure":{"Method":"Part","Version":"Azure","Region":null,"Mode":"Key","Auth":null},
-				"DeepL":{"Method":"Part","Version":"Free","Auth":null},
+			"External": {
+				"URL": null,
+				"ShowOnly": false,
+				"Position": "Forward",
+				"Offset": 0,
+				"Tolerance": 1000
 			},
-			"Advanced": {
-				"Translator":{"Times":3,"Interval":100,"Exponential":true}
+			"API": {
+				"GoogleCloud": {
+					"Mode": "Key",
+					"Auth": null
+				},
+				"Azure": {
+					"Version": "Azure",
+					"Region": null,
+					"Mode": "Key",
+					"Auth": null
+				},
+				"DeepL": {
+					"Version": "Free",
+					"Auth": null
+				}
 			}
 		},
 		"Configs": {
-			"Languages":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]}
+			"Languages": {
+				"Official":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]},
+				"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
+				"Microsoft":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"yue","ZH-HANT":"zh-Hant"},
+				"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT-PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}
+			}
 		}
 	},
 	"YouTube": {
@@ -41,15 +77,6 @@ const DataBase = {
 	"Netflix": {
 		"Configs": {
 			"Languages":{"AR":"ar","CS":"cs","DA":"da","DE":"de","EN":"en","EN-GB":"en-GB","EN-US":"en-US","EN-US SDH":"en-US SDH","ES":"es","ES-419":"es-419","ES-ES":"es-ES","FI":"fi","FR":"fr","HE":"he","HR":"hr","HU":"hu","ID":"id","IT":"it","JA":"ja","KO":"ko","MS":"ms","NB":"nb","NL":"nl","PL":"pl","PT":"pt","PT-PT":"pt-PT","PT-BR":"pt-BR","RO":"ro","RU":"ru","SV":"sv","TH":"th","TR":"tr","UK":"uk","VI":"vi","IS":"is","ZH":"zh","ZH-HANS":"zh-Hans","ZH-HK":"zh-HK","ZH-HANT":"zh-Hant"}
-		}
-	},
-	"Translate": {
-		"Configs": {
-			"Languages":{
-				"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
-				"Microsoft":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"yue","ZH-HANT":"zh-Hant"},
-				"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT-PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}
-			}
 		}
 	}
 };
@@ -72,7 +99,7 @@ const DataBase = {
 			const Platform = getPlatform(HOST);
 			$.log(`⚠ ${$.name}`, `Platform: ${Platform}`, "");
 			// 设置自定义参数
-			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Type, Languages = url?.params?.sublang || Settings.Languages;
+			const Type = url?.params?.subtype || url?.params?.dualsubs || Settings.Translate.Type, Languages = url?.params?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 获取字幕格式
 			const Format = url.params?.fmt || url.params?.format || PATHs?.[PATHs?.length - 1]?.split(".")?.[1], Kind = url.params?.kind;
@@ -83,14 +110,12 @@ const DataBase = {
 			switch (Type) {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
-					// 设置字幕偏移参数
-					Settings.External.Offset = 0;
 					// 获取字幕文件地址vtt缓存（map）
-					const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches?.Subtitles, Settings?.Languages);
+					const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Subtitles, Settings.Languages);
 					// 获取字幕播放列表m3u8缓存（map）
-					const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches?.Playlists, Settings?.Languages);
+					const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches?.Playlists, Settings.Languages);
 					// 获取字幕文件地址vtt缓存（map）
-					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches?.Playlists, Caches?.Subtitles, Settings?.Languages);
+					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists, Caches.Subtitles, Settings.Languages);
 					// 获取官方字幕请求
 					if (subtitlesURIArray1.length) {
 						$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
@@ -100,6 +125,10 @@ const DataBase = {
 						// 构造请求队列
 						requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
 					};
+					break;
+				case "Translate":
+				default:
+					$.log(`🚧 ${$.name}, 翻译字幕`, "");
 					break;
 				case "External":
 					$.log(`🚧 ${$.name}, 外挂字幕`, "");
@@ -111,14 +140,6 @@ const DataBase = {
 						}
 					};
 					requests.push(request);
-					break;
-				case "Translate":
-				case "Google":
-				case "GoogleCloud":
-				case "Azure":
-				case "DeepL":
-				default:
-					$.log(`🚧 ${$.name}, 翻译字幕`, "");
 					break;
 			};
 			// 创建第二字幕Object
@@ -135,9 +156,6 @@ const DataBase = {
 				case "m3u8":
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
-					//body = M3U8.parse($response.body);
-					//$.log(body);
-					//$response.body = M3U8.stringify(PlayList);
 				case "srv3":
 				case "text/xml":
 				case "application/xml":
@@ -145,16 +163,13 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = XML.parse(SecondSub);
-						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.External.Offset, Settings.Tolerance, [Settings.Position]);
+						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$response.body = XML.stringify(body);
 					break;
 				case "text/plist":
 				case "application/plist":
 				case "application/x-plist":
-					//body = await PLIST("plist2json", $request.body);
-					//$.log(body);
-					//$request.body = await PLIST("json2plist", body);
 					break;
 				case "vtt":
 				case "webvtt":
@@ -165,41 +180,58 @@ const DataBase = {
 					// 处理类型
 					switch (Type) {
 						case "Official":
-						case "External":
+							$.log(`🚧 ${$.name}`, "官方字幕", "");
 							for await (let request of requests) {
 								SecondSub = await $.http.get(request).then(response => response.body);
 								SecondSub = VTT.parse(SecondSub);
-								body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.External.Offset, Settings.Tolerance, [Settings.Position]);
+								body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Official.Offset, Settings.Official.Tolerance, [Settings.Official.Position]);
 							};
 							break;
 						case "Translate":
-						case "Google":
-						case "GoogleCloud":
-						case "Azure":
-						case "DeepL":
 						default:
 							$.log(`🚧 ${$.name}`, `翻译字幕`, "");
-							switch (Settings?.Verify?.[Type]?.Method) {
+							switch (Settings?.Translate?.Method) {
 								default:
 								case "Part": // Part 逐段翻译
 									let Full = await Promise.all(body.body.map(async item => item.text));
-									let length = (Type == "Google") ? 127 : (Type == "GoogleCloud") ? 127 : (Type == "Azure") ? 99 : (Type == "DeepL") ? 49 : 127;
+									let length = 127;
+									switch (Settings.Translate.Type) {
+										case "Google":
+										case "GoogleCloud":
+										default:
+											length = 127;
+											break;
+										case "Azure":
+											length = 99;
+											break;
+										case "DeepL":
+											length = 49;
+											break;
+									};
 									let Parts = await chunk(Full, length);
 									Parts = await Promise.all(Parts.map(async Part => {
-										return await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], Part, Settings?.Verify], Settings?.Advanced?.Translator?.Times, Settings?.Advanced?.Translator?.Interval, Settings?.Advanced?.Translator?.Exponential); // 3, 100, true
+										return await retry(Translator, [Settings.Translate.Type, Settings.Languages[1], Settings.Languages[0], Part, Settings?.API, Configs.Languages], Settings?.Translate?.Times, Settings?.Translate?.Interval, Settings?.Translate?.Exponential); // 3, 100, true
 									})).then(parts => parts.flat(Infinity));
 									body.body = await Promise.all(body.body.map(async (item, i) => {
-										item.text = await combineText(item.text, Parts[i], Settings.Position);
+										item.text = await combineText(item.text, Parts[i], Settings?.Translate?.Position);
 										return item
 									}));
 									break;
 								case "Row": // Row 逐行翻译
 									body.body = await Promise.all(body.body.map(async item => {
-										let text2 = await retry(Translator, [Type, Settings.Languages[1], Settings.Languages[0], item.text, Settings?.Verify], Settings?.Advanced?.Translator?.Times, Settings?.Advanced?.Translator?.Interval, Settings?.Advanced?.Translator?.Exponential); // 3, 100, true
-										item.text = await combineText(item.text, text2[0], Settings.Position);
+										let text2 = await retry(Translator, [Settings.Translate.Type, Settings.Languages[1], Settings.Languages[0], item.text, Settings?.API, Configs.Languages], Settings?.Translate?.Times, Settings?.Translate?.Interval, Settings?.Translate?.Exponential); // 3, 100, true
+										item.text = await combineText(item.text, text2[0], Settings?.Translate?.Position);
 										return item
 									}));
 									break;
+							};
+							break;
+						case "External":
+							$.log(`🚧 ${$.name}, 外挂字幕`, "");
+							for await (let request of requests) {
+								SecondSub = await $.http.get(request).then(response => response.body);
+								SecondSub = VTT.parse(SecondSub);
+								body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.External.Offset, Settings.External.Tolerance, [Settings.External.Position]);
 							};
 							break;
 					};
@@ -213,7 +245,7 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = JSON.parse(SecondSub);
-						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.External.Offset, Settings.Tolerance, [Settings.Position]);
+						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$response.body = JSON.stringify(body);
 					break;
@@ -221,12 +253,6 @@ const DataBase = {
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "applecation/octet-stream":
-					//$.log(`🚧 ${$.name}`, `$response.body: ${JSON.stringify($response.body)}`, "");
-					//let rawBody = $.isQuanX() ? new Uint8Array($response.bodyBytes) : $response.body;
-					//$.log(`🚧 ${$.name}`, `isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
-					// 写入二进制数据
-					//if ($.isQuanX()) $response.bodyBytes = rawBody
-					//else $response.body = rawBody;
 					break;
 			};
 			break;
@@ -318,31 +344,20 @@ function getPlatform(host) {
  * @return {Object} { Settings, Caches, Configs }
  */
 function setENV(name, platform, database) {
-	$.log(`⚠ ${$.name}, Set Environment Variables`, "");
+	$.log(`☑️ ${$.name}, Set Environment Variables`, "");
 	let { Settings, Caches, Configs } = getENV(name, platform, database);
 	/***************** Settings *****************/
 	traverseObject(Settings, (key, value) => {
-		if (value === "true" && value === "false") value = JSON.parse(value); // BoxJs字符串转Boolean
-		if (typeof value === "string") value = value?.includes(",") ? value?.split(",") : value; // BoxJs字符串转数组
+		if (value === "true" && value === "false") value = JSON.parse(value); // 字符串转Boolean
+		else if (typeof value === "string") {
+			if (value?.includes(",")) value = value.split(","); // 字符串转数组
+			else if (!isNaN(value)) value = parseInt(value, 10) // 字符串转数字
+		};
 		return value;
 	});
-	//Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
-	//if (typeof Settings?.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
-	if (Array.isArray(Settings?.Types)) {
-		if (!Settings?.Verify?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
-		if (!Settings?.Verify?.Azure?.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
-		if (!Settings?.Verify?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
-	}
-	if (Settings?.CacheSize) Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
-	if (Settings?.Tolerance) Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
-	if (Settings?.External?.Offset) Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
-	//if (Settings?.External?.ShowOnly) Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
-	if (Settings?.Advanced?.Translator?.Times) Settings.Advanced.Translator.Times = parseInt(Settings?.Advanced?.Translator?.Times, 10) // BoxJs字符串转数字
-	if (Settings?.Advanced?.Translator?.Interval) Settings.Advanced.Translator.Interval = parseInt(Settings?.Advanced?.Translator?.Interval, 10) // BoxJs字符串转数字
-	//if (Settings?.Advanced?.Translator?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Advanced?.Translator?.Exponential) //  BoxJs字符串转Boolean
-	$.log(`🎉 ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	//$.log(`🎉 ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
 	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/
@@ -430,7 +445,7 @@ function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages
 	const subtitlesPlaylistValue = playlistsCache?.get(url) || {};
 	let subtitlesPlaylistURL0 = subtitlesPlaylistValue?.[languages[0]]?.[index]?.URL || subtitlesPlaylistValue?.[languages[0]]?.[0]?.URL;
 	let subtitlesPlaylistURL1 = subtitlesPlaylistValue?.[languages[1]]?.[index]?.URL || subtitlesPlaylistValue?.[languages[1]]?.[0]?.URL;
-	//$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesPlaylistURL0: ${subtitlesPlaylistURL0}, subtitlesPlaylistURL1: ${subtitlesPlaylistURL1}`, "");
+	$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesPlaylistURL0: ${subtitlesPlaylistURL0}, subtitlesPlaylistURL1: ${subtitlesPlaylistURL1}`, "");
 	// 查找字幕文件地址vtt缓存（map）
 	let subtitlesURIArray0 = subtitlesCache.get(subtitlesPlaylistURL0) || [];
 	let subtitlesURIArray1 = subtitlesCache.get(subtitlesPlaylistURL1) || [];
@@ -563,21 +578,22 @@ async function combineText(text1, text2, position) { return (position == "Forwar
  * @param {String} source - source
  * @param {String} target - target
  * @param {String} text - text
- * @param {Object} verify - verify
+ * @param {Object} api - API
+ * @param {Object} database - Languages Database
  * @return {Promise<*>}
  */
- async function Translator(type = "Google", source = "", target = "", text = "", verify = {}) {
-	$.log(`⚠ ${$.name}, Translator`, `orig: ${text}`, "");
+async function Translator(type = "Google", source = "", target = "", text = "", api = {}, database) {
+	$.log(`☑️ ${$.name}, Translator`, `orig: ${text}`, "");
 	// 构造请求
-	let request = await GetRequest(type, source, target, text);
+	let request = await GetRequest(type, source, target, text, database);
 	// 发送请求
 	let trans = await GetData(type, request);
 	$.log(`🚧 ${$.name}, Translator`, `trans: ${trans}`, "");
 	return trans
 	/***************** Fuctions *****************/
 	// Get Translate Request
-	async function GetRequest(type = "", source = "", target = "", text = "") {
-		$.log(`⚠ ${$.name}, Get Translate Request`, "");
+	async function GetRequest(type = "", source = "", target = "", text = "", database) {
+		$.log(`☑️ ${$.name}, Get Translate Request`, "");
 		const UAPool = [
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
@@ -628,27 +644,27 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				]
 				request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 3))] // 随机Request, 排除最后三项
 				text = (Array.isArray(text)) ? text.join("\n\n") : text;
-				request.url = request.url + `&sl=${DataBase.Translate.Configs.Languages.Google[source]}&tl=${DataBase.Translate.Configs.Languages.Google[target]}&q=${encodeURIComponent(text)}`;
+				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
-				request.url = `https://translation.googleapis.com/language/translate/v2/?key=${verify.GoogleCloud?.Auth}`;
+				request.url = `https://translation.googleapis.com/language/translate/v2/?key=${api.GoogleCloud?.Auth}`;
 				request.headers = {
-					//"Authorization": `Bearer ${verify.GoogleCloud?.Auth}`,
+					//"Authorization": `Bearer ${api.GoogleCloud?.Auth}`,
 					"User-Agent": "DualSubs",
 					"Content-Type": "application/json; charset=utf-8"
 				};
 				request.body = JSON.stringify({
 					"q": text,
-					"source": DataBase.Translate.Configs.Languages.Google[source],
-					"target": DataBase.Translate.Configs.Languages.Google[target],
+					"source": database.Google[source],
+					"target": database.Google[target],
 					"format": "html",
-					//"key": verify.GoogleCloud?.Key
+					//"key": api.GoogleCloud?.Key
 				});
 				break;
 			case "Bing":
 				// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
-				BaseURL = (verify.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
-					: (verify.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
+				BaseURL = (api.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+					: (api.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
 						: "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
 				request.url = `${BaseURL}`;
 				request.headers = {
@@ -661,29 +677,29 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 					"fromLang": "auto-detect",
 					//"text": '%s' % trans,
 					"text": text,
-					//"from": DataBase.Translate.Configs.Languages.Microsoft[source],
-					"to": DataBase.Translate.Configs.Languages.Microsoft[target]
+					//"from": database.Microsoft[source],
+					"to": database.Microsoft[target]
 				});
 				break;
 			case "Azure":
 				// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 				// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-				BaseURL = (verify.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
-					: (verify.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
+				BaseURL = (api.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
+					: (api.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
 						: "https://api.cognitive.microsofttranslator.com"
-				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${DataBase.Translate.Configs.Languages.Microsoft[target]}&from=${DataBase.Translate.Configs.Languages.Microsoft[source]}`;
+				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${database.Microsoft[target]}&from=${database.Microsoft[source]}`;
 				request.headers = {
 					"Content-Type": "application/json; charset=UTF-8",
 					"Accept": "application/json, text/javascript, */*; q=0.01",
 					"Accept-Language": "zh-hans"
-					//"Authorization": `Bearer ${verify.Azure?.Auth}`,
-					//"Ocp-Apim-Subscription-Key": verify.Azure?.Auth,
-					//"Ocp-Apim-Subscription-Region": verify.Azure?.Region, // chinanorth, chinaeast2
+					//"Authorization": `Bearer ${api.Azure?.Auth}`,
+					//"Ocp-Apim-Subscription-Key": api.Azure?.Auth,
+					//"Ocp-Apim-Subscription-Region": api.Azure?.Region, // chinanorth, chinaeast2
 					//"X-ClientTraceId": uuidv4().toString()
 				};
-				if (verify.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = verify.Azure.Region;
-				if (verify?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = verify.Azure.Auth;
-				else if (verify?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${verify.Azure.Auth}`;
+				if (api.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = api.Azure.Region;
+				if (api?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = api.Azure.Auth;
+				else if (api?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${api.Azure.Auth}`;
 				text = (Array.isArray(text)) ? text : [text];
 				texts = await Promise.all(text?.map(async item => { return { "text": item } }))
 				request.body = JSON.stringify(texts);
@@ -694,8 +710,8 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				*/
 				break;
 			case "DeepL":
-				BaseURL = (verify.DeepL.Version == "Free") ? "https://api-free.deepl.com"
-					: (verify.DeepL.Version == "Pro") ? "https://api.deepl.com"
+				BaseURL = (api.DeepL.Version == "Free") ? "https://api-free.deepl.com"
+					: (api.DeepL.Version == "Pro") ? "https://api.deepl.com"
 						: "https://api-free.deepl.com"
 				request.url = `${BaseURL}/v2/translate`
 				request.headers = {
@@ -703,13 +719,13 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 					"User-Agent": "DualSubs",
 					"Content-Type": "application/x-www-form-urlencoded"
 				};
-				const source_lang = (DataBase.Translate.Configs.Languages.DeepL[source].includes("EN")) ? "EN"
-					: (DataBase.Translate.Configs.Languages.DeepL[source].includes("PT")) ? "PT"
-						: DataBase.Translate.Configs.Languages.DeepL[source];
-				const target_lang = (DataBase.Translate.Configs.Languages.DeepL[target] == "EN") ? "EN-US"
-					: (DataBase.Translate.Configs.Languages.DeepL[target] == "PT") ? "PT-PT"
-						: DataBase.Translate.Configs.Languages.DeepL[target];
-				const BaseBody = `auth_key=${verify.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+				const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
+					: (database.DeepL[source].includes("PT")) ? "PT"
+						: database.DeepL[source];
+				const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
+					: (database.DeepL[target] == "PT") ? "PT-PT"
+						: database.DeepL[target];
+				const BaseBody = `auth_key=${api.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
 				text = (Array.isArray(text)) ? text : [text];
 				texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
 				request.body = BaseBody + texts.join("");
@@ -723,9 +739,9 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				};
 				request.body = {
 					"q": text,
-					"from": DataBase.Translate.Configs.Languages.Baidu[source],
-					"to": DataBase.Translate.Configs.Languages.Baidu[target],
-					"appid": verify.BaiduFanyi?.Key,
+					"from": database.Baidu[source],
+					"to": database.Baidu[target],
+					"appid": api.BaiduFanyi?.Key,
 					"salt": uuidv4().toString(),
 					"sign": "",
 				};
@@ -739,9 +755,9 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				};
 				request.body = {
 					"q": text,
-					"from": DataBase.Translate.Configs.Languages.Youdao[source],
-					"to": DataBase.Translate.Configs.Languages.Youdao[target],
-					"appKey": verify.YoudaoAI?.Key,
+					"from": database.Youdao[source],
+					"to": database.Youdao[target],
+					"appKey": api.YoudaoAI?.Key,
 					"salt": uuidv4().toString(),
 					"signType": "v3",
 					"sign": "",
@@ -749,7 +765,7 @@ async function combineText(text1, text2, position) { return (position == "Forwar
 				};
 				break;
 		}
-		//$.log(`🎉 ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
+		//$.log(`✅ ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
 	// Get Translate Data

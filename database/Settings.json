@@ -1,0 +1,45 @@
+{
+	"Switch": true,
+	"Types": ["Official", "Translate"],
+	"Languages": ["ZH", "EN"],
+	"Official": {
+		"CacheSize": 100,
+		"Position": "Forward",
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"Translate": {
+		"Type": "Google",
+		"Types": ["Google", "GoogleCloud", "Azure", "DeepL"],
+		"ShowOnly": false,
+		"Position": "Forward",
+		"CacheSize": 10,
+		"Method": "Part",
+		"Times": 3,
+		"Interval": 100,
+		"Exponential": true
+	},
+	"External": {
+		"URL": null,
+		"ShowOnly": false,
+		"Position": "Forward",
+		"Offset": 0,
+		"Tolerance": 1000
+	},
+	"API": {
+		"GoogleCloud": {
+			"Mode": "Key",
+			"Auth": null
+		},
+		"Azure": {
+			"Version": "Azure",
+			"Region": null,
+			"Mode": "Key",
+			"Auth": null
+		},
+		"DeepL": {
+			"Version": "Free",
+			"Auth": null
+		}
+	}
+}

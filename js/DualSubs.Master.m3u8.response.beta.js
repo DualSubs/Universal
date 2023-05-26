@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.3(4) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(22) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -324,7 +324,7 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 	let datas = [];
 	for (let langcode of langcodes) {
 		$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
-		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === `\"${langcode.toLowerCase()}\"`));
+		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === `${langcode.toLowerCase()}`));
 		if (datas.length !== 0) break;
 		/*
 		if (datas.length !== 0) {
@@ -338,16 +338,22 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 		datas = [
 			{
 				"OPTION": {
-					"NAME": `\"${langCode}\"`,
-					"LANGUAGE": `\"${langCode}\"`,
+					"NAME": `${langCode}`,
+					"LANGUAGE": `${langCode}`,
 				},
 				"URL": aPath(url, null)
 			}
 		]
 		$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, "未找到匹配语言", "");
 	} else {
+		/*
 		datas = datas.map(data => {
 			data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+			return data;
+		})
+		*/
+		datas = datas.map(data => {
+			data.URL = aPath(url, data?.OPTION?.URI ?? null);
 			return data;
 		})
 		$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, "已找到匹配语言", "");
@@ -363,17 +369,18 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
 		let Data = { ...data };
 		if (data?.OPTION) {
-			Data.OPTION.NAME = data.OPTION.NAME ?? `\"${langCode}\"`;
-			Data.OPTION.LANGUAGE = data.OPTION.LANGUAGE ?? `\"${langCode}\"`;
+			Data.OPTION.NAME = data.OPTION.NAME ?? `${langCode}`;
+			Data.OPTION.LANGUAGE = data.OPTION.LANGUAGE ?? `${langCode}`;
 		} else {
 			Data.OPTION = {
-				"NAME": `\"${langCode}\"`,
-				"LANGUAGE": `\"${langCode}\"`,
+				"NAME": `${langCode}`,
+				"LANGUAGE": `${langCode}`,
 			};
 		}
 		//Data.Name = data?.OPTION?.NAME?.replace(/\"/g, "") ?? langCode;
 		//Data.Language = data?.OPTION?.LANGUAGE?.replace(/\"/g, "") ?? langCode;
-		Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		//Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
+		Data.URL = aPath(url, data?.OPTION?.URI || null);
 		//$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
 		return Data
 	};
@@ -410,8 +417,8 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 			} else if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
 				//$.log(`🚧 ${$.name}`, "obj2?.OPTION.FORCED", obj2?.OPTION.FORCED, "");
 				if (obj1?.OPTION?.["GROUP-ID"] == obj2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
-					//$.log(`🚧 ${$.name}`, "obj1?.OPTION[\"GROUP-ID\"]", obj1?.OPTION["GROUP-ID"], "");
-					//$.log(`🚧 ${$.name}`, "obj2?.OPTION[\"GROUP-ID\"]", obj2?.OPTION["GROUP-ID"], "");
+					//$.log(`🚧 ${$.name}`, "obj1?.OPTION[GROUP-ID]", obj1?.OPTION["GROUP-ID"], "");
+					//$.log(`🚧 ${$.name}`, "obj2?.OPTION[GROUP-ID]", obj2?.OPTION["GROUP-ID"], "");
 					// 创建字幕选项
 					let Options = [];
 					// 兼容性修正
@@ -442,44 +449,44 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 	// Get DualSubs Subtitle Options
 	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
 		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
-		const NAME1 = obj1?.OPTION?.NAME?.replace(/\"/g, ""), NAME2 = obj2?.OPTION?.NAME?.replace(/\"/g, "")
-		const LANGUAGE1 = obj1?.OPTION?.LANGUAGE?.replace(/\"/g, ""), LANGUAGE2 = obj2?.OPTION?.LANGUAGE?.replace(/\"/g, "")
+		const NAME1 = obj1?.OPTION?.NAME, NAME2 = obj2?.OPTION?.NAME;
+		const LANGUAGE1 = obj1?.OPTION?.LANGUAGE, LANGUAGE2 = obj2?.OPTION?.LANGUAGE;
 		return types.map(type => {
 			// 复制此语言选项
 			let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
 				: JSON.parse(JSON.stringify(obj2))
 			// 修改名称
-			//newSub.OPTION.NAME = `\"${obj1.Name} / ${obj2.Name} [${type}]\"`
-			newSub.OPTION.NAME = `\"${NAME1} / ${NAME2} [${type}]\"`
+			//newSub.OPTION.NAME = `${obj1.Name} / ${obj2.Name} [${type}]`
+			newSub.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
 			// 修改语言代码
-			//newSub.OPTION.LANGUAGE = (standard) ? `\"${obj1.Language}\"` : `\"${obj2.Language}\"`
-			newSub.OPTION.LANGUAGE = (standard) ? `\"${LANGUAGE1}\"` : `\"${LANGUAGE2}\"`
+			//newSub.OPTION.LANGUAGE = (standard) ? `${obj1.Language}` : `${obj2.Language}`
+			newSub.OPTION.LANGUAGE = (standard) ? `${LANGUAGE1}` : `${LANGUAGE2}`
 			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `\"${LANGUAGE2}\"` : `\"${LANGUAGE1}\"`
+			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `${LANGUAGE2}` : `${LANGUAGE1}`
 			// 修改链接
-			newSub.OPTION.URI = (newSub?.OPTION?.URI?.includes("?")) ? `\"${newSub?.OPTION?.URI?.replace(/\"/g, "")}&dualsubs=${type}\"`
-				: `\"${newSub?.OPTION?.URI?.replace(/\"/g, "")}?dualsubs=${type}\"`
+			newSub.OPTION.URI = (newSub?.OPTION?.URI?.includes("?")) ? `${newSub?.OPTION?.URI}&dualsubs=${type}`
+				: `${newSub?.OPTION?.URI}?dualsubs=${type}`
 			// 自动选择
 			newSub.OPTION.AUTOSELECT = "YES"
 			// 兼容性修正
 			switch (platform) {
 				case "Apple":
-					newSub.OPTION.NAME = `\"${NAME1}/${NAME2}[${type}]\"`
-					newSub.OPTION.LANGUAGE = `\"${LANGUAGE1}/${LANGUAGE2} [${type}]\"`
+					newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+					newSub.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`
 					break;
 				case "Disney_Plus":
-					newSub.OPTION.NAME = `\"${NAME1}/${NAME2}[${type}]\"`
-					newSub.OPTION.LANGUAGE = `\"${LANGUAGE1} / ${LANGUAGE2} [${type}]\"`
+					newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+					newSub.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
 					break;
 				case "Prime_Video":
-					newSub.OPTION.NAME = `\"${NAME1}/${NAME2}[${type}]\"`
+					newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
 					break;
 				case "Hulu":
 				case "Paramount_Plus":
 				case "Discovery_Plus_Ph":
-					//newSub.OPTION.NAME = `\"${NAME1} / ${NAME2} [${type}]\"`
-					newSub.OPTION.LANGUAGE = `\"${LANGUAGE1} / ${LANGUAGE2} [${type}]\"`
-					//newSub.OPTION["ASSOC-LANGUAGE"] = `\"${LANGUAGE2} [${type}]\"`
+					//newSub.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
+					newSub.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
+					//newSub.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`
 					break;
 			};
 			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
@@ -576,4 +583,86 @@ function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.2",this.
 function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $argument&&Boolean($argument)){let t=Object.fromEntries($argument.split("&").map((t=>t.split("="))));for(let e in t)l(s,e,t[e])}let g={...n?.Default?.Settings,...n?.[e]?.Settings,...i?.[e]?.Settings,...s},f={...n?.Default?.Configs,...n?.[e]?.Configs,...i?.[e]?.Configs},o=i?.[e]?.Caches||{};return"string"==typeof o&&(o=JSON.parse(o)),{Settings:g,Caches:o,Configs:f};function l(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}
 
 // https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
-function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.7.2",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){const t=/^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;let s=n.replace(/\r\n/g,"\n").split(/[\r\n]+#/).map((n=>n.match(t)?.groups??n));return s=s.map((n=>(/=/.test(n?.OPTION)&&this.opts.includes(n.TYPE)&&(n.OPTION=Object.fromEntries(n.OPTION.split(/,(?=[A-Z])/).map((n=>n.split(/=(.*)/))))),n))),s}stringify(n=new Array){n?.[0]?.includes("#EXTM3U")||n.unshift("#EXTM3U");let t=n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((n=>n.join("="))).join(",")),n?.URI?n.TYPE+":"+n.OPTION+this.newLine+n.URI:n?.OPTION?n.TYPE+":"+n.OPTION:n?.TYPE?n.TYPE:n)));return t=t.join(this.newLine+"#"),t}}(n)}
+//function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.7.2",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){const t=/^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;let s=n.replace(/\r\n/g,"\n").split(/[\r\n]+#/).map((n=>n.match(t)?.groups??n));return s=s.map((n=>(/=/.test(n?.OPTION)&&this.opts.includes(n.TYPE)&&(n.OPTION=Object.fromEntries(n.OPTION.split(/,(?=[A-Z])/).map((n=>n.split(/=(.*)/))))),n))),s}stringify(n=new Array){n?.[0]?.includes("#EXTM3U")||n.unshift("#EXTM3U");let t=n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((n=>n.join("="))).join(",")),n?.URI?n.TYPE+":"+n.OPTION+this.newLine+n.URI:n?.OPTION?n.TYPE+":"+n.OPTION:n?.TYPE?n.TYPE:n)));return t=t.join(this.newLine+"#"),t}}(n)}
+// refer: https://datatracker.ietf.org/doc/html/draft-pantos-http-live-streaming-08
+function EXTM3U(opts) {
+	return new (class {
+		constructor(opts) {
+			this.name = "EXTM3U v0.8.0";
+			this.opts = opts;
+			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
+		};
+
+		parse(m3u8 = new String) {
+			$.log(`🚧 ${$.name}, parse EXTM3U`, "");
+			/***************** v0.7.0-beta *****************/
+			const EXTM3U_Regex = /^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;
+			let json = m3u8.replace(/\r\n/g, "\n").split(/[\r\n]+#/);
+			$.log(`🚧 ${$.name}, parse EXTM3U`, `json: ${JSON.stringify(json)}`, "");
+			json = json.map(v => v.match(EXTM3U_Regex)?.groups ?? v);
+			$.log(`🚧 ${$.name}, parse EXTM3U`, `json: ${JSON.stringify(json)}`, "");
+			json = json.map(item => {
+				$.log(`🚧 ${$.name}, parse EXTM3U`, `before: item.OPTION.split(/,\s*(?![^"]*",)/) ${JSON.stringify(`${item.OPTION}\,`?.split(/,\s*(?![^"]*",)/) ?? "")}`, "");
+				//if (/=/.test(item?.OPTION) && this.opts.includes(item.TYPE)) item.OPTION = Object.fromEntries(item.OPTION.split(/,\s*(?![^"]*",)/).map(item => item.split(/="?([^"]+)"?/)));
+				if (/=/.test(item?.OPTION)) item.OPTION = Object.fromEntries(`${item.OPTION}\,`.split(/,\s*(?![^"]*",)/)
+					.slice(0, -1)
+					.map(item => {
+						item = item.split(/=(.*)/)
+						if (!isNaN(item[1])) item[1] = parseInt(item[1], 10)
+						else item[1] = item[1].replace(/^"(.*)"$/, "$1")
+						return item;
+					}));
+				return item
+			});
+			$.log(`🚧 ${$.name}, parse WebVTT`, `json: ${JSON.stringify(json)}`, "");
+			return json
+		};
+
+		stringify(json = new Array) {
+			$.log(`🚧 ${$.name}, stringify EXTM3U`, "");
+			if (!json?.[0]?.includes("#EXTM3U")) json.unshift("#EXTM3U")
+			const OPTION_value_Regex = /^((-?\d+[x.\d]+)|[0-9A-Z-]+)$/;
+			let m3u8 = json.map(item => {
+				$.log(`🚧 ${$.name}, stringify EXTM3U`, `before: item.OPTION ${JSON.stringify(item.OPTION)}`, "");
+				if (typeof item?.OPTION == "object") item.OPTION = Object.entries(item.OPTION).map(option => {
+					
+					switch (item.TYPE) {
+						case "EXT-X-SESSION-DATA":
+							option[1] = `"${option[1]}"`;
+							break;
+						case "EXT-X-MEDIA":
+						default:
+							switch (option[0]) {
+								case "INSTREAM-ID":
+								case "HDCP-LEVEL":
+								case "CHANNELS":
+								case "URI":
+									option[1] = `"${option[1]}"`;
+									break;
+								default:
+									if (typeof option[1] === "number") option[1] = option[1];
+									else if (!OPTION_value_Regex.test(option[1])) option[1] = `"${option[1]}"`;
+									break;
+							};
+							break;
+					};
+					/*
+					if (item.TYPE === "EXT-X-SESSION-DATA") option[1] = `"${option[1]}"`;
+					else if (typeof option[1] === "number") option[1] = option[1];
+					//else if (!isNaN(option[1])) option[1] = `"${option[1]}"`;
+					else if (!OPTION_value_Regex.test(option[1])) option[1] = `"${option[1]}"`;
+					*/
+					return option.join("=");
+				}).join(",");
+				/***************** v0.7.0-beta *****************/
+				return item = (item.URI) ? item.TYPE + ":" + item.OPTION + this.newLine + item.URI
+					: (item.OPTION) ? item.TYPE + ":" + item.OPTION
+						: (item.TYPE) ? item.TYPE
+							: item
+			})
+			m3u8 = m3u8.join(this.newLine + "#")
+			$.log(`🚧 ${$.name}, stringify EXTM3U`, `m3u8: ${m3u8}`, "");
+			return m3u8
+		};
+	})(opts)
+};

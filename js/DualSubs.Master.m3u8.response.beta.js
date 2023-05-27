@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(11) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(12) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -204,12 +204,25 @@ const DataBase = {
 							$.log(`🚧 ${$.name}, 有次选字幕`, "");
 							playlistCache[Settings.Languages[0]]?.forEach(playlist0 => {
 								playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
-									if (playlist1?.OPTION?.URI === playlist0.OPTION.URI) {
+									if (playlist0?.OPTION?.["GROUP-ID"] === playlist1?.OPTION?.["GROUP-ID"]) {
 										let index = body.findIndex(item => item?.OPTION?.URI === playlist0.OPTION.URI);
-										// 创建字幕选项
-										let options = Settings.Types.map(type => setOption(Platform, playlist0, playlist1, type, Standard));
-										if (Standard == true) body.splice(index + 1, 0, ...options)
-										else body.splice(index, 1, ...options);
+										// 兼容性修正
+										switch (Platform) {
+											case "Apple":
+												if (playlist0?.OPTION.CHARACTERISTICS == playlist1?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+													// 创建字幕选项
+													let options = Settings.Types.map(type => setOption(Platform, playlist0, playlist1, type, Standard));
+													if (Standard == true) body.splice(index + 1, 0, ...options)
+													else body.splice(index, 1, ...options);
+												}
+												break;
+											default:
+												// 创建字幕选项
+												let options = Settings.Types.map(type => setOption(Platform, playlist0, playlist1, type, Standard));
+												if (Standard == true) body.splice(index + 1, 0, ...options)
+												else body.splice(index, 1, ...options);
+												break;
+										};
 									};
 								});
 							});

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(22) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(26) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["EXT-X-MEDIA", "\n"]);
 const DataBase = {
@@ -117,7 +117,7 @@ const DataBase = {
 				case "application/vnd.apple.mpegurl":
 					// 序列化M3U8
 					body = M3U8.parse($response.body);
-					$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
+					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// 写入字幕播放列表m3u8缓存（map）
 					const { subtitlesPlaylist } = await setPlaylistCache($request.url, body, Caches.Playlists, Settings.Languages, Configs.Languages.Official);
 					// 格式化缓存
@@ -597,16 +597,10 @@ function EXTM3U(opts) {
 			$.log(`🚧 ${$.name}, parse EXTM3U`, "");
 			/***************** v0.7.0-beta *****************/
 			const EXTM3U_Regex = /^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;
-			let json = m3u8.replace(/\r\n/g, "\n").split(/[\r\n]+#/);
-			$.log(`🚧 ${$.name}, parse EXTM3U`, `json: ${JSON.stringify(json)}`, "");
-			json = json.map(v => v.match(EXTM3U_Regex)?.groups ?? v);
-			$.log(`🚧 ${$.name}, parse EXTM3U`, `json: ${JSON.stringify(json)}`, "");
-			json = json.map(item => {
-				$.log(`🚧 ${$.name}, parse EXTM3U`, `before: item.OPTION.split(/,\s*(?![^"]*",)/) ${JSON.stringify(`${item.OPTION}\,`?.split(/,\s*(?![^"]*",)/) ?? "")}`, "");
+			let json = m3u8.replace(/\r\n/g, "\n").split(/[\r\n]+#/).map(v => v.match(EXTM3U_Regex)?.groups ?? v).map(item => {
+				//$.log(`🚧 ${$.name}, parse EXTM3U`, `before: item.OPTION.split(/,\s*(?![^"]*",)/) ${JSON.stringify(`${item.OPTION}\,`?.split(/,\s*(?![^"]*",)/) ?? "")}`, "");
 				//if (/=/.test(item?.OPTION) && this.opts.includes(item.TYPE)) item.OPTION = Object.fromEntries(item.OPTION.split(/,\s*(?![^"]*",)/).map(item => item.split(/="?([^"]+)"?/)));
-				if (/=/.test(item?.OPTION)) item.OPTION = Object.fromEntries(`${item.OPTION}\,`.split(/,\s*(?![^"]*",)/)
-					.slice(0, -1)
-					.map(item => {
+				if (/=/.test(item?.OPTION)) item.OPTION = Object.fromEntries(`${item.OPTION}\,`.split(/,\s*(?![^"]*",)/).slice(0, -1).map(item => {
 						item = item.split(/=(.*)/)
 						if (!isNaN(item[1])) item[1] = parseInt(item[1], 10)
 						else item[1] = item[1].replace(/^"(.*)"$/, "$1")
@@ -614,18 +608,18 @@ function EXTM3U(opts) {
 					}));
 				return item
 			});
-			$.log(`🚧 ${$.name}, parse WebVTT`, `json: ${JSON.stringify(json)}`, "");
+			//$.log(`🚧 ${$.name}, parse WebVTT`, `json: ${JSON.stringify(json)}`, "");
 			return json
 		};
 
 		stringify(json = new Array) {
-			$.log(`🚧 ${$.name}, stringify EXTM3U`, "");
+			//$.log(`🚧 ${$.name}, stringify EXTM3U`, "");
 			if (!json?.[0]?.includes("#EXTM3U")) json.unshift("#EXTM3U")
 			const OPTION_value_Regex = /^((-?\d+[x.\d]+)|[0-9A-Z-]+)$/;
 			let m3u8 = json.map(item => {
 				$.log(`🚧 ${$.name}, stringify EXTM3U`, `before: item.OPTION ${JSON.stringify(item.OPTION)}`, "");
 				if (typeof item?.OPTION == "object") item.OPTION = Object.entries(item.OPTION).map(option => {
-					
+					/*
 					switch (item.TYPE) {
 						case "EXT-X-SESSION-DATA":
 							option[1] = `"${option[1]}"`;
@@ -640,12 +634,21 @@ function EXTM3U(opts) {
 									option[1] = `"${option[1]}"`;
 									break;
 								default:
-									if (typeof option[1] === "number") option[1] = option[1];
-									else if (!OPTION_value_Regex.test(option[1])) option[1] = `"${option[1]}"`;
+									if (!isNaN(item[1])) {
+										if (typeof option[1] === "number") option[1] = option[1];
+										else if (typeof option[1] === "string") option[1] = `"${option[1]}"`
+									} else if (!OPTION_value_Regex.test(option[1])) option[1] = `"${option[1]}"`;
 									break;
 							};
 							break;
 					};
+					*/
+					if (item.TYPE === "EXT-X-SESSION-DATA") option[1] = `"${option[1]}"`;
+					else if (!isNaN(option[1])) {
+						if (typeof option[1] === "number") option[1] = option[1];
+						else if (typeof option[1] === "string") option[1] = `"${option[1]}"`;
+					} else if (option[0] === "INSTREAM-ID") option[1] = `"${option[1]}"`;
+					else if (!OPTION_value_Regex.test(option[1])) option[1] = `"${option[1]}"`;
 					/*
 					if (item.TYPE === "EXT-X-SESSION-DATA") option[1] = `"${option[1]}"`;
 					else if (typeof option[1] === "number") option[1] = option[1];
@@ -659,9 +662,8 @@ function EXTM3U(opts) {
 					: (item.OPTION) ? item.TYPE + ":" + item.OPTION
 						: (item.TYPE) ? item.TYPE
 							: item
-			})
-			m3u8 = m3u8.join(this.newLine + "#")
-			$.log(`🚧 ${$.name}, stringify EXTM3U`, `m3u8: ${m3u8}`, "");
+			}).join(this.newLine + "#");
+			//$.log(`🚧 ${$.name}, stringify EXTM3U`, `m3u8: ${m3u8}`, "");
 			return m3u8
 		};
 	})(opts)

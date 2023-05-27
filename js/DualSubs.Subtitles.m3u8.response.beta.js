@@ -2,9 +2,9 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(4) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(1) Subtitles.m3u8.response.beta");
 const URL = new URLs();
-const M3U8 = new EXTM3U(["", "\n"]);
+const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
 	"Default": {
 		"Settings": {"Switch":true},
@@ -420,4 +420,4 @@ function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.2",this.
 function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $argument&&Boolean($argument)){let t=Object.fromEntries($argument.split("&").map((t=>t.split("="))));for(let e in t)l(s,e,t[e])}let g={...n?.Default?.Settings,...n?.[e]?.Settings,...i?.[e]?.Settings,...s},f={...n?.Default?.Configs,...n?.[e]?.Configs,...i?.[e]?.Configs},o=i?.[e]?.Caches||{};return"string"==typeof o&&(o=JSON.parse(o)),{Settings:g,Caches:o,Configs:f};function l(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}
 
 // https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
-function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.7.2",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){const t=/^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;let s=n.replace(/\r\n/g,"\n").split(/[\r\n]+#/).map((n=>n.match(t)?.groups??n));return s=s.map((n=>(/=/.test(n?.OPTION)&&this.opts.includes(n.TYPE)&&(n.OPTION=Object.fromEntries(n.OPTION.split(/,(?=[A-Z])/).map((n=>n.split(/=(.*)/))))),n))),s}stringify(n=new Array){n?.[0]?.includes("#EXTM3U")||n.unshift("#EXTM3U");let t=n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((n=>n.join("="))).join(",")),n?.URI?n.TYPE+":"+n.OPTION+this.newLine+n.URI:n?.OPTION?n.TYPE+":"+n.OPTION:n?.TYPE?n.TYPE:n)));return t=t.join(this.newLine+"#"),t}}(n)}
+function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.8.1",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){const t=/^(?<TYPE>(?:EXT|AIV)[^#:]+):?(?<OPTION>.+)?[\r\n]?(?<URI>.+)?$/;return n.replace(/\r\n/g,"\n").split(/[\r\n]+#/).map((n=>n.match(t)?.groups??n)).map((n=>(/=/.test(n?.OPTION)&&(n.OPTION=Object.fromEntries(`${n.OPTION},`.split(/,\s*(?![^"]*",)/).slice(0,-1).map((n=>((n=n.split(/=(.*)/))[1]=isNaN(n[1])?n[1].replace(/^"(.*)"$/,"$1"):parseInt(n[1],10),n))))),n)))}stringify(n=new Array){n?.[0]?.includes("#EXTM3U")||n.unshift("#EXTM3U");const t=/^((-?\d+[x.\d]+)|[0-9A-Z-]+)$/;return n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((s=>("EXT-X-SESSION-DATA"===n.TYPE?s[1]=`"${s[1]}"`:isNaN(s[1])?"INSTREAM-ID"===s[0]?s[1]=`"${s[1]}"`:t.test(s[1])||(s[1]=`"${s[1]}"`):s[1]="number"==typeof s[1]?s[1]:`"${s[1]}"`,s.join("=")))).join(",")),n=n.URI?n.TYPE+":"+n.OPTION+this.newLine+n.URI:n.OPTION?n.TYPE+":"+n.OPTION:n.TYPE?n.TYPE:n))).join(this.newLine+"#")}}(n)}

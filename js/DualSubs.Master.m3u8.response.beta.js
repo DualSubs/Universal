@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(12) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(20) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -57,7 +57,7 @@ const DataBase = {
 		},
 		"Configs": {
 			"Languages": {
-				"Official":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-bg","bul"],"CS":["cs","cs-cz","ces"],"DA":["da","da-dk","dan"],"DE":["de","de-de","deu"],"EL":["el","el-gr","ell"],"EN":["en","en-us","eng","en-gb","en-uk","en-ca","en-us sdh"],"EN-CA":["en-ca","en","eng"],"EN-GB":["en-uk","en","eng"],"EN-US":["en-us","en","eng"],"EN-US SDH":["en-us sdh","en-us","en","eng"],"ES":["es","es-419","es-es","spa","es-419 sdh"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 sdh","es-419","es","spa"],"ES-ES":["es-es","es","spa"],"ET":["et","et-ee","est"],"FI":["fi","fi-fi","fin"],"FR":["fr","fr-ca","fr-fr","fra"],"FR-CA":["fr-ca","fr","fra"],"FR-DR":["fr-fr","fr","fra"],"HU":["hu","hu-hu","hun"],"ID":["id","id-id"],"IT":["it","it-it","ita"],"JA":["ja","ja-jp","jpn"],"KO":["ko","ko-kr","kor"],"LT":["lt","lt-lt","lit"],"LV":["lv","lv-lv","lav"],"NL":["nl","nl-nl","nld"],"NO":["no","nb-no","nor"],"PL":["pl","pl-pl"],"PT":["pt","pt-pt","pt-br","por"],"PT-PT":["pt-pt","pt","por"],"PT-BR":["pt-br","pt","por"],"RO":["ro","ro-ro","ron"],"RU":["ru","ru-ru","rus"],"SK":["sk","sk-sk","slk"],"SL":["sl","sl-si","slv"],"SV":["sv","sv-se","swe"],"IS":["is","is-is","isl"],"ZH":["zh","cmn","zho","zh-cn","zh-hans","cmn-hans","zh-tw","zh-hant","cmn-hant","zh-hk","yue-hant","yue"],"ZH-CN":["zh-cn","zh-hans","cmn-hans","zho"],"ZH-HANS":["zh-hans","cmn-hans","zh-cn","zho"],"ZH-HK":["zh-hk","yue-hant","yue","zho"],"ZH-TW":["zh-tw","zh-hant","cmn-hant","zho"],"ZH-HANT":["zh-hant","cmn-hant","zh-tw","zho"],"YUE":["yue","yue-hant","zh-hk","zho"],"YUE-HK":["yue-hant","yue","zh-hk","zho"]},
+				"Official":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]},
 				"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
 				"Microsoft":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"yue","ZH-HANT":"zh-Hant"},
 				"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT-PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}
@@ -125,11 +125,10 @@ const DataBase = {
 					// 读取已存数据
 					let playlistCache = Caches.Playlists.get($request.url) || {};
 					// 查找特定语言的字幕
-					const subtitlesPlaylist = body.filter(item => item?.OPTION?.TYPE == "SUBTITLES" && item?.OPTION?.FORCED !== "YES"); // 过滤强制字幕
-					$.log(`🚧 ${$.name}`, "subtitlesPlaylist", JSON.stringify(subtitlesPlaylist), "");
-					playlistCache[Settings.Languages[0]] = subtitlesPlaylist.filter(item => Configs.Languages.Official[Settings.Languages[0]].includes(item?.OPTION?.LANGUAGE.toLowerCase()));
+					$.log(`🚧 ${$.name}`, "playlistCache", JSON.stringify(playlistCache), "");
+					playlistCache[Settings.Languages[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[0]]);
 					$.log(`🚧 ${$.name}`, "playlistCache[Settings.Languages[0]]", JSON.stringify(playlistCache[Settings.Languages[0]]), "");
-					playlistCache[Settings.Languages[1]] = subtitlesPlaylist.filter(item => Configs.Languages.Official[Settings.Languages[1]].includes(item?.OPTION?.LANGUAGE.toLowerCase()));
+					playlistCache[Settings.Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[1]]);
 					$.log(`🚧 ${$.name}`, "playlistCache[Settings.Languages[1]]", JSON.stringify(playlistCache[Settings.Languages[1]]), "");
 					// 写入数据
 					Caches.Playlists.set($request.url, playlistCache);
@@ -141,63 +140,8 @@ const DataBase = {
 					//Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					// 写入选项
-					//body = await setOptions(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Standard);
-					//const subtitlesPlaylist0 = playlistCache[Settings.Languages[0]];
-					//const subtitlesPlaylist1 = playlistCache[Settings.Languages[1]];
-					// 创建字幕选项
-					//let Options = [];
-					// 判断字幕情况
+					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Standard);
 					/*
-					switch (playlistCache[Settings.Languages[0]]?.length) {
-						default: // 有首选字幕
-							$.log(`🚧 ${$.name}, 有首选字幕`, "");
-							switch (playlistCache[Settings.Languages[1]]?.length) {
-								default: // 有次选字幕
-									$.log(`🚧 ${$.name}, 有次选字幕`, "");
-									playlistCache[Settings.Languages[0]]?.forEach(playlist0 => {
-										playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
-											// 创建字幕选项
-											let options = Settings.Types.map(type => getOption(Platform, playlist0, playlist1, type, Standard));
-											let index = body.findIndex(item => item.OPTION.URI === playlist0.OPTION.URI);
-											body = (Standard == true) ? body.toSpliced(index + 1, 0, ...options) : body.toSpliced(index, 1, ...options);
-										});
-									});
-									break;
-								case 0: // 无次选字幕
-									$.log(`🚧 ${$.name}, 无次选字幕`, "");
-									break;
-							};
-							break;
-						case 0: // 无首选字幕
-							$.log(`🚧 ${$.name}, 无首选字幕`, "");
-							// 无首选语言时删除官方字幕选项
-							Settings.Types = Settings.Types.filter(e => e !== "Official");
-							// 创建字幕选项
-							let playlist0 = {
-								"TYPE": "SUBTITLES",
-								"OPTION": {
-									"NAME": Settings.Languages[0],
-									"LANGUAGE": Settings.Languages[0],
-								}
-							};
-							switch (playlistCache[Settings.Languages[1]]?.length) {
-								default: // 有次选字幕
-									$.log(`🚧 ${$.name}, 有次选字幕`, "");
-									playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
-										// 创建字幕选项
-										let options = Settings.Types.map(type => getOption(Platform, playlist1, playlist0, type, Standard));
-										let index = body.findIndex(item => item.OPTION.URI === playlist1.OPTION.URI);
-										body = (Standard == true) ? body.toSpliced(index + 1, 0, ...options) : body.toSpliced(index, 1, ...options);
-									});
-									break;
-								case 0: // 无任何字幕
-									$.log(`🚧 ${$.name}, 无任何字幕`, "");
-									// 新增字幕选项，待完成
-									break;
-							};
-							break;
-					};
-					*/
 					if (playlistCache[Settings.Languages[0]]?.length !== 0) {
 						$.log(`🚧 ${$.name}, 有首选字幕`, "");
 						if (playlistCache[Settings.Languages[1]]?.length !== 0) {
@@ -255,48 +199,6 @@ const DataBase = {
 							// 新增字幕选项，待完成
 						};
 					};
-					/*
-					//if (Settings.Types.includes("Translate")) { // 翻译选项
-					// 字幕位置
-					let Index = 0;
-					for (let subtitlesPlaylist1 of subtitlesPlaylist[Settings.Languages[0]]) {
-						for (let subtitlesPlaylist2 of subtitlesPlaylist[Settings.Languages[1]]) {
-							// 无首选字幕时
-							if (!subtitlesPlaylist1?.TYPE) {
-								// 无首选语言时删除官方字幕选项
-								Settings.Types = Settings.Types.filter(e => e !== "Official");
-								Options = getOptions(Platform, subtitlesPlaylist1, subtitlesPlaylist2, Settings.Types, Standard);
-								if (Options.length !== 0) {
-									// 计算位置
-									Index = getIndex(Platform, body, subtitlesPlaylist2);
-								};
-							} else if (subtitlesPlaylist2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
-								//$.log(`🚧 ${$.name}`, "subtitlesPlaylist2?.OPTION.FORCED", subtitlesPlaylist2?.OPTION.FORCED, "");
-								if (subtitlesPlaylist1?.OPTION?.["GROUP-ID"] == subtitlesPlaylist2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
-									//$.log(`🚧 ${$.name}`, "subtitlesPlaylist1?.OPTION[GROUP-ID]", subtitlesPlaylist1?.OPTION["GROUP-ID"], "");
-									//$.log(`🚧 ${$.name}`, "subtitlesPlaylist2?.OPTION[GROUP-ID]", subtitlesPlaylist2?.OPTION["GROUP-ID"], "");
-									// 兼容性修正
-									switch (Platform) {
-										case "Apple":
-											if (subtitlesPlaylist1?.OPTION.CHARACTERISTICS == subtitlesPlaylist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-												Options = getOptions(Platform, subtitlesPlaylist1, subtitlesPlaylist2, Settings.Types, Standard);
-											}
-											break;
-										default:
-											Options = getOptions(Platform, subtitlesPlaylist1, subtitlesPlaylist2, Settings.Types, Standard);
-											break;
-									};
-									$.log(`🎉 ${$.name}, Set DualSubs Subtitle Options`, `Options: ${JSON.stringify(Options)}`, "");
-									if (Options.length !== 0) {
-										// 计算位置
-										Index = getIndex(Platform, body, subtitlesPlaylist1);
-									};
-								};
-							};
-						}
-					};
-					// 插入字幕选项
-					body = (Standard == true) ? body.toSpliced(Index + 1, 0, ...Options) : body.toSpliced(Index, 1, ...Options);
 					*/
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
@@ -402,8 +304,6 @@ function setENV(name, platform, database) {
 		};
 		return value;
 	});
-	//Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
-	//if (typeof Settings?.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
 	/*
 	if (Array.isArray(Settings?.Types)) {
 		if (!Settings?.API?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
@@ -411,13 +311,6 @@ function setENV(name, platform, database) {
 		if (!Settings?.API?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	}
 	*/
-	//if (Settings?.CacheSize) Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
-	//if (Settings?.Tolerance) Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
-	//if (Settings?.External?.Offset) Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
-	//if (Settings?.External?.ShowOnly) Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
-	//if (Settings?.Advanced?.Translator?.Times) Settings.Advanced.Translator.Times = parseInt(Settings?.Advanced?.Translator?.Times, 10) // BoxJs字符串转数字
-	//if (Settings?.Advanced?.Translator?.Interval) Settings.Advanced.Translator.Interval = parseInt(Settings?.Advanced?.Translator?.Interval, 10) // BoxJs字符串转数字
-	//if (Settings?.Advanced?.Translator?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Advanced?.Translator?.Exponential) //  BoxJs字符串转Boolean
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
@@ -440,19 +333,19 @@ function setENV(name, platform, database) {
  * @param {Object} database - Languages Database
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist }
  */
-async function setPlaylistCache(url, body, cache, languages, database) {
+function setPlaylistCache(url, body, cache, languages, database) {
 	$.log(`☑️ ${$.name}, setPlaylistCache`, "");
 	let masterPlaylistURL = url;
 	let masterPlaylistBody = body;
 	let subtitlesPlaylist = cache?.get(masterPlaylistURL) || {};
 	//let subtitlesPlaylistIndex = 0;
 	// 查找字幕播放列表m3u8缓存（map）
-	await Promise.all(languages?.map(async language => {
+	languages?.map(language => {
 		//$.log(`🚧 ${$.name}, setPlaylistCache`, `language: ${language}`, "");
 		// 获取字幕播放列表m3u8缓存（按语言）
-		subtitlesPlaylist[language] = await getMEDIA(masterPlaylistURL, masterPlaylistBody, "SUBTITLES", language, database);
+		subtitlesPlaylist[language] = getMEDIA(masterPlaylistURL, masterPlaylistBody, "SUBTITLES", language, database);
 		//$.log(`🚧 ${$.name}, setPlaylistCache`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
-	}));
+	});
 	// 写入字幕播放列表m3u8缓存到map
 	cache = cache.set(masterPlaylistURL, subtitlesPlaylist);
 	$.log(`✅ ${$.name}, setPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, "");
@@ -475,146 +368,102 @@ function setCache(cache, cacheSize = 100) {
 };
 
 /**
- * Get EXT-X-MEDIA Data
+ * Get Attribute List
  * @author VirgilClyne
  * @param {String} url - Request URL
- * @param {String} platform - Steaming Media Platform
- * @param {Object} json - Parsed WebVTT
+ * @param {Object} m3u8 - Parsed M3U8
  * @param {String} type - Content Type
- * @param {String} langCode - Language Code in Settings
- * @return {Promise<*>}
+ * @param {Array} langCodes - Language Codes Array
+ * @return {Array} datas
  */
-async function getMEDIA(url = "", json = {}, type = "", langCode = "", database) {
-	$.log(`⚠ ${$.name}, Get EXT-X-MEDIA Data`, `langcode: ${langCode}`, "");
-	// 自动语言转换
-	let langcodes = database?.[langCode]
-	//查询是否有符合语言的字幕
-	let datas = [];
-	for (let langcode of langcodes) {
-		$.log(`🚧 ${$.name}, Get EXT-X-MEDIA Data`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
-		datas = json.filter(item => (item?.OPTION?.FORCED !== "YES" && item?.OPTION?.TYPE === type && item?.OPTION?.LANGUAGE.toLowerCase() === `${langcode.toLowerCase()}`));
-		if (datas.length !== 0) break;
-		/*
-		if (datas.length !== 0) {
-			datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcode)));
-			break;
-		} else datas = [await setMEDIA(url, {}, langcodes[0])];
-		*/
+function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
+	$.log(`☑️ $${$.name}, Get Attribute List`, `langCodes: ${langCodes}`, "");
+	let attrList = m3u8.filter(item => item?.OPTION?.TYPE === type && item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
+	$.log(`🚧 ${$.name}`, "attrList", JSON.stringify(attrList), "");
+	let matchList = [];
+	//查询是否有符合语言的内容
+	for (let langcode of langCodes) {
+		$.log(`🚧 ${$.name}, Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
+		matchList = attrList.filter(item => {
+			$.log(`🚧 ${$.name}, Get Attribute List`, "attrList.filter(item => {", `item: ${JSON.stringify(item)}`, "");
+			return (item?.OPTION?.LANGUAGE?.toLowerCase() === langcode?.toLowerCase())
+		});
+		if (matchList.length !== 0) break;
 	};
-	//datas = await Promise.all(datas.map(async data => await setMEDIA(url, data, langcodes[0])));
-	if (datas.length === 0) {
-		datas = [
-			{
-				"OPTION": {
-					"NAME": `${langCode}`,
-					"LANGUAGE": `${langCode}`,
-				},
-				"URL": aPath(url, null)
-			}
-		]
-		$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, "未找到匹配语言", "");
-	} else {
-		/*
-		datas = datas.map(data => {
-			data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
-			return data;
-		})
-		*/
-		datas = datas.map(data => {
-			data.URL = aPath(url, data?.OPTION?.URI ?? null);
-			return data;
-		})
-		$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, "已找到匹配语言", "");
-	}
-	$.log(`🎉 ${$.name}, Get EXT-X-MEDIA Data`, `datas: ${JSON.stringify(datas)}`, "");
-	return datas
+	matchList = matchList.map(data => {
+		data.URL = aPath(url, data?.OPTION?.URI ?? null);
+		return data;
+	})
+	$.log(`✅ $${$.name}, Get Attribute List`, `matchList: ${JSON.stringify(matchList)}`, "");
+	return matchList;
 
 	/***************** Fuctions *****************/
 	// Get Absolute Path
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
-	// Set EXT-X-MEDIA Data
-	async function setMEDIA(url, data = {}, langCode = "") {
-		$.log(`⚠ ${$.name}, Set EXT-X-MEDIA Data`, "");
-		let Data = { ...data };
-		if (data?.OPTION) {
-			Data.OPTION.NAME = data.OPTION.NAME ?? `${langCode}`;
-			Data.OPTION.LANGUAGE = data.OPTION.LANGUAGE ?? `${langCode}`;
-		} else {
-			Data.OPTION = {
-				"NAME": `${langCode}`,
-				"LANGUAGE": `${langCode}`,
-			};
-		}
-		//Data.Name = data?.OPTION?.NAME?.replace(/\"/g, "") ?? langCode;
-		//Data.Language = data?.OPTION?.LANGUAGE?.replace(/\"/g, "") ?? langCode;
-		//Data.URL = aPath(url, data?.OPTION?.URI.replace(/\"/g, "") ?? null);
-		Data.URL = aPath(url, data?.OPTION?.URI || null);
-		//$.log(`🎉 ${$.name}, 调试信息`, "set EXT-X-MEDIA Data", `Data: ${JSON.stringify(Data)}`, "");
-		return Data
-	};
 };
 
-/**
- * Set DualSubs Subtitle Options
- * @author VirgilClyne
- * @param {String} platform - platform
- * @param {Object} json - json
- * @param {Array} languages1SubtitlesPlaylist - Subtitles Playlist (Languages 0)
- * @param {Array} languages2SubtitlesPlaylist - Subtitles Playlist (Languages 1)
- * @param {Array} enabledTypes - Enabled Types
- * @param {Array} translateTypes - Translate Types
- * @param {String} Standard - Standard
- * @return {Promise<*>}
- */
-function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 = [], Types = [], Standard = true) {
-	// 兼容性设置
-	$.log(`⚠ ${$.name}, Set DualSubs Subtitle Options`, `Types: ${Types}`, "");
-	// 创建字幕选项
-	let Options = [];
-	for (let obj1 of Languages1) {
-		for (let obj2 of Languages2) {
-			// 无首选字幕时
-			if (!obj1?.TYPE) {
-				// 无首选语言时删除官方字幕选项
-				Types = Types.filter(e => e !== "Official");
-				Options = getOptions(Platform, obj1, obj2, Types, Standard);
-				if (Options.length !== 0) {
-					// 计算位置
-					let Index = getIndex(Platform, Json, obj2);
-					// 插入字幕选项
-					insertOptions(Json, Index, Options, Standard);
-				};
-			} else if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
-				//$.log(`🚧 ${$.name}`, "obj2?.OPTION.FORCED", obj2?.OPTION.FORCED, "");
-				if (obj1?.OPTION?.["GROUP-ID"] == obj2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
-					//$.log(`🚧 ${$.name}`, "obj1?.OPTION[GROUP-ID]", obj1?.OPTION["GROUP-ID"], "");
-					//$.log(`🚧 ${$.name}`, "obj2?.OPTION[GROUP-ID]", obj2?.OPTION["GROUP-ID"], "");
-					// 兼容性修正
-					switch (Platform) {
-						case "Apple":
-							if (obj1?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-								Options = getOptions(Platform, obj1, obj2, Types, Standard);
-							}
-							break;
-						default:
-							Options = getOptions(Platform, obj1, obj2, Types, Standard);
-							break;
+function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, types = [], standard = true) {
+	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
+	if (playlist0?.length !== 0) {
+		$.log(`🚧 ${$.name}, 有首选字幕`, "");
+		if (playlist1?.length !== 0) {
+			$.log(`🚧 ${$.name}, 有次选字幕`, "");
+			playlist0?.forEach(playlist0 => {
+				playlist1?.forEach(playlist1 => {
+					if (playlist0?.OPTION?.["GROUP-ID"] === playlist1?.OPTION?.["GROUP-ID"]) {
+						let index = m3u8.findIndex(item => item?.OPTION?.URI === playlist0.OPTION.URI);
+						// 兼容性修正
+						switch (platform) {
+							case "Apple":
+								if (playlist0?.OPTION.CHARACTERISTICS == playlist1?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+									// 创建字幕选项
+									let options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
+									if (standard == true) m3u8.splice(index + 1, 0, ...options)
+									else m3u8.splice(index, 1, ...options);
+								}
+								break;
+							default:
+								// 创建字幕选项
+								let options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
+								if (standard == true) m3u8.splice(index + 1, 0, ...options)
+								else m3u8.splice(index, 1, ...options);
+								break;
+						};
 					};
-					$.log(`🎉 ${$.name}, Set DualSubs Subtitle Options`, `Options: ${JSON.stringify(Options)}`, "");
-					if (Options.length !== 0) {
-						// 计算位置
-						let Index = getIndex(Platform, Json, obj1);
-						// 插入字幕选项
-						insertOptions(Json, Index, Options, Standard);
-					};
-				};
-			};
+				});
+			});
 		}
+	} else if (playlist0?.length === 0) {
+		$.log(`🚧 ${$.name}, 无首选字幕`, "");
+		types = types.filter(e => e !== "Official"); // 无首选语言时删除官方字幕选项
+		let playlist0 = {
+			"OPTION": {
+				"TYPE": "SUBTITLES",
+				//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
+				"NAME": Settings.Languages[0],
+				"LANGUAGE": Settings.Languages[0],
+				//"URI": playlist?.URI,
+			}
+		};
+		if (playlist1?.length !== 0) {
+			$.log(`🚧 ${$.name}, 有次选字幕`, "");
+			playlist1?.forEach(playlist1 => {
+				let index = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI);
+				if (index) {
+					// 创建字幕选项
+					let options = types.map(type => setOption(platform, playlist1, playlist0, type, standard));
+					if (standard == true) m3u8.splice(index + 1, 0, ...options)
+					else m3u8.splice(index, 1, ...options);
+				};
+			});
+		} else {
+			$.log(`🚧 ${$.name}, 无任何字幕`, "");
+			// 新增字幕选项，待完成
+		};
 	};
-	return Json
-
-	/***************** Fuctions *****************/
-
+	//$.log(`✅ ${$.name}, Set Attribute List`, `m3u8: ${JSON.stringify(m3u8)}`, "");
+	$.log(`✅ ${$.name}, Set Attribute List`, "");
+	return m3u8;
 };
 
 /**
@@ -674,80 +523,6 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	};
 	$.log(`🎉 ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
 	return newOption;
-};
-
-// Get DualSubs Subtitle Options
-function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
-	$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
-	const NAME1 = obj1?.OPTION?.NAME, NAME2 = obj2?.OPTION?.NAME;
-	const LANGUAGE1 = obj1?.OPTION?.LANGUAGE, LANGUAGE2 = obj2?.OPTION?.LANGUAGE;
-	return types.map(type => {
-		// 复制此语言选项
-		let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
-			: JSON.parse(JSON.stringify(obj2))
-		// 修改名称
-		//newSub.OPTION.NAME = `${obj1.Name} / ${obj2.Name} [${type}]`
-		newSub.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
-		// 修改语言代码
-		//newSub.OPTION.LANGUAGE = (standard) ? `${obj1.Language}` : `${obj2.Language}`
-		newSub.OPTION.LANGUAGE = (standard) ? `${LANGUAGE1}` : `${LANGUAGE2}`
-		// 增加副语言
-		newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `${LANGUAGE2}` : `${LANGUAGE1}`
-		// 修改链接
-		newSub.OPTION.URI = (newSub?.OPTION?.URI?.includes("?")) ? `${newSub?.OPTION?.URI}&dualsubs=${type}`
-			: `${newSub?.OPTION?.URI}?dualsubs=${type}`
-		// 自动选择
-		newSub.OPTION.AUTOSELECT = "YES"
-		// 兼容性修正
-		switch (platform) {
-			case "Apple":
-				newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
-				newSub.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`
-				break;
-			case "Disney_Plus":
-				newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
-				newSub.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
-				break;
-			case "Prime_Video":
-				newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
-				break;
-			case "Hulu":
-			case "Paramount_Plus":
-			case "Discovery_Plus_Ph":
-				//newSub.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
-				newSub.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
-				//newSub.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`
-				break;
-		};
-		$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
-		return newSub
-	})
-};
-
-// Get Same Options Index
-function getIndex(platform, m3u8, obj) {
-	$.log(`⚠ ${$.name}, Get Same Options Index`, "");
-	// 计算位置
-	let Index = m3u8.findIndex(item => {
-		if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
-			&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
-			&& item?.OPTION?.CHARACTERISTICS == obj?.OPTION?.CHARACTERISTICS) {
-			if (platform == "Apple") {
-				if (item?.OPTION?.["STABLE-RENDITION-ID"] == obj?.OPTION?.["STABLE-RENDITION-ID"]) return true
-			} else return true
-		}
-	})
-	$.log(`🎉 ${$.name}, Get Same Options Index`, `Index: ${Index}`, "");
-	return Index
-};
-
-// Insert Options
-function insertOptions(m3u8, index, options, standard) {
-	$.log(`☑️ ${$.name}, Insert Options`, "");
-	// 插入字幕选项
-	m3u8 = (standard == true) ? m3u8.toSpliced(index + 1, 0, ...options) : m3u8.toSpliced(index, 1, ...options);
-	$.log(`✅ ${$.name}, Insert Options`, "");
-	return m3u8;
 };
 
 /**

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.4(27) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(11) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -57,7 +57,7 @@ const DataBase = {
 		},
 		"Configs": {
 			"Languages": {
-				"Official":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]},
+				"Official":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-bg","bul"],"CS":["cs","cs-cz","ces"],"DA":["da","da-dk","dan"],"DE":["de","de-de","deu"],"EL":["el","el-gr","ell"],"EN":["en","en-us","eng","en-gb","en-uk","en-ca","en-us sdh"],"EN-CA":["en-ca","en","eng"],"EN-GB":["en-uk","en","eng"],"EN-US":["en-us","en","eng"],"EN-US SDH":["en-us sdh","en-us","en","eng"],"ES":["es","es-419","es-es","spa","es-419 sdh"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 sdh","es-419","es","spa"],"ES-ES":["es-es","es","spa"],"ET":["et","et-ee","est"],"FI":["fi","fi-fi","fin"],"FR":["fr","fr-ca","fr-fr","fra"],"FR-CA":["fr-ca","fr","fra"],"FR-DR":["fr-fr","fr","fra"],"HU":["hu","hu-hu","hun"],"ID":["id","id-id"],"IT":["it","it-it","ita"],"JA":["ja","ja-jp","jpn"],"KO":["ko","ko-kr","kor"],"LT":["lt","lt-lt","lit"],"LV":["lv","lv-lv","lav"],"NL":["nl","nl-nl","nld"],"NO":["no","nb-no","nor"],"PL":["pl","pl-pl"],"PT":["pt","pt-pt","pt-br","por"],"PT-PT":["pt-pt","pt","por"],"PT-BR":["pt-br","pt","por"],"RO":["ro","ro-ro","ron"],"RU":["ru","ru-ru","rus"],"SK":["sk","sk-sk","slk"],"SL":["sl","sl-si","slv"],"SV":["sv","sv-se","swe"],"IS":["is","is-is","isl"],"ZH":["zh","cmn","zho","zh-cn","zh-hans","cmn-hans","zh-tw","zh-hant","cmn-hant","zh-hk","yue-hant","yue"],"ZH-CN":["zh-cn","zh-hans","cmn-hans","zho"],"ZH-HANS":["zh-hans","cmn-hans","zh-cn","zho"],"ZH-HK":["zh-hk","yue-hant","yue","zho"],"ZH-TW":["zh-tw","zh-hant","cmn-hant","zho"],"ZH-HANT":["zh-hant","cmn-hant","zh-tw","zho"],"YUE":["yue","yue-hant","zh-hk","zho"],"YUE-HK":["yue-hant","yue","zh-hk","zho"]},
 				"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
 				"Microsoft":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"yue","ZH-HANT":"zh-Hant"},
 				"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT-PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}
@@ -103,6 +103,8 @@ const DataBase = {
 			// 获取字幕格式
 			const Format = url.params?.fmt || url.params?.format || PATHs?.[PATHs?.length - 1]?.split(".")?.[1], Kind = url.params?.kind;
 			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
+			// 兼容性判断
+			const Standard = isStandard(Platform, $request.url, $request.headers);
 			// 格式判断
 			switch (Format || FORMAT) {
 				case undefined: // 视为无body
@@ -119,17 +121,170 @@ const DataBase = {
 					body = M3U8.parse($response.body);
 					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// 写入字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylist } = await setPlaylistCache($request.url, body, Caches.Playlists, Settings.Languages, Configs.Languages.Official);
+					//const { subtitlesPlaylist: playlistCache } = await setPlaylistCache($request.url, body, Caches.Playlists, Settings.Languages, Configs.Languages.Official);
+					// 读取已存数据
+					let playlistCache = Caches.Playlists.get($request.url) || {};
+					// 查找特定语言的字幕
+					const subtitlesPlaylist = body.filter(item => item?.OPTION?.TYPE == "SUBTITLES" && item?.OPTION?.FORCED !== "YES"); // 过滤强制字幕
+					$.log(`🚧 ${$.name}`, "subtitlesPlaylist", JSON.stringify(subtitlesPlaylist), "");
+					playlistCache[Settings.Languages[0]] = subtitlesPlaylist.filter(item => Configs.Languages.Official[Settings.Languages[0]].includes(item?.OPTION?.LANGUAGE.toLowerCase()));
+					$.log(`🚧 ${$.name}`, "playlistCache[Settings.Languages[0]]", JSON.stringify(playlistCache[Settings.Languages[0]]), "");
+					playlistCache[Settings.Languages[1]] = subtitlesPlaylist.filter(item => Configs.Languages.Official[Settings.Languages[1]].includes(item?.OPTION?.LANGUAGE.toLowerCase()));
+					$.log(`🚧 ${$.name}`, "playlistCache[Settings.Languages[1]]", JSON.stringify(playlistCache[Settings.Languages[1]]), "");
+					// 写入数据
+					Caches.Playlists.set($request.url, playlistCache);
 					// 格式化缓存
 					Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
 					Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
-					// 写入缓存
+					// 写入持久化储存
 					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
-					// 兼容性判断
-					const Standard = await isStandard(Platform, $request.url, $request.headers);
+					//Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					// 写入选项
-					body = await setOptions(Platform, body, subtitlesPlaylist[Settings.Languages[0]], subtitlesPlaylist[Settings.Languages[1]], Settings.Types, Standard);
+					//body = await setOptions(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Standard);
+					//const subtitlesPlaylist0 = playlistCache[Settings.Languages[0]];
+					//const subtitlesPlaylist1 = playlistCache[Settings.Languages[1]];
+					// 创建字幕选项
+					//let Options = [];
+					// 判断字幕情况
+					/*
+					switch (playlistCache[Settings.Languages[0]]?.length) {
+						default: // 有首选字幕
+							$.log(`🚧 ${$.name}, 有首选字幕`, "");
+							switch (playlistCache[Settings.Languages[1]]?.length) {
+								default: // 有次选字幕
+									$.log(`🚧 ${$.name}, 有次选字幕`, "");
+									playlistCache[Settings.Languages[0]]?.forEach(playlist0 => {
+										playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
+											// 创建字幕选项
+											let options = Settings.Types.map(type => getOption(Platform, playlist0, playlist1, type, Standard));
+											let index = body.findIndex(item => item.OPTION.URI === playlist0.OPTION.URI);
+											body = (Standard == true) ? body.toSpliced(index + 1, 0, ...options) : body.toSpliced(index, 1, ...options);
+										});
+									});
+									break;
+								case 0: // 无次选字幕
+									$.log(`🚧 ${$.name}, 无次选字幕`, "");
+									break;
+							};
+							break;
+						case 0: // 无首选字幕
+							$.log(`🚧 ${$.name}, 无首选字幕`, "");
+							// 无首选语言时删除官方字幕选项
+							Settings.Types = Settings.Types.filter(e => e !== "Official");
+							// 创建字幕选项
+							let playlist0 = {
+								"TYPE": "SUBTITLES",
+								"OPTION": {
+									"NAME": Settings.Languages[0],
+									"LANGUAGE": Settings.Languages[0],
+								}
+							};
+							switch (playlistCache[Settings.Languages[1]]?.length) {
+								default: // 有次选字幕
+									$.log(`🚧 ${$.name}, 有次选字幕`, "");
+									playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
+										// 创建字幕选项
+										let options = Settings.Types.map(type => getOption(Platform, playlist1, playlist0, type, Standard));
+										let index = body.findIndex(item => item.OPTION.URI === playlist1.OPTION.URI);
+										body = (Standard == true) ? body.toSpliced(index + 1, 0, ...options) : body.toSpliced(index, 1, ...options);
+									});
+									break;
+								case 0: // 无任何字幕
+									$.log(`🚧 ${$.name}, 无任何字幕`, "");
+									// 新增字幕选项，待完成
+									break;
+							};
+							break;
+					};
+					*/
+					if (playlistCache[Settings.Languages[0]]?.length !== 0) {
+						$.log(`🚧 ${$.name}, 有首选字幕`, "");
+						if (playlistCache[Settings.Languages[1]]?.length !== 0) {
+							$.log(`🚧 ${$.name}, 有次选字幕`, "");
+							playlistCache[Settings.Languages[0]]?.forEach(playlist0 => {
+								playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
+									if (playlist1?.OPTION?.URI === playlist0.OPTION.URI) {
+										let index = body.findIndex(item => item?.OPTION?.URI === playlist0.OPTION.URI);
+										// 创建字幕选项
+										let options = Settings.Types.map(type => setOption(Platform, playlist0, playlist1, type, Standard));
+										if (Standard == true) body.splice(index + 1, 0, ...options)
+										else body.splice(index, 1, ...options);
+									};
+								});
+							});
+						}
+					} else if (playlistCache[Settings.Languages[0]]?.length === 0) {
+						$.log(`🚧 ${$.name}, 无首选字幕`, "");
+						Settings.Types = Settings.Types.filter(e => e !== "Official"); // 无首选语言时删除官方字幕选项
+						let playlist0 = {
+							"OPTION": {
+								"TYPE": "SUBTITLES",
+								//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
+								"NAME": Settings.Languages[0],
+								"LANGUAGE": Settings.Languages[0],
+								//"URI": playlist?.URI,
+							}
+						};
+						if (playlistCache[Settings.Languages[1]]?.length !== 0) {
+							$.log(`🚧 ${$.name}, 有次选字幕`, "");
+							playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
+								let index = body.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI);
+								if (index) {
+									// 创建字幕选项
+									let options = Settings.Types.map(type => setOption(Platform, playlist1, playlist0, type, Standard));
+									if (Standard == true) body.splice(index + 1, 0, ...options)
+									else body.splice(index, 1, ...options);
+								};
+							});
+						} else {
+							$.log(`🚧 ${$.name}, 无任何字幕`, "");
+							// 新增字幕选项，待完成
+						};
+					};
+					/*
+					//if (Settings.Types.includes("Translate")) { // 翻译选项
+					// 字幕位置
+					let Index = 0;
+					for (let subtitlesPlaylist1 of subtitlesPlaylist[Settings.Languages[0]]) {
+						for (let subtitlesPlaylist2 of subtitlesPlaylist[Settings.Languages[1]]) {
+							// 无首选字幕时
+							if (!subtitlesPlaylist1?.TYPE) {
+								// 无首选语言时删除官方字幕选项
+								Settings.Types = Settings.Types.filter(e => e !== "Official");
+								Options = getOptions(Platform, subtitlesPlaylist1, subtitlesPlaylist2, Settings.Types, Standard);
+								if (Options.length !== 0) {
+									// 计算位置
+									Index = getIndex(Platform, body, subtitlesPlaylist2);
+								};
+							} else if (subtitlesPlaylist2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
+								//$.log(`🚧 ${$.name}`, "subtitlesPlaylist2?.OPTION.FORCED", subtitlesPlaylist2?.OPTION.FORCED, "");
+								if (subtitlesPlaylist1?.OPTION?.["GROUP-ID"] == subtitlesPlaylist2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
+									//$.log(`🚧 ${$.name}`, "subtitlesPlaylist1?.OPTION[GROUP-ID]", subtitlesPlaylist1?.OPTION["GROUP-ID"], "");
+									//$.log(`🚧 ${$.name}`, "subtitlesPlaylist2?.OPTION[GROUP-ID]", subtitlesPlaylist2?.OPTION["GROUP-ID"], "");
+									// 兼容性修正
+									switch (Platform) {
+										case "Apple":
+											if (subtitlesPlaylist1?.OPTION.CHARACTERISTICS == subtitlesPlaylist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+												Options = getOptions(Platform, subtitlesPlaylist1, subtitlesPlaylist2, Settings.Types, Standard);
+											}
+											break;
+										default:
+											Options = getOptions(Platform, subtitlesPlaylist1, subtitlesPlaylist2, Settings.Types, Standard);
+											break;
+									};
+									$.log(`🎉 ${$.name}, Set DualSubs Subtitle Options`, `Options: ${JSON.stringify(Options)}`, "");
+									if (Options.length !== 0) {
+										// 计算位置
+										Index = getIndex(Platform, body, subtitlesPlaylist1);
+									};
+								};
+							};
+						}
+					};
+					// 插入字幕选项
+					body = (Standard == true) ? body.toSpliced(Index + 1, 0, ...Options) : body.toSpliced(Index, 1, ...Options);
+					*/
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -389,55 +544,55 @@ async function getMEDIA(url = "", json = {}, type = "", langCode = "", database)
 /**
  * Set DualSubs Subtitle Options
  * @author VirgilClyne
- * @param {String} Platform - Platform
- * @param {Object} Json - Json
- * @param {Array} Languages1 - Languages1
- * @param {Array} Languages2 - Languages2
- * @param {Array} Types - Types
+ * @param {String} platform - platform
+ * @param {Object} json - json
+ * @param {Array} languages1SubtitlesPlaylist - Subtitles Playlist (Languages 0)
+ * @param {Array} languages2SubtitlesPlaylist - Subtitles Playlist (Languages 1)
+ * @param {Array} enabledTypes - Enabled Types
+ * @param {Array} translateTypes - Translate Types
  * @param {String} Standard - Standard
- * @param {String} Type - Type
  * @return {Promise<*>}
  */
-async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 = [], Types = [], Standard = true) {
+function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 = [], Types = [], Standard = true) {
 	// 兼容性设置
 	$.log(`⚠ ${$.name}, Set DualSubs Subtitle Options`, `Types: ${Types}`, "");
-	for await (var obj1 of Languages1) {
-		for await (var obj2 of Languages2) {
+	// 创建字幕选项
+	let Options = [];
+	for (let obj1 of Languages1) {
+		for (let obj2 of Languages2) {
 			// 无首选字幕时
 			if (!obj1?.TYPE) {
 				// 无首选语言时删除官方字幕选项
 				Types = Types.filter(e => e !== "Official");
-				Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+				Options = getOptions(Platform, obj1, obj2, Types, Standard);
 				if (Options.length !== 0) {
 					// 计算位置
-					let Index = await getIndex(Platform, Json, obj2);
+					let Index = getIndex(Platform, Json, obj2);
 					// 插入字幕选项
-					await insertOptions(Json, Index, Options, Standard);
+					insertOptions(Json, Index, Options, Standard);
 				};
 			} else if (obj2?.OPTION?.FORCED !== "YES") { // 强制字幕不生成
 				//$.log(`🚧 ${$.name}`, "obj2?.OPTION.FORCED", obj2?.OPTION.FORCED, "");
 				if (obj1?.OPTION?.["GROUP-ID"] == obj2?.OPTION?.["GROUP-ID"]) { // 只生成同组字幕
 					//$.log(`🚧 ${$.name}`, "obj1?.OPTION[GROUP-ID]", obj1?.OPTION["GROUP-ID"], "");
 					//$.log(`🚧 ${$.name}`, "obj2?.OPTION[GROUP-ID]", obj2?.OPTION["GROUP-ID"], "");
-					// 创建字幕选项
-					let Options = [];
 					// 兼容性修正
 					switch (Platform) {
 						case "Apple":
 							if (obj1?.OPTION.CHARACTERISTICS == obj2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-								Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+								Options = getOptions(Platform, obj1, obj2, Types, Standard);
 							}
 							break;
 						default:
-							Options = await getOptions(Platform, obj1, obj2, Types, Standard);
+							Options = getOptions(Platform, obj1, obj2, Types, Standard);
 							break;
 					};
 					$.log(`🎉 ${$.name}, Set DualSubs Subtitle Options`, `Options: ${JSON.stringify(Options)}`, "");
 					if (Options.length !== 0) {
 						// 计算位置
-						let Index = await getIndex(Platform, Json, obj1);
+						let Index = getIndex(Platform, Json, obj1);
 						// 插入字幕选项
-						await insertOptions(Json, Index, Options, Standard);
+						insertOptions(Json, Index, Options, Standard);
 					};
 				};
 			};
@@ -446,76 +601,140 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
 	return Json
 
 	/***************** Fuctions *****************/
-	// Get DualSubs Subtitle Options
-	async function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
-		$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
-		const NAME1 = obj1?.OPTION?.NAME, NAME2 = obj2?.OPTION?.NAME;
-		const LANGUAGE1 = obj1?.OPTION?.LANGUAGE, LANGUAGE2 = obj2?.OPTION?.LANGUAGE;
-		return types.map(type => {
-			// 复制此语言选项
-			let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
-				: JSON.parse(JSON.stringify(obj2))
-			// 修改名称
-			//newSub.OPTION.NAME = `${obj1.Name} / ${obj2.Name} [${type}]`
-			newSub.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
-			// 修改语言代码
-			//newSub.OPTION.LANGUAGE = (standard) ? `${obj1.Language}` : `${obj2.Language}`
-			newSub.OPTION.LANGUAGE = (standard) ? `${LANGUAGE1}` : `${LANGUAGE2}`
-			// 增加副语言
-			newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `${LANGUAGE2}` : `${LANGUAGE1}`
-			// 修改链接
-			newSub.OPTION.URI = (newSub?.OPTION?.URI?.includes("?")) ? `${newSub?.OPTION?.URI}&dualsubs=${type}`
-				: `${newSub?.OPTION?.URI}?dualsubs=${type}`
-			// 自动选择
-			newSub.OPTION.AUTOSELECT = "YES"
-			// 兼容性修正
-			switch (platform) {
-				case "Apple":
-					newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
-					newSub.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`
-					break;
-				case "Disney_Plus":
-					newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
-					newSub.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
-					break;
-				case "Prime_Video":
-					newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
-					break;
-				case "Hulu":
-				case "Paramount_Plus":
-				case "Discovery_Plus_Ph":
-					//newSub.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
-					newSub.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
-					//newSub.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`
-					break;
-			};
-			$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
-			return newSub
-		})
+
+};
+
+/**
+ * Set DualSubs Subtitle Options
+ * @author VirgilClyne
+ * @param {String} platform - platform
+ * @param {Array} playlist0 - Subtitles Playlist (Languages 0)
+ * @param {Array} playlist1 - Subtitles Playlist (Languages 1)
+ * @param {Array} enabledTypes - Enabled Types
+ * @param {Array} translateTypes - Translate Types
+ * @param {String} Standard - Standard
+ * @return {Promise<*>}
+ */
+function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", standard) {
+	$.log(`⚠ ${$.name}, 调试信息`, "Set DualSubs Subtitle Option", `type: ${type}`, "");
+	const NAME1 = playlist0?.OPTION?.NAME, NAME2 = playlist1?.OPTION?.NAME;
+	const LANGUAGE1 = playlist0?.OPTION?.LANGUAGE, LANGUAGE2 = playlist1?.OPTION?.LANGUAGE;
+	// 复制此语言选项
+	/*
+	let newOption = (playlist0?.TYPE) ? JSON.parse(JSON.stringify(playlist0))
+		: JSON.parse(JSON.stringify(playlist1))
+		*/
+	let newOption = JSON.parse(JSON.stringify(playlist0));
+	// 修改名称
+	//newSub.OPTION.NAME = `${playlist0.Name} / ${playlist1.Name} [${type}]`
+	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
+	// 修改语言代码
+	//newOption.OPTION.LANGUAGE = (standard) ? `${playlist0.Language}` : `${playlist1.Language}`
+	newOption.OPTION.LANGUAGE = (standard) ? `${LANGUAGE1}` : `${LANGUAGE2}`
+	// 增加副语言
+	newOption.OPTION["ASSOC-LANGUAGE"] = (standard) ? `${LANGUAGE2}` : `${LANGUAGE1}`
+	// 修改链接
+	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&dualsubs=${type}`
+		: `${newOption?.OPTION?.URI}?dualsubs=${type}`
+	// 自动选择
+	newOption.OPTION.AUTOSELECT = "YES"
+	// 兼容性修正
+	switch (platform) {
+		case "Apple":
+			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`
+			break;
+		case "Disney_Plus":
+			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
+			break;
+		case "Prime_Video":
+			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+			break;
+		case "Hulu":
+		case "Paramount_Plus":
+		case "Discovery_Plus_Ph":
+			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
+			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
+			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`
+			break;
 	};
-	// Get Same Options Index
-	async function getIndex(platform, json, obj) {
-		$.log(`⚠ ${$.name}, Get Same Options Index`, "");
-		// 计算位置
-		let Index = json.findIndex(item => {
-			if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
-				&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
-				&& item?.OPTION?.CHARACTERISTICS == obj?.OPTION?.CHARACTERISTICS) {
-				if (platform == "Apple") {
-					if (item?.OPTION?.["STABLE-RENDITION-ID"] == obj?.OPTION?.["STABLE-RENDITION-ID"]) return true
-				} else return true
-			}
-		})
-		$.log(`🎉 ${$.name}, Get Same Options Index`, `Index: ${Index}`, "");
-		return Index
-	};
-	// Insert Options
-	async function insertOptions(json, index, options, standard) {
-		$.log(`⚠ ${$.name}, Insert Options`, "");
-		// 插入字幕选项
-		if (standard == true) json.splice(index + 1, 0, ...options)
-		else json.splice(index, 1, ...options); // 兼容性设置
-	};
+	$.log(`🎉 ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
+	return newOption;
+};
+
+// Get DualSubs Subtitle Options
+function getOptions(platform = "", obj1 = {}, obj2 = {}, types = [], standard) {
+	$.log(`⚠ ${$.name}, 调试信息`, "Get DualSubs Subtitle Options", `types: ${types}`, "");
+	const NAME1 = obj1?.OPTION?.NAME, NAME2 = obj2?.OPTION?.NAME;
+	const LANGUAGE1 = obj1?.OPTION?.LANGUAGE, LANGUAGE2 = obj2?.OPTION?.LANGUAGE;
+	return types.map(type => {
+		// 复制此语言选项
+		let newSub = (obj1?.TYPE) ? JSON.parse(JSON.stringify(obj1))
+			: JSON.parse(JSON.stringify(obj2))
+		// 修改名称
+		//newSub.OPTION.NAME = `${obj1.Name} / ${obj2.Name} [${type}]`
+		newSub.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
+		// 修改语言代码
+		//newSub.OPTION.LANGUAGE = (standard) ? `${obj1.Language}` : `${obj2.Language}`
+		newSub.OPTION.LANGUAGE = (standard) ? `${LANGUAGE1}` : `${LANGUAGE2}`
+		// 增加副语言
+		newSub.OPTION["ASSOC-LANGUAGE"] = (standard) ? `${LANGUAGE2}` : `${LANGUAGE1}`
+		// 修改链接
+		newSub.OPTION.URI = (newSub?.OPTION?.URI?.includes("?")) ? `${newSub?.OPTION?.URI}&dualsubs=${type}`
+			: `${newSub?.OPTION?.URI}?dualsubs=${type}`
+		// 自动选择
+		newSub.OPTION.AUTOSELECT = "YES"
+		// 兼容性修正
+		switch (platform) {
+			case "Apple":
+				newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+				newSub.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`
+				break;
+			case "Disney_Plus":
+				newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+				newSub.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
+				break;
+			case "Prime_Video":
+				newSub.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+				break;
+			case "Hulu":
+			case "Paramount_Plus":
+			case "Discovery_Plus_Ph":
+				//newSub.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
+				newSub.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
+				//newSub.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`
+				break;
+		};
+		$.log(`🎉 ${$.name}, Get DualSubs Subtitle Options`, `newSub: ${JSON.stringify(newSub)}`, "");
+		return newSub
+	})
+};
+
+// Get Same Options Index
+function getIndex(platform, m3u8, obj) {
+	$.log(`⚠ ${$.name}, Get Same Options Index`, "");
+	// 计算位置
+	let Index = m3u8.findIndex(item => {
+		if (item?.OPTION?.LANGUAGE == obj?.OPTION?.LANGUAGE
+			&& item?.OPTION?.["GROUP-ID"] == obj?.OPTION?.["GROUP-ID"]
+			&& item?.OPTION?.CHARACTERISTICS == obj?.OPTION?.CHARACTERISTICS) {
+			if (platform == "Apple") {
+				if (item?.OPTION?.["STABLE-RENDITION-ID"] == obj?.OPTION?.["STABLE-RENDITION-ID"]) return true
+			} else return true
+		}
+	})
+	$.log(`🎉 ${$.name}, Get Same Options Index`, `Index: ${Index}`, "");
+	return Index
+};
+
+// Insert Options
+function insertOptions(m3u8, index, options, standard) {
+	$.log(`☑️ ${$.name}, Insert Options`, "");
+	// 插入字幕选项
+	m3u8 = (standard == true) ? m3u8.toSpliced(index + 1, 0, ...options) : m3u8.toSpliced(index, 1, ...options);
+	$.log(`✅ ${$.name}, Insert Options`, "");
+	return m3u8;
 };
 
 /**
@@ -527,7 +746,7 @@ async function setOptions(Platform = "", Json = {}, Languages1 = [], Languages2 
  * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-async function isStandard(platform, url, headers) {
+function isStandard(platform, url, headers) {
 	$.log(`⚠ ${$.name}, is Standard`, "");
 	let _url = URL.parse(url);
 	for(const [key, value] of Object.entries(headers)) {

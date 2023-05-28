@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(5) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(3) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -110,15 +110,12 @@ const DataBase = {
 					// 获取字幕播放列表m3u8缓存（map）
 					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists, Settings.Languages);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Subtitles = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Subtitles, Settings.Languages[0]);
-					Caches.Subtitles = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Subtitles, Settings.Languages[1]);
+					Caches.Subtitles = await setSubtitlesCache(subtitlesPlaylist, Caches.Subtitles, Settings.Languages);
 					// 格式化缓存
-					//Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
-					//Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
-					//Caches.Playlists = setCache(Caches?.Playlists, { key: $request.url, value: playlistCache }, Settings.Official.CacheSize);
+					Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
 					Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
 					// 写入缓存
-					$.setjson(Caches.Subtitles, `@DualSubs.${"Universal"}.Caches.Subtitles`);
+					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
 					break;
 				case "Translate":
 				default:
@@ -283,11 +280,9 @@ function setENV(name, platform, database) {
 	//if (Settings?.Advanced?.Translator?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Advanced?.Translator?.Exponential) //  BoxJs字符串转Boolean
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	Caches.Playlists = JSON.parse(Caches?.Playlists || []);
-	Caches.Subtitles = JSON.parse(Caches?.Subtitles || []);
-	$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
-	Caches.Subtitles = new Map(Caches?.Playlists || []); // Array转Map
+	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 
@@ -332,28 +327,31 @@ function getPlaylistCache(url, cache, languages) {
 /**
  * Set Subtitles Cache
  * @author VirgilClyne
- * @param {String} platform - Steaming Media Platform
  * @param {String} url - Request URL / Master Playlist URL
  * @param {Object} playlist - Subtitles Playlist Cache
  * @param {Map} cache - Subtitles Cache
  * @param {Array} languages - Languages
+ * @param {String} platform - Steaming Media Platform
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
-async function setSubtitlesCache(platform, playlist, cache, language) {
+async function setSubtitlesCache(playlist, cache, languages, platform) {
 	$.log(`☑️ ${$.name}, setSubtitlesCache`, "");
-	await Promise.all(playlist?.[language]?.map(async subtitlesPlaylistDATA => {
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA: ${JSON.stringify(subtitlesPlaylistDATA)}`, "");
-		// 查找字幕文件地址vtt缓存（map）
-		let subtitlesURIArray = cache.get(subtitlesPlaylistDATA.URL) ?? [];
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA?.URL: ${subtitlesPlaylistDATA?.URL}`, "");
-		// 获取字幕文件地址vtt缓存（按语言）
-		subtitlesURIArray = await getVTTs(subtitlesPlaylistDATA?.URL, $request.headers, platform);
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
-		// 写入字幕文件地址vtt缓存到map
-		cache = cache.set(subtitlesPlaylistDATA.URL, subtitlesURIArray);
-		//$.log(`✅ ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(cache.get(subtitlesPlaylistDATA.URL))}`, "");
-		$.log(`✅ ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA?.URL: ${subtitlesPlaylistDATA?.URL}`, "");
+	await Promise.all(languages?.map(async language => {
+		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `language: ${language}`, "");
+		await Promise.all(playlist?.[language]?.map(async subtitlesPlaylistDATA => {
+			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA: ${JSON.stringify(subtitlesPlaylistDATA)}`, "");
+			// 查找字幕文件地址vtt缓存（map）
+			let subtitlesURIArray = cache.get(subtitlesPlaylistDATA.URL) ?? [];
+			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
+			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA?.URL: ${subtitlesPlaylistDATA?.URL}`, "");
+			// 获取字幕文件地址vtt缓存（按语言）
+			subtitlesURIArray = await getVTTs(subtitlesPlaylistDATA?.URL, $request.headers, platform);
+			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
+			// 写入字幕文件地址vtt缓存到map
+			cache = cache.set(subtitlesPlaylistDATA.URL, subtitlesURIArray);
+			//$.log(`✅ ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(cache.get(subtitlesPlaylistDATA.URL))}`, "");
+			$.log(`✅ ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA?.URL: ${subtitlesPlaylistDATA?.URL}`, "");
+		}));
 	}));
 	return cache;
 };
@@ -362,13 +360,11 @@ async function setSubtitlesCache(platform, playlist, cache, language) {
  * Set Cache
  * @author VirgilClyne
  * @param {Map} cache - Playlists Cache / Subtitles Cache
- * @param {Object} data - {key, value}
  * @param {Number} cacheSize - Cache Size
  * @return {Boolean} isSaved
  */
-function setCache(cache, cacheSize = 100, { key = undefined, value = undefined }) {
-	$.log(`☑️ ${$.name}, Set Cache, key: ${key}, cacheSize: ${cacheSize}`, "");
-	if (key && value) cache.set(key, value);
+function setCache(cache, cacheSize = 100) {
+	$.log(`☑️ ${$.name}, Set Cache, cacheSize: ${cacheSize}`, "");
 	cache = Array.from(cache || []); // Map转Array
 	cache = cache.slice(-cacheSize); // 限制缓存大小
 	$.log(`✅ ${$.name}, Set Cache`, "");

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.7(2) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(18) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -131,16 +131,75 @@ const DataBase = {
 					playlistCache[Settings.Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[1]]);
 					$.log(`🚧 ${$.name}`, "playlistCache[Settings.Languages[1]]", JSON.stringify(playlistCache[Settings.Languages[1]]), "");
 					// 写入数据
-					//Caches.Playlists.set($request.url, playlistCache);
+					Caches.Playlists.set($request.url, playlistCache);
 					// 格式化缓存
-					Caches.Playlists = setCache(Caches?.Playlists, { key: $request.url, value: playlistCache }, Settings.Official.CacheSize);
-					//Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
+					Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
+					Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
 					// 写入持久化储存
-					$.setjson(Caches.Playlists, `@DualSubs.${"Universal"}.Caches.Playlists`);
+					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
 					//Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					// 写入选项
 					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Standard);
+					/*
+					if (playlistCache[Settings.Languages[0]]?.length !== 0) {
+						$.log(`🚧 ${$.name}, 有首选字幕`, "");
+						if (playlistCache[Settings.Languages[1]]?.length !== 0) {
+							$.log(`🚧 ${$.name}, 有次选字幕`, "");
+							playlistCache[Settings.Languages[0]]?.forEach(playlist0 => {
+								playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
+									if (playlist0?.OPTION?.["GROUP-ID"] === playlist1?.OPTION?.["GROUP-ID"]) {
+										let index = body.findIndex(item => item?.OPTION?.URI === playlist0.OPTION.URI);
+										// 兼容性修正
+										switch (Platform) {
+											case "Apple":
+												if (playlist0?.OPTION.CHARACTERISTICS == playlist1?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+													// 创建字幕选项
+													let options = Settings.Types.map(type => setOption(Platform, playlist0, playlist1, type, Standard));
+													if (Standard == true) body.splice(index + 1, 0, ...options)
+													else body.splice(index, 1, ...options);
+												}
+												break;
+											default:
+												// 创建字幕选项
+												let options = Settings.Types.map(type => setOption(Platform, playlist0, playlist1, type, Standard));
+												if (Standard == true) body.splice(index + 1, 0, ...options)
+												else body.splice(index, 1, ...options);
+												break;
+										};
+									};
+								});
+							});
+						}
+					} else if (playlistCache[Settings.Languages[0]]?.length === 0) {
+						$.log(`🚧 ${$.name}, 无首选字幕`, "");
+						Settings.Types = Settings.Types.filter(e => e !== "Official"); // 无首选语言时删除官方字幕选项
+						let playlist0 = {
+							"OPTION": {
+								"TYPE": "SUBTITLES",
+								//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
+								"NAME": Settings.Languages[0],
+								"LANGUAGE": Settings.Languages[0],
+								//"URI": playlist?.URI,
+							}
+						};
+						if (playlistCache[Settings.Languages[1]]?.length !== 0) {
+							$.log(`🚧 ${$.name}, 有次选字幕`, "");
+							playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
+								let index = body.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI);
+								if (index) {
+									// 创建字幕选项
+									let options = Settings.Types.map(type => setOption(Platform, playlist1, playlist0, type, Standard));
+									if (Standard == true) body.splice(index + 1, 0, ...options)
+									else body.splice(index, 1, ...options);
+								};
+							});
+						} else {
+							$.log(`🚧 ${$.name}, 无任何字幕`, "");
+							// 新增字幕选项，待完成
+						};
+					};
+					*/
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -254,11 +313,9 @@ function setENV(name, platform, database) {
 	*/
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	Caches.Playlists = JSON.parse(Caches?.Playlists || []);
-	Caches.Subtitles = JSON.parse(Caches?.Subtitles || []);
-	$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
-	Caches.Subtitles = new Map(Caches?.Playlists || []); // Array转Map
+	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 
@@ -299,13 +356,11 @@ function setPlaylistCache(url, body, cache, languages, database) {
  * Set Cache
  * @author VirgilClyne
  * @param {Map} cache - Playlists Cache / Subtitles Cache
- * @param {Object} data - {key, value}
  * @param {Number} cacheSize - Cache Size
  * @return {Boolean} isSaved
  */
-function setCache(cache, { key, value }, cacheSize = 100) {
-	$.log(`☑️ ${$.name}, Set Cache, key: ${key}, cacheSize: ${cacheSize}`, "");
-	cache.set(key, value);
+function setCache(cache, cacheSize = 100) {
+	$.log(`☑️ ${$.name}, Set Cache, cacheSize: ${cacheSize}`, "");
 	cache = Array.from(cache || []); // Map转Array
 	cache = cache.slice(-cacheSize); // 限制缓存大小
 	$.log(`✅ ${$.name}, Set Cache`, "");

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(18) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(19) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -120,16 +120,11 @@ const DataBase = {
 					// 序列化M3U8
 					body = M3U8.parse($response.body);
 					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
-					// 写入字幕播放列表m3u8缓存（map）
-					//const { subtitlesPlaylist: playlistCache } = await setPlaylistCache($request.url, body, Caches.Playlists, Settings.Languages, Configs.Languages.Official);
 					// 读取已存数据
 					let playlistCache = Caches.Playlists.get($request.url) || {};
-					// 查找特定语言的字幕
-					$.log(`🚧 ${$.name}`, "playlistCache", JSON.stringify(playlistCache), "");
+					// 获取特定语言的字幕
 					playlistCache[Settings.Languages[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[0]]);
-					$.log(`🚧 ${$.name}`, "playlistCache[Settings.Languages[0]]", JSON.stringify(playlistCache[Settings.Languages[0]]), "");
 					playlistCache[Settings.Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[1]]);
-					$.log(`🚧 ${$.name}`, "playlistCache[Settings.Languages[1]]", JSON.stringify(playlistCache[Settings.Languages[1]]), "");
 					// 写入数据
 					Caches.Playlists.set($request.url, playlistCache);
 					// 格式化缓存
@@ -137,69 +132,9 @@ const DataBase = {
 					Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
 					// 写入持久化储存
 					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
-					//Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					// 写入选项
 					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Standard);
-					/*
-					if (playlistCache[Settings.Languages[0]]?.length !== 0) {
-						$.log(`🚧 ${$.name}, 有首选字幕`, "");
-						if (playlistCache[Settings.Languages[1]]?.length !== 0) {
-							$.log(`🚧 ${$.name}, 有次选字幕`, "");
-							playlistCache[Settings.Languages[0]]?.forEach(playlist0 => {
-								playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
-									if (playlist0?.OPTION?.["GROUP-ID"] === playlist1?.OPTION?.["GROUP-ID"]) {
-										let index = body.findIndex(item => item?.OPTION?.URI === playlist0.OPTION.URI);
-										// 兼容性修正
-										switch (Platform) {
-											case "Apple":
-												if (playlist0?.OPTION.CHARACTERISTICS == playlist1?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-													// 创建字幕选项
-													let options = Settings.Types.map(type => setOption(Platform, playlist0, playlist1, type, Standard));
-													if (Standard == true) body.splice(index + 1, 0, ...options)
-													else body.splice(index, 1, ...options);
-												}
-												break;
-											default:
-												// 创建字幕选项
-												let options = Settings.Types.map(type => setOption(Platform, playlist0, playlist1, type, Standard));
-												if (Standard == true) body.splice(index + 1, 0, ...options)
-												else body.splice(index, 1, ...options);
-												break;
-										};
-									};
-								});
-							});
-						}
-					} else if (playlistCache[Settings.Languages[0]]?.length === 0) {
-						$.log(`🚧 ${$.name}, 无首选字幕`, "");
-						Settings.Types = Settings.Types.filter(e => e !== "Official"); // 无首选语言时删除官方字幕选项
-						let playlist0 = {
-							"OPTION": {
-								"TYPE": "SUBTITLES",
-								//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
-								"NAME": Settings.Languages[0],
-								"LANGUAGE": Settings.Languages[0],
-								//"URI": playlist?.URI,
-							}
-						};
-						if (playlistCache[Settings.Languages[1]]?.length !== 0) {
-							$.log(`🚧 ${$.name}, 有次选字幕`, "");
-							playlistCache[Settings.Languages[1]]?.forEach(playlist1 => {
-								let index = body.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI);
-								if (index) {
-									// 创建字幕选项
-									let options = Settings.Types.map(type => setOption(Platform, playlist1, playlist0, type, Standard));
-									if (Standard == true) body.splice(index + 1, 0, ...options)
-									else body.splice(index, 1, ...options);
-								};
-							});
-						} else {
-							$.log(`🚧 ${$.name}, 无任何字幕`, "");
-							// 新增字幕选项，待完成
-						};
-					};
-					*/
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -324,35 +259,6 @@ function setENV(name, platform, database) {
 };
 
 /**
- * Set Playlist Cache
- * @author VirgilClyne
- * @param {String} url - Request URL / Master Playlist URL
- * @param {Object} body - Response Body / Master Playlist Body
- * @param {Map} cache - Playlist Cache
- * @param {Array} languages - Languages
- * @param {Object} database - Languages Database
- * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist }
- */
-function setPlaylistCache(url, body, cache, languages, database) {
-	$.log(`☑️ ${$.name}, setPlaylistCache`, "");
-	let masterPlaylistURL = url;
-	let masterPlaylistBody = body;
-	let subtitlesPlaylist = cache?.get(masterPlaylistURL) || {};
-	//let subtitlesPlaylistIndex = 0;
-	// 查找字幕播放列表m3u8缓存（map）
-	languages?.map(language => {
-		//$.log(`🚧 ${$.name}, setPlaylistCache`, `language: ${language}`, "");
-		// 获取字幕播放列表m3u8缓存（按语言）
-		subtitlesPlaylist[language] = getMEDIA(masterPlaylistURL, masterPlaylistBody, "SUBTITLES", language, database);
-		//$.log(`🚧 ${$.name}, setPlaylistCache`, `Cache[${language}]`, JSON.stringify(Cache[language]), "");
-	});
-	// 写入字幕播放列表m3u8缓存到map
-	cache = cache.set(masterPlaylistURL, subtitlesPlaylist);
-	$.log(`✅ ${$.name}, setPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, "");
-	return { masterPlaylistURL, subtitlesPlaylist };
-};
-
-/**
  * Set Cache
  * @author VirgilClyne
  * @param {Map} cache - Playlists Cache / Subtitles Cache
@@ -399,6 +305,17 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 };
 
+/**
+ * Set Attribute List
+ * @author VirgilClyne
+ * @param {String} platform - Platform
+ * @param {Object} m3u8 - Parsed m3u8
+ * @param {Array} playlist0 - Languages1 (First Choice) Playlist
+ * @param {Array} playlist1 - Languages2 (Second Choice) Playlist
+ * @param {Array} Types - Types
+ * @param {Boolean} Standard - Standard
+ * @return {Object} m3u8
+ */
 function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, types = [], standard = true) {
 	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
 	if (playlist0?.length !== 0) {
@@ -479,10 +396,6 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	const NAME1 = playlist0?.OPTION?.NAME, NAME2 = playlist1?.OPTION?.NAME;
 	const LANGUAGE1 = playlist0?.OPTION?.LANGUAGE, LANGUAGE2 = playlist1?.OPTION?.LANGUAGE;
 	// 复制此语言选项
-	/*
-	let newOption = (playlist0?.TYPE) ? JSON.parse(JSON.stringify(playlist0))
-		: JSON.parse(JSON.stringify(playlist1))
-		*/
 	let newOption = JSON.parse(JSON.stringify(playlist0));
 	// 修改名称
 	//newSub.OPTION.NAME = `${playlist0.Name} / ${playlist1.Name} [${type}]`

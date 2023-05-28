@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(4) Subtitles.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(5) Subtitles.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -384,7 +384,7 @@ function getPlaylistCache(url, cache, languages) {
 		languages?.forEach(language => {
 			let Array = Value?.[language];
 			if (Array?.some((Object, Index) => {
-				if (url.includes(Object?.URL || null)) {
+				if (url.includes(Object?.URI || Object?.OPTION?.URI || null)) {
 					subtitlesPlaylistIndex = Index;
 					$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
 					return true;

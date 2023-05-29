@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(3) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(4) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -110,7 +110,8 @@ const DataBase = {
 					// 获取字幕播放列表m3u8缓存（map）
 					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists, Settings.Languages);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Subtitles = await setSubtitlesCache(subtitlesPlaylist, Caches.Subtitles, Settings.Languages);
+					Caches.Subtitles = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Subtitles, Settings.Languages[0]);
+					Caches.Subtitles = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Subtitles, Settings.Languages[1]);
 					// 格式化缓存
 					Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
 					Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
@@ -327,31 +328,27 @@ function getPlaylistCache(url, cache, languages) {
 /**
  * Set Subtitles Cache
  * @author VirgilClyne
- * @param {String} url - Request URL / Master Playlist URL
+ * @param {String} platform - Steaming Media Platform
  * @param {Object} playlist - Subtitles Playlist Cache
  * @param {Map} cache - Subtitles Cache
- * @param {Array} languages - Languages
- * @param {String} platform - Steaming Media Platform
+ * @param {Array} language - Language
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
-async function setSubtitlesCache(playlist, cache, languages, platform) {
-	$.log(`☑️ ${$.name}, setSubtitlesCache`, "");
-	await Promise.all(languages?.map(async language => {
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `language: ${language}`, "");
-		await Promise.all(playlist?.[language]?.map(async subtitlesPlaylistDATA => {
-			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA: ${JSON.stringify(subtitlesPlaylistDATA)}`, "");
-			// 查找字幕文件地址vtt缓存（map）
-			let subtitlesURIArray = cache.get(subtitlesPlaylistDATA.URL) ?? [];
-			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
-			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA?.URL: ${subtitlesPlaylistDATA?.URL}`, "");
-			// 获取字幕文件地址vtt缓存（按语言）
-			subtitlesURIArray = await getVTTs(subtitlesPlaylistDATA?.URL, $request.headers, platform);
-			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(subtitlesURIArray)}`, "");
-			// 写入字幕文件地址vtt缓存到map
-			cache = cache.set(subtitlesPlaylistDATA.URL, subtitlesURIArray);
-			//$.log(`✅ ${$.name}, setSubtitlesCache`, `subtitlesURIArray: ${JSON.stringify(cache.get(subtitlesPlaylistDATA.URL))}`, "");
-			$.log(`✅ ${$.name}, setSubtitlesCache`, `subtitlesPlaylistDATA?.URL: ${subtitlesPlaylistDATA?.URL}`, "");
-		}));
+async function setSubtitlesCache(platform, playlist, cache, language) {
+	$.log(`☑️ ${$.name}, setSubtitlesCache, language: ${language}`, "");
+	await Promise.all(playlist?.[language]?.map(async data => {
+		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `data: ${JSON.stringify(data)}`, "");
+		// 查找字幕文件地址vtt缓存（map）
+		let array = cache.get(data.URL) ?? [];
+		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
+		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `data?.URL: ${data?.URL}`, "");
+		// 获取字幕文件地址vtt缓存（按语言）
+		array = await getVTTs(data?.URL, $request.headers, platform);
+		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
+		// 写入字幕文件地址vtt缓存到map
+		cache = cache.set(data.URL, array);
+		//$.log(`✅ ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(cache.get(data.URL))}`, "");
+		$.log(`✅ ${$.name}, setSubtitlesCache`, `data?.URL: ${data?.URL}`, "");
 	}));
 	return cache;
 };
@@ -382,11 +379,11 @@ function setCache(cache, cacheSize = 100) {
 async function getVTTs(url, headers, platform) {
 	$.log(`☑️ ${$.name}, Get Subtitle *.vtt URLs`, "");
 	let response = await $.http.get({ url: url, headers: headers });
-	$.log(`🚧 ${$.name}, Get Subtitle *.vtt URLs`, `response: ${JSON.stringify(response)}`, "");
+	//$.log(`🚧 ${$.name}, Get Subtitle *.vtt URLs`, `response: ${JSON.stringify(response)}`, "");
 	let subtitlePlayList = M3U8.parse(response.body);
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/empty/.test(URI));
-	let VTTs = subtitlePlayList.map(({ URI }) => aPath(url, URI));
+	let VTTs = subtitlePlayList.map(({ URI }) => aPath($request.url, URI));
 	switch (platform) {
 		case "Disney_Plus":
 			if (VTTs.some(item => /\/.+-MAIN\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))

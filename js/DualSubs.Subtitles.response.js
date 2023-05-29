@@ -348,7 +348,7 @@ function setENV(name, platform, database) {
 	let { Settings, Caches, Configs } = getENV(name, platform, database);
 	/***************** Settings *****************/
 	traverseObject(Settings, (key, value) => {
-		if (value === "true" && value === "false") value = JSON.parse(value); // 字符串转Boolean
+		if (value === "true" || value === "false") value = JSON.parse(value); // 字符串转Boolean
 		else if (typeof value === "string") {
 			if (value?.includes(",")) value = value.split(","); // 字符串转数组
 			else if (!isNaN(value)) value = parseInt(value, 10) // 字符串转数字

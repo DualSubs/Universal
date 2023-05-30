@@ -21,12 +21,8 @@
 # DualSubs.TV+.Subtitles.response
 ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.response.js
 
-# DualSubs.Fitness.Master.m3u8.response
-^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\/playlist\.m3u8(\?.+)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js
-# DualSubs.Fitness.DualSubs.Subtitles.m3u8.response
-^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.m3u8(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
 # DualSubs.Fitness.Subtitles.response
-^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*dualsubs=\w+)$ url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.response.js
+^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.+)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.response.js
 
 # DualSubs.Disney+.Master.m3u8.response
 ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(cbcs|ctr)-all-(.+)\.m3u8(\?.+)?$ url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(19) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(20) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -134,7 +134,7 @@ const DataBase = {
 					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
 					Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					// 写入选项
-					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Standard);
+					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Settings.Languages, Standard);
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -312,11 +312,12 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  * @param {Object} m3u8 - Parsed m3u8
  * @param {Array} playlist0 - Languages1 (First Choice) Playlist
  * @param {Array} playlist1 - Languages2 (Second Choice) Playlist
- * @param {Array} Types - Types
+ * @param {Array} types - Types
+ * @param {Array} languages - Languages
  * @param {Boolean} Standard - Standard
  * @return {Object} m3u8
  */
-function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, types = [], standard = true) {
+function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, types = [], languages = [], standard = true) {
 	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
 	if (playlist0?.length !== 0) {
 		$.log(`🚧 ${$.name}, 有首选字幕`, "");
@@ -354,8 +355,8 @@ function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, t
 			"OPTION": {
 				"TYPE": "SUBTITLES",
 				//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
-				"NAME": Settings.Languages[0],
-				"LANGUAGE": Settings.Languages[0],
+				"NAME": languages[0],
+				"LANGUAGE": languages[0],
 				//"URI": playlist?.URI,
 			}
 		};

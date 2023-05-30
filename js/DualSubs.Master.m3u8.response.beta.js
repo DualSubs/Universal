@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(23) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(24) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -356,8 +356,8 @@ function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, t
 			"OPTION": {
 				"TYPE": "SUBTITLES",
 				//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
-				"NAME": languages[0],
-				"LANGUAGE": languages[0],
+				"NAME": languages[0].toLowerCase(),
+				"LANGUAGE": languages[0].toLowerCase(),
 				//"URI": playlist?.URI,
 			}
 		};
@@ -402,10 +402,9 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	// 修改名称
 	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
 	// 修改语言代码
-	//newOption.OPTION.LANGUAGE = (standard) ? playlist0.Language : playlist1.Language
 	newOption.OPTION.LANGUAGE = (standard) ? LANGUAGE1 : LANGUAGE2
 	// 增加副语言
-	newOption.OPTION["ASSOC-LANGUAGE"] = (standard) ? LANGUAGE2 : LANGUAGE1
+	newOption.OPTION["ASSOC-LANGUAGE"] = ((standard) ? LANGUAGE2 : LANGUAGE1).toLowerCase()
 	// 修改链接
 	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&dualsubs=${type}`
 		: `${newOption?.OPTION?.URI}?dualsubs=${type}`

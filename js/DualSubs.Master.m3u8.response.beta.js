@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(20) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(21) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -399,13 +399,12 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	// 复制此语言选项
 	let newOption = JSON.parse(JSON.stringify(playlist0));
 	// 修改名称
-	//newSub.OPTION.NAME = `${playlist0.Name} / ${playlist1.Name} [${type}]`
 	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
 	// 修改语言代码
-	//newOption.OPTION.LANGUAGE = (standard) ? `${playlist0.Language}` : `${playlist1.Language}`
-	newOption.OPTION.LANGUAGE = (standard) ? `${LANGUAGE1}` : `${LANGUAGE2}`
+	//newOption.OPTION.LANGUAGE = (standard) ? playlist0.Language : playlist1.Language
+	newOption.OPTION.LANGUAGE = (standard) ? LANGUAGE1 : LANGUAGE2
 	// 增加副语言
-	newOption.OPTION["ASSOC-LANGUAGE"] = (standard) ? `${LANGUAGE2}` : `${LANGUAGE1}`
+	newOption.OPTION["ASSOC-LANGUAGE"] = (standard) ? LANGUAGE2 : LANGUAGE1
 	// 修改链接
 	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&dualsubs=${type}`
 		: `${newOption?.OPTION?.URI}?dualsubs=${type}`

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(24) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.7(10) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -121,17 +121,20 @@ const DataBase = {
 					body = M3U8.parse($response.body);
 					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// 读取已存数据
-					let playlistCache = Caches.Playlists.get($request.url) || {};
+					let playlistCache = Caches.Playlists.Master.get($request.url) || {};
 					// 获取特定语言的字幕
 					playlistCache[Settings.Languages[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[0]]);
 					playlistCache[Settings.Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[1]]);
 					// 写入数据
-					Caches.Playlists.set($request.url, playlistCache);
+					Caches.Playlists.Master.set($request.url, playlistCache);
 					// 格式化缓存
-					Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
-					Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
+					Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.Official.CacheSize);
+					//Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.Official.CacheSize);
+					//Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
 					// 写入持久化储存
-					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
+					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Universal"}.Caches.Playlists.Master`);
+					//$.setjson(Caches.Playlists.Subtitle, `@DualSubs.${"Universal"}.Caches.Playlists.Subtitle`);
+					//$.setjson(Caches.Playlists.Subtitles, `@DualSubs.${"Universal"}.Caches.Subtitles`);
 					Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					// 写入选项
 					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Settings.Languages, Standard);
@@ -250,8 +253,10 @@ function setENV(name, platform, database) {
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
-	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
+	if (typeof Caches.Playlists !== "object" || Array.isArray(Caches.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
+	Caches.Playlists.Master = new Map(JSON.parse(Caches?.Playlists?.Master || "[]")); // Strings转Array转Map
+	Caches.Playlists.Subtitle = new Map(JSON.parse(Caches?.Playlists?.Subtitle || "[]")); // Strings转Array转Map
+	Caches.Subtitles = new Map(JSON.parse(Caches?.Subtitles || "[]")); // Strings转Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 

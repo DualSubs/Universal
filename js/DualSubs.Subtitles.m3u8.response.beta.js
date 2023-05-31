@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(4) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.7(10) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -108,15 +108,17 @@ const DataBase = {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 获取字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists, Settings.Languages);
+					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists.Master, Settings.Languages);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Subtitles = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Subtitles, Settings.Languages[0]);
-					Caches.Subtitles = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Subtitles, Settings.Languages[1]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, Settings.Languages[0]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, Settings.Languages[1]);
 					// 格式化缓存
-					Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
-					Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
+					//Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
+					//Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
+					Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.Official.CacheSize);
 					// 写入缓存
-					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
+					//$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
+					$.setjson(Caches.Playlists.Subtitle, `@DualSubs.${"Universal"}.Caches.Playlists.Subtitle`);
 					break;
 				case "Translate":
 				default:
@@ -263,8 +265,7 @@ function setENV(name, platform, database) {
 		};
 		return value;
 	});
-	//Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
-	//if (typeof Settings?.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
 	/*
 	if (Array.isArray(Settings?.Types)) {
 		if (!Settings?.API?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
@@ -272,18 +273,13 @@ function setENV(name, platform, database) {
 		if (!Settings?.API?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	}
 	*/
-	//if (Settings?.CacheSize) Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
-	//if (Settings?.Tolerance) Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
-	//if (Settings?.External?.Offset) Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
-	//if (Settings?.External?.ShowOnly) Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
-	//if (Settings?.Advanced?.Translator?.Times) Settings.Advanced.Translator.Times = parseInt(Settings?.Advanced?.Translator?.Times, 10) // BoxJs字符串转数字
-	//if (Settings?.Advanced?.Translator?.Interval) Settings.Advanced.Translator.Interval = parseInt(Settings?.Advanced?.Translator?.Interval, 10) // BoxJs字符串转数字
-	//if (Settings?.Advanced?.Translator?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Advanced?.Translator?.Exponential) //  BoxJs字符串转Boolean
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
-	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
+	$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	if (typeof Caches.Playlists !== "object" || Array.isArray(Caches.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
+	Caches.Playlists.Master = new Map(JSON.parse(Caches?.Playlists?.Master || "[]")); // Strings转Array转Map
+	Caches.Playlists.Subtitle = new Map(JSON.parse(Caches?.Playlists?.Subtitle || "[]")); // Strings转Array转Map
+	Caches.Subtitles = new Map(JSON.parse(Caches?.Subtitles || "[]")); // Strings转Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 

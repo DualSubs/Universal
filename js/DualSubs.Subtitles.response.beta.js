@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.5(5) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(9) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -115,11 +115,11 @@ const DataBase = {
 					//Settings.Tolerance = Settings.Official.Tolerance || 1000;
 					//Settings.Position = Settings.Official.Position || "Forward";
 					// 获取字幕文件地址vtt缓存（map）
-					const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Subtitles, Settings.Languages);
+					const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Settings.Languages);
 					// 获取字幕播放列表m3u8缓存（map）
-					const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches?.Playlists, Settings.Languages);
+					const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, Settings.Languages);
 					// 获取字幕文件地址vtt缓存（map）
-					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists, Caches.Subtitles, Settings.Languages);
+					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Settings.Languages);
 					// 获取官方字幕请求
 					if (subtitlesURIArray1.length) {
 						$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
@@ -375,8 +375,7 @@ function setENV(name, platform, database) {
 		};
 		return value;
 	});
-	//Settings.Switch = JSON.parse(Settings.Switch) //  BoxJs字符串转Boolean
-	//if (typeof Settings?.Types === "string") Settings.Types = Settings.Types.split(",") // BoxJs字符串转数组
+	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
 	/*
 	if (Array.isArray(Settings?.Types)) {
 		if (!Settings?.API?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
@@ -384,18 +383,13 @@ function setENV(name, platform, database) {
 		if (!Settings?.API?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	}
 	*/
-	//if (Settings?.CacheSize) Settings.CacheSize = parseInt(Settings.CacheSize, 10) // BoxJs字符串转数字
-	//if (Settings?.Tolerance) Settings.Tolerance = parseInt(Settings.Tolerance, 10) // BoxJs字符串转数字
-	//if (Settings?.External?.Offset) Settings.External.Offset = parseInt(Settings.External?.Offset, 10) // BoxJs字符串转数字
-	//if (Settings?.External?.ShowOnly) Settings.External.ShowOnly = JSON.parse(Settings.External?.ShowOnly) //  BoxJs字符串转Boolean
-	//if (Settings?.Translate?.Times) Settings.Advanced.Translator.Times = parseInt(Settings?.Translate?.Times, 10) // BoxJs字符串转数字
-	//if (Settings?.Translate?.Interval) Settings.Advanced.Translator.Interval = parseInt(Settings?.Translate?.Interval, 10) // BoxJs字符串转数字
-	//if (Settings?.Translate?.Exponential) Settings.Advanced.Translator.Exponential = JSON.parse(Settings?.Translate?.Exponential) //  BoxJs字符串转Boolean
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
-	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
+	if (typeof Caches.Playlists !== "object" || Array.isArray(Caches.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
+	Caches.Playlists.Master = new Map(JSON.parse(Caches?.Playlists?.Master || "[]")); // Strings转Array转Map
+	Caches.Playlists.Subtitle = new Map(JSON.parse(Caches?.Playlists?.Subtitle || "[]")); // Strings转Array转Map
+	Caches.Subtitles = new Map(JSON.parse(Caches?.Subtitles || "[]")); // Strings转Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 

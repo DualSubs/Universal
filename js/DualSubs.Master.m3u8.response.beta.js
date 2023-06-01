@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.7(10) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.7(11) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -129,12 +129,8 @@ const DataBase = {
 					Caches.Playlists.Master.set($request.url, playlistCache);
 					// 格式化缓存
 					Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.Official.CacheSize);
-					//Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.Official.CacheSize);
-					//Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
 					// 写入持久化储存
 					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Universal"}.Caches.Playlists.Master`);
-					//$.setjson(Caches.Playlists.Subtitle, `@DualSubs.${"Universal"}.Caches.Playlists.Subtitle`);
-					//$.setjson(Caches.Playlists.Subtitles, `@DualSubs.${"Universal"}.Caches.Subtitles`);
 					Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					// 写入选项
 					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Settings.Languages, Standard);

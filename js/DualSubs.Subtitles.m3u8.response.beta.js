@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.7(11) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(1) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -144,8 +144,8 @@ const DataBase = {
 					body = body.map(item => {
 						if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
 							const symbol = (item.URI.includes("?")) ? "&" : "?"
-							item.URI = item.URI + symbol + `dualsubs=${Type}`
-							//item.URI = item.URI + symbol + `dualsubs=${Type}&format=${"vtt"}`
+							item.URI = item.URI + symbol + `subtype=${Type}`
+							//item.URI = item.URI + symbol + `subtype=${Type}&sublang=${"vtt"}`
 						}
 						return item;
 					})

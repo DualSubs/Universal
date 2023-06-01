@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.7(11) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(1) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -395,44 +395,44 @@ function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, t
  * @return {Promise<*>}
  */
 function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", standard) {
-	$.log(`⚠ ${$.name}, 调试信息`, "Set DualSubs Subtitle Option", `type: ${type}`, "");
+	$.log(`☑️ ${$.name}, 调试信息`, "Set DualSubs Subtitle Option", `type: ${type}`, "");
 	const NAME1 = playlist0?.OPTION?.NAME, NAME2 = playlist1?.OPTION?.NAME;
 	const LANGUAGE1 = playlist0?.OPTION?.LANGUAGE, LANGUAGE2 = playlist1?.OPTION?.LANGUAGE;
 	// 复制此语言选项
 	let newOption = JSON.parse(JSON.stringify(playlist0));
 	// 修改名称
-	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
+	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
 	// 修改语言代码
 	newOption.OPTION.LANGUAGE = (standard) ? LANGUAGE1 : LANGUAGE2
 	// 增加副语言
-	newOption.OPTION["ASSOC-LANGUAGE"] = ((standard) ? LANGUAGE2 : LANGUAGE1).toLowerCase()
+	newOption.OPTION["ASSOC-LANGUAGE"] = ((standard) ? LANGUAGE2 : LANGUAGE1).toLowerCase();
 	// 修改链接
-	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&dualsubs=${type}`
-		: `${newOption?.OPTION?.URI}?dualsubs=${type}`
+	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&subtype=${type}`
+		: `${newOption?.OPTION?.URI}?subtype=${type}`;
 	// 自动选择
-	newOption.OPTION.AUTOSELECT = "YES"
+	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正
 	switch (platform) {
 		case "Apple":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`
+			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
+			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
 			break;
 		case "Disney_Plus":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
+			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
+			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
 			break;
 		case "Prime_Video":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`
+			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
 			break;
 		case "Hulu":
 		case "Paramount_Plus":
 		case "Discovery_Plus_Ph":
-			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`
-			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`
+			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
+			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
+			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
 	};
-	$.log(`🎉 ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
+	$.log(`✅ ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
 	return newOption;
 };
 

@@ -2,9 +2,10 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(4) Master.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.7(2) Subtitles.Composite.response");
 const URL = new URLs();
-const M3U8 = new EXTM3U(["\n"]);
+const XML = new XMLs();
+const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default": {
 		"Settings": {"Switch":true},
@@ -103,8 +104,54 @@ const DataBase = {
 			// 获取字幕格式
 			const Format = url.params?.fmt || url.params?.format || PATHs?.[PATHs?.length - 1]?.split(".")?.[1], Kind = url.params?.kind;
 			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
-			// 兼容性判断
-			const Standard = isStandard(Platform, $request.url, $request.headers);
+			// 创建字幕请求队列
+			let requests = [];
+			// 处理类型
+			switch (Type) {
+				case "Official":
+					$.log(`🚧 ${$.name}`, "官方字幕", "");
+					// 设置字幕偏移参数
+					//Settings.Offset = Settings.Official.Offset || 0;
+					//Settings.Tolerance = Settings.Official.Tolerance || 1000;
+					//Settings.Position = Settings.Official.Position || "Forward";
+					// 获取字幕文件地址vtt缓存（map）
+					const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Settings.Languages);
+					// 获取字幕播放列表m3u8缓存（map）
+					const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, Settings.Languages);
+					// 获取字幕文件地址vtt缓存（map）
+					const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Settings.Languages);
+					// 获取官方字幕请求
+					if (subtitlesURIArray1.length) {
+						$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
+						// 获取字幕文件名
+						let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, Platform);
+						$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
+						// 构造请求队列
+						requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
+					};
+					break;
+				case "Translate":
+				default:
+					$.log(`🚧 ${$.name}, 翻译字幕`, "");
+					//Settings.Position = Settings.Translate.Position || "Forward";
+					break;
+				case "External":
+					$.log(`🚧 ${$.name}, 外挂字幕`, "");
+					//Settings.Offset = Settings.External.Offset || 0;
+					//Settings.Tolerance = Settings.External.Tolerance || 1000;
+					//Settings.Position = Settings.External.Position || "Forward";
+					let request = {
+						"url": Settings.External.URL,
+						"headers": {
+							"Accept": "*/*",
+							"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+						}
+					};
+					requests.push(request);
+					break;
+			};
+			// 创建第二字幕Object
+			let SecondSub = {};
 			// 格式判断
 			switch (Format || FORMAT) {
 				case undefined: // 视为无body
@@ -117,24 +164,55 @@ const DataBase = {
 				case "m3u8":
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
-					// 序列化M3U8
-					body = M3U8.parse($response.body);
-					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
-					// 读取已存数据
-					let playlistCache = Caches.Playlists.Master.get($request.url) || {};
-					// 获取特定语言的字幕
-					playlistCache[Settings.Languages[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[0]]);
-					playlistCache[Settings.Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages.Official[Settings.Languages[1]]);
-					// 写入数据
-					Caches.Playlists.Master.set($request.url, playlistCache);
-					// 格式化缓存
-					Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.Official.CacheSize);
-					// 写入持久化储存
-					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Universal"}.Caches.Playlists.Master`);
-					// 写入选项
-					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Settings.Languages, Standard);
-					// 字符串M3U8
-					$response.body = M3U8.stringify(body);
+					break;
+				case "srv3":
+				case "text/xml":
+				case "application/xml":
+					body = XML.parse($response.body);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					for await (let request of requests) {
+						SecondSub = await $.http.get(request).then(response => response.body);
+						SecondSub = XML.parse(SecondSub);
+						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+					};
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					$response.body = XML.stringify(body);
+					break;
+				case "text/plist":
+				case "application/plist":
+				case "application/x-plist":
+					break;
+				case "vtt":
+				case "webvtt":
+				case "text/vtt":
+				case "application/vtt":
+					body = VTT.parse($response.body);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					for await (let request of requests) {
+						SecondSub = await $.http.get(request).then(response => response.body);
+						SecondSub = VTT.parse(SecondSub);
+						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Official.Offset, Settings.Official.Tolerance, [Settings.Official.Position]);
+					};
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					$response.body = VTT.stringify(body);
+					break;
+				case "json3":
+				case "text/json":
+				case "application/json":
+					body = JSON.parse($response.body);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					for await (let request of requests) {
+						SecondSub = await $.http.get(request).then(response => response.body);
+						SecondSub = JSON.parse(SecondSub);
+						body = CombineDualSubs(body, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+					};
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					$response.body = JSON.stringify(body);
+					break;
+				case "application/x-protobuf":
+				case "application/grpc":
+				case "application/grpc+proto":
+				case "applecation/octet-stream":
 					break;
 			};
 			break;
@@ -241,10 +319,17 @@ function setENV(name, platform, database) {
 		return value;
 	});
 	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
+	/*
+	if (Array.isArray(Settings?.Types)) {
+		if (!Settings?.API?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+		if (!Settings?.API?.Azure?.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+		if (!Settings?.API?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+	}
+	*/
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	if (typeof Caches?.Playlists !== "object" || Array.isArray(Caches?.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
+	if (typeof Caches.Playlists !== "object" || Array.isArray(Caches.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
 	Caches.Playlists.Master = new Map(JSON.parse(Caches?.Playlists?.Master || "[]")); // Strings转Array转Map
 	Caches.Playlists.Subtitle = new Map(JSON.parse(Caches?.Playlists?.Subtitle || "[]")); // Strings转Array转Map
 	if (typeof Caches?.Subtitles !== "object") Caches.Subtitles = new Map(JSON.parse(Caches?.Subtitles || "[]")); // Strings转Array转Map
@@ -253,6 +338,93 @@ function setENV(name, platform, database) {
 
 	function traverseObject(o,c){for(var t in o){var n=o[t];o[t]="object"==typeof n&&null!==n?traverseObject(n,c):c(t,n)}return o}
 
+};
+
+/**
+ * Get Playlist Cache
+ * @author VirgilClyne
+ * @param {String} url - Request URL / Master Playlist URL
+ * @param {Map} cache - Playlist Cache
+ * @param {Array} languages - Languages
+ * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
+ */
+function getPlaylistCache(url, cache, languages) {
+	$.log(`☑️ ${$.name}, getPlaylistCache`, "");
+	let masterPlaylistURL = "";
+	let subtitlesPlaylist = {};
+	let subtitlesPlaylistIndex = 0;
+	cache?.forEach((Value, Key) => {
+		languages?.forEach(language => {
+			let Array = Value?.[language];
+			if (Array?.some((Object, Index) => {
+				if (url.includes(Object?.URI || Object?.OPTION?.URI || null)) {
+					subtitlesPlaylistIndex = Index;
+					$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+					return true;
+				} else return false;
+			})) {
+				masterPlaylistURL = Key;
+				subtitlesPlaylist = Value;
+				//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+			};
+		});
+	});
+	$.log(`✅ ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
+	return { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex };
+};
+
+/**
+ * Get Subtitles Cache
+ * @author VirgilClyne
+ * @param {String} url - Request URL / Subtitles URL
+ * @param {Map} cache - Subtitles Cache
+ * @param {Array} languages - Languages
+ * @return {Promise<Object>} { subtitlesPlaylistURL, subtitles, subtitlesIndex }
+ */
+function getSubtitlesCache(url, cache, languages) {
+	$.log(`☑️ ${$.name}, getSubtitlesCache`, "");
+	let subtitlesPlaylistURL = "";
+	let subtitles = [];
+	let subtitlesIndex = 0;
+	cache?.forEach((Value, Key) => {
+		if (Value?.some((String, Index) => {
+			if (url.includes(String || null)) {
+				subtitlesIndex = Index;
+				$.log(`🚧 ${$.name}, getSubtitlesCache`, `subtitlesIndex: ${subtitlesIndex}`, "");
+				return true;
+			} else return false;
+		})) {
+			subtitlesPlaylistURL = Key;
+			subtitles = Value;
+			//$.log(`🚧 ${$.name}, getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
+		};
+	});
+	$.log(`✅ ${$.name}, getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
+	return { subtitlesPlaylistURL, subtitles, subtitlesIndex };
+};
+
+/**
+ * Get Subtitles Array
+ * @author VirgilClyne
+ * @param {String} url - Request URL / Master Playlist URL
+ * @param {Number} index - Subtitles Playlist Index
+ * @param {Map} playlistsCache - Playlists Cache
+ * @param {Map} subtitlesCache - Subtitles Cache
+ * @param {Array} languages - Languages
+ * @return {Promise<Object>} { subtitlesURIArray0, subtitlesURIArray1 }
+ */
+function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages) {
+	$.log(`☑️ ${$.name}, getSubtitlesArray`, "");
+	const subtitlesPlaylistValue = playlistsCache?.get(url) || {};
+	let subtitlesPlaylistURL0 = subtitlesPlaylistValue?.[languages[0]]?.[index]?.URL || subtitlesPlaylistValue?.[languages[0]]?.[0]?.URL;
+	let subtitlesPlaylistURL1 = subtitlesPlaylistValue?.[languages[1]]?.[index]?.URL || subtitlesPlaylistValue?.[languages[1]]?.[0]?.URL;
+	$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesPlaylistURL0: ${subtitlesPlaylistURL0}, subtitlesPlaylistURL1: ${subtitlesPlaylistURL1}`, "");
+	// 查找字幕文件地址vtt缓存（map）
+	let subtitlesURIArray0 = subtitlesCache.get(subtitlesPlaylistURL0) || [];
+	let subtitlesURIArray1 = subtitlesCache.get(subtitlesPlaylistURL1) || [];
+	//$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
+	$.log(`✅ ${$.name}, getSubtitlesArray`, "");
+	return { subtitlesURIArray0, subtitlesURIArray1 };
 };
 
 /**
@@ -271,211 +443,256 @@ function setCache(cache, cacheSize = 100) {
 };
 
 /**
- * Get Attribute List
+ * Get Subtitles FileName
  * @author VirgilClyne
- * @param {String} url - Request URL
- * @param {Object} m3u8 - Parsed M3U8
- * @param {String} type - Content Type
- * @param {Array} langCodes - Language Codes Array
- * @return {Array} datas
+ * @param {String} url - Request URL / Subtitles URL
+ * @param {String} platform - Platform Name
+ * @return {String<*>} fileName
  */
-function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
-	$.log(`☑️ $${$.name}, Get Attribute List`, `langCodes: ${langCodes}`, "");
-	let attrList = m3u8.filter(item => item?.OPTION?.TYPE === type && item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
-	//$.log(`🚧 ${$.name}`, "attrList", JSON.stringify(attrList), "");
-	let matchList = [];
-	//查询是否有符合语言的内容
-	for (let langcode of langCodes) {
-		$.log(`🚧 ${$.name}, Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
-		matchList = attrList.filter(item => item?.OPTION?.LANGUAGE?.toLowerCase() === langcode?.toLowerCase());
-		if (matchList.length !== 0) break;
-	};
-	matchList = matchList.map(data => {
-		data.URL = aPath(url, data?.OPTION?.URI ?? null);
-		return data;
-	})
-	$.log(`✅ $${$.name}, Get Attribute List`, `matchList: ${JSON.stringify(matchList)}`, "");
-	return matchList;
-
-	/***************** Fuctions *****************/
-	// Get Absolute Path
-	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
-};
-
-/**
- * Set Attribute List
- * @author VirgilClyne
- * @param {String} platform - Platform
- * @param {Object} m3u8 - Parsed m3u8
- * @param {Array} playlist0 - Languages1 (First Choice) Playlist
- * @param {Array} playlist1 - Languages2 (Second Choice) Playlist
- * @param {Array} types - Types
- * @param {Array} languages - Languages
- * @param {Boolean} Standard - Standard
- * @return {Object} m3u8
- */
-function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, types = [], languages = [], standard = true) {
-	types = (standard == true) ? types : ["Translate"];
-	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
-	if (playlist0?.length !== 0) {
-		$.log(`🚧 ${$.name}, 有首选字幕`, "");
-		if (playlist1?.length !== 0) {
-			$.log(`🚧 ${$.name}, 有次选字幕`, "");
-			playlist0?.forEach(playlist0 => {
-				playlist1?.forEach(playlist1 => {
-					if (playlist0?.OPTION?.["GROUP-ID"] === playlist1?.OPTION?.["GROUP-ID"]) {
-						let index = m3u8.findIndex(item => item?.OPTION?.URI === playlist0.OPTION.URI);
-						// 兼容性修正
-						switch (platform) {
-							case "Apple":
-								if (playlist0?.OPTION.CHARACTERISTICS == playlist1?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-									// 创建字幕选项
-									let options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
-									if (standard == true) m3u8.splice(index + 1, 0, ...options)
-									else m3u8.splice(index, 1, ...options);
-								}
-								break;
-							default:
-								// 创建字幕选项
-								let options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
-								if (standard == true) m3u8.splice(index + 1, 0, ...options)
-								else m3u8.splice(index, 1, ...options);
-								break;
-						};
-					};
-				});
-			});
-		}
-	} else if (playlist0?.length === 0) {
-		$.log(`🚧 ${$.name}, 无首选字幕`, "");
-		types = types.filter(e => e !== "Official"); // 无首选语言时删除官方字幕选项
-		let playlist0 = {
-			"OPTION": {
-				"TYPE": "SUBTITLES",
-				//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
-				"NAME": languages[0].toLowerCase(),
-				"LANGUAGE": languages[0].toLowerCase(),
-				//"URI": playlist?.URI,
-			}
-		};
-		if (playlist1?.length !== 0) {
-			$.log(`🚧 ${$.name}, 有次选字幕`, "");
-			playlist1?.forEach(playlist1 => {
-				let index = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI);
-				if (index) {
-					// 创建字幕选项
-					let options = types.map(type => setOption(platform, playlist1, playlist0, type, standard));
-					if (standard == true) m3u8.splice(index + 1, 0, ...options)
-					else m3u8.splice(index, 1, ...options);
-				};
-			});
-		} else {
-			$.log(`🚧 ${$.name}, 无任何字幕`, "");
-			// 新增字幕选项，待完成
-		};
-	};
-	//$.log(`✅ ${$.name}, Set Attribute List`, `m3u8: ${JSON.stringify(m3u8)}`, "");
-	$.log(`✅ ${$.name}, Set Attribute List`, "");
-	return m3u8;
-};
-
-/**
- * Set DualSubs Subtitle Options
- * @author VirgilClyne
- * @param {String} platform - platform
- * @param {Array} playlist0 - Subtitles Playlist (Languages 0)
- * @param {Array} playlist1 - Subtitles Playlist (Languages 1)
- * @param {Array} enabledTypes - Enabled Types
- * @param {Array} translateTypes - Translate Types
- * @param {String} Standard - Standard
- * @return {Promise<*>}
- */
-function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", standard) {
-	$.log(`☑️ ${$.name}, Set DualSubs Subtitle Option, type: ${type}`, "");
-	const NAME1 = playlist0?.OPTION?.NAME, NAME2 = playlist1?.OPTION?.NAME;
-	const LANGUAGE1 = playlist0?.OPTION?.LANGUAGE, LANGUAGE2 = playlist1?.OPTION?.LANGUAGE;
-	// 复制此语言选项
-	let newOption = JSON.parse(JSON.stringify(playlist0));
-	// 修改名称
-	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
-	// 修改语言代码
-	newOption.OPTION.LANGUAGE = (standard) ? LANGUAGE1 : LANGUAGE2
-	// 增加副语言
-	newOption.OPTION["ASSOC-LANGUAGE"] = ((standard) ? LANGUAGE2 : LANGUAGE1).toLowerCase();
-	// 修改链接
-	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&subtype=${type}`
-		: `${newOption?.OPTION?.URI}?subtype=${type}`;
-	// 自动选择
-	newOption.OPTION.AUTOSELECT = "YES";
-	// 兼容性修正
+function getSubtitlesFileName(url, platform) {
+	$.log(`☑️ ${$.name}, Get Subtitles FileName`, `url: ${url}`, "");
+	let fileName = undefined;
 	switch (platform) {
 		case "Apple":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
+			fileName = request.url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1]; // Apple 片段分型序号不同
 			break;
 		case "Disney_Plus":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
-			break;
-		case "Prime_Video":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
+			fileName = request.url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Disney+ 片段名称相同
 			break;
 		case "Hulu":
-		case "Paramount_Plus":
-		case "Discovery_Plus_Ph":
-			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
-			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
+			fileName = request.url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Hulu 片段分型序号相同
+			break;
+		case "Prime_Video":
+		case "HBO_Max":
+		default:
+			fileName = null; // Amazon Prime Video HBO_Max不拆分字幕片段
 			break;
 	};
-	$.log(`✅ ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
-	return newOption;
+	$.log(`✅ ${$.name}, Get Subtitles FileName`, `fileName: ${fileName}`, "");
+	return fileName;
 };
 
 /**
- * is Standard?
- * Determine whether Standard Media Player
+ * Construct Subtitles Queue
  * @author VirgilClyne
- * @param {String} url - Request URL
- * @param {Object} headers - Request Headers
- * @param {String} platform - Steaming Media Platform
- * @return {Promise<*>}
+ * @param {String} fileName - Request URL
+ * @param {Array} VTTs0 - First Language Subtitles Array
+ * @param {Array} VTTs1 - Second Language Subtitles Array
+ * @return {Array<*>} Subtitles Requests Queue
  */
-function isStandard(platform, url, headers) {
-	$.log(`☑️ ${$.name}, is Standard`, "");
-	let _url = URL.parse(url);
-	for(const [key, value] of Object.entries(headers)) {
-		delete headers[key]
-		headers[key.toLowerCase()] = value
+function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
+	$.log(`☑️ ${$.name}, Construct Subtitles Queue`, `fileName: ${fileName}`, "");
+	let requests = [];
+	$.log(`🚧 ${$.name}, Construct Subtitles Queue, VTTs0.length: ${VTTs0.length}, VTTs1.length: ${VTTs1.length}`, "")
+	switch (VTTs1.length) {
+		case 0: // 长度为0，无须计算
+			break;
+		case 1: // 长度为1，无须计算
+			let _request = {
+				"url": VTTs1[0],
+				"headers": request.headers
+			};
+			requests.push(_request);
+			break;
+		case VTTs0.length: { // 长度相等，一一对应，无须计算
+			//request.url = VTTs1.find(item => item?.includes(fileName)) || VTTs1[0];
+			let Index1 = VTTs1.findIndex(item => item?.includes(fileName));
+			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index1: ${Index1}`, "");
+			let _request = {
+				"url": VTTs1[Index1],
+				"headers": request.headers
+			};
+			requests.push(_request);
+			break;
+		};
+		default: { // 长度不等，需要计算
+			$.log(`⚠ ${$.name}, Construct Subtitles Queue, 长度不等，需要计算`, "")
+			// 查询当前字幕在原字幕队列中的位置
+			let Index0 = VTTs0.findIndex(item => item?.includes(fileName));
+			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index0: ${Index0}`, "")
+			// 计算当前字幕在原字幕队列中的百分比
+			let Position0 = Index0 / VTTs0.length;
+			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Position0: ${Position0}`, "");
+			// 根据百分比计算当前字幕在新字幕队列中的位置
+			//let Index1 = VTTs1.findIndex(item => item.includes(fileName));
+			let Index1 = Math.round(Position0 * VTTs1.length);
+			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index1: ${Index1}`, "");
+			// 获取当前字幕在新字幕队列中的前后4个字幕
+			nearlyVTTs = VTTs1.slice((Index1 - 2 < 0) ? 0 : Index1 - 2, Index1 + 2);
+			requests = nearlyVTTs.map(url => {
+				let _request = {
+					"url": url,
+					"headers": request.headers
+				};
+				return _request;
+			});
+			break;
+		};
 	};
-	let standard = true;
-	switch (platform) {
-		case "Max":
-		case "HBO_Max":
-			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
-			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
-			else if (headers?.["x-hbo-device-name"]?.includes("ios")) standard = false;
-			else if (_url.params["device-code"] === "iphone") standard = false;
+	//$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `requests: ${JSON.stringify(requests)}`, "");
+	$.log(`✅ ${$.name}, Construct Subtitles Queue`, "");
+	return requests;
+};
+
+/** 
+ * Combine Dual Subtitles
+ * @param {Object} Sub1 - Sub1
+ * @param {Object} Sub2 - Sub2
+ * @param {Array} Format - options = ["json", "srv3", "vtt"]
+ * @param {Array} Kind - options = ["asr", "captions"]
+ * @param {Number} Offset - Offset
+ * @param {Number} Tolerance - Tolerance
+ * @param {Array} Options - options = ["Forward", "Reverse", "ShowOnly"]
+ * @return {String} DualSub
+ */
+function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions", Offset = 0, Tolerance = 0, Options = ["Forward"]) {
+	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Options:${Options}`, "");
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
+	let DualSub = Options.includes("Reverse") ? Sub2 : Sub1
+	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`let DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	// 有序数列 用不着排序
+	//FirstSub.body.sort((x, y) => x - y);
+	//SecondSub.body.sort((x, y) => x - y);
+	let index0 = 0, index1 = 0, index2 = 0;
+	// 双指针法查找两个数组中的相同元素
+	switch (Format) {
+		case "json3":
+		case "text/json":
+		case "application/json": {
+			const length1 = Sub1?.events?.length, length2 = Sub2?.events?.length;
+			switch (Kind) {
+				case "asr":
+					// 自动生成字幕转普通字幕
+					$.log(`🚧`, `DualSub是自动生成字幕`, "");
+					index0 = 1, index1 = 1, index2 = 1;
+					Sub1.events = Sub1.events.map(event => {
+						if (event?.segs) {
+							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join(" ") }];
+						};
+						delete event.wWinId;
+						return event;
+					});
+					Sub2.events = Sub2.events.map(event => {
+						if (event?.segs) {
+							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join(" ") }];
+						};
+						delete event.wWinId;
+						return event;
+					});
+					//break; 不要break，连续处理
+				case "captions":
+					// 处理普通字幕
+					while (index1 < length1 && index2 < length2) {
+						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+						const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
+						//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+							index0 = Options.includes("Reverse") ? index2 : index1;
+							// 处理普通字幕
+							const text1 = Sub1.events[index1]?.segs?.[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs?.[0].utf8 ?? "";
+							//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+							DualSub.events[index0].segs = [{ "utf8": Options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}` }];
+							//$.log(`🚧`, `DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
+							//DualSub.body[index0].tStartMs = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
+							//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
+						};
+						if (timeStamp2 > timeStamp1) index1++
+						else if (timeStamp2 < timeStamp1) index2++
+						else { index1++; index2++ };
+					};
+					break;
+			};
 			break;
-		case "Peacock_TV":
-			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
-			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
-			else if (headers?.["user-agent"]?.includes("PeacockMobile")) standard = false;
+		};
+		case "srv3":
+		case "text/xml":
+		case "application/xml": {
+			const length1 = Sub1?.timedtext?.body?.p?.length, length2 = Sub2?.timedtext?.body?.p?.length;
+			switch (Kind) {
+				case "asr":
+					// 自动生成字幕转普通字幕
+					$.log(`🚧`, `DualSub是自动生成字幕`, "");
+					DualSub.timedtext.head.wp[1]["@rc"] = "1";
+					Sub1.timedtext.body.p = Sub1.timedtext.body.p.map(para => {
+						if (para?.s) {
+							if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join(" ");
+							else para["#"] = para.s?.["#"] ?? "";
+							delete para.s;
+						};
+						return para;
+					});
+					Sub2.timedtext.body.p = Sub2.timedtext.body.p.map(para => {
+						if (para?.s) {
+							if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join(" ");
+							else para["#"] = para.s?.["#"] ?? "";
+							delete para.s;
+						};
+						return para;
+					});
+					//break; 不要break，连续处理
+				case "captions":
+					// 处理普通字幕
+					while (index1 < length1 && index2 < length2) {
+						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+						const timeStamp1 = parseInt(Sub1.timedtext.body.p[index1]["@t"], 10), timeStamp2 = parseInt(Sub2.timedtext.body.p[index2]["@t"], 10);
+						//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+							index0 = Options.includes("Reverse") ? index2 : index1;
+							// 处理普通字幕
+							const text1 = Sub1.timedtext.body.p[index1]?.["#"] ?? "", text2 = Sub2.timedtext.body.p[index2]?.["#"] ?? "";
+							//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+							DualSub.timedtext.body.p[index0]["#"] = Options.includes("Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`;
+							//$.log(`🚧`, `DualSub.timedtext.body.p[index0]["#"]: ${DualSub.timedtext.body.p[index0]["#"]}`, "");
+							//DualSub.timedtext.body.p[index0]["@t"] = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
+							//DualSub.timedtext.body.p[index0].index = Options.includes("Reverse") ? index2 : index1;
+						};
+						if (timeStamp2 > timeStamp1) index1++
+						else if (timeStamp2 < timeStamp1) index2++
+						else { index1++; index2++ };
+					};
+					break;
+			};
 			break;
-		case "Fubo_TV":
-			if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
-			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
+		};
+		case "vtt":
+		case "webvtt":
+		case "text/vtt":
+		case "application/vtt": {
+			const length1 = Sub1?.body?.length, length2 = Sub2?.body?.length;
+			switch (Kind) {
+				case "asr":
+					// 自动生成字幕转普通字幕
+					$.log(`🚧`, `DualSub是自动生成字幕`, "");
+				case "captions":
+					// 处理普通字幕
+					while (index1 < length1 && index2 < length2) {
+						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+						const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp;
+						//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+						// 处理普通字幕
+						const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
+						//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+							index0 = Options.includes("Reverse") ? index2 : index1;
+							// 处理普通字幕
+							DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}` : Options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
+							//$.log(`🚧`, `index0: ${index0}`, `text: ${DualSub.body[index0].text}`, "");
+							//DualSub.body[index0].timeStamp = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
+							//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
+						};
+						if (timeStamp2 > timeStamp1) index1++
+						else if (timeStamp2 < timeStamp1) index2++
+						else { index1++; index2++ }
+					};
+					break;
+			};
 			break;
-		case "TED":
-			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
-	}
-	$.log(`✅ ${$.name}, is Standard`, `standard: ${standard}`, "");
-	return standard
+		};
+	};
+	//$.log(`🎉 ${$.name}, Combine Dual Subtitles`, `return DualSub内容: ${JSON.stringify(DualSub)}`, "");
+	$.log(`🎉 ${$.name}, Combine Dual Subtitles`, "");
+	return DualSub;
 };
 
 /***************** Env *****************/
@@ -497,5 +714,10 @@ function URLs(s){return new class{constructor(s=[]){this.name="URL v1.0.2",this.
  */
 function getENV(t,e,n){let i=$.getjson(t,n),s={};if("undefined"!=typeof $argument&&Boolean($argument)){let t=Object.fromEntries($argument.split("&").map((t=>t.split("="))));for(let e in t)l(s,e,t[e])}let g={...n?.Default?.Settings,...n?.[e]?.Settings,...i?.[e]?.Settings,...s},f={...n?.Default?.Configs,...n?.[e]?.Configs,...i?.[e]?.Configs},o=i?.[e]?.Caches||{};return"string"==typeof o&&(o=JSON.parse(o)),{Settings:g,Caches:o,Configs:f};function l(t,e,n){e.split(".").reduce(((t,i,s)=>t[i]=e.split(".").length===++s?n:t[i]||{}),t)}}
 
-// https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
-function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.8.2",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){return[...n.matchAll(/^(?:[\s\r\n]{1})|(?:(?<TAG>#(?:EXT|AIV)[^#:\s\r\n]+)|(?<NOTE>#.+))(?::(?<OPTION>.+))?[\s\r\n]?(?<URI>[^#\s\r\n]+)?$/gm)].map((n=>(n=n?.groups||n,/=/.test(n?.OPTION)&&(n.OPTION=Object.fromEntries(`${n.OPTION},`.split(/,\s*(?![^"]*",)/).slice(0,-1).map((n=>((n=n.split(/=(.*)/))[1]=isNaN(n[1])?n[1].replace(/^"(.*)"$/,"$1"):parseInt(n[1],10),n))))),n)))}stringify(n=new Array){"#EXTM3U"!==n?.[0]?.TAG&&n.unshift({TAG:"#EXTM3U"});const s=/^((-?\d+[x.\d]+)|[0-9A-Z-]+)$/;return n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((t=>("#EXT-X-SESSION-DATA"===n?.TAG?t[1]=`"${t[1]}"`:isNaN(t[1])?"INSTREAM-ID"===t[0]?t[1]=`"${t[1]}"`:s.test(t[1])||(t[1]=`"${t[1]}"`):t[1]="number"==typeof t[1]?t[1]:`"${t[1]}"`,t.join("=")))).join(",")),n=n?.URI?n.TAG+":"+n.OPTION+this.newLine+n.URI:n?.OPTION?n.TAG+":"+n.OPTION:n?.TAG?n.TAG:n?.NOTE?n.NOTE:""))).join(this.newLine)}}(n)}
+// https://github.com/DualSubs/WebVTT/blob/main/WebVTT.embedded.min.js
+function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","singleLine","\n"]){this.name="WebVTT v1.8.1",this.opts=e,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.vtt=new String,this.txt=new String,this.json={headers:{},CSS:{},body:[]}}parse(e=this.vtt){const t=this.opts.includes("milliseconds")?/^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/:/^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/;let i={headers:e.match(/^(?<fileType>WEBVTT)?[^](?<Xoptions>.+[^])*/)?.groups??null,CSS:e.match(/^(?<Style>STYLE)[^](?<Boxes>.*::cue.*(\(.*\))?((\n|.)*}$)?)/m)?.groups??null,body:e.split(/\r\n\r\n|\r\r|\n\n/).map((e=>e.match(t)?.groups??""))};return i.body=i.body.filter(Boolean),i.body=i.body.map(((e,t)=>{if(e.index=t,"WEBVTT"!==i.headers?.fileType&&(e.timeLine=e.timeLine.replace(",","."),e.startTime=e.startTime.replace(",","."),e.endTime=e.endTime.replace(",",".")),this.opts.includes("timeStamp")){let t=e.startTime.replace(/(.*)/,"1970-01-01T$1Z");e.timeStamp=this.opts.includes("milliseconds")?Date.parse(t):Date.parse(t)/1e3}return e.text=e.text?.trim()??"_",this.opts.includes("singleLine")?e.text=e.text.replace(/\r\n|\r|\n/," "):this.opts.includes("multiLine")&&(e.text=e.text.split(/\r\n|\r|\n/)),e})),i}stringify(e=this.json){return[e.headers=[e.headers?.fileType||"WEBVTT",e.headers?.Xoptions||null].join(this.newLine),e.CSS=e.CSS?.Style?[e.CSS.Style,e.CSS.Boxes].join(this.newLine):null,e.body=e.body.map((e=>(Array.isArray(e.text)&&(e.text=e.text.join(this.newLine)),e=`${e.timeLine} ${e?.options??""}${this.newLine}${e.text}`))).join(this.newLine+this.newLine)].join(this.newLine+this.newLine)}}(e)}
+
+// refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
+// refer: https://goessner.net/download/prj/jsonxml/json2xml.js
+// minify: https://www.digitalocean.com/community/tools/minify
+function XMLs(r){return new class{constructor(r){this.name="XML v0.1.4",this.opts=r}parse(r=new String,t=""){const n={"&amp;":"&","&lt;":"<","&gt;":">","&apos;":"'","&quot;":'"'},e="@";let s=function r(t,n){if("string"==typeof t)return t;var s=t.r;if(s)return s;var u,o=function(r,t){if(!r.t)return;for(var n,s,u=r.t.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/),o=u.length,l=0;l<o;l++){var c=i(u[l]);if(c){n||(n={});var p=c.indexOf("=");if(p<0)c=e+c,s=null;else{s=c.substr(p+1).replace(/^\s+/,""),c=e+c.substr(0,p).replace(/\s+$/,"");var g=s[0];g!==s[s.length-1]||"'"!==g&&'"'!==g||(s=s.substr(1,s.length-2)),s=a(s)}t&&(s=t(c,s)),f(n,c,s)}}return n}(t,n),l=t.f,c=l.length;if(o||c>1)u=o||{},l.forEach((function(t){"string"==typeof t?f(u,"#",t):f(u,t.n,r(t,n))}));else if(c){var p=l[0];if(u=r(p,n),p.n){var g={};g[p.n]=u,u=g}}else u=t.c?null:"";n&&(u=n(t.n||"",u));return u}(function(r){for(var t=String.prototype.split.call(r,/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/),n=t.length,e={f:[]},s=e,f=[],u=0;u<n;){var o=t[u++];o&&g(o);var l=t[u++];l&&c(l)}return e;function c(r){var t=r.length,n=r[0];if("/"===n)for(var e=r.replace(/^\/|[\s\/].*$/g,"").toLowerCase();f.length;){var i=s.n&&s.n.toLowerCase();if(s=f.pop(),i===e)break}else if("?"===n)p({n:"?",r:r.substr(1,t-2)});else if("!"===n)"[CDATA["===r.substr(1,7)&&"]]"===r.substr(-2)?g(r.substr(8,t-10)):p({n:"!",r:r.substr(1)});else{var a=function(r){var t={f:[]},n=(r=r.replace(/\s*\/?$/,"")).search(/[\s='"\/]/);n<0?t.n=r:(t.n=r.substr(0,n),t.t=r.substr(n));return t}(r);p(a),"/"===r[t-1]?a.c=1:(f.push(s),s=a)}}function p(r){s.f.push(r)}function g(r){(r=i(r))&&p(a(r))}}(r),t);return s;function i(r){return r&&r.replace(/^\s+|\s+$/g,"")}function a(r){return r.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g,(function(r){if("#"===r[1]){var t="x"===r[2]?parseInt(r.substr(3),16):parseInt(r.substr(2),10);if(t>-1)return String.fromCharCode(t)}return n[r]||r}))}function f(r,t,n){if(void 0!==n){var e=r[t];e instanceof Array?e.push(n):r[t]=t in r?[e,n]:n}}}stringify(r=new Object,t=""){var n="";for(var e in r)n+=s(r[e],e,"");return n=t?n.replace(/\t/g,t):n.replace(/\t|\n/g,"");function s(r,t,n){let e="";if(Array.isArray(r))e=r.reduce(((r,e)=>r+(n+s(e,t,n+"\t")+"\n")),"");else if("object"==typeof r){let i=!1;e+=n+"<"+t;for(let t in r)"@"==t.charAt(0)?e+=" "+t.substring(1)+'="'+r[t].toString()+'"':i=!0;if(e+=i?">":"/>",i){for(let t in r)"#"==t?e+=r[t]:"#cdata"==t?e+="<![CDATA["+r[t]+"]]>":"@"!=t.charAt(0)&&(e+=s(r[t],t,n+"\t"));e+=("\n"==e.charAt(e.length-1)?n:"")+"</"+t+">"}}else e+="?"===t?n+"<"+t+r.toString()+t+">":n+"<"+t+">"+r.toString()+"</"+t+">";return e}}}(r)}

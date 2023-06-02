@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(4) Subtitles.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(3) Subtitles.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -108,15 +108,14 @@ const DataBase = {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 获取字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists, Settings.Languages);
+					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists.Master, Settings.Languages);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Subtitles = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Subtitles, Settings.Languages[0]);
-					Caches.Subtitles = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Subtitles, Settings.Languages[1]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, Settings.Languages[0]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, Settings.Languages[1]);
 					// 格式化缓存
-					Caches.Playlists = setCache(Caches?.Playlists, Settings.Official.CacheSize);
-					Caches.Subtitles = setCache(Caches?.Subtitles, Settings.Official.CacheSize);
+					Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.Official.CacheSize);
 					// 写入缓存
-					$.setjson(Caches, `@DualSubs.${"Universal"}.Caches`);
+					$.setjson(Caches.Playlists.Subtitle, `@DualSubs.${"Universal"}.Caches.Playlists.Subtitle`);
 					break;
 				case "Translate":
 				default:
@@ -145,8 +144,8 @@ const DataBase = {
 					body = body.map(item => {
 						if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
 							const symbol = (item.URI.includes("?")) ? "&" : "?"
-							item.URI = item.URI + symbol + `dualsubs=${Type}`
-							//item.URI = item.URI + symbol + `dualsubs=${Type}&format=${"vtt"}`
+							item.URI = item.URI + symbol + `subtype=${Type}`
+							//item.URI = item.URI + symbol + `subtype=${Type}&sublang=${"vtt"}`
 						}
 						return item;
 					})
@@ -226,20 +225,23 @@ const DataBase = {
 
 /***************** Function *****************/
 function getPlatform(host) {
+	$.log(`☑️ ${$.name}, Get Platform`, "");
 	/***************** Platform *****************/
 	let Platform = /\.apple\.com/i.test(host) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(host) ? "Disney_Plus"
 			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(host) ? "Prime_Video"
-				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
-					: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
-						: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
-							: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
-								: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
-									: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
-										: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
-											: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
-												: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
-													: "Universal";
+				: /prd\.media\.h264\.io/i.test(host) ? "Max"
+					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
+						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
+							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
+								: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
+									: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
+										: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
+											: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
+												: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
+													: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
+														: "Universal";
+	$.log(`✅ ${$.name}, Get Platform`, `Platform: ${Platform}`, "");
 	return Platform;
 };
 
@@ -263,11 +265,14 @@ function setENV(name, platform, database) {
 		};
 		return value;
 	});
+	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
-	Caches.Playlists = new Map(Caches?.Playlists || []); // Array转Map
-	Caches.Subtitles = new Map(Caches?.Subtitles || []); // Array转Map
+	if (typeof Caches.Playlists !== "object" || Array.isArray(Caches.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
+	Caches.Playlists.Master = new Map(JSON.parse(Caches?.Playlists?.Master || "[]")); // Strings转Array转Map
+	Caches.Playlists.Subtitle = new Map(JSON.parse(Caches?.Playlists?.Subtitle || "[]")); // Strings转Array转Map
+	if (typeof Caches?.Subtitles !== "object") Caches.Subtitles = new Map(JSON.parse(Caches?.Subtitles || "[]")); // Strings转Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
 

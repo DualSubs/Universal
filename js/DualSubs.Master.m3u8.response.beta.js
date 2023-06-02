@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(3) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(5) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -131,7 +131,6 @@ const DataBase = {
 					Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.Official.CacheSize);
 					// 写入持久化储存
 					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Universal"}.Caches.Playlists.Master`);
-					Settings.Types = (Standard == true) ? Settings.Types : [Settings.Translate.Type];
 					// 写入选项
 					body = setAttrList(Platform, body, playlistCache[Settings.Languages[0]], playlistCache[Settings.Languages[1]], Settings.Types, Settings.Languages, Standard);
 					// 字符串M3U8
@@ -323,6 +322,7 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  * @return {Object} m3u8
  */
 function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, types = [], languages = [], standard = true) {
+	types = (standard == true) ? types : ["Translate"];
 	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
 	if (playlist0?.length !== 0) {
 		$.log(`🚧 ${$.name}, 有首选字幕`, "");

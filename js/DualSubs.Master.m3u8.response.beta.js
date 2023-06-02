@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(1) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(2) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -201,20 +201,23 @@ const DataBase = {
 
 /***************** Function *****************/
 function getPlatform(host) {
+	$.log(`☑️ ${$.name}, Get Platform`, "");
 	/***************** Platform *****************/
 	let Platform = /\.apple\.com/i.test(host) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(host) ? "Disney_Plus"
 			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(host) ? "Prime_Video"
-				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
-					: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
-						: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
-							: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
-								: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
-									: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
-										: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
-											: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
-												: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
-													: "Universal";
+				: /prd\.media\.h264\.io/i.test(host) ? "Max"
+					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
+						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
+							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
+								: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
+									: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
+										: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
+											: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
+												: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
+													: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
+														: "Universal";
+	$.log(`✅ ${$.name}, Get Platform`, `Platform: ${Platform}`, "");
 	return Platform;
 };
 
@@ -395,7 +398,7 @@ function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, t
  * @return {Promise<*>}
  */
 function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", standard) {
-	$.log(`☑️ ${$.name}, 调试信息`, "Set DualSubs Subtitle Option", `type: ${type}`, "");
+	$.log(`☑️ ${$.name}, Set DualSubs Subtitle Option, type: ${type}`, "");
 	const NAME1 = playlist0?.OPTION?.NAME, NAME2 = playlist1?.OPTION?.NAME;
 	const LANGUAGE1 = playlist0?.OPTION?.LANGUAGE, LANGUAGE2 = playlist1?.OPTION?.LANGUAGE;
 	// 复制此语言选项
@@ -446,7 +449,7 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
  * @return {Promise<*>}
  */
 function isStandard(platform, url, headers) {
-	$.log(`⚠ ${$.name}, is Standard`, "");
+	$.log(`☑️ ${$.name}, is Standard`, "");
 	let _url = URL.parse(url);
 	for(const [key, value] of Object.entries(headers)) {
 		delete headers[key]
@@ -454,6 +457,7 @@ function isStandard(platform, url, headers) {
 	};
 	let standard = true;
 	switch (platform) {
+		case "Max":
 		case "HBO_Max":
 			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
 			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
@@ -477,7 +481,7 @@ function isStandard(platform, url, headers) {
 		case "TED":
 			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
 	}
-	$.log(`🎉 ${$.name}, is Standard`, `standard: ${standard}`, "");
+	$.log(`✅ ${$.name}, is Standard`, `standard: ${standard}`, "");
 	return standard
 };
 

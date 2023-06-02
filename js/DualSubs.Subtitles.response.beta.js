@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(9) Subtitles.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.6(10) Subtitles.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -338,20 +338,23 @@ const DataBase = {
 
 /***************** Function *****************/
 function getPlatform(host) {
+	$.log(`☑️ ${$.name}, Get Platform`, "");
 	/***************** Platform *****************/
 	let Platform = /\.apple\.com/i.test(host) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(host) ? "Disney_Plus"
 			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(host) ? "Prime_Video"
-				: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
-					: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
-						: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
-							: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
-								: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
-									: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
-										: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
-											: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
-												: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
-													: "Universal";
+				: /prd\.media\.h264\.io/i.test(host) ? "Max"
+					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
+						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
+							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
+								: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
+									: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
+										: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
+											: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
+												: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
+													: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
+														: "Universal";
+	$.log(`✅ ${$.name}, Get Platform`, `Platform: ${Platform}`, "");
 	return Platform;
 };
 

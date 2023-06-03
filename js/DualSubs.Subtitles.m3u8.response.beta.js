@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.9(4) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.9(5) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -239,7 +239,7 @@ function setENV(name, platform, database) {
 	*/
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
 	if (typeof Caches.Playlists !== "object" || Array.isArray(Caches.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
 	Caches.Playlists.Master = new Map(JSON.parse(Caches?.Playlists?.Master || "[]")); // Strings转Array转Map
 	Caches.Playlists.Subtitle = new Map(JSON.parse(Caches?.Playlists?.Subtitle || "[]")); // Strings转Array转Map
@@ -259,22 +259,23 @@ function setENV(name, platform, database) {
 function getPlaylistCache(url, cache, languages) {
 	$.log(`☑️ ${$.name}, getPlaylistCache`, "");
 	let masterPlaylistURL = "";
-	//let masterPlaylistBody = body;
 	let subtitlesPlaylist = {};
 	let subtitlesPlaylistIndex = 0;
 	cache?.forEach((Value, Key) => {
 		languages?.forEach(language => {
-			let Array = Value?.[language];
-			if (Array?.some((Object, Index) => {
-				if (url.includes(Object?.URI || Object?.OPTION?.URI || null)) {
-					subtitlesPlaylistIndex = Index;
-					$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
-					return true;
-				} else return false;
-			})) {
-				masterPlaylistURL = Key;
-				subtitlesPlaylist = Value;
-				//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+			if (Array.isArray(Value?.[language])) {
+				let Array = Value?.[language];
+				if (Array?.some((Object, Index) => {
+					if (url.includes(Object?.URI || Object?.OPTION?.URI || null)) {
+						subtitlesPlaylistIndex = Index;
+						$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+						return true;
+					} else return false;
+				})) {
+					masterPlaylistURL = Key;
+					subtitlesPlaylist = Value;
+					//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+				};
 			};
 		});
 	});

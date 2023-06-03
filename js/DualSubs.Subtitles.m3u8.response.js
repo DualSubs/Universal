@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.9(4) Subtitles.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.9(5) Subtitles.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -221,7 +221,7 @@ function getPlatform(host) {
  * Set Environment Variables
  * @author VirgilClyne
  * @param {String} name - Persistent Store Key
- * @param {String} platform - Platform Name
+ * @param {Array} platform - Platform Names
  * @param {Object} database - Default DataBase
  * @return {Object} { Settings, Caches, Configs }
  */
@@ -252,22 +252,23 @@ function setENV(name, platform, database) {
 function getPlaylistCache(url, cache, languages) {
 	$.log(`☑️ ${$.name}, getPlaylistCache`, "");
 	let masterPlaylistURL = "";
-	//let masterPlaylistBody = body;
 	let subtitlesPlaylist = {};
 	let subtitlesPlaylistIndex = 0;
 	cache?.forEach((Value, Key) => {
 		languages?.forEach(language => {
-			let Array = Value?.[language];
-			if (Array?.some((Object, Index) => {
-				if (url.includes(Object?.URI || Object?.OPTION?.URI || null)) {
-					subtitlesPlaylistIndex = Index;
-					$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
-					return true;
-				} else return false;
-			})) {
-				masterPlaylistURL = Key;
-				subtitlesPlaylist = Value;
-				//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+			if (Array.isArray(Value?.[language])) {
+				let Array = Value?.[language];
+				if (Array?.some((Object, Index) => {
+					if (url.includes(Object?.URI || Object?.OPTION?.URI || null)) {
+						subtitlesPlaylistIndex = Index;
+						$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+						return true;
+					} else return false;
+				})) {
+					masterPlaylistURL = Key;
+					subtitlesPlaylist = Value;
+					//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+				};
 			};
 		});
 	});

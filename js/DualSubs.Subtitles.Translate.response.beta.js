@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.8(6) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.9(3) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -55,7 +55,7 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings, Caches, Configs } = setENV("DualSubs", ["Universal", "Translate"], DataBase);
+	const { Settings, Caches, Configs } = setENV("DualSubs", ["Universal", "Translate", "API"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings?.Switch) {
 		case true:
@@ -137,7 +137,7 @@ const DataBase = {
 									};
 									let Parts = await chunk(Full, length);
 									Parts = await Promise.all(Parts.map(async Part => {
-										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], Part, Settings?.API, Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
+										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], Part, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
 									})).then(parts => parts.flat(Infinity));
 									body.body = await Promise.all(body.body.map(async (item, i) => {
 										item.text = await combineText(item.text, Parts[i], Settings?.Position);
@@ -146,7 +146,7 @@ const DataBase = {
 									break;
 								case "Row": // Row 逐行翻译
 									body.body = await Promise.all(body.body.map(async item => {
-										let text2 = await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], item.text, Settings?.API, Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
+										let text2 = await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], item.text, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
 										item.text = await combineText(item.text, text2[0], Settings?.Position);
 										return item
 									}));
@@ -277,9 +277,9 @@ function setENV(name, platforms, database) {
 	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
 	/*
 	if (Array.isArray(Settings?.Types)) {
-		if (!Settings?.API?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
-		if (!Settings?.API?.Azure?.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
-		if (!Settings?.API?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
+		if (!Settings?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
+		if (!Settings?.Azure?.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
+		if (!Settings?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
 	}
 	*/
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
@@ -394,9 +394,10 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
-				request.url = `https://translation.googleapis.com/language/translate/v2/?key=${api.GoogleCloud?.Auth}`;
+				BaseURL = "https://translation.googleapis.com";
+				request.url = `${BaseURL}/language/translate/v2/?key=${api?.Auth}`;
 				request.headers = {
-					//"Authorization": `Bearer ${api.GoogleCloud?.Auth}`,
+					//"Authorization": `Bearer ${api?.Auth}`,
 					"User-Agent": "DualSubs",
 					"Content-Type": "application/json; charset=utf-8"
 				};
@@ -405,14 +406,20 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					"source": database.Google[source],
 					"target": database.Google[target],
 					"format": "html",
-					//"key": api.GoogleCloud?.Key
+					//"key": api?.Key
 				});
 				break;
 			case "Bing":
 				// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
-				BaseURL = (api.Bing?.Version == "Bing") ? "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
-					: (api.Azure?.Version == "BingCN") ? "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1"
-						: "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3"
+				switch (api?.Version) {
+					case "Bing":
+					default:
+						BaseURL = "https://www.bing.com/ttranslatev3?IG=839D27F8277F4AA3B0EDB83C255D0D70&IID=translator.5033.3";
+						break;
+					case "BingCN":
+						BaseURL = "https://cn.bing.com/ttranslatev3?IG=25FEE7A7C7C14533BBFD66AC5125C49E&IID=translator.5025.1";
+						break;
+				};
 				request.url = `${BaseURL}`;
 				request.headers = {
 					"Accept": "*/*",
@@ -431,22 +438,31 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 			case "Azure":
 				// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 				// https://docs.azure.cn/zh-cn/cognitive-services/translator/
-				BaseURL = (api.Azure?.Version == "Azure") ? "https://api.cognitive.microsofttranslator.com"
-					: (api.Azure?.Version == "AzureCN") ? "https://api.translator.azure.cn"
-						: "https://api.cognitive.microsofttranslator.com"
+				switch (api?.Version) {
+					case "Azure":
+					default:
+						BaseURL = "https://api.cognitive.microsofttranslator.com";
+						break;
+					case "AzureCN":
+						BaseURL = "https://api.translator.azure.cn";
+						break;
+					case "AzureUS":
+						BaseURL = "https://api.cognitive.microsofttranslator.us"
+						break;
+				};
 				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${database.Microsoft[target]}&from=${database.Microsoft[source]}`;
 				request.headers = {
 					"Content-Type": "application/json; charset=UTF-8",
 					"Accept": "application/json, text/javascript, */*; q=0.01",
 					"Accept-Language": "zh-hans"
-					//"Authorization": `Bearer ${api.Azure?.Auth}`,
-					//"Ocp-Apim-Subscription-Key": api.Azure?.Auth,
-					//"Ocp-Apim-Subscription-Region": api.Azure?.Region, // chinanorth, chinaeast2
+					//"Authorization": `Bearer ${api?.Auth}`,
+					//"Ocp-Apim-Subscription-Key": api?.Auth,
+					//"Ocp-Apim-Subscription-Region": api?.Region, // chinanorth, chinaeast2
 					//"X-ClientTraceId": uuidv4().toString()
 				};
-				if (api.Azure?.Region) request.headers["Ocp-Apim-Subscription-Region"] = api.Azure.Region;
-				if (api?.Azure?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = api.Azure.Auth;
-				else if (api?.Azure?.Mode == "Token") request.headers.Authorization = `Bearer ${api.Azure.Auth}`;
+				if (api?.Region) request.headers["Ocp-Apim-Subscription-Region"] = api?.Region;
+				if (api?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = api?.Auth;
+				else if (api?.Mode == "Token") request.headers.Authorization = `Bearer ${api?.Auth}`;
 				text = (Array.isArray(text)) ? text : [text];
 				texts = await Promise.all(text?.map(async item => { return { "text": item } }))
 				request.body = JSON.stringify(texts);
@@ -457,9 +473,15 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				*/
 				break;
 			case "DeepL":
-				BaseURL = (api.DeepL.Version == "Free") ? "https://api-free.deepl.com"
-					: (api.DeepL.Version == "Pro") ? "https://api.deepl.com"
-						: "https://api-free.deepl.com"
+				switch (api?.Version) {
+					case "Free":
+					default:
+						BaseURL = "https://api-free.deepl.com";
+						break;
+					case "Pro":
+						BaseURL = "https://api.deepl.com";
+						break;
+				};
 				request.url = `${BaseURL}/v2/translate`
 				request.headers = {
 					"Accept": "*/*",
@@ -472,14 +494,15 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
 					: (database.DeepL[target] == "PT") ? "PT-PT"
 						: database.DeepL[target];
-				const BaseBody = `auth_key=${api.DeepL?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+				const BaseBody = `auth_key=${api?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
 				text = (Array.isArray(text)) ? text : [text];
 				texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
 				request.body = BaseBody + texts.join("");
 				break;
 			case "BaiduFanyi":
 				// https://fanyi-api.baidu.com/doc/24
-				request.url = `https://fanyi-api.baidu.com/api/trans/vip/language`;
+				BaseURL = "https://fanyi-api.baidu.com";
+				request.url = `${BaseURL}/api/trans/vip/language`;
 				request.headers = {
 					"User-Agent": "DualSubs",
 					"Content-Type": "application/x-www-form-urlencoded"
@@ -488,14 +511,15 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					"q": text,
 					"from": database.Baidu[source],
 					"to": database.Baidu[target],
-					"appid": api.BaiduFanyi?.Key,
+					"appid": api?.Key,
 					"salt": uuidv4().toString(),
 					"sign": "",
 				};
 				break;
 			case "YoudaoAI":
 				// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html
-				request.url = `https://openapi.youdao.com/api`;
+				BaseURL = "https://openapi.youdao.com";
+				request.url = `${BaseURL}/api`;
 				request.headers = {
 					"User-Agent": "DualSubs",
 					"Content-Type": "application/json; charset=utf-8"
@@ -504,7 +528,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					"q": text,
 					"from": database.Youdao[source],
 					"to": database.Youdao[target],
-					"appKey": api.YoudaoAI?.Key,
+					"appKey": api?.Key,
 					"salt": uuidv4().toString(),
 					"signType": "v3",
 					"sign": "",

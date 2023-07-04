@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.9(4) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.9(9) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -335,7 +335,9 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134",
 			"Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
-			"Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+			"Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1",
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+			"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0",
 		];
 		let request = {};
 		let BaseURL = "";
@@ -348,6 +350,14 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 						"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t",
 						"headers": {
 							"Accept": "*/*",
+							"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)], // 随机UA
+							"Referer": "https://translate.google.com"
+						}
+					},
+					{ // Google Dictionary Chrome extension https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja
+						"url": "https://clients5.google.com/translate_a/t?client=dict-chrome-ex",
+						"headers": {
+							"Accept": "*/*",
 							"User-Agent": UAPool[Math.floor(Math.random() * UAPool.length)] // 随机UA
 						}
 					},
@@ -355,25 +365,18 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 						"url": "https://translate.google.com/translate_a/single?client=it&dt=qca&dt=t&dt=rmt&dt=bd&dt=rms&dt=sos&dt=md&dt=gt&dt=ld&dt=ss&dt=ex&otf=2&dj=1&hl=en&ie=UTF-8&oe=UTF-8",
 						"headers": {
 							"Accept": "*/*",
-							"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
+							"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)",
 						}
 					},
 					{ // Google Translate App
 						"url": "https://translate.googleapis.com/translate_a/single?client=gtx&dj=1&source=bubble&dt=t&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at",
 						"headers": {
 							"Accept": "*/*",
-							"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)"
-						}
-					},
-					{// Google Dictionary Chrome extension https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja
-						"url": "https://clients5.google.com/translate_a/t?client=dict-chrome-ex",
-						"headers": {
-							"Accept": "*/*",
-							"User-Agent": ""
+							"User-Agent": "GoogleTranslate/6.29.59279 (iPhone; iOS 15.4; en; iPhone14,2)",
 						}
 					}
 				]
-				request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 3))] // 随机Request, 排除最后三项
+				request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
 				text = (Array.isArray(text)) ? text.join("\n\n") : text;
 				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
@@ -537,10 +540,13 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 							switch (type) {
 								default:
 								case "Google":
-									if (Array.isArray(_data)) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+									if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+									else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
 									else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
 									break;
-							}
+								case "Bing":
+									break;
+							};
 							texts = texts?.join("")?.split(/\n\n/);
 							resolve(texts);
 						} else throw new Error(response);

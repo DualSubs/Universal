@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(2) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(3) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -533,7 +533,6 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 		return new Promise((resolve, reject) => {
 			switch (type) {
 				case "Google":
-				case "Bing":
 				default:
 					$.get(request, (error, response, data) => {
 						try {
@@ -547,8 +546,6 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 										else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
 										else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
 										break;
-									case "Bing":
-										break;
 								};
 								texts = texts?.join("")?.split(/\n\n/);
 								resolve(texts);
@@ -559,6 +556,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					});
 					break;
 				case "GoogleCloud":
+				case "Bing":
 				case "Azure":
 				case "DeepL":
 				case "BaiduFanyi":
@@ -573,6 +571,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 									case "GoogleCloud":
 										texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
 										break;
+									case "Bing":
 									case "Azure":
 										texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
 										break;

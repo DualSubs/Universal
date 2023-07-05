@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(4) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(5) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -109,10 +109,11 @@ const DataBase = {
 						case "Translate":
 						default:
 							$.log(`🚧 ${$.name}`, `翻译字幕`, "");
+							let Full = await Promise.all(body.body.map(async item => item.text));
+							let Translation = [];
 							switch (Settings?.Method) {
 								default:
 								case "Part": // Part 逐段翻译
-									let Full = await Promise.all(body.body.map(async item => item.text));
 									let length = 127;
 									switch (Settings.Type) {
 										case "Google":
@@ -127,39 +128,29 @@ const DataBase = {
 											length = 49;
 											break;
 									};
-									let Parts = await chunk(Full, length);
-									Parts = await Promise.all(Parts.map(async Part => {
-										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], Part, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
-									})).then(parts => parts.flat(Infinity));
-									body.body = await Promise.all(body.body.map(async (item, i) => {
-										switch (Settings.ShowOnly) { // 仅显示翻译结果
-											case true:
-												item.text = Parts[i];
-												break;
-											case false:
-											default:
-												item.text = combineText(item.text, Parts[i], Settings?.Position);
-												break;
-										};
-										return item
-									}));
+									let Parts = chunk(Full, length);
+									Translation = await Promise.all(Parts.map(async part => {
+										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
+									})).then(part => part.flat(Infinity));
 									break;
 								case "Row": // Row 逐行翻译
-									body.body = await Promise.all(body.body.map(async (item, i) => {
-										let text2 = await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], item.text, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
-										switch (Settings.ShowOnly) {
-											case true:
-												item.text = text2[0];
-												break;
-											case false:
-											default:
-												item.text = combineText(item.text, text2[0], Settings?.Position);
-												break;
-										};
-										return item
+									Translation = await Promise.all(Full.map(async row => {
+										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], row, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
 									}));
 									break;
 							};
+							body.body = await Promise.all(body.body.map(async (item, i) => {
+								switch (Settings.ShowOnly) { // 仅显示翻译结果
+									case true:
+										item.text = Translation?.[i] ?? item.text;
+										break;
+									case false:
+									default:
+										item.text = combineText(item.text, Translation?.[i], Settings?.Position);
+										break;
+								};
+								return item
+							}));
 							break;
 						case "External":
 							$.log(`🚧 ${$.name}, 外挂字幕`, "");
@@ -594,9 +585,9 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
  * @author VirgilClyne
  * @param {Array} source - source
  * @param {Number} length - number
- * @return {Promise<*>}
+ * @return {Array<*>} target
  */
-async function chunk(source, length) {
+function chunk(source, length) {
 	$.log(`⚠ ${$.name}, Chunk Array`, "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));

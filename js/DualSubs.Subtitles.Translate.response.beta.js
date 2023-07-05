@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(3) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(4) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -141,14 +141,30 @@ const DataBase = {
 										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], Part, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
 									})).then(parts => parts.flat(Infinity));
 									body.body = await Promise.all(body.body.map(async (item, i) => {
-										item.text = await combineText(item.text, Parts[i], Settings?.Position);
+										switch (Settings.ShowOnly) { // 仅显示翻译结果
+											case true:
+												item.text = Parts[i];
+												break;
+											case false:
+											default:
+												item.text = combineText(item.text, Parts[i], Settings?.Position);
+												break;
+										};
 										return item
 									}));
 									break;
 								case "Row": // Row 逐行翻译
-									body.body = await Promise.all(body.body.map(async item => {
+									body.body = await Promise.all(body.body.map(async (item, i) => {
 										let text2 = await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], item.text, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
-										item.text = await combineText(item.text, text2[0], Settings?.Position);
+										switch (Settings.ShowOnly) {
+											case true:
+												item.text = text2[0];
+												break;
+											case false:
+											default:
+												item.text = combineText(item.text, text2[0], Settings?.Position);
+												break;
+										};
 										return item
 									}));
 									break;
@@ -298,9 +314,9 @@ function setCache(cache, cacheSize = 100) {
  * @param {String} text1 - text1
  * @param {String} text2 - text2
  * @param {String} position - position
- * @return {Promise<*>}
+ * @return {String} combined text
  */
-async function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
 
 /**
  * Translator

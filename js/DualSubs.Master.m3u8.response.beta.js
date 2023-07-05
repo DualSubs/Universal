@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(1) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(2) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -389,8 +389,9 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
 			break;
 		case "Max":
-			//newOption.OPTION.NAME = (standard) ? `${NAME1} / ${NAME2} [${type}]` : NAME1;
-			//if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
+		case "HBO_Max":
+			newOption.OPTION.NAME = (standard) ? `${NAME1} / ${NAME2} [${type}]` : NAME1;
+			if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
 			break;
 		case "Hulu":
 		case "Paramount_Plus":

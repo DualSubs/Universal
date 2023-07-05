@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.9(9) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -529,60 +529,68 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 	// Get Translate Data
 	function GetData(type, request) {
 		$.log(`⚠ ${$.name}, Get Translate Data`, "");
-		return new Promise(resolve => {
-			if (type == "Google") {
-				$.get(request, (error, response, data) => {
-					try {
-						if (error) throw new Error(error)
-						else if (data) {
-							const _data = JSON.parse(data)
-							let texts = [];
-							switch (type) {
-								default:
-								case "Google":
-									if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
-									else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
-									else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
-									break;
-								case "Bing":
-									break;
-							};
-							texts = texts?.join("")?.split(/\n\n/);
-							resolve(texts);
-						} else throw new Error(response);
-					} catch (e) {
-						throw e;
-					}
-				});
-			} else {
-				$.post(request, (error, response, data) => {
-					try {
-						if (error) throw new Error(error)
-						else if (data) {
-							const _data = JSON.parse(data)
-							let texts = [];
-							switch (type) {
-								default:
-								case "Google":
-									texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`)
-									break;
-								case "GoogleCloud":
-									texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
-									break;
-								case "Bing":
-								case "Azure":
-									texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
-									break;
-								case "DeepL":
-									texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
-									break;
-							}
-							resolve(texts);
-						} else throw new Error(response);
-					} catch (e) {
-						throw e;
-					}
-				});
+		let texts = [];
+		return new Promise((resolve, reject) => {
+			switch (type) {
+				case "Google":
+				case "Bing":
+				default:
+					$.get(request, (error, response, data) => {
+						try {
+							if (error) throw new Error(error)
+							else if (data) {
+								const _data = JSON.parse(data)
+								switch (type) {
+									default:
+									case "Google":
+										if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+										else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
+										else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
+										break;
+									case "Bing":
+										break;
+								};
+								texts = texts?.join("")?.split(/\n\n/);
+								resolve(texts);
+							} else throw new Error(response);
+						} catch (e) {
+							reject(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+						}
+					});
+					break;
+				case "GoogleCloud":
+				case "Azure":
+				case "DeepL":
+				case "BaiduFanyi":
+				case "YoudaoAI":
+					$.post(request, (error, response, data) => {
+						try {
+							if (error) throw new Error(error)
+							else if (data) {
+								const _data = JSON.parse(data)
+								switch (type) {
+									default:
+									case "GoogleCloud":
+										texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+										break;
+									case "Azure":
+										texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+										break;
+									case "DeepL":
+										texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+										break;
+									case "BaiduFanyi":
+										break;
+									case "YoudaoAI":
+										break;
+								};
+								resolve(texts);
+							} else throw new Error(response);
+						} catch (e) {
+							reject(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+						}
+					});
+					break;
 			};
 		});
 	};

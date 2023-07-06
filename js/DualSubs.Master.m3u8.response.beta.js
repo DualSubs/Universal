@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(3) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(10) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -185,9 +185,10 @@ function getPlatform(host) {
 									: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
 										: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
 											: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
-												: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
-													: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
-														: "Universal";
+												: /\.viki\.io/i.test(host) ? "Viki"
+													: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
+														: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
+															: "Universal";
 	$.log(`✅ ${$.name}, Get Platform`, `Platform: ${Platform}`, "");
 	return Platform;
 };
@@ -390,6 +391,7 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 			break;
 		case "Max":
 		case "HBO_Max":
+		case "Viki":
 			//newOption.OPTION.NAME = (standard) ? `${NAME1} / ${NAME2} [${type}]` : NAME1;
 			//if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
 			break;
@@ -425,6 +427,7 @@ function isStandard(platform, url, headers) {
 	switch (platform) {
 		case "Max":
 		case "HBO_Max":
+		case "Viki":
 			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
 			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
 			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;

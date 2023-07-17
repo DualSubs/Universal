@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(2) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(7) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -73,7 +73,22 @@ const DataBase = {
 			const Type = url?.query?.subtype || url?.query?.dualsubs || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建空数据
-			let body = {};
+			let OriginSub = {}, TransSub = {};
+			// 翻译长度设置
+			let length = 127;
+			switch (Settings.Type) {
+				case "Google":
+				case "GoogleCloud":
+				default:
+					length = 127;
+					break;
+				case "Azure":
+					length = 99;
+					break;
+				case "DeepL":
+					length = 49;
+					break;
+			};
 			// 格式判断
 			switch (Format || FORMAT) {
 				case undefined: // 视为无body
@@ -93,11 +108,37 @@ const DataBase = {
 				case "xml":
 				case "srv3":
 				case "text/xml":
-				case "application/xml":
+				case "application/xml": {
 					body = XML.parse($response.body);
 					$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					const OriginPara = OriginSub?.tt?.body?.div ?? OriginSub?.timedtext?.body;
+					let Full = (OriginPara?.p).map(para => {
+						const span = para?.span ?? para?.s;
+						if (Array.isArray(span)) sentences = span?.map(span => span["#"]).join(" ");
+						else sentences = span?.["#"] ?? "";
+						return sentences;
+					});
+					let Parts = chunk(Full, length);
+					let Translation = await Promise.all(Parts.map(async part => await Translator(Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages))).then(part => part.flat(Infinity));
+					const TransPara = TransSub?.tt?.body?.div ?? TransSub?.timedtext?.body;
+					TransPara.p = (TransPara?.p).map((para, i) => {
+						const span = para?.span ?? para?.s
+						switch (Settings.ShowOnly) { // 仅显示翻译结果
+							case true:
+								if (Array.isArray(span)) Translation?.[i]?.split(" ").forEach((text, j) => span?.[j]["#"] = text);
+								else span["#"] = Translation?.[i] ?? span;
+								break;
+							case false:
+							default:
+								if (Array.isArray(span)) Translation?.[i]?.split(" ").forEach((text, j) => span?.[j]["#"] = combineText(span?.[j]["#"], text, Settings?.Position));
+								else span["#"] = combineText(span["#"], Translation?.[i], Settings?.Position);
+								break;
+						};
+						return para;
+					});
 					$response.body = XML.stringify(body);
 					break;
+				};
 				case "plist":
 				case "text/plist":
 				case "application/plist":
@@ -109,67 +150,29 @@ const DataBase = {
 				case "vtt":
 				case "webvtt":
 				case "text/vtt":
-				case "application/vtt":
-					body = VTT.parse($response.body);
+				case "application/vtt": {
+					OriginSub = VTT.parse($response.body);
+					TransSub = OriginSub;
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-					// 处理类型
-					switch (Type) {
-						case "Official":
-							$.log(`🚧 ${$.name}`, "官方字幕", "");
-							break;
-						case "Translate":
-						default:
-							$.log(`🚧 ${$.name}`, `翻译字幕`, "");
-							let Full = await Promise.all(body.body.map(async item => item.text));
-							let Translation = [];
-							switch (Settings?.Method) {
-								default:
-								case "Part": // Part 逐段翻译
-									let length = 127;
-									switch (Settings.Type) {
-										case "Google":
-										case "GoogleCloud":
-										default:
-											length = 127;
-											break;
-										case "Azure":
-											length = 99;
-											break;
-										case "DeepL":
-											length = 49;
-											break;
-									};
-									let Parts = chunk(Full, length);
-									Translation = await Promise.all(Parts.map(async part => {
-										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
-									})).then(part => part.flat(Infinity));
-									break;
-								case "Row": // Row 逐行翻译
-									Translation = await Promise.all(Full.map(async row => {
-										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], row, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
-									}));
-									break;
-							};
-							body.body = await Promise.all(body.body.map(async (item, i) => {
-								switch (Settings.ShowOnly) { // 仅显示翻译结果
-									case true:
-										item.text = Translation?.[i] ?? item.text;
-										break;
-									case false:
-									default:
-										item.text = combineText(item.text, Translation?.[i], Settings?.Position);
-										break;
-								};
-								return item
-							}));
-							break;
-						case "External":
-							$.log(`🚧 ${$.name}, 外挂字幕`, "");
-							break;
-					};
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-					$response.body = VTT.stringify(body);
+					let Full = await Promise.all(OriginSub.body.map(async item => item.text));
+					let Parts = chunk(Full, length);
+					let Translation = await Promise.all(Parts.map(async part => await Translator(Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages))).then(part => part.flat(Infinity));
+					TransSub.body = OriginSub.body.map((item, i) => {
+						switch (Settings.ShowOnly) { // 仅显示翻译结果
+							case true:
+								item.text = Translation?.[i] ?? item.text;
+								break;
+							case false:
+							default:
+								item.text = combineText(item.text, Translation?.[i], Settings?.Position);
+								break;
+						};
+						return item
+					});
+					//$.log(`🚧 ${$.name}`, `TransSub: ${JSON.stringify(TransSub)}`, "");
+					$response.body = VTT.stringify(TransSub);
 					break;
+				};
 				case "json":
 				case "json3":
 				case "text/json":
@@ -339,15 +342,190 @@ function setCache(cache, cacheSize = 100) {
 	return cache;
 };
 
-/**
- * combineText
- * @author VirgilClyne
- * @param {String} text1 - text1
- * @param {String} text2 - text2
- * @param {String} position - position
- * @return {String} combined text
+
+/** 
+ * Translate Dual Subtitles
+ * @param {Object} Sub1 - Sub1
+ * @param {Object} Sub2 - Sub2
+ * @param {Array} Format - options = ["json", "srv3", "vtt", etc.]
+ * @param {Array} Kind - options = ["asr", "captions"]
+ * @param {Number} Offset - Offset
+ * @param {Number} Tolerance - Tolerance
+ * @param {Array} Options - options = ["Forward", "Reverse", "ShowOnly"]
+ * @return {Promise<String>} DualSub
  */
-function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+async function TranslateDualSubs(OriginSub = {}, Format = "vtt", Kind = "captions", Type = "Google", Method = "Part", Languages = ["ZH", "EN"], API = Type, DataBase = DataBase.Translate.Configs.Languages, Position = "Forward") {
+	$.log(`⚠ ${$.name}, Translate Dual Subtitles`, `Format: ${Format}, Kind: ${Kind}, Method: ${Method}, Options: ${Options}`, "");
+	//$.log(`🚧 ${$.name}, Translate Dual Subtitles`,`OriginSub 内容: ${JSON.stringify(OriginSub)}`, "");
+	//let DualSub = Options.includes("Reverse") ? Sub2 : Sub1;
+	let TransSub = OriginSub;
+	//$.log(`🚧 ${$.name}, Translate Dual Subtitles`,`let TransSub 内容: ${JSON.stringify(TransSub)}`, "");
+	let length = 127;
+	switch (Settings.Type) {
+		case "Google":
+		case "GoogleCloud":
+		default:
+			length = 127;
+			break;
+		case "Azure":
+			length = 99;
+			break;
+		case "DeepL":
+			length = 49;
+			break;
+	};
+	switch (Format) {
+		case "json":
+		case "json3":
+		case "text/json":
+		case "application/json": {
+			const length1 = Sub1?.events?.length, length2 = Sub2?.events?.length;
+			switch (Kind) {
+				case "asr":
+					// 自动生成字幕转普通字幕
+					$.log(`🚧`, `DualSub是自动生成字幕`, "");
+					index0 = 1, index1 = 1, index2 = 1;
+					Sub1.events = Sub1.events.map(event => {
+						if (event?.segs) {
+							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join(" ") }];
+						};
+						delete event.wWinId;
+						return event;
+					});
+					Sub2.events = Sub2.events.map(event => {
+						if (event?.segs) {
+							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join(" ") }];
+						};
+						delete event.wWinId;
+						return event;
+					});
+				//break; 不要break，连续处理
+				case "captions":
+					// 处理普通字幕
+					while (index1 < length1 && index2 < length2) {
+						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
+						const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
+						//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
+						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
+							index0 = Options.includes("Reverse") ? index2 : index1;
+							// 处理普通字幕
+							const text1 = Sub1.events[index1]?.segs?.[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs?.[0].utf8 ?? "";
+							//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
+							DualSub.events[index0].segs = [{ "utf8": Options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}` }];
+							//$.log(`🚧`, `DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
+							//DualSub.body[index0].tStartMs = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
+							//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;
+						};
+						if (timeStamp2 > timeStamp1) index1++
+						else if (timeStamp2 < timeStamp1) index2++
+						else { index1++; index2++ };
+					};
+					break;
+			};
+			break;
+		};
+		case "xml":
+		case "ttml":
+		case "srv3":
+		case "text/xml":
+		case "application/xml": {
+			Format = (OriginSub?.tt) ? "ttml" : (OriginSub?.timedtext) ? "srv3" : "xml";
+			switch (Format) {
+				case "ttml": {
+					let Full = (OriginSub?.tt?.body?.div?.p).map(para => {
+						if (Array.isArray(para?.span)) sentences = para?.span?.map(span => span["#"]).join(" ");
+						else sentences = para?.span?.["#"] ?? "";
+						return sentences;
+					});
+					// Part 逐段翻译
+					let Parts = chunk(Full, length);
+					let Translation = await Promise.all(Parts.map(async part => await Translator(Type, Languages[1], Languages[0], part, Settings[Settings.Type], Configs.Languages))).then(part => part.flat(Infinity));
+					TransSub.tt.body.div.p = TransSub?.tt?.body?.div?.p.map((para, i) => {
+						switch (Settings.ShowOnly) { // 仅显示翻译结果
+							case true:
+								if (Array.isArray(para?.span)) Translation?.[i]?.split(" ").forEach((text, j) => para?.span?.[j]["#"] = text);
+								else para.span["#"] = Translation?.[i] ?? para.span;
+								break;
+							case false:
+							default:
+								if (Array.isArray(para?.span)) Translation?.[i]?.split(" ").forEach((text, j) => para?.span?.[j]["#"] = combineText(para?.span?.[j]["#"], text, Settings?.Position));
+								else para.span["#"] = combineText(para.span["#"], Translation?.[i], Settings?.Position);
+								break;
+						};
+						return para;
+					});
+					break;
+				};
+				case "srv3": {
+					let Full = (OriginSub?.timedtext?.body?.p).map(para => {
+						if (Array.isArray(para?.s)) sentences = (para?.s)?.map(span => span["#"]).join(" ");
+						else sentences = (para?.s)?.["#"] ?? "";
+						return sentences;
+					});
+					 // Part 逐段翻译
+					let Parts = chunk(Full, length);
+					let Translation = await Promise.all(Parts.map(async part => await Translator(Type, Languages[1], Languages[0], part, Settings[Settings.Type], Configs.Languages))).then(part => part.flat(Infinity));
+					TransSub.timedtext.body.p = TransSub?.timedtext?.body?.p.map((para, i) => {
+						switch (Settings.ShowOnly) { // 仅显示翻译结果
+							case true:
+								if (Array.isArray(para?.s)) Translation?.[i]?.split(" ").forEach((text, j) => para?.s?.[j]["#"] = text);
+								else para.s["#"] = Translation?.[i] ?? para.s;
+								break;
+							case false:
+							default:
+								if (Array.isArray(para?.s)) Translation?.[i]?.split(" ").forEach((text, j) => para?.s?.[j]["#"] = combineText(para?.s?.[j]["#"], text, Settings?.Position));
+								else para.s["#"] = combineText(para.s["#"], Translation?.[i], Settings?.Position);
+								break;
+						};
+						return para;
+					});
+					break;
+				};
+				case "xml":
+				default: {
+					break;
+				};
+			};
+			break;
+		};
+		case "vtt":
+		case "webvtt":
+		case "text/vtt":
+		case "application/vtt": {
+			let Full = OriginSub.body.map(item => item.text);
+			// Part 逐段翻译
+			let Parts = chunk(Full, length);
+			let Translation = await Promise.all(Parts.map(async part => await Translator(Type, Languages[1], Languages[0], part, Settings[Settings.Type], Configs.Languages))).then(part => part.flat(Infinity));
+			TransSub.body = OriginSub.body.map((item, i) => {
+				switch (Settings.ShowOnly) { // 仅显示翻译结果
+					case true:
+						item.text = Translation?.[i] ?? item.text;
+						break;
+					case false:
+					default:
+						item.text = combineText(item.text, Translation?.[i], Settings?.Position);
+						break;
+				};
+				return item
+			});
+			break;
+		};
+	};
+	//$.log(`🎉 ${$.name}, Translate Dual Subtitles`, `return TransSub 内容: ${JSON.stringify(TransSub)}`, "");
+	$.log(`🎉 ${$.name}, Translate Dual Subtitles`, "");
+	return TransSub;
+
+	/**
+	 * combineText
+	 * @author VirgilClyne
+	 * @param {String} text1 - text1
+	 * @param {String} text2 - text2
+	 * @param {String} position - position
+	 * @return {String} combined text
+	 */
+	function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+
+};
 
 /**
  * Translator

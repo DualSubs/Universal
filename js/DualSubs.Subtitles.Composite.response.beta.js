@@ -23,7 +23,7 @@ const DataBase = {
 		}
 	},
 	"Netflix": {
-		"Settings": {"Switch":true,"Type":"Translate","Languages":["ZH","EN"]}
+		"Settings": {"Switch":true,"Type":"Translate","Languages":["ZH","EN"],"Language":"AUTO","ShowOnly":false},
 	},
 	"Official": {
 		"Settings":{"CacheSize":100,"Position":"Forward","Offset":0,"Tolerance":1000},
@@ -36,7 +36,7 @@ const DataBase = {
 		}
 	},
 	"Translate": {
-		"Settings":{"Type":"Google","Types":["Google","GoogleCloud","Azure","DeepL"],"ShowOnly":false,"Position":"Forward","CacheSize":10,"Method":"Part","Times":3,"Interval":100,"Exponential":true},
+		"Settings":{"Type":"Google","ShowOnly":false,"Position":"Forward","CacheSize":10,"Method":"Part","Times":3,"Interval":100,"Exponential":true},
 		"Configs": {
 			"Languages": {
 				"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
@@ -166,9 +166,10 @@ const DataBase = {
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
 					//body = M3U8.parse($response.body);
-					//$.log(body);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(PlayList);
 					break;
+				case "xml":
 				case "srv3":
 				case "text/xml":
 				case "application/xml":
@@ -182,6 +183,7 @@ const DataBase = {
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = XML.stringify(OriginSub);
 					break;
+				case "plist":
 				case "text/plist":
 				case "application/plist":
 				case "application/x-plist":
@@ -211,6 +213,7 @@ const DataBase = {
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = VTT.stringify(OriginSub);
 					break;
+				case "json":
 				case "json3":
 				case "text/json":
 				case "application/json":
@@ -259,9 +262,14 @@ const DataBase = {
 						case "application/x-www-form-urlencoded":
 						case "text/plain":
 						case "text/html":
+						case "m3u8":
+						case "application/x-mpegurl":
+						case "application/vnd.apple.mpegurl":
+						case "xml":
 						case "srv3":
 						case "text/xml":
 						case "application/xml":
+						case "plist":
 						case "text/plist":
 						case "application/plist":
 						case "application/x-plist":
@@ -269,12 +277,10 @@ const DataBase = {
 						case "webvtt":
 						case "text/vtt":
 						case "application/vtt":
+						case "json":
 						case "json3":
 						case "text/json":
 						case "application/json":
-						case "m3u8":
-						case "application/x-mpegurl":
-						case "application/vnd.apple.mpegurl":
 						default:
 							// 返回普通数据
 							$.done({ headers: $response.headers, body: $response.body });

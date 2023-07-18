@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(7) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.1(39) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -89,6 +89,7 @@ const DataBase = {
 					length = 49;
 					break;
 			};
+			let Translation = [];
 			// 格式判断
 			switch (Format || FORMAT) {
 				case undefined: // 视为无body
@@ -109,34 +110,47 @@ const DataBase = {
 				case "srv3":
 				case "text/xml":
 				case "application/xml": {
-					body = XML.parse($response.body);
-					$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					OriginSub = XML.parse($response.body);
+					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					const OriginPara = OriginSub?.tt?.body?.div ?? OriginSub?.timedtext?.body;
-					let Full = (OriginPara?.p).map(para => {
+					let Full = OriginPara.p.map(para => {
 						const span = para?.span ?? para?.s;
-						if (Array.isArray(span)) sentences = span?.map(span => span["#"]).join(" ");
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join("<br/>");
 						else sentences = span?.["#"] ?? "";
 						return sentences;
 					});
-					let Parts = chunk(Full, length);
-					let Translation = await Promise.all(Parts.map(async part => await Translator(Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages))).then(part => part.flat(Infinity));
+					switch (Settings?.Method) {
+						default:
+						case "Part": // Part 逐段翻译
+							let Parts = chunk(Full, length);
+							Translation = await Promise.all(Parts.map(async part => await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential))).then(part => part.flat(Infinity));
+							break;
+						case "Row": // Row 逐行翻译
+							Translation = await Promise.all(Full.map(async row => {
+								return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], row, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
+							}));
+							break;
+					};
+					//let Parts = chunk(Full, length);
+					//let Translation = await Promise.all(Parts.map(async part => await Translator(Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages))).then(part => part.flat(Infinity));
+					TransSub = OriginSub;
 					const TransPara = TransSub?.tt?.body?.div ?? TransSub?.timedtext?.body;
 					TransPara.p = (TransPara?.p).map((para, i) => {
 						const span = para?.span ?? para?.s
 						switch (Settings.ShowOnly) { // 仅显示翻译结果
 							case true:
-								if (Array.isArray(span)) Translation?.[i]?.split(" ").forEach((text, j) => span?.[j]["#"] = text);
+								if (Array.isArray(span)) Translation?.[i]?.split("<br/>").forEach((text, j) => { if (span[j]?.["#"]) span[j]["#"] = text });
 								else span["#"] = Translation?.[i] ?? span;
 								break;
 							case false:
 							default:
-								if (Array.isArray(span)) Translation?.[i]?.split(" ").forEach((text, j) => span?.[j]["#"] = combineText(span?.[j]["#"], text, Settings?.Position));
+								if (Array.isArray(span)) Translation?.[i]?.split("<br/>").forEach((text, j) => { if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.Position) });
 								else span["#"] = combineText(span["#"], Translation?.[i], Settings?.Position);
 								break;
 						};
 						return para;
 					});
-					$response.body = XML.stringify(body);
+					$response.body = XML.stringify(TransSub);
 					break;
 				};
 				case "plist":
@@ -152,11 +166,11 @@ const DataBase = {
 				case "text/vtt":
 				case "application/vtt": {
 					OriginSub = VTT.parse($response.body);
-					TransSub = OriginSub;
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					let Full = await Promise.all(OriginSub.body.map(async item => item.text));
 					let Parts = chunk(Full, length);
 					let Translation = await Promise.all(Parts.map(async part => await Translator(Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages))).then(part => part.flat(Infinity));
+					TransSub = OriginSub;
 					TransSub.body = OriginSub.body.map((item, i) => {
 						switch (Settings.ShowOnly) { // 仅显示翻译结果
 							case true:
@@ -443,12 +457,12 @@ async function TranslateDualSubs(OriginSub = {}, Format = "vtt", Kind = "caption
 					TransSub.tt.body.div.p = TransSub?.tt?.body?.div?.p.map((para, i) => {
 						switch (Settings.ShowOnly) { // 仅显示翻译结果
 							case true:
-								if (Array.isArray(para?.span)) Translation?.[i]?.split(" ").forEach((text, j) => para?.span?.[j]["#"] = text);
+								if (Array.isArray(para?.span)) Translation?.[i]?.split(" ").forEach((text, j) => para.span[j]["#"] = text);
 								else para.span["#"] = Translation?.[i] ?? para.span;
 								break;
 							case false:
 							default:
-								if (Array.isArray(para?.span)) Translation?.[i]?.split(" ").forEach((text, j) => para?.span?.[j]["#"] = combineText(para?.span?.[j]["#"], text, Settings?.Position));
+								if (Array.isArray(para?.span)) Translation?.[i]?.split(" ").forEach((text, j) => para.span[j]["#"] = combineText(para.span[j]["#"], text, Settings?.Position));
 								else para.span["#"] = combineText(para.span["#"], Translation?.[i], Settings?.Position);
 								break;
 						};
@@ -468,12 +482,12 @@ async function TranslateDualSubs(OriginSub = {}, Format = "vtt", Kind = "caption
 					TransSub.timedtext.body.p = TransSub?.timedtext?.body?.p.map((para, i) => {
 						switch (Settings.ShowOnly) { // 仅显示翻译结果
 							case true:
-								if (Array.isArray(para?.s)) Translation?.[i]?.split(" ").forEach((text, j) => para?.s?.[j]["#"] = text);
+								if (Array.isArray(para?.s)) Translation?.[i]?.split(" ").forEach((text, j) => para.s[j]["#"] = text);
 								else para.s["#"] = Translation?.[i] ?? para.s;
 								break;
 							case false:
 							default:
-								if (Array.isArray(para?.s)) Translation?.[i]?.split(" ").forEach((text, j) => para?.s?.[j]["#"] = combineText(para?.s?.[j]["#"], text, Settings?.Position));
+								if (Array.isArray(para?.s)) Translation?.[i]?.split(" ").forEach((text, j) => para.s[j]["#"] = combineText(para?.s?.[j]["#"], text, Settings?.Position));
 								else para.s["#"] = combineText(para.s["#"], Translation?.[i], Settings?.Position);
 								break;
 						};
@@ -514,18 +528,17 @@ async function TranslateDualSubs(OriginSub = {}, Format = "vtt", Kind = "caption
 	//$.log(`🎉 ${$.name}, Translate Dual Subtitles`, `return TransSub 内容: ${JSON.stringify(TransSub)}`, "");
 	$.log(`🎉 ${$.name}, Translate Dual Subtitles`, "");
 	return TransSub;
-
-	/**
-	 * combineText
-	 * @author VirgilClyne
-	 * @param {String} text1 - text1
-	 * @param {String} text2 - text2
-	 * @param {String} position - position
-	 * @return {String} combined text
-	 */
-	function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
-
 };
+
+/**
+ * combineText
+ * @author VirgilClyne
+ * @param {String} text1 - text1
+ * @param {String} text2 - text2
+ * @param {String} position - position
+ * @return {String} combined text
+ */
+function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
 
 /**
  * Translator
@@ -885,4 +898,242 @@ function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","s
 // refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
 // refer: https://goessner.net/download/prj/jsonxml/json2xml.js
 // minify: https://www.digitalocean.com/community/tools/minify
-function XMLs(r){return new class{constructor(r){this.name="XML v0.1.4",this.opts=r}parse(r=new String,t=""){const n={"&amp;":"&","&lt;":"<","&gt;":">","&apos;":"'","&quot;":'"'},e="@";let s=function r(t,n){if("string"==typeof t)return t;var s=t.r;if(s)return s;var u,o=function(r,t){if(!r.t)return;for(var n,s,u=r.t.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/),o=u.length,l=0;l<o;l++){var c=i(u[l]);if(c){n||(n={});var p=c.indexOf("=");if(p<0)c=e+c,s=null;else{s=c.substr(p+1).replace(/^\s+/,""),c=e+c.substr(0,p).replace(/\s+$/,"");var g=s[0];g!==s[s.length-1]||"'"!==g&&'"'!==g||(s=s.substr(1,s.length-2)),s=a(s)}t&&(s=t(c,s)),f(n,c,s)}}return n}(t,n),l=t.f,c=l.length;if(o||c>1)u=o||{},l.forEach((function(t){"string"==typeof t?f(u,"#",t):f(u,t.n,r(t,n))}));else if(c){var p=l[0];if(u=r(p,n),p.n){var g={};g[p.n]=u,u=g}}else u=t.c?null:"";n&&(u=n(t.n||"",u));return u}(function(r){for(var t=String.prototype.split.call(r,/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/),n=t.length,e={f:[]},s=e,f=[],u=0;u<n;){var o=t[u++];o&&g(o);var l=t[u++];l&&c(l)}return e;function c(r){var t=r.length,n=r[0];if("/"===n)for(var e=r.replace(/^\/|[\s\/].*$/g,"").toLowerCase();f.length;){var i=s.n&&s.n.toLowerCase();if(s=f.pop(),i===e)break}else if("?"===n)p({n:"?",r:r.substr(1,t-2)});else if("!"===n)"[CDATA["===r.substr(1,7)&&"]]"===r.substr(-2)?g(r.substr(8,t-10)):p({n:"!",r:r.substr(1)});else{var a=function(r){var t={f:[]},n=(r=r.replace(/\s*\/?$/,"")).search(/[\s='"\/]/);n<0?t.n=r:(t.n=r.substr(0,n),t.t=r.substr(n));return t}(r);p(a),"/"===r[t-1]?a.c=1:(f.push(s),s=a)}}function p(r){s.f.push(r)}function g(r){(r=i(r))&&p(a(r))}}(r),t);return s;function i(r){return r&&r.replace(/^\s+|\s+$/g,"")}function a(r){return r.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g,(function(r){if("#"===r[1]){var t="x"===r[2]?parseInt(r.substr(3),16):parseInt(r.substr(2),10);if(t>-1)return String.fromCharCode(t)}return n[r]||r}))}function f(r,t,n){if(void 0!==n){var e=r[t];e instanceof Array?e.push(n):r[t]=t in r?[e,n]:n}}}stringify(r=new Object,t=""){var n="";for(var e in r)n+=s(r[e],e,"");return n=t?n.replace(/\t/g,t):n.replace(/\t|\n/g,"");function s(r,t,n){let e="";if(Array.isArray(r))e=r.reduce(((r,e)=>r+(n+s(e,t,n+"\t")+"\n")),"");else if("object"==typeof r){let i=!1;e+=n+"<"+t;for(let t in r)"@"==t.charAt(0)?e+=" "+t.substring(1)+'="'+r[t].toString()+'"':i=!0;if(e+=i?">":"/>",i){for(let t in r)"#"==t?e+=r[t]:"#cdata"==t?e+="<![CDATA["+r[t]+"]]>":"@"!=t.charAt(0)&&(e+=s(r[t],t,n+"\t"));e+=("\n"==e.charAt(e.length-1)?n:"")+"</"+t+">"}}else e+="?"===t?n+"<"+t+r.toString()+t+">":n+"<"+t+">"+r.toString()+"</"+t+">";return e}}}(r)}
+// function XMLs(r){return new class{constructor(r){this.name="XML v0.1.4",this.opts=r}parse(r=new String,t=""){const n={"&amp;":"&","&lt;":"<","&gt;":">","&apos;":"'","&quot;":'"'},e="@";let s=function r(t,n){if("string"==typeof t)return t;var s=t.r;if(s)return s;var u,o=function(r,t){if(!r.t)return;for(var n,s,u=r.t.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/),o=u.length,l=0;l<o;l++){var c=i(u[l]);if(c){n||(n={});var p=c.indexOf("=");if(p<0)c=e+c,s=null;else{s=c.substr(p+1).replace(/^\s+/,""),c=e+c.substr(0,p).replace(/\s+$/,"");var g=s[0];g!==s[s.length-1]||"'"!==g&&'"'!==g||(s=s.substr(1,s.length-2)),s=a(s)}t&&(s=t(c,s)),f(n,c,s)}}return n}(t,n),l=t.f,c=l.length;if(o||c>1)u=o||{},l.forEach((function(t){"string"==typeof t?f(u,"#",t):f(u,t.n,r(t,n))}));else if(c){var p=l[0];if(u=r(p,n),p.n){var g={};g[p.n]=u,u=g}}else u=t.c?null:"";n&&(u=n(t.n||"",u));return u}(function(r){for(var t=String.prototype.split.call(r,/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/),n=t.length,e={f:[]},s=e,f=[],u=0;u<n;){var o=t[u++];o&&g(o);var l=t[u++];l&&c(l)}return e;function c(r){var t=r.length,n=r[0];if("/"===n)for(var e=r.replace(/^\/|[\s\/].*$/g,"").toLowerCase();f.length;){var i=s.n&&s.n.toLowerCase();if(s=f.pop(),i===e)break}else if("?"===n)p({n:"?",r:r.substr(1,t-2)});else if("!"===n)"[CDATA["===r.substr(1,7)&&"]]"===r.substr(-2)?g(r.substr(8,t-10)):p({n:"!",r:r.substr(1)});else{var a=function(r){var t={f:[]},n=(r=r.replace(/\s*\/?$/,"")).search(/[\s='"\/]/);n<0?t.n=r:(t.n=r.substr(0,n),t.t=r.substr(n));return t}(r);p(a),"/"===r[t-1]?a.c=1:(f.push(s),s=a)}}function p(r){s.f.push(r)}function g(r){(r=i(r))&&p(a(r))}}(r),t);return s;function i(r){return r&&r.replace(/^\s+|\s+$/g,"")}function a(r){return r.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g,(function(r){if("#"===r[1]){var t="x"===r[2]?parseInt(r.substr(3),16):parseInt(r.substr(2),10);if(t>-1)return String.fromCharCode(t)}return n[r]||r}))}function f(r,t,n){if(void 0!==n){var e=r[t];e instanceof Array?e.push(n):r[t]=t in r?[e,n]:n}}}stringify(r=new Object,t=""){var n="";for(var e in r)n+=s(r[e],e,"");return n=t?n.replace(/\t/g,t):n.replace(/\t|\n/g,"");function s(r,t,n){let e="";if(Array.isArray(r))e=r.reduce(((r,e)=>r+(n+s(e,t,n+"\t")+"\n")),"");else if("object"==typeof r){let i=!1;e+=n+"<"+t;for(let t in r)"@"==t.charAt(0)?e+=" "+t.substring(1)+'="'+r[t].toString()+'"':i=!0;if(e+=i?">":"/>",i){for(let t in r)"#"==t?e+=r[t]:"#cdata"==t?e+="<![CDATA["+r[t]+"]]>":"@"!=t.charAt(0)&&(e+=s(r[t],t,n+"\t"));e+=("\n"==e.charAt(e.length-1)?n:"")+"</"+t+">"}}else e+="?"===t?n+"<"+t+r.toString()+t+">":n+"<"+t+">"+r.toString()+"</"+t+">";return e}}}(r)}
+// refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
+// refer: https://goessner.net/download/prj/jsonxml/json2xml.js
+function XMLs(opts) {
+	return new (class {
+		constructor(opts) {
+			this.name = "XML v0.2.0";
+			this.opts = opts;
+		};
+
+		parse(xml = new String, reviver = "") {
+			const UNESCAPE = {
+				"&amp;": "&",
+				"&lt;": "<",
+				"&gt;": ">",
+				"&apos;": "'",
+				"&quot;": '"'
+			};
+			const ATTRIBUTE_KEY = "@";
+			const CHILD_NODE_KEY = "#";
+
+			$.log(`🚧 ${$.name}, parse XML`, "");
+			let parsedXML = parseXML(xml);
+			$.log(`🚧 ${$.name}, parse XML`, `parseXML: ${JSON.stringify(parsedXML)}`, "");
+			let json = toObject(parsedXML, reviver);
+			$.log(`🚧 ${$.name}, parse XML`, `json: ${JSON.stringify(json)}`, "");
+			return json;
+
+			/***************** Fuctions *****************/
+			function parseXML(text) {
+				const list = text.split(/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/);
+				const length = list.length;
+
+				// root element
+				const root = { father: [] };
+				let elem = root;
+
+				// dom tree stack
+				const stack = [];
+
+				for (let i = 0; i < length;) {
+					// text node
+					const str = list[i++];
+					if (str) appendText(str);
+
+					// child node
+					const tag = list[i++];
+					if (tag) parseNode(tag);
+				}
+
+				return root;
+
+				function parseNode(tag) {
+					const tagLength = tag.length;
+					const firstChar = tag[0];
+					if (firstChar === "/") {
+						// close tag
+						const closed = tag.replace(/^\/|[\s\/].*$/g, "").toLowerCase();
+						while (stack.length) {
+							const tagName = elem.name && elem.name.toLowerCase();
+							elem = stack.pop();
+							if (tagName === closed) break;
+						}
+					} else if (firstChar === "?") {
+						// XML declaration
+						appendChild({ name: "?", raw: tag.substr(1, tagLength - 2) });
+					} else if (firstChar === "!") {
+						if (tag.substr(1, 7) === "[CDATA[" && tag.substr(-2) === "]]") {
+							// CDATA section
+							appendText(tag.substr(8, tagLength - 10));
+						} else {
+							// comment
+							appendChild({ name: "!", raw: tag.substr(1) });
+						}
+					} else {
+						const child = openTag(tag);
+						appendChild(child);
+						if (tag[tagLength - 1] === "/") {
+							child.hasChild = false; // emptyTag
+						} else {
+							stack.push(elem); // openTag
+							elem = child;
+						}
+					}
+				}
+
+				function appendChild(child) {
+					elem.father.push(child);
+				}
+
+				function appendText(str) {
+					str = removeSpaces(str);
+					if (str) appendChild(unescapeXML(str));
+				}
+
+				function openTag(tag) {
+					const elem = { father: [] };
+					tag = tag.replace(/\s*\/?$/, "");
+					const pos = tag.search(/[\s='"\/]/);
+					if (pos < 0) {
+						elem.name = tag;
+					} else {
+						elem.name = tag.substr(0, pos);
+						elem.tag = tag.substr(pos);
+					}
+					return elem;
+				}
+			}
+
+			function parseAttribute(elem, reviver) {
+				if (!elem.tag) return;
+				const list = elem.tag.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/);
+				const length = list.length;
+				let attributes, val;
+
+				for (let i = 0; i < length; i++) {
+					let str = removeSpaces(list[i]);
+					if (!str) continue;
+
+					if (!attributes) {
+						attributes = {};
+					}
+
+					const pos = str.indexOf("=");
+					if (pos < 0) {
+						// bare attribute
+						str = ATTRIBUTE_KEY + str;
+						val = null;
+					} else {
+						// attribute key/value pair
+						val = str.substr(pos + 1).replace(/^\s+/, "");
+						str = ATTRIBUTE_KEY + str.substr(0, pos).replace(/\s+$/, "");
+
+						// quote: foo="FOO" bar='BAR'
+						const firstChar = val[0];
+						const lastChar = val[val.length - 1];
+						if (firstChar === lastChar && (firstChar === "'" || firstChar === '"')) {
+							val = val.substr(1, val.length - 2);
+						}
+
+						val = unescapeXML(val);
+					}
+					if (reviver) {
+						val = reviver(str, val);
+					}
+					addObject(attributes, str, val);
+				}
+
+				return attributes;
+			}
+
+			function removeSpaces(str) {
+				return str && str.replace(/^\s+|\s+$/g, "");
+			}
+
+			function unescapeXML(str) {
+				return str.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g, function (str) {
+					if (str[1] === "#") {
+						const code = (str[2] === "x") ? parseInt(str.substr(3), 16) : parseInt(str.substr(2), 10);
+						if (code > -1) return String.fromCharCode(code);
+					}
+					return UNESCAPE[str] || str;
+				});
+			}
+
+			function toObject(elem, reviver) {
+				let object;
+				switch (typeof elem) {
+					case "string":
+					case "undefined":
+						object = elem;
+						break;
+					case "object":
+					//default:
+						const raw = elem.raw;
+						const attributes = parseAttribute(elem, reviver);
+						const childList = elem.father;
+						object = attributes ?? {};
+						//$.log(`🚧 ${$.name}, toObject`, `object: ${JSON.stringify(object)}`, "");
+						if (elem === null) object = elem;
+						else if (raw) object = raw;
+						else childList.forEach((child, i) => addObject(object, (typeof child === "string") ? CHILD_NODE_KEY : child.name, toObject(child, reviver)));
+						if (Object.keys(object).length === 0) object = (elem.hasChild) ? "" : null;
+						if (reviver) object = reviver(elem.name || "", object);
+						break;
+				}
+				return object;
+			}
+
+			function addObject(object, key, val) {
+				if ("undefined" === typeof val) return;
+				else {
+					const prev = object[key];
+					if (Array.isArray(prev)) prev.push(val);
+					else if (key in object) object[key] = [prev, val];
+					else object[key] = val;
+				}
+			}
+		};
+
+		stringify(json = new Object, tab = "") {
+			$.log(`🚧 ${$.name}, stringify XML`, "");
+			var XML = "";
+			for (var m in json)
+				XML += toXml(json[m], m, "");
+			XML = tab ? XML.replace(/\t/g, tab) : XML.replace(/\t|\n/g, "");
+			$.log(`🚧 ${$.name}, stringify XML`, `XML: ${XML}`, "");
+			return XML;
+			/***************** Fuctions *****************/
+			function toXml(v, name, ind) {
+				let xml = "";
+				if (Array.isArray(v)) {
+					xml = v.reduce(
+						(prevXML, currXML) => prevXML += ind + toXml(currXML, name, ind + "\t") + "\n",
+						""
+					)
+				} else if (typeof v === "object") {
+					let hasChild = false;
+					xml += ind + "<" + name;
+					for (let m in v) {
+						if (m.charAt(0) == "@") xml += " " + m.substring(1) + "=\"" + v[m].toString() + "\"";
+						else hasChild = true;
+					}
+					xml += hasChild ? ">" : "/>";
+					if (hasChild) {
+						for (let m in v) {
+							if (m === "#cdata") xml += "<![CDATA[" + v[m] + "]]>";
+							else if (m.charAt(0) === "#") xml += v[m];
+							else if (m.charAt(0) !== "@") xml += toXml(v[m], m, ind + "\t");
+						}
+						xml += (xml.charAt(xml.length - 1) == "\n" ? ind : "") + "</" + name + ">";
+					}
+				} else if (name === "?") xml += ind + "<" + name + v.toString() + name + ">";
+				else xml += ind + "<" + name + ">" + v.toString() + "</" + name + ">";
+				return xml;
+			};
+		};
+	})(opts)
+}

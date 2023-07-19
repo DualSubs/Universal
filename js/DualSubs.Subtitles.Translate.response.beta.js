@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.1(39) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.1(62) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -903,22 +903,26 @@ function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","s
 // refer: https://goessner.net/download/prj/jsonxml/json2xml.js
 function XMLs(opts) {
 	return new (class {
+		#UNESCAPE = {
+			"&amp;": "&",
+			"&lt;": "<",
+			"&gt;": ">",
+			"&apos;": "'",
+			"&quot;": '"'
+		};
+		#ATTRIBUTE_KEY = "@";
+		#CHILD_NODE_KEY = "#";
+		
 		constructor(opts) {
 			this.name = "XML v0.2.0";
 			this.opts = opts;
+
 		};
 
 		parse(xml = new String, reviver = "") {
-			const UNESCAPE = {
-				"&amp;": "&",
-				"&lt;": "<",
-				"&gt;": ">",
-				"&apos;": "'",
-				"&quot;": '"'
-			};
-			const ATTRIBUTE_KEY = "@";
-			const CHILD_NODE_KEY = "#";
-
+			const UNESCAPE = this.#UNESCAPE;
+			const ATTRIBUTE_KEY = this.#ATTRIBUTE_KEY;
+			const CHILD_NODE_KEY = this.#CHILD_NODE_KEY;
 			$.log(`🚧 ${$.name}, parse XML`, "");
 			let parsedXML = parseXML(xml);
 			$.log(`🚧 ${$.name}, parse XML`, `parseXML: ${JSON.stringify(parsedXML)}`, "");
@@ -1007,46 +1011,94 @@ function XMLs(opts) {
 				}
 			}
 
-			function parseAttribute(elem, reviver) {
-				if (!elem.tag) return;
-				const list = elem.tag.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/);
-				const length = list.length;
-				let attributes, val;
+			function toObject(elem, reviver) {
+				let object;
+				switch (typeof elem) {
+					case "string":
+					case "undefined":
+						object = elem;
+						break;
+					case "object":
+					//default:
+						const raw = elem.raw;
+						const tag = elem.tag;
+						const childList = elem.father;
 
-				for (let i = 0; i < length; i++) {
-					let str = removeSpaces(list[i]);
-					if (!str) continue;
+						if (elem === null) object = null;
+						else if (raw) object = raw;
+						else if (tag) object = parseAttribute(tag, reviver);
+						else object = {};
+						//$.log(`🚧 ${$.name}, toObject`, `object: ${JSON.stringify(object)}`, "");
 
-					if (!attributes) {
-						attributes = {};
-					}
+						if (childList) childList.forEach((child, i) => {
+							if (!child.tag && child.hasChild === false) addObject(object, child.name, child.name, childList?.[i - 1]?.name)
+							else addObject(object, (typeof child === "string") ? CHILD_NODE_KEY : child.name, toObject(child, reviver), undefined)
+						});
+						/*
+						if (Object.keys(object).length === 0) {
+							if (elem.name) object[elem.name] = (elem.hasChild === false) ? null : "";
+							else object = (elem.hasChild === false) ? null : "";
+						}
+						*/
+						
+						//if (Object.keys(object).length === 0) addObject(object, elem.name, (elem.hasChild === false) ? null : "");
+						if (Object.keys(object).length === 0) object = (elem.hasChild === false) ? null : "";
+						if (reviver) object = reviver(elem.name || "", object);
+						break;
+				}
+				return object;
 
-					const pos = str.indexOf("=");
-					if (pos < 0) {
-						// bare attribute
-						str = ATTRIBUTE_KEY + str;
-						val = null;
-					} else {
-						// attribute key/value pair
-						val = str.substr(pos + 1).replace(/^\s+/, "");
-						str = ATTRIBUTE_KEY + str.substr(0, pos).replace(/\s+$/, "");
+				function parseAttribute(tag, reviver) {
+					if (!tag) return;
+					const list = tag.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/);
+					const length = list.length;
+					let attributes, val;
 
-						// quote: foo="FOO" bar='BAR'
-						const firstChar = val[0];
-						const lastChar = val[val.length - 1];
-						if (firstChar === lastChar && (firstChar === "'" || firstChar === '"')) {
-							val = val.substr(1, val.length - 2);
+					for (let i = 0; i < length; i++) {
+						let str = removeSpaces(list[i]);
+						if (!str) continue;
+
+						if (!attributes) {
+							attributes = {};
 						}
 
-						val = unescapeXML(val);
+						const pos = str.indexOf("=");
+						if (pos < 0) {
+							// bare attribute
+							str = ATTRIBUTE_KEY + str;
+							val = null;
+						} else {
+							// attribute key/value pair
+							val = str.substr(pos + 1).replace(/^\s+/, "");
+							str = ATTRIBUTE_KEY + str.substr(0, pos).replace(/\s+$/, "");
+
+							// quote: foo="FOO" bar='BAR'
+							const firstChar = val[0];
+							const lastChar = val[val.length - 1];
+							if (firstChar === lastChar && (firstChar === "'" || firstChar === '"')) {
+								val = val.substr(1, val.length - 2);
+							}
+
+							val = unescapeXML(val);
+						}
+						if (reviver) val = reviver(str, val);
+
+						addObject(attributes, str, val);
 					}
-					if (reviver) {
-						val = reviver(str, val);
-					}
-					addObject(attributes, str, val);
+
+					return attributes;
 				}
 
-				return attributes;
+				function addObject(object, key, val, prevKey = key) {
+					if (typeof val === "undefined") return;
+					else {
+						const prev = object[prevKey];
+						//const curr = object[key];
+						if (Array.isArray(prev)) prev.push(val);
+						else if (prev) object[prevKey] = [prev, val];
+						else object[key] = val;
+					}
+				}
 			}
 
 			function removeSpaces(str) {
@@ -1063,75 +1115,50 @@ function XMLs(opts) {
 				});
 			}
 
-			function toObject(elem, reviver) {
-				let object;
-				switch (typeof elem) {
-					case "string":
-					case "undefined":
-						object = elem;
-						break;
-					case "object":
-					//default:
-						const raw = elem.raw;
-						const attributes = parseAttribute(elem, reviver);
-						const childList = elem.father;
-						object = attributes ?? {};
-						//$.log(`🚧 ${$.name}, toObject`, `object: ${JSON.stringify(object)}`, "");
-						if (elem === null) object = elem;
-						else if (raw) object = raw;
-						else childList.forEach((child, i) => addObject(object, (typeof child === "string") ? CHILD_NODE_KEY : child.name, toObject(child, reviver)));
-						if (Object.keys(object).length === 0) object = (elem.hasChild) ? "" : null;
-						if (reviver) object = reviver(elem.name || "", object);
-						break;
-				}
-				return object;
-			}
-
-			function addObject(object, key, val) {
-				if ("undefined" === typeof val) return;
-				else {
-					const prev = object[key];
-					if (Array.isArray(prev)) prev.push(val);
-					else if (key in object) object[key] = [prev, val];
-					else object[key] = val;
-				}
-			}
 		};
 
 		stringify(json = new Object, tab = "") {
+			const UNESCAPE = this.#UNESCAPE;
+			const ATTRIBUTE_KEY = this.#ATTRIBUTE_KEY;
+			const CHILD_NODE_KEY = this.#CHILD_NODE_KEY;
 			$.log(`🚧 ${$.name}, stringify XML`, "");
-			var XML = "";
-			for (var m in json)
-				XML += toXml(json[m], m, "");
+			let XML = "";
+			for (let elem in json) XML += toXml(json[elem], elem, "");
 			XML = tab ? XML.replace(/\t/g, tab) : XML.replace(/\t|\n/g, "");
 			$.log(`🚧 ${$.name}, stringify XML`, `XML: ${XML}`, "");
 			return XML;
 			/***************** Fuctions *****************/
-			function toXml(v, name, ind) {
+			function toXml(elem, name, ind) {
 				let xml = "";
-				if (Array.isArray(v)) {
-					xml = v.reduce(
+				if (Array.isArray(elem)) {
+					xml = elem.reduce(
 						(prevXML, currXML) => prevXML += ind + toXml(currXML, name, ind + "\t") + "\n",
 						""
 					)
-				} else if (typeof v === "object") {
+				} else if (typeof elem === "object") {
+					let string = "";
 					let hasChild = false;
-					xml += ind + "<" + name;
-					for (let m in v) {
-						if (m.charAt(0) == "@") xml += " " + m.substring(1) + "=\"" + v[m].toString() + "\"";
+					for (let name in elem) {
+						if (name.charAt(0) === ATTRIBUTE_KEY) string += ` ${name.substring(1)}=\"${elem[name].toString()}\"`;
 						else hasChild = true;
 					}
-					xml += hasChild ? ">" : "/>";
+					xml += `${ind}<${name}${string}${hasChild ? "" : "/"}>`;
 					if (hasChild) {
-						for (let m in v) {
-							if (m === "#cdata") xml += "<![CDATA[" + v[m] + "]]>";
-							else if (m.charAt(0) === "#") xml += v[m];
-							else if (m.charAt(0) !== "@") xml += toXml(v[m], m, ind + "\t");
+						for (let name in elem) {
+							if (name.charAt(0) === CHILD_NODE_KEY) {
+								if (name === "#cdata") xml += `<![CDATA[${elem[name]}]]>`;
+								else xml += elem[name];
+							} else if (name.charAt(0) !== ATTRIBUTE_KEY) {
+								xml += toXml(elem[name], name, ind + "\t");
+							}
 						}
-						xml += (xml.charAt(xml.length - 1) == "\n" ? ind : "") + "</" + name + ">";
+						xml += (xml.charAt(xml.length - 1) == "\n" ? ind : "") + `</${name}>`;
 					}
-				} else if (name === "?") xml += ind + "<" + name + v.toString() + name + ">";
-				else xml += ind + "<" + name + ">" + v.toString() + "</" + name + ">";
+				}
+				else if (typeof elem === "string") xml += ind + `<${elem.toString()}/>`;
+				//else if (typeof elem === "undefined") xml += ind + `<${name.toString()}/>`;
+				else if (name === "?") xml += ind + `<${name + elem.toString() + name}>`;
+				else xml += ind + `<${name}>${elem.toString()}</${name}>`;
 				return xml;
 			};
 		};

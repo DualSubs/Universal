@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.1(62) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.1(69) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -898,11 +898,10 @@ function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","s
 // refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
 // refer: https://goessner.net/download/prj/jsonxml/json2xml.js
 // minify: https://www.digitalocean.com/community/tools/minify
-// function XMLs(r){return new class{constructor(r){this.name="XML v0.1.4",this.opts=r}parse(r=new String,t=""){const n={"&amp;":"&","&lt;":"<","&gt;":">","&apos;":"'","&quot;":'"'},e="@";let s=function r(t,n){if("string"==typeof t)return t;var s=t.r;if(s)return s;var u,o=function(r,t){if(!r.t)return;for(var n,s,u=r.t.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/),o=u.length,l=0;l<o;l++){var c=i(u[l]);if(c){n||(n={});var p=c.indexOf("=");if(p<0)c=e+c,s=null;else{s=c.substr(p+1).replace(/^\s+/,""),c=e+c.substr(0,p).replace(/\s+$/,"");var g=s[0];g!==s[s.length-1]||"'"!==g&&'"'!==g||(s=s.substr(1,s.length-2)),s=a(s)}t&&(s=t(c,s)),f(n,c,s)}}return n}(t,n),l=t.f,c=l.length;if(o||c>1)u=o||{},l.forEach((function(t){"string"==typeof t?f(u,"#",t):f(u,t.n,r(t,n))}));else if(c){var p=l[0];if(u=r(p,n),p.n){var g={};g[p.n]=u,u=g}}else u=t.c?null:"";n&&(u=n(t.n||"",u));return u}(function(r){for(var t=String.prototype.split.call(r,/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/),n=t.length,e={f:[]},s=e,f=[],u=0;u<n;){var o=t[u++];o&&g(o);var l=t[u++];l&&c(l)}return e;function c(r){var t=r.length,n=r[0];if("/"===n)for(var e=r.replace(/^\/|[\s\/].*$/g,"").toLowerCase();f.length;){var i=s.n&&s.n.toLowerCase();if(s=f.pop(),i===e)break}else if("?"===n)p({n:"?",r:r.substr(1,t-2)});else if("!"===n)"[CDATA["===r.substr(1,7)&&"]]"===r.substr(-2)?g(r.substr(8,t-10)):p({n:"!",r:r.substr(1)});else{var a=function(r){var t={f:[]},n=(r=r.replace(/\s*\/?$/,"")).search(/[\s='"\/]/);n<0?t.n=r:(t.n=r.substr(0,n),t.t=r.substr(n));return t}(r);p(a),"/"===r[t-1]?a.c=1:(f.push(s),s=a)}}function p(r){s.f.push(r)}function g(r){(r=i(r))&&p(a(r))}}(r),t);return s;function i(r){return r&&r.replace(/^\s+|\s+$/g,"")}function a(r){return r.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g,(function(r){if("#"===r[1]){var t="x"===r[2]?parseInt(r.substr(3),16):parseInt(r.substr(2),10);if(t>-1)return String.fromCharCode(t)}return n[r]||r}))}function f(r,t,n){if(void 0!==n){var e=r[t];e instanceof Array?e.push(n):r[t]=t in r?[e,n]:n}}}stringify(r=new Object,t=""){var n="";for(var e in r)n+=s(r[e],e,"");return n=t?n.replace(/\t/g,t):n.replace(/\t|\n/g,"");function s(r,t,n){let e="";if(Array.isArray(r))e=r.reduce(((r,e)=>r+(n+s(e,t,n+"\t")+"\n")),"");else if("object"==typeof r){let i=!1;e+=n+"<"+t;for(let t in r)"@"==t.charAt(0)?e+=" "+t.substring(1)+'="'+r[t].toString()+'"':i=!0;if(e+=i?">":"/>",i){for(let t in r)"#"==t?e+=r[t]:"#cdata"==t?e+="<![CDATA["+r[t]+"]]>":"@"!=t.charAt(0)&&(e+=s(r[t],t,n+"\t"));e+=("\n"==e.charAt(e.length-1)?n:"")+"</"+t+">"}}else e+="?"===t?n+"<"+t+r.toString()+t+">":n+"<"+t+">"+r.toString()+"</"+t+">";return e}}}(r)}
-// refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
-// refer: https://goessner.net/download/prj/jsonxml/json2xml.js
 function XMLs(opts) {
 	return new (class {
+		#ATTRIBUTE_KEY = "@";
+		#CHILD_NODE_KEY = "#";
 		#UNESCAPE = {
 			"&amp;": "&",
 			"&lt;": "<",
@@ -910,8 +909,13 @@ function XMLs(opts) {
 			"&apos;": "'",
 			"&quot;": '"'
 		};
-		#ATTRIBUTE_KEY = "@";
-		#CHILD_NODE_KEY = "#";
+		#ESCAPE = {
+			"&": "&amp;",
+			"<": "&lt;",
+			">": "&gt;",
+			"'": "&apos;",
+			'"': "&quot;"
+		};
 		
 		constructor(opts) {
 			this.name = "XML v0.2.0";
@@ -1118,7 +1122,7 @@ function XMLs(opts) {
 		};
 
 		stringify(json = new Object, tab = "") {
-			const UNESCAPE = this.#UNESCAPE;
+			const ESCAPE = this.#ESCAPE;
 			const ATTRIBUTE_KEY = this.#ATTRIBUTE_KEY;
 			const CHILD_NODE_KEY = this.#CHILD_NODE_KEY;
 			$.log(`🚧 ${$.name}, stringify XML`, "");
@@ -1136,28 +1140,23 @@ function XMLs(opts) {
 						""
 					)
 				} else if (typeof elem === "object") {
-					let string = "";
+					let attribute = "";
 					let hasChild = false;
 					for (let name in elem) {
-						if (name.charAt(0) === ATTRIBUTE_KEY) string += ` ${name.substring(1)}=\"${elem[name].toString()}\"`;
+						if (name.charAt(0) == ATTRIBUTE_KEY) attribute += ` ${name.substring(1)}=\"${elem[name].toString()}\"`;
 						else hasChild = true;
 					}
-					xml += `${ind}<${name}${string}${hasChild ? "" : "/"}>`;
+					xml += `${ind}<${name}${attribute}${(hasChild) ? "" : "/"}>`;
 					if (hasChild) {
 						for (let name in elem) {
-							if (name.charAt(0) === CHILD_NODE_KEY) {
-								if (name === "#cdata") xml += `<![CDATA[${elem[name]}]]>`;
-								else xml += elem[name];
-							} else if (name.charAt(0) !== ATTRIBUTE_KEY) {
-								xml += toXml(elem[name], name, ind + "\t");
-							}
+							if (name == CHILD_NODE_KEY) xml += elem[name];
+							else if (name == "#cdata") xml += `<![CDATA[${elem[name]}]]>`;
+							else if (name.charAt(0) != "@") xml += toXml(elem[name], name, ind + "\t");
 						}
 						xml += (xml.charAt(xml.length - 1) == "\n" ? ind : "") + `</${name}>`;
 					}
-				}
-				else if (typeof elem === "string") xml += ind + `<${elem.toString()}/>`;
-				//else if (typeof elem === "undefined") xml += ind + `<${name.toString()}/>`;
-				else if (name === "?") xml += ind + `<${name + elem.toString() + name}>`;
+				} else if (typeof elem === "string") xml += ind + `<${elem.toString()}/>`;
+				else if (name === "?") xml += ind + `<${name}${elem.toString()}${name}>`;
 				else xml += ind + `<${name}>${elem.toString()}</${name}>`;
 				return xml;
 			};

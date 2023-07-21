@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(7) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(11) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -68,6 +68,22 @@ const DataBase = {
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 获取字幕格式与字幕类型
 			const Format = url?.query?.fmt || url?.query?.format || url?.type, Kind = url?.query?.kind;
+			let format = undefined;
+			if (Platform === "Netflix") {
+				switch ($response?.body?.substring(0, 5)) {
+					case "<xml v":
+						format = "xml";
+						break;
+					case "WEBVTT":
+					default:
+						format = "vtt";
+						break;
+					case undefined:
+						break;
+				};
+				$.log(`🚧 ${$.name}, format: ${format}`, "");
+				$.log(`🚧 ${$.name}, $response.body: ${$response?.body}`, "");
+			};
 			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
 			// 设置自定义参数
 			const Type = url?.query?.subtype || url?.query?.dualsubs || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
@@ -91,7 +107,7 @@ const DataBase = {
 			};
 			let Translation = [];
 			// 格式判断
-			switch (Format || FORMAT) {
+			switch (format || Format || FORMAT) {
 				case undefined: // 视为无body
 					break;
 				case "application/x-www-form-urlencoded":

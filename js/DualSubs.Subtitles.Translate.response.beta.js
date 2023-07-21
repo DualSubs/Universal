@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.1(69) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(7) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -23,7 +23,7 @@ const DataBase = {
 		}
 	},
 	"Netflix": {
-		"Settings": {"Switch":true,"Type":"Translate","Languages":["ZH","EN"],"Language":"AUTO","ShowOnly":false},
+		"Settings": {"Switch":true,"Type":"Translate","Languages":["EN","ZH"],"ShowOnly":false},
 	},
 	"Official": {
 		"Settings":{"CacheSize":100,"Position":"Forward","Offset":0,"Tolerance":1000},
@@ -39,7 +39,7 @@ const DataBase = {
 		"Settings":{"Type":"Google","ShowOnly":false,"Position":"Forward","CacheSize":10,"Method":"Part","Times":3,"Interval":100,"Exponential":true},
 		"Configs": {
 			"Languages": {
-				"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
+				"Google":{"AUTO":"auto","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
 				"Microsoft":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"yue","ZH-HANT":"zh-Hant"},
 				"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT-PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}
 			}
@@ -115,7 +115,7 @@ const DataBase = {
 					const OriginPara = OriginSub?.tt?.body?.div ?? OriginSub?.timedtext?.body;
 					let Full = OriginPara.p.map(para => {
 						const span = para?.span ?? para?.s;
-						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join("<br/>");
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join("\r");
 						else sentences = span?.["#"] ?? "";
 						return sentences;
 					});
@@ -139,13 +139,19 @@ const DataBase = {
 						const span = para?.span ?? para?.s
 						switch (Settings.ShowOnly) { // 仅显示翻译结果
 							case true:
-								if (Array.isArray(span)) Translation?.[i]?.split("<br/>").forEach((text, j) => { if (span[j]?.["#"]) span[j]["#"] = text });
+								if (Array.isArray(span)) Translation?.[i]?.split("\r").forEach((text, j) => {
+									if (span[j]?.["#"]) span[j]["#"] = text;
+									else if (span[j + 1]?.["#"]) span[j + 1]["#"] = text;
+								});
 								else span["#"] = Translation?.[i] ?? span;
 								break;
 							case false:
 							default:
-								if (Array.isArray(span)) Translation?.[i]?.split("<br/>").forEach((text, j) => { if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.Position) });
-								else span["#"] = combineText(span["#"], Translation?.[i], Settings?.Position);
+								if (Array.isArray(span)) Translation?.[i]?.split("\r").forEach((text, j) => {
+									if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.Position, ' ');
+									else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.Position, ' ');
+								});
+								else span["#"] = combineText(span["#"], Translation?.[i], Settings?.Position, '</span><br/><span style="style1">');
 								break;
 						};
 						return para;
@@ -538,7 +544,9 @@ async function TranslateDualSubs(OriginSub = {}, Format = "vtt", Kind = "caption
  * @param {String} position - position
  * @return {String} combined text
  */
-function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+function combineText(text1, text2, position, newLine = "\n") {
+	return (position == "Forward") ? `${text2}${newLine}${text1}` : (position == "Reverse") ? `${text1}${newLine}${text2}` : `${text2}${newLine}${text1}`;
+}
 
 /**
  * Translator
@@ -619,20 +627,27 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
-				BaseURL = "https://translation.googleapis.com";
-				request.url = `${BaseURL}/language/translate/v2/?key=${api?.Auth}`;
-				request.headers = {
-					//"Authorization": `Bearer ${api?.Auth}`,
-					"User-Agent": "DualSubs",
-					"Content-Type": "application/json; charset=utf-8"
-				};
-				request.body = JSON.stringify({
-					"q": text,
-					"source": database.Google[source],
-					"target": database.Google[target],
-					"format": "html",
-					//"key": api?.Key
-				});
+				switch (api?.Version) {
+					case "v2":
+					default:
+						BaseURL = "https://translation.googleapis.com";
+						request.url = `${BaseURL}/language/translate/v2/?key=${api?.Auth}`;
+						request.headers = {
+							//"Authorization": `Bearer ${api?.Auth}`,
+							"User-Agent": "DualSubs",
+							"Content-Type": "application/json; charset=utf-8"
+						};
+						request.body = JSON.stringify({
+							"q": text,
+							"source": database.Google[source],
+							"target": database.Google[target],
+							"format": "html",
+							//"key": api?.Key
+						});
+						break;
+					case "v3":
+						break;
+				}
 				break;
 			case "Bing":
 				// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
@@ -675,7 +690,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 						BaseURL = "https://api.cognitive.microsofttranslator.us"
 						break;
 				};
-				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${database.Microsoft[target]}&from=${database.Microsoft[source]}`;
+				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&${(source !== "AUTO") ? `from=${ database.Microsoft[source]}` : ""}&to=${database.Microsoft[target]}`;
 				request.headers = {
 					"Content-Type": "application/json; charset=UTF-8",
 					"Accept": "application/json, text/javascript, */*; q=0.01",

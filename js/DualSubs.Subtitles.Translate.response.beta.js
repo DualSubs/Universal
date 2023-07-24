@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(3) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(9) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -73,7 +73,7 @@ const DataBase = {
 			let format = url?.query?.fmt || url?.query?.format || url?.type, kind = url?.query?.kind;
 			if (FORMAT === "application/octet-stream") {
 				switch ($response?.body?.substring(0, 5)) {
-					case "<?xml ":
+					case "<?xml":
 						format = "text/xml";
 						break;
 					case "WEBVTT":
@@ -158,7 +158,7 @@ const DataBase = {
 				case "application/vtt": {
 					OriginSub = VTT.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					let fullText = await Promise.all(OriginSub.body.map(async item => item.text));
+					let fullText = await Promise.all(OriginSub.body.map(async item => item.text.trim()));
 					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
 					TransSub.body = OriginSub.body.map((item, i) => {
@@ -652,6 +652,9 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 							} else throw new Error(response);
 						} catch (e) {
 							reject(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+						} finally {
+							//$.log(`🚧 ${$.name}, ${GetData.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
+							resolve()
 						}
 					});
 					break;
@@ -687,6 +690,9 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 							} else throw new Error(response);
 						} catch (e) {
 							reject(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
+						} finally {
+							//$.log(`🚧 ${$.name}, ${GetData.name}调试信息`, `request = ${JSON.stringify(request)}`, `data = ${data}`, "")
+							resolve()
 						}
 					});
 					break;

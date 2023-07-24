@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(10) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(11) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -627,72 +627,94 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 		return request
 	};
 	// Get Translate Data
-	function GetData(type, request) {
-		$.log(`⚠ ${$.name}, Get Translate Data`, "");
+	async function GetData(type, request) {
+		$.log(`☑️ ${$.name}, Get Translate Data`, "");
 		let texts = [];
-		return new Promise((resolve, reject) => {
-			switch (type) {
-				case "Google":
-				default:
-					$.get(request, (error, response, data) => {
-						try {
-							if (error) throw new Error(error)
-							else if (data) {
-								const _data = JSON.parse(data)
-								switch (type) {
-									default:
-									case "Google":
-										if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
-										else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
-										else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
-										break;
-								};
-								texts = texts?.join("")?.split(/\n\n/);
-								resolve(texts);
-							} else throw new Error(response);
-						} catch (e) {
-							reject(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
-						}
-					});
-					break;
-				case "GoogleCloud":
-				case "Bing":
-				case "Azure":
-				case "DeepL":
-				case "BaiduFanyi":
-				case "YoudaoAI":
-					$.post(request, (error, response, data) => {
-						try {
-							if (error) throw new Error(error)
-							else if (data) {
-								const _data = JSON.parse(data)
-								switch (type) {
-									default:
-									case "GoogleCloud":
-										texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
-										break;
-									case "Bing":
-									case "Azure":
-										texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
-										break;
-									case "DeepL":
-										texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
-										break;
-									case "BaiduFanyi":
-										break;
-									case "YoudaoAI":
-										break;
-								};
-								resolve(texts);
-							} else throw new Error(response);
-						} catch (e) {
-							reject(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
-						}
-					});
-					break;
-			};
-		});
+		await Fetch(request)
+			.then(response => JSON.parse(response.body))
+			.then(_data => {
+				switch (type) {
+					case "Google":
+					default:
+						switch (type) {
+							default:
+							case "Google":
+								if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+								else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
+								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
+								break;
+						};
+						texts = texts?.join("")?.split(/\n\n/);
+						break;
+					case "GoogleCloud":
+					case "Bing":
+					case "Azure":
+					case "DeepL":
+					case "BaiduFanyi":
+					case "YoudaoAI":
+						switch (type) {
+							default:
+							case "GoogleCloud":
+								texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+								break;
+							case "Bing":
+							case "Azure":
+								texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+								break;
+							case "DeepL":
+								texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+								break;
+							case "BaiduFanyi":
+								break;
+							case "YoudaoAI":
+								break;
+						};
+						break;
+				};
+			})
+			.catch(error => Promise.reject(error));
+		//$.log(`✅ ${$.name}, Get Translate Data, texts: ${JSON.stringify(texts)}`, "");
+		$.log(`✅ ${$.name}, Get Translate Data`, "");
+		return texts
 	};
+};
+
+/**
+ * Fetch Ruled Reqeust
+ * @author VirgilClyne
+ * @link https://github.com/BiliUniverse/Global/blob/main/js/BiliBili.Global.request.js
+ * @param {Object} request - Original Request Content
+ * @return {Promise<*>}
+ */
+async function Fetch(request = {}) {
+	$.log(`☑️ ${$.name}, Fetch Ruled Reqeust`, "");
+	const FORMAT = (request?.headers?.["Content-Type"] ?? request?.headers?.["content-type"])?.split(";")?.[0];
+	$.log(`⚠ ${$.name}, Fetch Ruled Reqeust`, `FORMAT: ${FORMAT}`, "");
+	if ($.isQuanX()) {
+		switch (FORMAT) {
+			case "application/json":
+			case "text/xml":
+			default:
+				// 返回普通数据
+				delete request.bodyBytes;
+				break;
+			case "application/x-protobuf":
+			case "application/grpc":
+				// 返回二进制数据
+				delete request.body;
+				if (ArrayBuffer.isView(request.bodyBytes)) request.bodyBytes = request.bodyBytes.buffer.slice(request.bodyBytes.byteOffset, request.bodyBytes.byteLength + request.bodyBytes.byteOffset);
+				break;
+			case undefined: // 视为无body
+				// 返回普通数据
+				break;
+		};
+	};
+	let response = (request?.body ?? request?.bodyBytes)
+		? await $.http.post(request)
+		: await $.http.get(request);
+	$.log(`✅ ${$.name}, Fetch Ruled Reqeust`, "");
+	//$.log(`🚧 ${$.name}, Fetch Ruled Reqeust`, `Response:${JSON.stringify(response)}`, "");
+	return response;
 };
 
 /**

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(14) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(18) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -158,7 +158,8 @@ const DataBase = {
 				case "application/vtt": {
 					OriginSub = VTT.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					let fullText = await Promise.all(OriginSub.body.map(async item => item.text.trim()));
+					//let fullText = OriginSub.body.map(item => item.text.replace(/&lrm;|\u200E/gi, ""));
+					let fullText = OriginSub.body.map(item => item.text.replace(/<\/?[^<>]+>/g, ""));
 					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
 					TransSub.body = OriginSub.body.map((item, i) => {

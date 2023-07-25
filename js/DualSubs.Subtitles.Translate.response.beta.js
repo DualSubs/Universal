@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(1) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -122,23 +122,11 @@ const DataBase = {
 					const TransPara = TransSub?.tt?.body?.div ?? TransSub?.timedtext?.body;
 					TransPara.p = (TransPara?.p).map((para, i) => {
 						const span = para?.span ?? para?.s
-						switch (Settings.ShowOnly) { // 仅显示翻译结果
-							case true:
-								if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
-									if (span[j]?.["#"]) span[j]["#"] = text;
-									else if (span[j + 1]?.["#"]) span[j + 1]["#"] = text;
-								});
-								else span["#"] = translation?.[i] ?? span;
-								break;
-							case false:
-							default:
-								if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
-									if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.Position, ' ');
-									else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.Position, ' ');
-								});
-								else span["#"] = combineText(span["#"], translation?.[i], Settings?.Position, '</span><br/><span style="style1">');
-								break;
-						};
+						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
+							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
+							else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
+						});
+						else span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, '</span><br/><span style="style1">');
 						return para;
 					});
 					$response.body = XML.stringify(TransSub);
@@ -163,15 +151,7 @@ const DataBase = {
 					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
 					TransSub.body = OriginSub.body.map((item, i) => {
-						switch (Settings.ShowOnly) { // 仅显示翻译结果
-							case true:
-								item.text = translation?.[i] ?? item.text;
-								break;
-							case false:
-							default:
-								item.text = combineText(item.text, translation?.[i], Settings?.Position);
-								break;
-						};
+						item.text = combineText(item.text, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
 					});
 					//$.log(`🚧 ${$.name}`, `TransSub: ${JSON.stringify(TransSub)}`, "");
@@ -719,16 +699,35 @@ async function Fetch(request = {}) {
 };
 
 /**
- * combineText
+ * combine two text
  * @author VirgilClyne
- * @param {String} text1 - text1
- * @param {String} text2 - text2
+ * @param {String} originText - original text
+ * @param {String} transText - translate text
+ * @param {Boolean} ShowOnly - only show translate text
  * @param {String} position - position
+ * @param {String} lineBreak - line break
  * @return {String} combined text
  */
-function combineText(text1, text2, position, newLine = "\n") {
-	return (position == "Forward") ? `${text2}${newLine}${text1}` : (position == "Reverse") ? `${text1}${newLine}${text2}` : `${text2}${newLine}${text1}`;
-}
+function combineText(originText, transText, ShowOnly = false, position = "Forward", lineBreak = "\n") {
+	let text = "";
+	switch (ShowOnly) {
+		case true:
+			text = transText;
+			break;
+		case false:
+		default:
+			switch (position) {
+				case "Forward":
+				default:
+					text = `${transText}${lineBreak}${originText}`;
+					break;
+				case "Reverse":
+					text = `${originText}${lineBreak}${transText}`;
+					break;
+			}
+	}
+	return text;
+};
 
 /** 
  * Chunk Array

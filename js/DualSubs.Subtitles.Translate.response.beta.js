@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(5) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(9) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -66,6 +66,10 @@ const DataBase = {
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 			const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
+			if (Platform === "YouTube") {
+				Settings.Languages[0] = url.query.tlang.split("-")[0].toUpperCase();
+				Settings.Languages[1] = url.query.lang.split("-")[0].toUpperCase();
+			};
 			// 设置自定义参数
 			const Type = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
@@ -110,23 +114,33 @@ const DataBase = {
 				case "application/xml": {
 					OriginSub = XML.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					const OriginPara = OriginSub?.tt?.body?.div ?? OriginSub?.timedtext?.body;
-					let fullText = OriginPara.p.map(para => {
-						const span = para?.span ?? para?.s;
+					const OriginPara = OriginSub?.tt?.body?.div.p ?? OriginSub?.timedtext?.body;
+					let fullText = (OriginPara?.p ?? OriginPara).map(para => {
+						const span = para?.span ?? para?.s ?? para;
 						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join("\r");
 						else sentences = span?.["#"] ?? "";
 						return sentences;
 					});
 					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
+					let breakLine = "\n";
+					switch (format || FORMAT) {
+						case "srv3":
+							breakLine = "\n";
+							break;
+						case "xml":
+						case "ttml":
+							breakLine = '</span><br/><span style="style1">';
+							break;
+						};
 					const TransPara = TransSub?.tt?.body?.div ?? TransSub?.timedtext?.body;
-					TransPara.p = (TransPara?.p).map((para, i) => {
-						const span = para?.span ?? para?.s
+					TransPara.p = (TransPara?.p ?? TransPara).map((para, i) => {
+						const span = para?.span ?? para?.s ?? para;
 						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
 							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 							else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 						});
-						else span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, '</span><br/><span style="style1">');
+						else span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
 						return para;
 					});
 					$response.body = XML.stringify(TransSub);
@@ -165,10 +179,6 @@ const DataBase = {
 					OriginSub = JSON.parse($response.body);
 					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					let fullText = OriginSub.events.map(item => item?.segs?.[0]?.utf8);
-					if (Platform === "YouTube") {
-						Settings.Languages[0] = url.query.tlang.split("-")[0].toUpperCase();
-						Settings.Languages[1] = url.query.lang.split("-")[0].toUpperCase();
-					};
 					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
 					TransSub.events = OriginSub.events.map((item, i) => {

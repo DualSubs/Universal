@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(18) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(1) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -36,7 +36,7 @@ const DataBase = {
 		}
 	},
 	"Translate": {
-		"Settings":{"Vendor":"Google","ShowOnly":false,"Position":"Forward","CacheSize":10,"Method":"Part","Times":3,"Interval":100,"Exponential":true},
+		"Settings":{"Vendor":"Google","ShowOnly":false,"Position":"Forward","CacheSize":10,"Method":"Part","Times":3,"Interval":1000,"Exponential":true},
 		"Configs": {
 			"Languages": {
 				"Google":{"AUTO":"auto","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
@@ -385,10 +385,10 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
 		default:
 		case "Part": // Part 逐段翻译
 			let parts = chunk(text, length);
-			Translation = await Promise.all(parts.map(async part => await retry(Translator, [vendor, source, target, part, API, database], times, interval, exponential))).then(part => part.flat(Infinity));
+			Translation = await Promise.all(parts.map(async part => await retry(() => Translator(vendor, source, target, part, API, database), times, interval, exponential))).then(part => part.flat(Infinity));
 			break;
 		case "Row": // Row 逐行翻译
-			Translation = await Promise.all(text.map(async row => await retry(Translator, [vendor, source, target, row, API, database], times, interval, exponential)));
+			Translation = await Promise.all(text.map(async row => await retry(() => Translator(vendor, source, target, row, API, database), times, interval, exponential)));
 			break;
 	};
 	//$.log(`✅ ${$.name}, Translate, Translation: ${JSON.stringify(Translation)}`, "");
@@ -748,25 +748,24 @@ function chunk(source, length) {
 /**
  * Retries the given function until it succeeds given a number of retries and an interval between them. They are set
  * by default to retry 5 times with 1sec in between. There's also a flag to make the cooldown time exponential
- * https://gitlab.com/-/snippets/1775781
+ * @link https://gitlab.com/-/snippets/1775781
  * @author Daniel Iñigo <danielinigobanos@gmail.com>
  * @param {Function} fn - Returns a promise
- * @param {Array} argsArray - args Array
  * @param {Number} retriesLeft - Number of retries. If -1 will keep retrying
  * @param {Number} interval - Millis between retries. If exponential set to true will be doubled each retry
  * @param {Boolean} exponential - Flag for exponential back-off mode
  * @return {Promise<*>}
  */
-async function retry(fn, argsArray = [], retriesLeft = 5, interval = 1000, exponential = false) {
-	$.log(`${fn.name}`, `剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) {
+	$.log(`☑️ ${$.name}, retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
 	try {
-		const val = await fn.apply(this, argsArray);
+		const val = await fn();
 		return val;
 	} catch (error) {
 		if (retriesLeft) {
 			await new Promise(r => setTimeout(r, interval));
-			return retry(fn, argsArray, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
-		} else throw new Error("最大重试次数");
+			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
+		} else throw new Error(`❌ ${$.name}, retry, 最大重试次数`);
 	}
 };
 

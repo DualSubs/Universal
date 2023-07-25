@@ -1,8 +1,8 @@
 /*
-README:https://github.com/DualSubs/DualSubs/
+README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(5) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(2) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -14,7 +14,7 @@ const DataBase = {
 		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"]}
 	},
 	"YouTube": {
-		"Settings": {"Switch":true,"Type": "Official"},
+		"Settings": {"Switch":true,"Type":"Official","Language":"AUTO","ShowOnly":false},
 		"Configs": {
 			"translationLanguages":{
 				"DESKTOP":[{"languageCode":"sq","languageName":{"simpleText":"Shqip - 阿尔巴尼亚语"}},{"languageCode":"ak","languageName":{"simpleText":"Ákán - 阿肯语"}},{"languageCode":"ar","languageName":{"simpleText":"العربية - 阿拉伯语"}},{"languageCode":"am","languageName":{"simpleText":"አማርኛ - 阿姆哈拉语"}},{"languageCode":"as","languageName":{"simpleText":"অসমীয়া - 阿萨姆语"}},{"languageCode":"az","languageName":{"simpleText":"آذربايجان ديلی - 阿塞拜疆语"}},{"languageCode":"ee","languageName":{"simpleText":"Èʋegbe - 埃维语"}},{"languageCode":"ay","languageName":{"simpleText":"Aymar aru - 艾马拉语"}},{"languageCode":"ga","languageName":{"simpleText":"Gaeilge - 爱尔兰语"}},{"languageCode":"et","languageName":{"simpleText":"Eesti - 爱沙尼亚语"}},{"languageCode":"or","languageName":{"simpleText":"ଓଡ଼ିଆ - 奥里亚语"}},{"languageCode":"om","languageName":{"simpleText":"Afaan Oromoo - 奥罗莫语"}},{"languageCode":"eu","languageName":{"simpleText":"Euskara - 巴斯克语"}},{"languageCode":"be","languageName":{"simpleText":"Беларуская - 白俄罗斯语"}},{"languageCode":"bg","languageName":{"simpleText":"Български - 保加利亚语"}},{"languageCode":"nso","languageName":{"simpleText":"Sesotho sa Leboa - 北索托语"}},{"languageCode":"is","languageName":{"simpleText":"Íslenska - 冰岛语"}},{"languageCode":"pl","languageName":{"simpleText":"Polski - 波兰语"}},{"languageCode":"bs","languageName":{"simpleText":"Bosanski - 波斯尼亚语"}},{"languageCode":"fa","languageName":{"simpleText":"فارسی - 波斯语"}},{"languageCode":"bho","languageName":{"simpleText":"भोजपुरी - 博杰普尔语"}},{"languageCode":"ts","languageName":{"simpleText":"Xitsonga - 聪加语"}},{"languageCode":"tt","languageName":{"simpleText":"Татарча - 鞑靼语"}},{"languageCode":"da","languageName":{"simpleText":"Dansk - 丹麦语"}},{"languageCode":"de","languageName":{"simpleText":"Deutsch - 德语"}},{"languageCode":"dv","languageName":{"simpleText":"ދިވެހިބަސް - 迪维希语"}},{"languageCode":"ru","languageName":{"simpleText":"Русский - 俄语"}},{"languageCode":"fr","languageName":{"simpleText":"français - 法语"}},{"languageCode":"sa","languageName":{"simpleText":"संस्कृतम् - 梵语"}},{"languageCode":"fil","languageName":{"simpleText":"Filipino - 菲律宾语"}},{"languageCode":"fi","languageName":{"simpleText":"suomi - 芬兰语"}},{"languageCode":"km","languageName":{"simpleText":"ភាសាខ្មែរ - 高棉语"}},{"languageCode":"ka","languageName":{"simpleText":"ქართული - 格鲁吉亚语"}},{"languageCode":"gu","languageName":{"simpleText":"ગુજરાતી - 古吉拉特语"}},{"languageCode":"gn","languageName":{"simpleText":"Avañe'ẽ - 瓜拉尼语"}},{"languageCode":"kk","languageName":{"simpleText":"Қазақ тілі - 哈萨克语"}},{"languageCode":"ht","languageName":{"simpleText":"Kreyòl ayisyen - 海地克里奥尔语"}},{"languageCode":"ko","languageName":{"simpleText":"한국어 - 韩语"}},{"languageCode":"ha","languageName":{"simpleText":"هَوُسَ - 豪萨语"}},{"languageCode":"nl","languageName":{"simpleText":"Nederlands - 荷兰语"}},{"languageCode":"gl","languageName":{"simpleText":"Galego - 加利西亚语"}},{"languageCode":"ca","languageName":{"simpleText":"català - 加泰罗尼亚语"}},{"languageCode":"cs","languageName":{"simpleText":"čeština - 捷克语"}},{"languageCode":"kn","languageName":{"simpleText":"ಕನ್ನಡ - 卡纳达语"}},{"languageCode":"ky","languageName":{"simpleText":"кыргыз тили - 吉尔吉斯语"}},{"languageCode":"xh","languageName":{"simpleText":"isiXhosa - 科萨语"}},{"languageCode":"co","languageName":{"simpleText":"corsu - 科西嘉语"}},{"languageCode":"hr","languageName":{"simpleText":"hrvatski - 克罗地亚语"}},{"languageCode":"qu","languageName":{"simpleText":"Runa Simi - 克丘亚语"}},{"languageCode":"ku","languageName":{"simpleText":"Kurdî - 库尔德语"}},{"languageCode":"la","languageName":{"simpleText":"lingua latīna - 拉丁语"}},{"languageCode":"lv","languageName":{"simpleText":"latviešu valoda - 拉脱维亚语"}},{"languageCode":"lo","languageName":{"simpleText":"ພາສາລາວ - 老挝语"}},{"languageCode":"lt","languageName":{"simpleText":"lietuvių kalba - 立陶宛语"}},{"languageCode":"ln","languageName":{"simpleText":"lingála - 林加拉语"}},{"languageCode":"lg","languageName":{"simpleText":"Luganda - 卢干达语"}},{"languageCode":"lb","languageName":{"simpleText":"Lëtzebuergesch - 卢森堡语"}},{"languageCode":"rw","languageName":{"simpleText":"Kinyarwanda - 卢旺达语"}},{"languageCode":"ro","languageName":{"simpleText":"Română - 罗马尼亚语"}},{"languageCode":"mt","languageName":{"simpleText":"Malti - 马耳他语"}},{"languageCode":"mr","languageName":{"simpleText":"मराठी - 马拉地语"}},{"languageCode":"mg","languageName":{"simpleText":"Malagasy - 马拉加斯语"}},{"languageCode":"ml","languageName":{"simpleText":"മലയാളം - 马拉雅拉姆语"}},{"languageCode":"ms","languageName":{"simpleText":"bahasa Melayu - 马来语"}},{"languageCode":"mk","languageName":{"simpleText":"македонски јазик - 马其顿语"}},{"languageCode":"mi","languageName":{"simpleText":"te reo Māori - 毛利语"}},{"languageCode":"mn","languageName":{"simpleText":"Монгол хэл - 蒙古语"}},{"languageCode":"bn","languageName":{"simpleText":"বাংলা - 孟加拉语"}},{"languageCode":"my","languageName":{"simpleText":"ဗမာစာ - 缅甸语"}},{"languageCode":"hmn","languageName":{"simpleText":"Hmoob - 苗语"}},{"languageCode":"af","languageName":{"simpleText":"Afrikaans - 南非荷兰语"}},{"languageCode":"st","languageName":{"simpleText":"Sesotho - 南索托语"}},{"languageCode":"ne","languageName":{"simpleText":"नेपाली - 尼泊尔语"}},{"languageCode":"no","languageName":{"simpleText":"Norsk - 挪威语"}},{"languageCode":"pa","languageName":{"simpleText":"ਪੰਜਾਬੀ - 旁遮普语"}},{"languageCode":"pt","languageName":{"simpleText":"Português - 葡萄牙语"}},{"languageCode":"ps","languageName":{"simpleText":"پښتو - 普什图语"}},{"languageCode":"ny","languageName":{"simpleText":"chiCheŵa - 齐切瓦语"}},{"languageCode":"ja","languageName":{"simpleText":"日本語 - 日语"}},{"languageCode":"sv","languageName":{"simpleText":"Svenska - 瑞典语"}},{"languageCode":"sm","languageName":{"simpleText":"Gagana fa'a Samoa - 萨摩亚语"}},{"languageCode":"sr","languageName":{"simpleText":"Српски језик - 塞尔维亚语"}},{"languageCode":"si","languageName":{"simpleText":"සිංහල - 僧伽罗语"}},{"languageCode":"sn","languageName":{"simpleText":"ChiShona - 绍纳语"}},{"languageCode":"eo","languageName":{"simpleText":"Esperanto - 世界语"}},{"languageCode":"sk","languageName":{"simpleText":"slovenčina - 斯洛伐克语"}},{"languageCode":"sl","languageName":{"simpleText":"slovenščina - 斯洛文尼亚语"}},{"languageCode":"sw","languageName":{"simpleText":"Kiswahili - 斯瓦希里语"}},{"languageCode":"gd","languageName":{"simpleText":"Gàidhlig - 苏格兰盖尔语"}},{"languageCode":"ceb","languageName":{"simpleText":"Binisaya - 宿务语"}},{"languageCode":"so","languageName":{"simpleText":"Soomaaliga - 索马里语"}},{"languageCode":"tg","languageName":{"simpleText":"тоҷикӣ - 塔吉克语"}},{"languageCode":"te","languageName":{"simpleText":"తెలుగు - 泰卢固语"}},{"languageCode":"ta","languageName":{"simpleText":"தமிழ் - 泰米尔语"}},{"languageCode":"th","languageName":{"simpleText":"ไทย - 泰语"}},{"languageCode":"ti","languageName":{"simpleText":"ትግርኛ - 提格利尼亚语"}},{"languageCode":"tr","languageName":{"simpleText":"Türkçe - 土耳其语"}},{"languageCode":"tk","languageName":{"simpleText":"Türkmen - 土库曼语"}},{"languageCode":"cy","languageName":{"simpleText":"Cymraeg - 威尔士语"}},{"languageCode":"ug","languageName":{"simpleText":"ئۇيغۇرچە - 维吾尔语"}},{"languageCode":"und","languageName":{"simpleText":"Unknown - 未知语言"}},{"languageCode":"ur","languageName":{"simpleText":"اردو - 乌尔都语"}},{"languageCode":"uk","languageName":{"simpleText":"українська - 乌克兰语"}},{"languageCode":"uz","languageName":{"simpleText":"O'zbek - 乌兹别克语"}},{"languageCode":"es","languageName":{"simpleText":"Español - 西班牙语"}},{"languageCode":"fy","languageName":{"simpleText":"Frysk - 西弗里西亚语"}},{"languageCode":"iw","languageName":{"simpleText":"עברית - 希伯来语"}},{"languageCode":"el","languageName":{"simpleText":"Ελληνικά - 希腊语"}},{"languageCode":"haw","languageName":{"simpleText":"ʻŌlelo Hawaiʻi - 夏威夷语"}},{"languageCode":"sd","languageName":{"simpleText":"سنڌي - 信德语"}},{"languageCode":"hu","languageName":{"simpleText":"magyar - 匈牙利语"}},{"languageCode":"su","languageName":{"simpleText":"Basa Sunda - 巽他语"}},{"languageCode":"hy","languageName":{"simpleText":"հայերեն - 亚美尼亚语"}},{"languageCode":"ig","languageName":{"simpleText":"Igbo - 伊博语"}},{"languageCode":"it","languageName":{"simpleText":"Italiano - 意大利语"}},{"languageCode":"yi","languageName":{"simpleText":"ייִדיש - 意第绪语"}},{"languageCode":"hi","languageName":{"simpleText":"हिन्दी - 印地语"}},{"languageCode":"id","languageName":{"simpleText":"Bahasa Indonesia - 印度尼西亚语"}},{"languageCode":"en","languageName":{"simpleText":"English - 英语"}},{"languageCode":"yo","languageName":{"simpleText":"Yorùbá - 约鲁巴语"}},{"languageCode":"vi","languageName":{"simpleText":"Tiếng Việt - 越南语"}},{"languageCode":"jv","languageName":{"simpleText":"Basa Jawa - 爪哇语"}},{"languageCode":"zh-Hant","languageName":{"simpleText":"中文（繁體）- 中文（繁体）"}},{"languageCode":"zh-Hans","languageName":{"simpleText":"中文（简体）"}},{"languageCode":"zu","languageName":{"simpleText":"isiZulu - 祖鲁语"}},{"languageCode":"kri","languageName":{"simpleText":"Krìì - 克里语"}}],
@@ -23,7 +23,7 @@ const DataBase = {
 		}
 	},
 	"Netflix": {
-		"Settings": {"Switch": true,"Type": "Translate","Languages": ["ZH", "EN"]}
+		"Settings": {"Switch":true,"Type":"Translate","Languages":["EN","ZH"],"ShowOnly":false},
 	},
 	"Official": {
 		"Settings":{"CacheSize":100,"Position":"Forward","Offset":0,"Tolerance":1000},
@@ -36,10 +36,10 @@ const DataBase = {
 		}
 	},
 	"Translate": {
-		"Settings":{"Type":"Google","ShowOnly":false,"Position":"Forward","CacheSize":10,"Method":"Part","Times":3,"Interval":100,"Exponential":true},
+		"Settings":{"Vendor":"Google","ShowOnly":false,"Position":"Forward","CacheSize":10,"Method":"Part","Times":3,"Interval":1000,"Exponential":true},
 		"Configs": {
 			"Languages": {
-				"Google":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
+				"Google":{"AUTO":"auto","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
 				"Microsoft":{"AUTO":"","AR":"ar","BG":"bg","CS":"cs","DA":"da","DE":"de","EL":"el","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","HU":"hu","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SV":"sv","IS":"is","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"yue","ZH-HANT":"zh-Hant"},
 				"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT-PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}
 			}
@@ -55,7 +55,9 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings, Caches, Configs } = setENV("DualSubs", ["Universal", "Translate", "API"], DataBase);
+	// 获取平台
+	const Platform = getPlatform($request?.url);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(Platform)) ? Platform : "Universal", "Translate", "API"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -64,16 +66,30 @@ const DataBase = {
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 			const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
-			// 获取字幕格式与字幕类型
-			const Format = url?.query?.fmt || url?.query?.format || url?.type, Kind = url?.query?.kind;
-			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
 			// 设置自定义参数
-			const Type = url?.query?.subtype || url?.query?.dualsubs || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
+			const Type = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			// 获取字幕格式与字幕类型
+			let format = url?.query?.fmt || url?.query?.format || url?.type, kind = url?.query?.kind;
+			if (FORMAT === "application/octet-stream") {
+				switch ($response?.body?.substring(0, 5)) {
+					case "<?xml":
+						format = "text/xml";
+						break;
+					case "WEBVTT":
+					default:
+						format = "text/vtt";
+						break;
+					case undefined:
+						break;
+				};
+				$.log(`🚧 ${$.name}, $response.body.substring(0, 5): ${$response?.body?.substring(0, 5)}`, "");
+			};
+			$.log(`🚧 ${$.name}, format: ${format}, kind: ${kind}`, "");
 			// 创建空数据
-			let body = {};
+			let OriginSub = {}, TransSub = {};
 			// 格式判断
-			switch (Format || FORMAT) {
+			switch (format || FORMAT) {
 				case undefined: // 视为无body
 					break;
 				case "application/x-www-form-urlencoded":
@@ -88,8 +104,30 @@ const DataBase = {
 				case "xml":
 				case "srv3":
 				case "text/xml":
-				case "application/xml":
+				case "application/xml": {
+					OriginSub = XML.parse($response.body);
+					const OriginPara = OriginSub?.tt?.body?.div ?? OriginSub?.timedtext?.body;
+					let fullText = OriginPara.p.map(para => {
+						const span = para?.span ?? para?.s;
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join("\r");
+						else sentences = span?.["#"] ?? "";
+						return sentences;
+					});
+					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					TransSub = OriginSub;
+					const TransPara = TransSub?.tt?.body?.div ?? TransSub?.timedtext?.body;
+					TransPara.p = (TransPara?.p).map((para, i) => {
+						const span = para?.span ?? para?.s
+						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
+							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
+							else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
+						});
+						else span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, '</span><br/><span style="style1">');
+						return para;
+					});
+					$response.body = XML.stringify(TransSub);
 					break;
+				};
 				case "plist":
 				case "text/plist":
 				case "application/plist":
@@ -98,67 +136,18 @@ const DataBase = {
 				case "vtt":
 				case "webvtt":
 				case "text/vtt":
-				case "application/vtt":
-					body = VTT.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-					// 处理类型
-					switch (Type) {
-						case "Official":
-							$.log(`🚧 ${$.name}`, "官方字幕", "");
-							break;
-						case "Translate":
-						default:
-							$.log(`🚧 ${$.name}`, `翻译字幕`, "");
-							let Full = await Promise.all(body.body.map(async item => item.text));
-							let Translation = [];
-							switch (Settings?.Method) {
-								default:
-								case "Part": // Part 逐段翻译
-									let length = 127;
-									switch (Settings.Type) {
-										case "Google":
-										case "GoogleCloud":
-										default:
-											length = 127;
-											break;
-										case "Azure":
-											length = 99;
-											break;
-										case "DeepL":
-											length = 49;
-											break;
-									};
-									let Parts = chunk(Full, length);
-									Translation = await Promise.all(Parts.map(async part => {
-										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], part, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
-									})).then(part => part.flat(Infinity));
-									break;
-								case "Row": // Row 逐行翻译
-									Translation = await Promise.all(Full.map(async row => {
-										return await retry(Translator, [Settings.Type, Settings.Languages[1], Settings.Languages[0], row, Settings[Settings.Type], Configs.Languages], Settings?.Times, Settings?.Interval, Settings?.Exponential); // 3, 100, true
-									}));
-									break;
-							};
-							body.body = await Promise.all(body.body.map(async (item, i) => {
-								switch (Settings.ShowOnly) { // 仅显示翻译结果
-									case true:
-										item.text = Translation?.[i] ?? item.text;
-										break;
-									case false:
-									default:
-										item.text = combineText(item.text, Translation?.[i], Settings?.Position);
-										break;
-								};
-								return item
-							}));
-							break;
-						case "External":
-							$.log(`🚧 ${$.name}, 外挂字幕`, "");
-							break;
-					};
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-					$response.body = VTT.stringify(body);
+				case "application/vtt": {
+					OriginSub = VTT.parse($response.body);
+					let fullText = OriginSub.body.map(item => item.text.replace(/<\/?[^<>]+>/g, ""));
+					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					TransSub = OriginSub;
+					TransSub.body = OriginSub.body.map((item, i) => {
+						item.text = combineText(item.text, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+						return item
+					});
+					$response.body = VTT.stringify(TransSub);
 					break;
+				};
 				case "json":
 				case "json3":
 				case "text/json":
@@ -238,6 +227,27 @@ const DataBase = {
 	})
 
 /***************** Function *****************/
+function getPlatform(host) {
+	$.log(`☑️ ${$.name}, Get Platform`, "");
+	/***************** Platform *****************/
+	let Platform = /\.apple\.com/i.test(host) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(host) ? "Disney_Plus"
+			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(host) ? "Prime_Video"
+				: /prd\.media\.h264\.io/i.test(host) ? "Max"
+					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
+						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
+							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
+								: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
+									: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
+										: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
+											: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
+												: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
+													: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
+														: "Universal";
+	$.log(`✅ ${$.name}, Get Platform, Platform: ${Platform}`, "");
+	return Platform;
+};
+
 /**
  * Set Environment Variables
  * @author VirgilClyne
@@ -251,6 +261,30 @@ function setENV(name, platforms, database) {
 	let { Settings, Caches, Configs } = getENV(name, platforms, database);
 	/***************** Settings *****************/
 	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
+	if ($.isLoon() && platforms.includes("YouTube")) {
+		Settings.ShowOnly = $persistentStore.read("仅输出译文") || Settings.ShowOnly;
+		switch (Settings.ShowOnly) {
+			case "是":
+				Settings.ShowOnly = true;
+				break;
+			case "否":
+				Settings.ShowOnly = false;
+				break;
+			default:
+				break;
+		};
+		Settings.Position = $persistentStore.read("字幕译文位置") || Settings.Position;
+		switch (Settings.Position) {
+			case "译文位于外文之上":
+				Settings.Position = "Forward";
+				break;
+			case "译文位于外文之下":
+				Settings.Position = "Reverse";
+				break;
+			default:
+				break;
+		};
+	};
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
@@ -278,14 +312,53 @@ function setCache(cache, cacheSize = 100) {
 };
 
 /**
- * combineText
+ * Translate
  * @author VirgilClyne
- * @param {String} text1 - text1
- * @param {String} text2 - text2
- * @param {String} position - position
- * @return {String} combined text
+ * @param {Array} text - full text
+ * @param {String} method - method
+ * @param {String} vendor - translate service vendor
+ * @param {String} source - source language
+ * @param {String} target - target language
+ * @param {Object} api - translate service API
+ * @param {Object} database - languages database
+ * @param {Number} times - retry times
+ * @param {Number} interval - retry interval
+ * @param {Boolean} exponential - retry Exponential
+ * 
+ * @return {Promise<*>}
  */
-function combineText(text1, text2, position) { return (position == "Forward") ? text2 + "\n" + text1 : (position == "Reverse") ? text1 + "\n" + text2 : text2 + "\n" + text1; }
+async function Translate(text = [], method = "Part", vendor = "Google", source = "EN", target = "ZH", API = {}, database = {}, times = 3, interval = 100, exponential = true) {
+	$.log(`☑️ ${$.name}, Translate, method: ${method}, vendor: ${vendor}, source: ${source}, target: ${target}`, "");
+	// 翻译长度设置
+	let length = 127;
+	switch (vendor) {
+		case "Google":
+		case "GoogleCloud":
+		default:
+			length = 127;
+			break;
+		case "Azure":
+			length = 99;
+			break;
+		case "DeepL":
+			length = 49;
+			break;
+	};
+	let Translation = [];
+	switch (method) {
+		default:
+		case "Part": // Part 逐段翻译
+			let parts = chunk(text, length);
+			Translation = await Promise.all(parts.map(async part => await retry(() => Translator(vendor, source, target, part, API, database), times, interval, exponential))).then(part => part.flat(Infinity));
+			break;
+		case "Row": // Row 逐行翻译
+			Translation = await Promise.all(text.map(async row => await retry(() => Translator(vendor, source, target, row, API, database), times, interval, exponential)));
+			break;
+	};
+	//$.log(`✅ ${$.name}, Translate, Translation: ${JSON.stringify(Translation)}`, "");
+	$.log(`✅ ${$.name}, Translate`, "");
+	return Translation;
+};
 
 /**
  * Translator
@@ -366,20 +439,27 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
-				BaseURL = "https://translation.googleapis.com";
-				request.url = `${BaseURL}/language/translate/v2/?key=${api?.Auth}`;
-				request.headers = {
-					//"Authorization": `Bearer ${api?.Auth}`,
-					"User-Agent": "DualSubs",
-					"Content-Type": "application/json; charset=utf-8"
-				};
-				request.body = JSON.stringify({
-					"q": text,
-					"source": database.Google[source],
-					"target": database.Google[target],
-					"format": "html",
-					//"key": api?.Key
-				});
+				switch (api?.Version) {
+					case "v2":
+					default:
+						BaseURL = "https://translation.googleapis.com";
+						request.url = `${BaseURL}/language/translate/v2/?key=${api?.Auth}`;
+						request.headers = {
+							//"Authorization": `Bearer ${api?.Auth}`,
+							"User-Agent": "DualSubs",
+							"Content-Type": "application/json; charset=utf-8"
+						};
+						request.body = JSON.stringify({
+							"q": text,
+							"source": database.Google[source],
+							"target": database.Google[target],
+							"format": "html",
+							//"key": api?.Key
+						});
+						break;
+					case "v3":
+						break;
+				}
 				break;
 			case "Bing":
 				// https://github.com/Animenosekai/translate/blob/main/translatepy/translators/bing.py
@@ -422,7 +502,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 						BaseURL = "https://api.cognitive.microsofttranslator.us"
 						break;
 				};
-				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&to=${database.Microsoft[target]}&from=${database.Microsoft[source]}`;
+				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&${(source !== "AUTO") ? `from=${ database.Microsoft[source]}` : ""}&to=${database.Microsoft[target]}`;
 				request.headers = {
 					"Content-Type": "application/json; charset=UTF-8",
 					"Accept": "application/json, text/javascript, */*; q=0.01",
@@ -512,72 +592,125 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 		return request
 	};
 	// Get Translate Data
-	function GetData(type, request) {
-		$.log(`⚠ ${$.name}, Get Translate Data`, "");
+	async function GetData(type, request) {
+		$.log(`☑️ ${$.name}, Get Translate Data`, "");
 		let texts = [];
-		return new Promise((resolve, reject) => {
-			switch (type) {
-				case "Google":
-				default:
-					$.get(request, (error, response, data) => {
-						try {
-							if (error) throw new Error(error)
-							else if (data) {
-								const _data = JSON.parse(data)
-								switch (type) {
-									default:
-									case "Google":
-										if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
-										else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
-										else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
-										break;
-								};
-								texts = texts?.join("")?.split(/\n\n/);
-								resolve(texts);
-							} else throw new Error(response);
-						} catch (e) {
-							reject(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
-						}
-					});
-					break;
-				case "GoogleCloud":
-				case "Bing":
-				case "Azure":
-				case "DeepL":
-				case "BaiduFanyi":
-				case "YoudaoAI":
-					$.post(request, (error, response, data) => {
-						try {
-							if (error) throw new Error(error)
-							else if (data) {
-								const _data = JSON.parse(data)
-								switch (type) {
-									default:
-									case "GoogleCloud":
-										texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
-										break;
-									case "Bing":
-									case "Azure":
-										texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
-										break;
-									case "DeepL":
-										texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
-										break;
-									case "BaiduFanyi":
-										break;
-									case "YoudaoAI":
-										break;
-								};
-								resolve(texts);
-							} else throw new Error(response);
-						} catch (e) {
-							reject(`❗️${$.name}, ${GetData.name}执行失败`, `request = ${JSON.stringify(request)}`, ` error = ${error || e}`, `response = ${JSON.stringify(response)}`, `data = ${data}`, "")
-						}
-					});
-					break;
-			};
-		});
+		await Fetch(request)
+			.then(response => JSON.parse(response.body))
+			.then(_data => {
+				switch (type) {
+					case "Google":
+					default:
+						switch (type) {
+							default:
+							case "Google":
+								if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+								else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
+								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
+								break;
+						};
+						texts = texts?.join("")?.split(/\n\n/);
+						break;
+					case "GoogleCloud":
+					case "Bing":
+					case "Azure":
+					case "DeepL":
+					case "BaiduFanyi":
+					case "YoudaoAI":
+						switch (type) {
+							default:
+							case "GoogleCloud":
+								texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+								break;
+							case "Bing":
+							case "Azure":
+								texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+								break;
+							case "DeepL":
+								texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+								break;
+							case "BaiduFanyi":
+								break;
+							case "YoudaoAI":
+								break;
+						};
+						break;
+				};
+			})
+			.catch(error => Promise.reject(error));
+		//$.log(`✅ ${$.name}, Get Translate Data, texts: ${JSON.stringify(texts)}`, "");
+		$.log(`✅ ${$.name}, Get Translate Data`, "");
+		return texts
 	};
+};
+
+/**
+ * Fetch Ruled Reqeust
+ * @author VirgilClyne
+ * @link https://github.com/BiliUniverse/Global/blob/main/js/BiliBili.Global.request.js
+ * @param {Object} request - Original Request Content
+ * @return {Promise<*>}
+ */
+async function Fetch(request = {}) {
+	$.log(`☑️ ${$.name}, Fetch Ruled Reqeust`, "");
+	const FORMAT = (request?.headers?.["Content-Type"] ?? request?.headers?.["content-type"])?.split(";")?.[0];
+	$.log(`⚠ ${$.name}, Fetch Ruled Reqeust`, `FORMAT: ${FORMAT}`, "");
+	if ($.isQuanX()) {
+		switch (FORMAT) {
+			case "application/json":
+			case "text/xml":
+			default:
+				// 返回普通数据
+				delete request.bodyBytes;
+				break;
+			case "application/x-protobuf":
+			case "application/grpc":
+				// 返回二进制数据
+				delete request.body;
+				if (ArrayBuffer.isView(request.bodyBytes)) request.bodyBytes = request.bodyBytes.buffer.slice(request.bodyBytes.byteOffset, request.bodyBytes.byteLength + request.bodyBytes.byteOffset);
+				break;
+			case undefined: // 视为无body
+				// 返回普通数据
+				break;
+		};
+	};
+	let response = (request?.body ?? request?.bodyBytes)
+		? await $.http.post(request)
+		: await $.http.get(request);
+	$.log(`✅ ${$.name}, Fetch Ruled Reqeust`, "");
+	//$.log(`🚧 ${$.name}, Fetch Ruled Reqeust`, `Response:${JSON.stringify(response)}`, "");
+	return response;
+};
+
+/**
+ * combine two text
+ * @author VirgilClyne
+ * @param {String} originText - original text
+ * @param {String} transText - translate text
+ * @param {Boolean} ShowOnly - only show translate text
+ * @param {String} position - position
+ * @param {String} lineBreak - line break
+ * @return {String} combined text
+ */
+function combineText(originText, transText, ShowOnly = false, position = "Forward", lineBreak = "\n") {
+	let text = "";
+	switch (ShowOnly) {
+		case true:
+			text = transText;
+			break;
+		case false:
+		default:
+			switch (position) {
+				case "Forward":
+				default:
+					text = `${transText}${lineBreak}${originText}`;
+					break;
+				case "Reverse":
+					text = `${originText}${lineBreak}${transText}`;
+					break;
+			}
+	}
+	return text;
 };
 
 /** 
@@ -598,25 +731,24 @@ function chunk(source, length) {
 /**
  * Retries the given function until it succeeds given a number of retries and an interval between them. They are set
  * by default to retry 5 times with 1sec in between. There's also a flag to make the cooldown time exponential
- * https://gitlab.com/-/snippets/1775781
+ * @link https://gitlab.com/-/snippets/1775781
  * @author Daniel Iñigo <danielinigobanos@gmail.com>
  * @param {Function} fn - Returns a promise
- * @param {Array} argsArray - args Array
  * @param {Number} retriesLeft - Number of retries. If -1 will keep retrying
  * @param {Number} interval - Millis between retries. If exponential set to true will be doubled each retry
  * @param {Boolean} exponential - Flag for exponential back-off mode
  * @return {Promise<*>}
  */
-async function retry(fn, argsArray = [], retriesLeft = 5, interval = 1000, exponential = false) {
-	$.log(`${fn.name}`, `剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) {
+	$.log(`☑️ ${$.name}, retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
 	try {
-		const val = await fn.apply(this, argsArray);
+		const val = await fn();
 		return val;
 	} catch (error) {
 		if (retriesLeft) {
 			await new Promise(r => setTimeout(r, interval));
-			return retry(fn, argsArray, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
-		} else throw new Error("最大重试次数");
+			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
+		} else throw new Error(`❌ ${$.name}, retry, 最大重试次数`);
 	}
 };
 
@@ -642,7 +774,5 @@ function getENV(key,names,database){let BoxJs=$.getjson(key,database),Argument={
 // https://github.com/DualSubs/WebVTT/blob/main/WebVTT.embedded.min.js
 function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","singleLine","\n"]){this.name="WebVTT v1.8.1",this.opts=e,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.vtt=new String,this.txt=new String,this.json={headers:{},CSS:{},body:[]}}parse(e=this.vtt){const t=this.opts.includes("milliseconds")?/^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/:/^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/;let i={headers:e.match(/^(?<fileType>WEBVTT)?[^](?<Xoptions>.+[^])*/)?.groups??null,CSS:e.match(/^(?<Style>STYLE)[^](?<Boxes>.*::cue.*(\(.*\))?((\n|.)*}$)?)/m)?.groups??null,body:e.split(/\r\n\r\n|\r\r|\n\n/).map((e=>e.match(t)?.groups??""))};return i.body=i.body.filter(Boolean),i.body=i.body.map(((e,t)=>{if(e.index=t,"WEBVTT"!==i.headers?.fileType&&(e.timeLine=e.timeLine.replace(",","."),e.startTime=e.startTime.replace(",","."),e.endTime=e.endTime.replace(",",".")),this.opts.includes("timeStamp")){let t=e.startTime.replace(/(.*)/,"1970-01-01T$1Z");e.timeStamp=this.opts.includes("milliseconds")?Date.parse(t):Date.parse(t)/1e3}return e.text=e.text?.trim()??"_",this.opts.includes("singleLine")?e.text=e.text.replace(/\r\n|\r|\n/," "):this.opts.includes("multiLine")&&(e.text=e.text.split(/\r\n|\r|\n/)),e})),i}stringify(e=this.json){return[e.headers=[e.headers?.fileType||"WEBVTT",e.headers?.Xoptions||null].join(this.newLine),e.CSS=e.CSS?.Style?[e.CSS.Style,e.CSS.Boxes].join(this.newLine):null,e.body=e.body.map((e=>(Array.isArray(e.text)&&(e.text=e.text.join(this.newLine)),e=`${e.timeLine} ${e?.options??""}${this.newLine}${e.text}`))).join(this.newLine+this.newLine)].join(this.newLine+this.newLine)}}(e)}
 
-// refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
-// refer: https://goessner.net/download/prj/jsonxml/json2xml.js
-// minify: https://www.digitalocean.com/community/tools/minify
-function XMLs(r){return new class{constructor(r){this.name="XML v0.1.4",this.opts=r}parse(r=new String,t=""){const n={"&amp;":"&","&lt;":"<","&gt;":">","&apos;":"'","&quot;":'"'},e="@";let s=function r(t,n){if("string"==typeof t)return t;var s=t.r;if(s)return s;var u,o=function(r,t){if(!r.t)return;for(var n,s,u=r.t.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/),o=u.length,l=0;l<o;l++){var c=i(u[l]);if(c){n||(n={});var p=c.indexOf("=");if(p<0)c=e+c,s=null;else{s=c.substr(p+1).replace(/^\s+/,""),c=e+c.substr(0,p).replace(/\s+$/,"");var g=s[0];g!==s[s.length-1]||"'"!==g&&'"'!==g||(s=s.substr(1,s.length-2)),s=a(s)}t&&(s=t(c,s)),f(n,c,s)}}return n}(t,n),l=t.f,c=l.length;if(o||c>1)u=o||{},l.forEach((function(t){"string"==typeof t?f(u,"#",t):f(u,t.n,r(t,n))}));else if(c){var p=l[0];if(u=r(p,n),p.n){var g={};g[p.n]=u,u=g}}else u=t.c?null:"";n&&(u=n(t.n||"",u));return u}(function(r){for(var t=String.prototype.split.call(r,/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/),n=t.length,e={f:[]},s=e,f=[],u=0;u<n;){var o=t[u++];o&&g(o);var l=t[u++];l&&c(l)}return e;function c(r){var t=r.length,n=r[0];if("/"===n)for(var e=r.replace(/^\/|[\s\/].*$/g,"").toLowerCase();f.length;){var i=s.n&&s.n.toLowerCase();if(s=f.pop(),i===e)break}else if("?"===n)p({n:"?",r:r.substr(1,t-2)});else if("!"===n)"[CDATA["===r.substr(1,7)&&"]]"===r.substr(-2)?g(r.substr(8,t-10)):p({n:"!",r:r.substr(1)});else{var a=function(r){var t={f:[]},n=(r=r.replace(/\s*\/?$/,"")).search(/[\s='"\/]/);n<0?t.n=r:(t.n=r.substr(0,n),t.t=r.substr(n));return t}(r);p(a),"/"===r[t-1]?a.c=1:(f.push(s),s=a)}}function p(r){s.f.push(r)}function g(r){(r=i(r))&&p(a(r))}}(r),t);return s;function i(r){return r&&r.replace(/^\s+|\s+$/g,"")}function a(r){return r.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g,(function(r){if("#"===r[1]){var t="x"===r[2]?parseInt(r.substr(3),16):parseInt(r.substr(2),10);if(t>-1)return String.fromCharCode(t)}return n[r]||r}))}function f(r,t,n){if(void 0!==n){var e=r[t];e instanceof Array?e.push(n):r[t]=t in r?[e,n]:n}}}stringify(r=new Object,t=""){var n="";for(var e in r)n+=s(r[e],e,"");return n=t?n.replace(/\t/g,t):n.replace(/\t|\n/g,"");function s(r,t,n){let e="";if(Array.isArray(r))e=r.reduce(((r,e)=>r+(n+s(e,t,n+"\t")+"\n")),"");else if("object"==typeof r){let i=!1;e+=n+"<"+t;for(let t in r)"@"==t.charAt(0)?e+=" "+t.substring(1)+'="'+r[t].toString()+'"':i=!0;if(e+=i?">":"/>",i){for(let t in r)"#"==t?e+=r[t]:"#cdata"==t?e+="<![CDATA["+r[t]+"]]>":"@"!=t.charAt(0)&&(e+=s(r[t],t,n+"\t"));e+=("\n"==e.charAt(e.length-1)?n:"")+"</"+t+">"}}else e+="?"===t?n+"<"+t+r.toString()+t+">":n+"<"+t+">"+r.toString()+"</"+t+">";return e}}}(r)}
+// https://github.com/DualSubs/XML/blob/main/XML.embedded.min.js
+function XMLs(opts){return new class{#ATTRIBUTE_KEY="@";#CHILD_NODE_KEY="#";#UNESCAPE={"&amp;":"&","&lt;":"<","&gt;":">","&apos;":"'","&quot;":'"'};#ESCAPE={"&":"&amp;","<":"&lt;",">":"&gt;","'":"&apos;",'"':"&quot;"};constructor(opts){this.name="XML v0.2.1",this.opts=opts}parse(xml=new String,reviver=""){const UNESCAPE=this.#UNESCAPE,ATTRIBUTE_KEY=this.#ATTRIBUTE_KEY,CHILD_NODE_KEY=this.#CHILD_NODE_KEY;let json=function toObject(elem,reviver){let object;switch(typeof elem){case"string":case"undefined":object=elem;break;case"object":const raw=elem.raw,tag=elem.tag,childList=elem.father;object=null===elem?null:raw||(tag?function(tag,reviver){if(!tag)return;const list=tag.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/),length=list.length;let attributes,val;for(let i=0;i<length;i++){let str=removeSpaces(list[i]);if(!str)continue;attributes||(attributes={});const pos=str.indexOf("=");if(pos<0)str=ATTRIBUTE_KEY+str,val=null;else{val=str.substr(pos+1).replace(/^\s+/,""),str=ATTRIBUTE_KEY+str.substr(0,pos).replace(/\s+$/,"");const firstChar=val[0];firstChar!==val[val.length-1]||"'"!==firstChar&&'"'!==firstChar||(val=val.substr(1,val.length-2)),val=unescapeXML(val)}reviver&&(val=reviver(str,val)),addObject(attributes,str,val)}return attributes}(tag,reviver):{}),childList&&childList.forEach(((child,i)=>{child.tag||!1!==child.hasChild?addObject(object,"string"==typeof child?CHILD_NODE_KEY:child.name,toObject(child,reviver),void 0):addObject(object,child.name,child.name,childList?.[i-1]?.name)})),0===Object.keys(object).length&&(object=!1===elem.hasChild?null:""),reviver&&(object=reviver(elem.name||"",object))}return object;function addObject(object,key,val,prevKey=key){if(void 0!==val){const prev=object[prevKey];Array.isArray(prev)?prev.push(val):prev?object[prevKey]=[prev,val]:object[key]=val}}}(function(text){const list=text.split(/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/),length=list.length,root={father:[]};let elem=root;const stack=[];for(let i=0;i<length;){const str=list[i++];str&&appendText(str);const tag=list[i++];tag&&parseNode(tag)}return root;function parseNode(tag){const tagLength=tag.length,firstChar=tag[0];if("/"===firstChar){const closed=tag.replace(/^\/|[\s\/].*$/g,"").toLowerCase();for(;stack.length;){const tagName=elem.name&&elem.name.toLowerCase();if(elem=stack.pop(),tagName===closed)break}}else if("?"===firstChar)appendChild({name:"?",raw:tag.substr(1,tagLength-2)});else if("!"===firstChar)"[CDATA["===tag.substr(1,7)&&"]]"===tag.substr(-2)?appendText(tag.substr(8,tagLength-10)):appendChild({name:"!",raw:tag.substr(1)});else{const child=function(tag){const elem={father:[]};tag=tag.replace(/\s*\/?$/,"");const pos=tag.search(/[\s='"\/]/);pos<0?elem.name=tag:(elem.name=tag.substr(0,pos),elem.tag=tag.substr(pos));return elem}(tag);appendChild(child),"/"===tag[tagLength-1]?child.hasChild=!1:(stack.push(elem),elem=child)}}function appendChild(child){elem.father.push(child)}function appendText(str){(str=removeSpaces(str))&&appendChild(unescapeXML(str))}}(xml),reviver);return json;function removeSpaces(str){return str&&str.replace(/^\s+|\s+$/g,"")}function unescapeXML(str){return str.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g,(function(str){if("#"===str[1]){const code="x"===str[2]?parseInt(str.substr(3),16):parseInt(str.substr(2),10);if(code>-1)return String.fromCharCode(code)}return UNESCAPE[str]||str}))}}stringify(json=new Object,tab=""){this.#ESCAPE;const ATTRIBUTE_KEY=this.#ATTRIBUTE_KEY,CHILD_NODE_KEY=this.#CHILD_NODE_KEY;let XML="";for(let elem in json)XML+=toXml(json[elem],elem,"");return XML=tab?XML.replace(/\t/g,tab):XML.replace(/\t|\n/g,""),XML;function toXml(elem,name,ind){let xml="";if(Array.isArray(elem))xml=elem.reduce(((prevXML,currXML)=>prevXML+(ind+toXml(currXML,name,ind+"\t")+"\n")),"");else if("object"==typeof elem){let attribute="",hasChild=!1;for(let name in elem)name.charAt(0)===ATTRIBUTE_KEY?attribute+=` ${name.substring(1)}="${elem[name].toString()}"`:hasChild=!0;if(xml+=`${ind}<${name}${attribute}${hasChild?"":"/"}>`,hasChild){for(let name in elem)name==CHILD_NODE_KEY?xml+=elem[name]:"#cdata"==name?xml+=`<![CDATA[${elem[name]}]]>`:"@"!=name.charAt(0)&&(xml+=toXml(elem[name],name,ind+"\t"));xml+=("\n"==xml.charAt(xml.length-1)?ind:"")+`</${name}>`}}else xml+="string"==typeof elem?ind+`<${elem.toString()}/>`:"?"===name?ind+`<${name}${elem.toString()}${name}>`:ind+`<${name}>${elem.toString()}</${name}>`;return xml}}}(opts)}

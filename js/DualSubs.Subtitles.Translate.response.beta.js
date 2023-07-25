@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(2) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(5) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -162,9 +162,21 @@ const DataBase = {
 				case "json3":
 				case "text/json":
 				case "application/json":
-					body = JSON.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-					$response.body = JSON.stringify(body);
+					OriginSub = JSON.parse($response.body);
+					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					let fullText = OriginSub.events.map(item => item?.segs?.[0]?.utf8);
+					if (Platform === "YouTube") {
+						Settings.Languages[0] = url.query.tlang.split("-")[0].toUpperCase();
+						Settings.Languages[1] = url.query.lang.split("-")[0].toUpperCase();
+					};
+					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					TransSub = OriginSub;
+					TransSub.events = OriginSub.events.map((item, i) => {
+						if (item?.segs?.[0]?.utf8) item.segs[0].utf8 = combineText(item.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+						return item
+					});
+					//$.log(`🚧 ${$.name}`, `TransSub: ${JSON.stringify(TransSub)}`, "");
+					$response.body = JSON.stringify(TransSub);
 					break;
 				case "application/x-protobuf":
 				case "application/grpc":

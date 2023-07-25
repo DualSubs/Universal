@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(2) Subtitles.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(4) Subtitles.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -123,9 +123,9 @@ const DataBase = {
 					})
 					if (Platform === "Prime_Video") {
 						// 删除BYTERANGE
-						//body = body.filter(({ TYPE }) => TYPE !== "EXT-X-BYTERANGE");
+						//body = body.filter(({ TAG }) => TAG !== "#EXT-X-BYTERANGE");
 						body = body.map((item, i) => {
-							if (item.TYPE === "EXT-X-BYTERANGE") body[i - 1].URI = item.URI;
+							if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI;
 							else return item;
 						}).filter(e => e);
 						$.log(`🚧 ${$.name}`, "body.map", JSON.stringify(body), "");

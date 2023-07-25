@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(11) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(12) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -76,8 +76,8 @@ const DataBase = {
 			// 获取字幕格式与字幕类型
 			let format = url?.query?.fmt || url?.query?.format || url?.type, kind = url?.query?.kind;
 			if (FORMAT === "application/octet-stream") {
-				switch ($response?.body?.substring(0, 5)) {
-					case "<?xml":
+				switch ($response?.body?.substring(0, 6)) {
+					case "<?xml ":
 						format = "text/xml";
 						break;
 					case "WEBVTT":
@@ -87,7 +87,7 @@ const DataBase = {
 					case undefined:
 						break;
 				};
-				$.log(`🚧 ${$.name}, $response.body.substring(0, 5): ${$response?.body?.substring(0, 5)}`, "");
+				$.log(`🚧 ${$.name}, $response.body.substring(0, 6): ${$response?.body?.substring(0, 6)}`, "");
 			};
 			$.log(`🚧 ${$.name}, format: ${format}, kind: ${kind}`, "");
 			// 创建空数据

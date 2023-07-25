@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(9) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(11) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -123,6 +123,7 @@ const DataBase = {
 					});
 					let translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
+					/*
 					let breakLine = "\n";
 					switch (format || FORMAT) {
 						case "srv3":
@@ -132,7 +133,8 @@ const DataBase = {
 						case "ttml":
 							breakLine = '</span><br/><span style="style1">';
 							break;
-						};
+					};
+					*/
 					const TransPara = TransSub?.tt?.body?.div ?? TransSub?.timedtext?.body;
 					TransPara.p = (TransPara?.p ?? TransPara).map((para, i) => {
 						const span = para?.span ?? para?.s ?? para;
@@ -140,7 +142,7 @@ const DataBase = {
 							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 							else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 						});
-						else span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
+						else span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, "&#x000A;");
 						return para;
 					});
 					$response.body = XML.stringify(TransSub);

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.5(16) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.6(1) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -67,6 +67,7 @@ const DataBase = {
 			const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			if (Platform === "YouTube") {
+				if (Caches?.tlang) url.query.tlang = Caches.tlang; // 翻译字幕语言
 				Settings.Languages[0] = url.query.tlang.split("-")[0].toUpperCase();
 				Settings.Languages[1] = url.query.lang.split("-")[0].toUpperCase();
 			};

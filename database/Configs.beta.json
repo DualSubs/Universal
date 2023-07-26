@@ -1,5 +1,24 @@
 {
 	"Default": {
+		"Configs":{
+			"breakLine":{
+				"xml":"&#x000A;",
+				"srv3":"&#x000A;",
+				"ttml":"</span><br/><span style=\"style1\">",
+				"ttml2":"</span><br/><span style=\"style1\">",
+				"imsc":"</span><br/><span style=\"style1\">",
+				"text/xml":"&#x000A;",
+				"application/xml":"&#x000A;",
+				"vtt":"\n",
+				"webvtt":"\n",
+				"text/vtt":"\n",
+				"application/vtt":"\n",
+				"json":"\n",
+				"json3":"\n",
+				"text/json":"\n",
+				"application/json":"\n"
+			}
+		}
 	},
 	"Universal": {
 	},

@@ -8,26 +8,7 @@ const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Type":"Official","Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100},
-		"Configs":{
-			"breakLine":{
-				"xml":"&#x000A;",
-				"srv3":"&#x000A;",
-				"ttml":'</span><br/><span style="style1">',
-				"ttml2":'</span><br/><span style="style1">',
-				"imsc":'</span><br/><span style="style1">',
-				"text/xml":"&#x000A;",
-				"application/xml":"&#x000A;",
-				"vtt":"\n",
-				"webvtt":"\n",
-				"text/vtt":"\n",
-				"application/vtt":"\n",
-				"json":"\n",
-				"json3":"\n",
-				"text/json":"\n",
-				"application/json":"\n",
-			}
-		}
+		"Settings":{"Switch":true,"Type":"Official","Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100}
 	},
 	"Universal":{
 		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"]}
@@ -143,7 +124,7 @@ const DataBase = {
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
 					let TransPara = TransSub?.tt?.body?.div?.p ?? TransSub?.timedtext?.body?.p ?? TransSub?.timedtext?.body;
-					const breakLine = (TransSub?.tt) ? '</span><br/><span style="style1">' : (TransSub?.timedtext) ? "&#x000A;" : "&#x000A;";
+					const breakLine = (TransSub?.tt) ? "</span><br/><span style=\"style1\">" : (TransSub?.timedtext) ? "&#x000A;" : "&#x000A;";
 					TransPara = TransPara.map((para, i) => {
 						const span = para?.span ?? para?.s ?? para;
 						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
@@ -826,4 +807,3 @@ function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","s
 
 // https://github.com/DualSubs/XML/blob/main/XML.embedded.min.js
 function XMLs(opts){return new class{#ATTRIBUTE_KEY="@";#CHILD_NODE_KEY="#";#UNESCAPE={"&amp;":"&","&lt;":"<","&gt;":">","&apos;":"'","&quot;":'"'};#ESCAPE={"&":"&amp;","<":"&lt;",">":"&gt;","'":"&apos;",'"':"&quot;"};constructor(opts){this.name="XML v0.2.2",this.opts=opts}parse(xml=new String,reviver=""){const UNESCAPE=this.#UNESCAPE,ATTRIBUTE_KEY=this.#ATTRIBUTE_KEY,CHILD_NODE_KEY=this.#CHILD_NODE_KEY;let json=function toObject(elem,reviver){let object;switch(typeof elem){case"string":case"undefined":object=elem;break;case"object":const raw=elem.raw,tag=elem.tag,childList=elem.father;object=raw||(tag?function(tag,reviver){if(!tag)return;const list=tag.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/),length=list.length;let attributes,val;for(let i=0;i<length;i++){let str=removeSpaces(list[i]);if(!str)continue;attributes||(attributes={});const pos=str.indexOf("=");if(pos<0)str=ATTRIBUTE_KEY+str,val=null;else{val=str.substr(pos+1).replace(/^\s+/,""),str=ATTRIBUTE_KEY+str.substr(0,pos).replace(/\s+$/,"");const firstChar=val[0];firstChar!==val[val.length-1]||"'"!==firstChar&&'"'!==firstChar||(val=val.substr(1,val.length-2)),val=unescapeXML(val)}reviver&&(val=reviver(str,val)),addObject(attributes,str,val)}return attributes}(tag,reviver):!1===elem.hasChild?{[elem.name]:void 0}:{}),childList&&childList.forEach(((child,i)=>{child.tag||!1!==child.hasChild?addObject(object,"string"==typeof child?CHILD_NODE_KEY:child.name,toObject(child,reviver),void 0):addObject(object,child.name,toObject(child,reviver),childList?.[i-1]?.name)})),reviver&&(object=reviver(elem.name||"",object))}return object;function addObject(object,key,val,prevKey=key){if(void 0!==val){const prev=object[prevKey];Array.isArray(prev)?prev.push(val):prev?object[prevKey]=[prev,val]:object[key]=val}}}(function(text){const list=text.split(/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/),length=list.length,root={father:[]};let elem=root;const stack=[];for(let i=0;i<length;){const str=list[i++];str&&appendText(str);const tag=list[i++];tag&&parseNode(tag)}return root;function parseNode(tag){const tagLength=tag.length,firstChar=tag[0];if("/"===firstChar){const closed=tag.replace(/^\/|[\s\/].*$/g,"").toLowerCase();for(;stack.length;){const tagName=elem.name&&elem.name.toLowerCase();if(elem=stack.pop(),tagName===closed)break}}else if("?"===firstChar)appendChild({name:"?",raw:tag.substr(1,tagLength-2)});else if("!"===firstChar)"[CDATA["===tag.substr(1,7)&&"]]"===tag.substr(-2)?appendText(tag.substr(8,tagLength-10)):appendChild({name:"!",raw:tag.substr(1)});else{const child=function(tag){const elem={father:[]};tag=tag.replace(/\s*\/?$/,"");const pos=tag.search(/[\s='"\/]/);pos<0?elem.name=tag:(elem.name=tag.substr(0,pos),elem.tag=tag.substr(pos));return elem}(tag);appendChild(child),"/"===tag[tagLength-1]?child.hasChild=!1:(stack.push(elem),elem=child)}}function appendChild(child){elem.father.push(child)}function appendText(str){(str=removeSpaces(str))&&appendChild(unescapeXML(str))}}(xml),reviver);return json;function removeSpaces(str){return str&&str.replace(/^\s+|\s+$/g,"")}function unescapeXML(str){return str.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g,(function(str){if("#"===str[1]){const code="x"===str[2]?parseInt(str.substr(3),16):parseInt(str.substr(2),10);if(code>-1)return String.fromCharCode(code)}return UNESCAPE[str]||str}))}}stringify(json=new Object,tab=""){this.#ESCAPE;const ATTRIBUTE_KEY=this.#ATTRIBUTE_KEY,CHILD_NODE_KEY=this.#CHILD_NODE_KEY;let XML="";for(let elem in json)XML+=toXml(json[elem],elem,"");return XML=tab?XML.replace(/\t/g,tab):XML.replace(/\t|\n/g,""),XML;function toXml(Elem,Name,Ind){let xml="";if(Array.isArray(Elem))xml=Elem.reduce(((prevXML,currXML)=>prevXML+(Ind+toXml(currXML,Name,Ind+"\t")+"\n")),"");else if("object"==typeof Elem){let attribute="",hasChild=!1;for(let name in Elem)name.charAt(0)===ATTRIBUTE_KEY?attribute+=` ${name.substring(1)}="${Elem[name].toString()}"`:void 0===Elem[name]?Name=name:hasChild=!0;if(xml+=`${Ind}<${Name}${attribute}${hasChild?"":"/"}>`,hasChild){for(let name in Elem)name==CHILD_NODE_KEY?xml+=Elem[name]:"#cdata"==name?xml+=`<![CDATA[${Elem[name]}]]>`:"@"!=name.charAt(0)&&(xml+=toXml(Elem[name],name,Ind+"\t"));xml+=("\n"==xml.charAt(xml.length-1)?Ind:"")+`</${Name}>`}}else"string"==typeof Elem?xml+="?"===Name?Ind+`<${Name}${Elem.toString()}${Name}>`:"!"===Name?Ind+`\x3c!--${Elem.toString()}--\x3e`:Ind+`<${Name}>${Elem.toString()}</${Name}>`:void 0===Elem&&(xml+=Ind+`<${Name.toString()}/>`);return xml}}}(opts)}
-

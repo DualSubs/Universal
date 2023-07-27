@@ -23,7 +23,7 @@ const DataBase = {
 		}
 	},
 	"Netflix":{
-		"Settings":{"Switch":true,"Type":"Translate","Languages":["ZH","EN"]},
+		"Settings":{"Switch":true,"Type":"Translate","Languages":["ZH","EN"]}
 	},
 	"Official":{
 		"Settings":{"CacheSize":100,"Position":"Forward","Offset":0,"Tolerance":1000},
@@ -49,7 +49,7 @@ const DataBase = {
 		"Settings":{"URL":undefined,"ShowOnly":false,"Position":"Forward","Offset":0,"Tolerance":1000}
 	},
 	"API":{
-		"Settings":{"GoogleCloud":{"Mode":"Key","Auth":undefined},"Azure":{"Version":"Azure","Region":undefined,"Mode":"Key","Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined}}
+		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Azure":{"Version":"Azure","Region":undefined,"Mode":"Key","Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined}}
 	}
 };
 

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.6(1) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.6(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -125,7 +125,7 @@ const DataBase = {
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
 					let TransPara = TransSub?.tt?.body?.div?.p ?? TransSub?.timedtext?.body?.p ?? TransSub?.timedtext?.body;
-					const breakLine = (TransSub?.tt) ? "</span><br/><span style=\"style1\">" : (TransSub?.timedtext) ? "&#x000A;" : "&#x000A;";
+					const breakLine = (TransSub?.tt) ? "<br/>" : (TransSub?.timedtext) ? "&#x000A;" : "&#x000A;";
 					TransPara = TransPara.map((para, i) => {
 						const span = para?.span ?? para?.s ?? para;
 						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {

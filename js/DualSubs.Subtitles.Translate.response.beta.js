@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.6(13) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.7(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -115,24 +115,28 @@ const DataBase = {
 				case "application/xml": {
 					OriginSub = XML.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					const OriginPara = OriginSub?.tt?.body?.div?.p ?? OriginSub?.timedtext?.body?.p ?? OriginSub?.timedtext?.body;
+					const OriginPara = OriginSub?.tt?.body?.div?.p ?? OriginSub?.timedtext?.body?.p;
+					let separtor = (TransSub?.tt) ? "\r" : (TransSub?.timedtext) ? " " : " ";
 					const fullText = OriginPara.map(para => {
 						const span = para?.span ?? para?.s ?? para;
-						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join("\r");
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join(separtor);
 						else sentences = span?.["#"] ?? "";
 						return sentences;
 					});
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					TransSub = OriginSub;
-					let TransPara = TransSub?.tt?.body?.div?.p ?? TransSub?.timedtext?.body?.p ?? TransSub?.timedtext?.body;
+					if (TransSub?.timedtext?.head?.wp?.[1]?.["@rc"]) TransSub.timedtext.head.wp[1]["@rc"] = "1";
+					let TransPara = TransSub?.tt?.body?.div?.p ?? TransSub?.timedtext?.body?.p;
+					separtor = (TransSub?.tt) ? "\r" : (TransSub?.timedtext) ? undefined : undefined;
 					const breakLine = (TransSub?.tt) ? "<br/>" : (TransSub?.timedtext) ? "&#x000A;" : "&#x000A;";
 					TransPara = TransPara.map((para, i) => {
+						delete para.s;
 						const span = para?.span ?? para?.s ?? para;
-						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
+						if (Array.isArray(span)) translation?.[i]?.split(separtor).forEach((text, j) => {
 							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 							else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 						});
-						else span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
+						else span["#"] = combineText(span?.["#"] ?? fullText?.[i], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
 						return para;
 					});
 					//$.log(`🚧 ${$.name}`, `TransSub: ${JSON.stringify(TransSub)}`, "");

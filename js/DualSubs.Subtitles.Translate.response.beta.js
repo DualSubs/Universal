@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.7(17) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.7(21) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -118,18 +118,19 @@ const DataBase = {
 				case "application/xml": {
 					DualSub = XML.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
+					const breakLine = (DualSub?.tt) ? "<br/>" : (DualSub?.timedtext) ? "&#x000A;" : "&#x000A;";
 					if (DualSub?.timedtext?.head?.wp?.[1]?.["@rc"]) DualSub.timedtext.head.wp[1]["@rc"] = "1";
 					let paragraph = DualSub?.tt?.body?.div?.p ?? DualSub?.timedtext?.body?.p;
 					paragraph = paragraph.map(para => {
 						if (para?.s) {
-							if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join(" ");
+							if (Array.isArray(para.s)) para["#"] = para.s.map(seg => seg["#"]).join(" ");
 							else para["#"] = para.s?.["#"] ?? "";
 							delete para.s;
 						};
 						const span = para?.span ?? para;
-						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? "").join("\r");
-						else sentences = span?.["#"] ?? "";
-						fullText.push(sentences);
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"]).join(breakLine);
+						else sentences = span?.["#"];
+						fullText.push(sentences ?? "null");
 						/*
 						const spans = para?.span ?? para?.s ?? para;
 						if (Array.isArray(span)) spans["#"] = spans?.map(span => span?.["#"] ?? "").join(" ");
@@ -140,14 +141,13 @@ const DataBase = {
 						return para;
 					});
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-					const breakLine = (DualSub?.tt) ? "<br/>" : (DualSub?.timedtext) ? "&#x000A;" : "&#x000A;";
 					paragraph = paragraph.map((para, i) => {
 						const span = para?.span ?? para;
-						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
+						if (Array.isArray(span)) translation?.[i]?.split(breakLine).forEach((text, j) => {
 							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 							//else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 						});
-						else span["#"] = combineText(span?.["#"] ?? fullText?.[i], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
+						else if (span?.["#"]) span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
 						return para;
 					});
 					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");

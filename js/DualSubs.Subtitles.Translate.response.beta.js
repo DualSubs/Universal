@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.7(4) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.7(8) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -110,6 +110,9 @@ const DataBase = {
 					//$response.body = M3U8.stringify(PlayList);
 					break;
 				case "xml":
+				case "imsc":
+				case "ttml":
+				case "ttml2":
 				case "srv3":
 				case "text/xml":
 				case "application/xml": {
@@ -124,9 +127,16 @@ const DataBase = {
 							delete para.s;
 						};
 						const span = para?.span ?? para;
-						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join("\r");
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? "").join("\r");
 						else sentences = span?.["#"] ?? "";
 						fullText.push(sentences);
+						/*
+						const spans = para?.span ?? para?.s ?? para;
+						if (Array.isArray(span)) spans["#"] = spans?.map(span => span?.["#"] ?? "").join(" ");
+						else spans["#"] = spans?.["#"] ?? "";
+						if (para?.s) para = spans;
+						if (spans?.["#"]) fullText.push(spans["#"]);
+						*/
 						return para;
 					});
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
@@ -135,7 +145,7 @@ const DataBase = {
 						const span = para?.span ?? para;
 						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
 							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
-							else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
+							//else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 						});
 						else span["#"] = combineText(span?.["#"] ?? fullText?.[i], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
 						return para;
@@ -175,17 +185,18 @@ const DataBase = {
 					DualSub = JSON.parse($response.body);
 					$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
 					DualSub.events = DualSub.events.map(event => {
-						if (event?.segs) {
-							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join(" ") }];
-							fullText.push(item?.segs?.[0]?.utf8 ?? item?.segs?.utf8 ?? "");
+						if (event?.segs?.[0]?.utf8) {
+							event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
+							fullText.push(event.segs[0].utf8);
 						};
 						delete event.wWinId;
 						return event;
 					});
+					$.log(JSON.stringify(fullText));
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-					DualSub.events = DualSub.events.map((item, i) => {
-						if (item?.segs?.[0]?.utf8) item.segs[0].utf8 = combineText(item.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
-						return item
+					DualSub.events = DualSub.events.map((event, i) => {
+						if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+						return event
 					});
 					//$.log(`🚧 ${$.name}`, `TransSub: ${JSON.stringify(TransSub)}`, "");
 					$response.body = JSON.stringify(DualSub);

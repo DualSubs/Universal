@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.7(8) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.7(17) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -185,14 +185,11 @@ const DataBase = {
 					DualSub = JSON.parse($response.body);
 					$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
 					DualSub.events = DualSub.events.map(event => {
-						if (event?.segs?.[0]?.utf8) {
-							event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
-							fullText.push(event.segs[0].utf8);
-						};
+						if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
+						fullText.push(event?.segs?.[0]?.utf8 ?? "null");
 						delete event.wWinId;
 						return event;
 					});
-					$.log(JSON.stringify(fullText));
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					DualSub.events = DualSub.events.map((event, i) => {
 						if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
@@ -240,6 +237,9 @@ const DataBase = {
 						case "application/x-mpegurl":
 						case "application/vnd.apple.mpegurl":
 						case "xml":
+						case "imsc":
+						case "ttml":
+						case "ttml2":
 						case "srv3":
 						case "text/xml":
 						case "application/xml":
@@ -486,7 +486,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					}
 				]
 				request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
-				text = (Array.isArray(text)) ? text.join("\n\n") : text;
+				text = (Array.isArray(text)) ? text.join("\r\r") : text;
 				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
@@ -660,7 +660,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
 								break;
 						};
-						texts = texts?.join("")?.split(/\n\n/);
+						texts = texts?.join("")?.split(/\r\r/);
 						break;
 					case "GoogleCloud":
 					case "Bing":

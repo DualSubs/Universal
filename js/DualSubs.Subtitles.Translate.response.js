@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.6(13) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.7(21) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -92,7 +92,7 @@ const DataBase = {
 			};
 			$.log(`🚧 ${$.name}, format: ${format}, kind: ${kind}`, "");
 			// 创建空数据
-			let OriginSub = {}, TransSub = {};
+			let DualSub = {}, fullText = [];
 			// 格式判断
 			switch (format || FORMAT) {
 				case undefined: // 视为无body
@@ -107,31 +107,38 @@ const DataBase = {
 				case "application/vnd.apple.mpegurl":
 					break;
 				case "xml":
+				case "imsc":
+				case "ttml":
+				case "ttml2":
 				case "srv3":
 				case "text/xml":
 				case "application/xml": {
-					OriginSub = XML.parse($response.body);
-					const OriginPara = OriginSub?.tt?.body?.div?.p ?? OriginSub?.timedtext?.body?.p ?? OriginSub?.timedtext?.body;
-					const fullText = OriginPara.map(para => {
-						const span = para?.span ?? para?.s ?? para;
-						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? null).join("\r");
-						else sentences = span?.["#"] ?? "";
-						return sentences;
-					});
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-					TransSub = OriginSub;
-					let TransPara = TransSub?.tt?.body?.div?.p ?? TransSub?.timedtext?.body?.p ?? TransSub?.timedtext?.body;
-					const breakLine = (TransSub?.tt) ? "<br/>" : (TransSub?.timedtext) ? "&#x000A;" : "&#x000A;";
-					TransPara = TransPara.map((para, i) => {
-						const span = para?.span ?? para?.s ?? para;
-						if (Array.isArray(span)) translation?.[i]?.split("\r").forEach((text, j) => {
-							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
-							else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
-						});
-						else span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
+					DualSub = XML.parse($response.body);
+					const breakLine = (DualSub?.tt) ? "<br/>" : (DualSub?.timedtext) ? "&#x000A;" : "&#x000A;";
+					if (DualSub?.timedtext?.head?.wp?.[1]?.["@rc"]) DualSub.timedtext.head.wp[1]["@rc"] = "1";
+					let paragraph = DualSub?.tt?.body?.div?.p ?? DualSub?.timedtext?.body?.p;
+					paragraph = paragraph.map(para => {
+						if (para?.s) {
+							if (Array.isArray(para.s)) para["#"] = para.s.map(seg => seg["#"]).join(" ");
+							else para["#"] = para.s?.["#"] ?? "";
+							delete para.s;
+						};
+						const span = para?.span ?? para;
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"]).join(breakLine);
+						else sentences = span?.["#"];
+						fullText.push(sentences ?? "null");
 						return para;
 					});
-					$response.body = XML.stringify(TransSub);
+					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					paragraph = paragraph.map((para, i) => {
+						const span = para?.span ?? para;
+						if (Array.isArray(span)) translation?.[i]?.split(breakLine).forEach((text, j) => {
+							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
+						});
+						else if (span?.["#"]) span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
+						return para;
+					});
+					$response.body = XML.stringify(DualSub);
 					break;
 				};
 				case "plist":
@@ -143,32 +150,33 @@ const DataBase = {
 				case "webvtt":
 				case "text/vtt":
 				case "application/vtt": {
-					OriginSub = VTT.parse($response.body);
-					const OriginPara = OriginSub?.body;
-					const fullText = OriginPara.map(item => item.text.replace(/<\/?[^<>]+>/g, ""));
+					DualSub = VTT.parse($response.body);
+					fullText = DualSub?.body.map(item => item.text.replace(/<\/?[^<>]+>/g, ""));
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-					TransSub = OriginSub;
-					TransSub.body = OriginSub.body.map((item, i) => {
+					DualSub.body = DualSub.body.map((item, i) => {
 						item.text = combineText(item.text, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
 					});
-					$response.body = VTT.stringify(TransSub);
+					$response.body = VTT.stringify(DualSub);
 					break;
 				};
 				case "json":
 				case "json3":
 				case "text/json":
 				case "application/json":
-					OriginSub = JSON.parse($response.body);
-					const OriginPara = OriginSub?.events;
-					const fullText = OriginPara.map(item => item?.segs?.[0]?.utf8);
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-					TransSub = OriginSub;
-					TransSub.events = OriginSub.events.map((item, i) => {
-						if (item?.segs?.[0]?.utf8) item.segs[0].utf8 = combineText(item.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
-						return item
+					DualSub = JSON.parse($response.body);
+					DualSub.events = DualSub.events.map(event => {
+						if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
+						fullText.push(event?.segs?.[0]?.utf8 ?? "null");
+						delete event.wWinId;
+						return event;
 					});
-					$response.body = JSON.stringify(TransSub);
+					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					DualSub.events = DualSub.events.map((event, i) => {
+						if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+						return event
+					});
+					$response.body = JSON.stringify(DualSub);
 					break;
 				case "application/x-protobuf":
 				case "application/grpc":
@@ -203,6 +211,9 @@ const DataBase = {
 						case "application/x-mpegurl":
 						case "application/vnd.apple.mpegurl":
 						case "xml":
+						case "imsc":
+						case "ttml":
+						case "ttml2":
 						case "srv3":
 						case "text/xml":
 						case "application/xml":
@@ -449,7 +460,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					}
 				]
 				request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
-				text = (Array.isArray(text)) ? text.join("\n\n") : text;
+				text = (Array.isArray(text)) ? text.join("\r\r") : text;
 				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
@@ -623,7 +634,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
 								break;
 						};
-						texts = texts?.join("")?.split(/\n\n/);
+						texts = texts?.join("")?.split(/\r\r/);
 						break;
 					case "GoogleCloud":
 					case "Bing":

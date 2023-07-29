@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(23) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.9(5) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -64,8 +64,6 @@ const DataBase = {
 		default:
 			let url = URL.parse($request?.url);
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-			const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			if (Platform === "YouTube") {
 				if (Caches?.tlang) url.query.tlang = Caches.tlang; // 翻译字幕语言
 				Settings.Languages[0] = url.query.tlang.split("-")[0].toUpperCase();
@@ -74,27 +72,46 @@ const DataBase = {
 			// 设置自定义参数
 			const Type = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
-			// 获取字幕格式与字幕类型
-			let format = url?.query?.fmt || url?.query?.format || url?.type, kind = url?.query?.kind;
+			// 检测字幕格式与字幕类型;
+			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream") {
-				switch ($response?.body?.substring(0, 6)) {
-					case "<?xml ":
-						format = "text/xml";
+				$.log(`🚧 ${$.name}, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
+				switch (url?.type ?? url?.query?.fmt ?? url?.query?.format) {
+					case "xml":
+					case "srv3":
+					case "ttml":
+					case "ttml2":
+					case "imsc":
+						FORMAT = "text/xml";
 						break;
-					case "WEBVTT":
-					default:
-						format = "text/vtt";
-						break;
-					case undefined:
+					case "webvtt":
+					case "vtt":
+						FORMAT = "text/vtt";
 						break;
 				};
-				$.log(`🚧 ${$.name}, $response.body.substring(0, 6): ${$response?.body?.substring(0, 6)}`, "");
+				if (FORMAT === "application/octet-stream") {
+					$.log(`🚧 ${$.name}, $response.body.substring(0, 6): ${$response?.body?.substring(0, 6)}`, "");
+					switch ($response?.body?.substring(0, 6)) {
+						case "<?xml ":
+							FORMAT = "text/xml";
+							break;
+						case "WEBVTT":
+						default:
+							FORMAT = "text/vtt";
+							break;
+						case undefined:
+							break;
+					};
+				};
+				$.log(`🚧 ${$.name}, FORMAT: ${FORMAT}`, "");
+				if ($response?.headers?.["Content-Type"]) $response.headers["Content-Type"] = FORMAT;
+				if ($response?.headers?.["content-type"]) $response.headers["content-type"] = FORMAT;
 			};
-			$.log(`🚧 ${$.name}, format: ${format}, kind: ${kind}`, "");
+			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 创建空数据
 			let DualSub = {}, fullText = [];
 			// 格式判断
-			switch (format || FORMAT) {
+			switch (FORMAT) {
 				case undefined: // 视为无body
 					break;
 				case "application/x-www-form-urlencoded":

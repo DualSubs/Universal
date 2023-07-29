@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(17) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(22) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -387,7 +387,7 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
 		case "Google":
 		case "GoogleCloud":
 		default:
-			length = 127;
+			length = 120;
 			break;
 		case "Azure":
 			length = 99;
@@ -487,7 +487,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					}
 				]
 				request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
-				text = (Array.isArray(text)) ? text.join("\r\r") : text;
+				text = (Array.isArray(text)) ? text.join("\r") : text;
 				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
@@ -661,7 +661,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
 								break;
 						};
-						texts = texts?.join("")?.split(/\r\r/);
+						texts = texts?.join("")?.split(/\r/);
 						break;
 					case "GoogleCloud":
 					case "Bing":

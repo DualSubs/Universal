@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(14) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(15) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -828,17 +828,17 @@ function getENV(key,names,database){let BoxJs=$.getjson(key,database),Argument={
 function WebVTT(opts) {
 	return new (class {
 		constructor(opts = ["milliseconds", "timeStamp", "singleLine", "\n"]) {
-			this.name = "WebVTT v2.0.3";
+			this.name = "WebVTT v2.1.0";
 			this.opts = opts;
 			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
 			this.vtt = new String;
 			this.txt = new String;
-			this.json = { headers: {}, note: [], css: "", body: [] };
+			this.json = { headers: {}, note: [], style: "", body: [] };
 		};
 
 		parse(vtt = this.vtt) {
-			const body_CUE_Regex = (this.opts.includes("milliseconds")) ? /^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/
-				: /^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/
+			const body_CUE_Regex = (this.opts.includes("milliseconds")) ? /^((?<index>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/
+				: /^((?<index>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/
 			const Array = vtt.split(/\r\n\r\n|\r\r|\n\n/);
 			$.log(`🚧 ${$.name}`, `Array: ${Array}`);
 			const Json = {
@@ -848,14 +848,14 @@ function WebVTT(opts) {
 				body: []
 			};
 
-			Array.forEach((item, i) => {
+			Array.forEach(item => {
 				item = item.trim();
 				switch (item.substring(0, 5).trim()) {
 					case "WEBVT": {
-						let array = item.split(/\r\n|\r|\n/);
-						$.log(`🚧 ${$.name}`, `array: ${array}`);
-						Json.headers.type = array.shift();
-						Json.headers.options = array;
+						let cues = item.split(/\r\n|\r|\n/);
+						$.log(`🚧 ${$.name}`, `array: ${cues}`);
+						Json.headers.type = cues.shift();
+						Json.headers.options = cues;
 						break;
 					};
 					case "NOTE": {
@@ -863,13 +863,31 @@ function WebVTT(opts) {
 						break;
 					};
 					case "STYLE": {
-						let array = item.split(/\r\n|\r|\n/);
-						array.shift();
-						Json.style = array.join(this.newLine);
+						let cues = item.split(/\r\n|\r|\n/);
+						cues.shift();
+						Json.style = cues.join(this.newLine);
 						break;
 					};
 					default:
-						Json.body[i] = item.match(body_CUE_Regex)?.groups ?? {};
+						let cue = item.match(body_CUE_Regex)?.groups;
+						if (cue) {
+							if (Json.headers?.type !== "WEBVTT") {
+								cue.timeLine = cue?.timeLine?.replace?.(",", ".");
+								cue.startTime = cue?.startTime?.replace?.(",", ".");
+								cue.endTime = cue?.endTime?.replace?.(",", ".");
+							}
+							if (this.opts.includes("timeStamp")) {
+								let ISOString = cue?.startTime?.replace?.(/(.*)/, "1970-01-01T$1Z")
+								cue.timeStamp = this.opts.includes("milliseconds") ? Date.parse(ISOString) : Date.parse(ISOString) / 1000;
+							}
+							cue.text = cue?.text?.trimEnd?.();
+							if (this.opts.includes("singleLine")) {
+								cue.text = cue?.text?.replace?.(/\r\n|\r|\n/, " ");
+							} else if (this.opts.includes("multiLine")) {
+								cue.text = cue?.text?.split?.(/\r\n|\r|\n/);
+							}
+							Json.body.push(cue);
+						};
 						break;
 				}
 			});
@@ -877,27 +895,6 @@ function WebVTT(opts) {
 			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.note: ${JSON.stringify(Json.note)}`, "");
 			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.style: ${JSON.stringify(Json.style)}`, "");
 			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.body: ${JSON.stringify(Json.body)}`, "");
-			Json.body = Json.body.filter(Boolean);
-			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.body: ${JSON.stringify(Json.body)}`, "");
-			Json.body = Json.body.map((item, i) => {
-				item.index = i;
-				if (Json.headers?.type !== "WEBVTT") {
-					item.timeLine = item?.timeLine?.replace?.(",", ".");
-					item.startTime = item?.startTime?.replace?.(",", ".");
-					item.endTime = item?.endTime?.replace?.(",", ".");
-				}
-				if (this.opts.includes("timeStamp")) {
-					let ISOString = item?.startTime?.replace(/(.*)/, "1970-01-01T$1Z")
-					item.timeStamp = this.opts.includes("milliseconds") ? Date.parse(ISOString) : Date.parse(ISOString) / 1000;
-				}
-				//item.text = item.text?.trim?.() ?? "_";
-				if (this.opts.includes("singleLine")) {
-					item.text = item.text.replace(/\r\n|\r|\n/, " ");
-				} else if (this.opts.includes("multiLine")) {
-					item.text = item.text.split(/\r\n|\r|\n/);
-				}
-				return item
-			});
 			return Json
 		};
 
@@ -907,13 +904,11 @@ function WebVTT(opts) {
 				json.note = (json?.note).join(this.newLine),
 				json.style = (json?.style?.length > 0) ? ["STYLE", json.style].join(this.newLine) : "",
 				json.body = json.body.map(item => {
-					if (item?.timeLine) {
-						if (Array.isArray(item.text)) item.text = item.text.join(this.newLine);
-						item = `${(item.srtNum) ? item.srtNum + this.newLine : ""}${item.timeLine} ${item?.options ?? ""}${this.newLine}${item.text}`;
-					} else item = "";
+					if (Array.isArray(item.text)) item.text = item.text.join(this.newLine);
+					item = `${(item.index) ? item.index + this.newLine : ""}${item.timeLine} ${item?.options ?? ""}${this.newLine}${item.text}`;
 					return item;
 				}).join(this.newLine + this.newLine)
-			].join(this.newLine + this.newLine).trimStart();
+			].join(this.newLine + this.newLine).trim() + this.newLine + this.newLine;
 			return vtt
 		};
 	})(opts)

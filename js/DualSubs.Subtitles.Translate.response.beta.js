@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(15) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(17) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -824,95 +824,7 @@ function URLs(t){return new class{constructor(t=[]){this.name="URL v1.2.2",this.
 function getENV(key,names,database){let BoxJs=$.getjson(key,database),Argument={};if("undefined"!=typeof $argument&&Boolean($argument)){let arg=Object.fromEntries($argument.split("&").map((item=>item.split("="))));for(let item in arg)setPath(Argument,item,arg[item])}const Store={Settings:database?.Default?.Settings||{},Configs:database?.Default?.Configs||{},Caches:{}};Array.isArray(names)||(names=[names]);for(let name of names)Store.Settings={...Store.Settings,...database?.[name]?.Settings,...BoxJs?.[name]?.Settings,...Argument},Store.Configs={...Store.Configs,...database?.[name]?.Configs},BoxJs?.[name]?.Caches&&"string"==typeof BoxJs?.[name]?.Caches&&(BoxJs[name].Caches=JSON.parse(BoxJs?.[name]?.Caches)),Store.Caches={...Store.Caches,...BoxJs?.[name]?.Caches};return function traverseObject(o,c){for(var t in o){var n=o[t];o[t]="object"==typeof n&&null!==n?traverseObject(n,c):c(t,n)}return o}(Store.Settings,((key,value)=>("true"===value||"false"===value?value=JSON.parse(value):"string"==typeof value&&(value?.includes(",")?value=value.split(","):value&&!isNaN(value)&&(value=parseInt(value,10))),value))),Store;function setPath(object,path,value){path.split(".").reduce(((o,p,i)=>o[p]=path.split(".").length===++i?value:o[p]||{}),object)}}
 
 // https://github.com/DualSubs/WebVTT/blob/main/WebVTT.embedded.min.js
-//function WebVTT(e){return new class{constructor(e=["milliseconds","timeStamp","singleLine","\n"]){this.name="WebVTT v2.0.1",this.opts=e,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.vtt=new String,this.txt=new String,this.json={headers:{},note:[],css:"",body:[]}}parse(e=this.vtt){const t=this.opts.includes("milliseconds")?/^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/:/^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/,i=e.split(/\r\n\r\n|\r\r|\n\n/),n={headers:{},note:[],style:"",body:[]};return i.forEach(((e,i)=>{switch((e=e.trim()).substring(0,5).trim()){case"WEBVT":{let t=e.split(/\r\n|\r|\n/);$.log(`🚧 ${$.name}`,`array: ${t}`),n.headers.type=t.shift(),n.headers.options=t;break}case"NOTE":{let t=e.split(/\r\n|\r|\n/);$.log(`🚧 ${$.name}`,`array: ${t}`),n.note=t;break}case"STYLE":n.style=e;break;default:n.body[i]=e.match(t)?.groups??void 0}})),n.body=n.body.filter(Boolean),n.body=n.body.map(((e,t)=>{if(e.index=t,"WEBVTT"!==n.headers?.type&&(e.timeLine=e.timeLine.replace(",","."),e.startTime=e.startTime.replace(",","."),e.endTime=e.endTime.replace(",",".")),this.opts.includes("timeStamp")){let t=e.startTime.replace(/(.*)/,"1970-01-01T$1Z");e.timeStamp=this.opts.includes("milliseconds")?Date.parse(t):Date.parse(t)/1e3}return e.text=e.text?.trim()??"_",this.opts.includes("singleLine")?e.text=e.text.replace(/\r\n|\r|\n/," "):this.opts.includes("multiLine")&&(e.text=e.text.split(/\r\n|\r|\n/)),e})),n}stringify(e=this.json){return[e.headers=[e.headers?.type||"",e.headers?.options||""].flat(1/0).join(this.newLine),e.note=(e.note??"").join(this.newLine),e.style=e.style??"",e.body=e.body.map((e=>(Array.isArray(e.text)&&(e.text=e.text.join(this.newLine)),e=`${e.srtNum?e.srtNum+this.newLine:""}${e.timeLine} ${e?.options??""}${this.newLine}${e.text}`))).join(this.newLine+this.newLine)].join(this.newLine+this.newLine).trimStart()}}(e)}
-function WebVTT(opts) {
-	return new (class {
-		constructor(opts = ["milliseconds", "timeStamp", "singleLine", "\n"]) {
-			this.name = "WebVTT v2.1.0";
-			this.opts = opts;
-			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
-			this.vtt = new String;
-			this.txt = new String;
-			this.json = { headers: {}, note: [], style: "", body: [] };
-		};
-
-		parse(vtt = this.vtt) {
-			const body_CUE_Regex = (this.opts.includes("milliseconds")) ? /^((?<index>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/
-				: /^((?<index>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/
-			const Array = vtt.split(/\r\n\r\n|\r\r|\n\n/);
-			$.log(`🚧 ${$.name}`, `Array: ${Array}`);
-			const Json = {
-				headers: {},
-				note: [],
-				style: "",
-				body: []
-			};
-
-			Array.forEach(item => {
-				item = item.trim();
-				switch (item.substring(0, 5).trim()) {
-					case "WEBVT": {
-						let cues = item.split(/\r\n|\r|\n/);
-						$.log(`🚧 ${$.name}`, `array: ${cues}`);
-						Json.headers.type = cues.shift();
-						Json.headers.options = cues;
-						break;
-					};
-					case "NOTE": {
-						Json.note.push(item);
-						break;
-					};
-					case "STYLE": {
-						let cues = item.split(/\r\n|\r|\n/);
-						cues.shift();
-						Json.style = cues.join(this.newLine);
-						break;
-					};
-					default:
-						let cue = item.match(body_CUE_Regex)?.groups;
-						if (cue) {
-							if (Json.headers?.type !== "WEBVTT") {
-								cue.timeLine = cue?.timeLine?.replace?.(",", ".");
-								cue.startTime = cue?.startTime?.replace?.(",", ".");
-								cue.endTime = cue?.endTime?.replace?.(",", ".");
-							}
-							if (this.opts.includes("timeStamp")) {
-								let ISOString = cue?.startTime?.replace?.(/(.*)/, "1970-01-01T$1Z")
-								cue.timeStamp = this.opts.includes("milliseconds") ? Date.parse(ISOString) : Date.parse(ISOString) / 1000;
-							}
-							cue.text = cue?.text?.trimEnd?.();
-							if (this.opts.includes("singleLine")) {
-								cue.text = cue?.text?.replace?.(/\r\n|\r|\n/, " ");
-							} else if (this.opts.includes("multiLine")) {
-								cue.text = cue?.text?.split?.(/\r\n|\r|\n/);
-							}
-							Json.body.push(cue);
-						};
-						break;
-				}
-			});
-			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.headers: ${JSON.stringify(Json.headers)}`, "");
-			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.note: ${JSON.stringify(Json.note)}`, "");
-			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.style: ${JSON.stringify(Json.style)}`, "");
-			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.body: ${JSON.stringify(Json.body)}`, "");
-			return Json
-		};
-
-		stringify(json = this.json) {
-			let vtt = [
-				json.headers = [json.headers?.type || "", json.headers?.options || ""].flat(Infinity).join(this.newLine),
-				json.note = (json?.note).join(this.newLine),
-				json.style = (json?.style?.length > 0) ? ["STYLE", json.style].join(this.newLine) : "",
-				json.body = json.body.map(item => {
-					if (Array.isArray(item.text)) item.text = item.text.join(this.newLine);
-					item = `${(item.index) ? item.index + this.newLine : ""}${item.timeLine} ${item?.options ?? ""}${this.newLine}${item.text}`;
-					return item;
-				}).join(this.newLine + this.newLine)
-			].join(this.newLine + this.newLine).trim() + this.newLine + this.newLine;
-			return vtt
-		};
-	})(opts)
-}
+function WebVTT(opts){return new class{constructor(opts=["milliseconds","timeStamp","singleLine","\n"]){this.name="WebVTT v2.1.1",this.opts=opts,this.lineBreak=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n",this.vtt=new String,this.txt=new String,this.json={headers:{},note:[],style:"",body:[]}}parse(vtt=this.vtt){const body_CUE_Regex=this.opts.includes("milliseconds")?/^((?<index>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/:/^((?<index>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/,Array=vtt.split(/\r\n\r\n|\r\r|\n\n/),Json={headers:{},note:[],style:"",body:[]};return Array.forEach((item=>{switch((item=item.trim()).substring(0,5).trim()){case"WEBVT":{let cues=item.split(/\r\n|\r|\n/);Json.headers.type=cues.shift(),Json.headers.options=cues;break}case"NOTE":Json.note.push(item);break;case"STYLE":{let cues=item.split(/\r\n|\r|\n/);cues.shift(),Json.style=cues.join(this.lineBreak);break}default:let cue=item.match(body_CUE_Regex)?.groups;if(cue){if("WEBVTT"!==Json.headers?.type&&(cue.timeLine=cue?.timeLine?.replace?.(",","."),cue.startTime=cue?.startTime?.replace?.(",","."),cue.endTime=cue?.endTime?.replace?.(",",".")),this.opts.includes("timeStamp")){let ISOString=cue?.startTime?.replace?.(/(.*)/,"1970-01-01T$1Z");cue.timeStamp=this.opts.includes("milliseconds")?Date.parse(ISOString):Date.parse(ISOString)/1e3}cue.text=cue?.text?.trimEnd?.(),this.opts.includes("singleLine")?cue.text=cue?.text?.replace?.(/\r\n|\r|\n/," "):this.opts.includes("multiLine")&&(cue.text=cue?.text?.split?.(/\r\n|\r|\n/)),Json.body.push(cue)}}})),Json.body=Json.body.filter(Boolean),Json.body=Json.body.map(((item,i)=>{if(item.index=i,"WEBVTT"!==Json.headers?.type&&(item.timeLine=item.timeLine.replace(",","."),item.startTime=item.startTime.replace(",","."),item.endTime=item.endTime.replace(",",".")),this.opts.includes("timeStamp")){let ISOString=item.startTime.replace(/(.*)/,"1970-01-01T$1Z");item.timeStamp=this.opts.includes("milliseconds")?Date.parse(ISOString):Date.parse(ISOString)/1e3}return item.text=item.text?.trim()??"_",this.opts.includes("singleLine")?item.text=item.text.replace(/\r\n|\r|\n/," "):this.opts.includes("multiLine")&&(item.text=item.text.split(/\r\n|\r|\n/)),item})),Json}stringify(json=this.json){return[json.headers=[json.headers?.type||"",json.headers?.options||""].flat(1/0).join(this.lineBreak),json.note=json?.note?.join?.(this.lineBreak),json.style=json?.style?.length>0?["STYLE",json.style].join(this.lineBreak):"",json.body=json.body.map((item=>(Array.isArray(item.text)&&(item.text=item.text.join(this.lineBreak)),item=`${item.index?item.index+this.lineBreak:""}${item.timeLine} ${item?.options??""}${this.lineBreak}${item.text}`))).join(this.lineBreak+this.lineBreak)].join(this.lineBreak+this.lineBreak).trim()+this.lineBreak+this.lineBreak}}(opts)}
 
 // https://github.com/DualSubs/XML/blob/main/XML.embedded.min.js
 function XMLs(opts){return new class{#ATTRIBUTE_KEY="@";#CHILD_NODE_KEY="#";#UNESCAPE={"&amp;":"&","&lt;":"<","&gt;":">","&apos;":"'","&quot;":'"'};#ESCAPE={"&":"&amp;","<":"&lt;",">":"&gt;","'":"&apos;",'"':"&quot;"};constructor(opts){this.name="XML v0.2.4",this.opts=opts}parse(xml=new String,reviver=""){const UNESCAPE=this.#UNESCAPE,ATTRIBUTE_KEY=this.#ATTRIBUTE_KEY,CHILD_NODE_KEY=this.#CHILD_NODE_KEY;let json=function toObject(elem,reviver){let object;switch(typeof elem){case"string":case"undefined":object=elem;break;case"object":const raw=elem.raw,tag=elem.tag,children=elem.children;object=raw||(tag?function(tag,reviver){if(!tag)return;const list=tag.split(/([^\s='"]+(?:\s*=\s*(?:'[\S\s]*?'|"[\S\s]*?"|[^\s'"]*))?)/),length=list.length;let attributes,val;for(let i=0;i<length;i++){let str=list[i]?.trim?.();if(!str)continue;attributes||(attributes={});const pos=str.indexOf("=");if(pos<0)str=ATTRIBUTE_KEY+str,val=null;else{val=str.substr(pos+1).replace(/^\s+/,""),str=ATTRIBUTE_KEY+str.substr(0,pos).replace(/\s+$/,"");const firstChar=val[0];firstChar!==val[val.length-1]||"'"!==firstChar&&'"'!==firstChar||(val=val.substr(1,val.length-2)),val=unescapeXML(val)}reviver&&(val=reviver(str,val)),addObject(attributes,str,val)}return attributes}(tag,reviver):children?{}:{[elem.name]:void 0}),children&&children.forEach(((child,i)=>{"string"==typeof child?addObject(object,CHILD_NODE_KEY,toObject(child,reviver),void 0):child.tag||child.children?addObject(object,child.name,toObject(child,reviver),void 0):addObject(object,child.name,toObject(child,reviver),children?.[i-1]?.name)})),reviver&&(object=reviver(elem.name||"",object))}return object;function addObject(object,key,val,prevKey=key){if(void 0!==val){const prev=object[prevKey];Array.isArray(prev)?prev.push(val):prev?object[prevKey]=[prev,val]:object[key]=val}}}(function(text){const list=text.split(/<([^!<>?](?:'[\S\s]*?'|"[\S\s]*?"|[^'"<>])*|!(?:--[\S\s]*?--|\[[^\[\]'"<>]+\[[\S\s]*?]]|DOCTYPE[^\[<>]*?\[[\S\s]*?]|(?:ENTITY[^"<>]*?"[\S\s]*?")?[\S\s]*?)|\?[\S\s]*?\?)>/),length=list.length,root={children:[]};let elem=root;const stack=[];for(let i=0;i<length;){const str=list[i++];str&&appendText(str);const tag=list[i++];tag&&parseNode(tag)}return root;function parseNode(tag){const tagLength=tag.length;let child={};switch(tag[0]){case"/":const closed=tag.replace(/^\/|[\s\/].*$/g,"").toLowerCase();for(;stack.length;){const tagName=elem?.name?.toLowerCase?.();if(elem=stack.pop(),tagName===closed)break}break;case"?":child.name="?",child.raw=tag.substr(1,tagLength-2),appendChild(child);break;case"!":"[CDATA["===tag.substr(1,7)&&"]]"===tag.substr(-2)?appendText(tag.substr(8,tagLength-10)):(child.name="!",child.raw=tag.substr(1),appendChild(child));break;default:if(child=function(tag){const elem={children:[]};tag=tag.replace(/\s*\/?$/,"");const pos=tag.search(/[\s='"\/]/);pos<0?elem.name=tag:(elem.name=tag.substr(0,pos),elem.tag=tag.substr(pos));return elem}(tag),appendChild(child),"/"===tag[tagLength-1])delete child.children;else stack.push(elem),elem=child}}function appendChild(child){elem.children.push(child)}function appendText(str){str=str?.trim?.(),str&&appendChild(unescapeXML(str))}}(xml),reviver);return json;function unescapeXML(str){return str.replace(/(&(?:lt|gt|amp|apos|quot|#(?:\d{1,6}|x[0-9a-fA-F]{1,5}));)/g,(function(str){if("#"===str[1]){const code="x"===str[2]?parseInt(str.substr(3),16):parseInt(str.substr(2),10);if(code>-1)return String.fromCharCode(code)}return UNESCAPE[str]||str}))}}stringify(json=new Object,tab=""){this.#ESCAPE;const ATTRIBUTE_KEY=this.#ATTRIBUTE_KEY,CHILD_NODE_KEY=this.#CHILD_NODE_KEY;let XML="";for(let elem in json)XML+=toXml(json[elem],elem,"");return XML=tab?XML.replace(/\t/g,tab):XML.replace(/\t|\n/g,""),XML;function toXml(Elem,Name,Ind){let xml="";if(Array.isArray(Elem))xml=Elem.reduce(((prevXML,currXML)=>prevXML+(Ind+toXml(currXML,Name,Ind+"\t")+"\n")),"");else if("object"==typeof Elem){let attribute="",hasChild=!1;for(let name in Elem)name.charAt(0)===ATTRIBUTE_KEY?attribute+=` ${name.substring(1)}="${Elem[name].toString()}"`:void 0===Elem[name]?Name=name:hasChild=!0;if(xml+=`${Ind}<${Name}${attribute}${hasChild?"":"/"}>`,hasChild){for(let name in Elem)name==CHILD_NODE_KEY?xml+=Elem[name]:"#cdata"==name?xml+=`<![CDATA[${Elem[name]}]]>`:"@"!=name.charAt(0)&&(xml+=toXml(Elem[name],name,Ind+"\t"));xml+=("\n"==xml.charAt(xml.length-1)?Ind:"")+`</${Name}>`}}else"string"==typeof Elem?xml+="?"===Name?Ind+`<${Name}${Elem.toString()}${Name}>`:"!"===Name?Ind+`\x3c!--${Elem.toString()}--\x3e`:Ind+`<${Name}>${Elem.toString()}</${Name}>`:void 0===Elem&&(xml+=Ind+`<${Name.toString()}/>`);return xml}}}(opts)}

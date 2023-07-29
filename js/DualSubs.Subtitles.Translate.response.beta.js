@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(23) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.9(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -64,7 +64,42 @@ const DataBase = {
 		default:
 			let url = URL.parse($request?.url);
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-			const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+			// 检测字幕格式与字幕类型;
+			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+			if (FORMAT === "application/octet-stream") {
+				let format = undefined;
+				$.log(`🚧 ${$.name}, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
+				switch (url?.type ?? url?.query?.fmt ?? url?.query?.format) {
+					case "xml":
+					case "srv3":
+					case "ttml":
+					case "ttml2":
+					case "imsc":
+						format = "text/xml";
+						break;
+					case "webvtt":
+					case "vtt":
+						format = "text/vtt";
+						break;
+				};
+				if (format === undefined) {
+					$.log(`🚧 ${$.name}, $response.body.substring(0, 6): ${$response?.body?.substring(0, 6)}`, "");
+					switch ($response?.body?.substring(0, 6)) {
+						case "<?xml ":
+							format = "text/xml";
+							break;
+						case "WEBVTT":
+						default:
+							format = "text/vtt";
+							break;
+						case undefined:
+							break;
+					};
+				};
+				$.log(`🚧 ${$.name}, format: ${format}`, "");
+				if ($response?.headers?.["Content-Type"]) $response.headers["Content-Type"] = format;
+				if ($response?.headers?.["content-type"]) $response.headers["content-type"] = format;
+			};
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			if (Platform === "YouTube") {
 				if (Caches?.tlang) url.query.tlang = Caches.tlang; // 翻译字幕语言

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(12) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(13) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -828,7 +828,7 @@ function getENV(key,names,database){let BoxJs=$.getjson(key,database),Argument={
 function WebVTT(opts) {
 	return new (class {
 		constructor(opts = ["milliseconds", "timeStamp", "singleLine", "\n"]) {
-			this.name = "WebVTT v2.0.1";
+			this.name = "WebVTT v2.0.2";
 			this.opts = opts;
 			this.newLine = (this.opts.includes("\n")) ? "\n" : (this.opts.includes("\r")) ? "\r" : (this.opts.includes("\r\n")) ? "\r\n" : "\n";
 			this.vtt = new String;
@@ -840,6 +840,7 @@ function WebVTT(opts) {
 			const body_CUE_Regex = (this.opts.includes("milliseconds")) ? /^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:.,]+) --> (?<endTime>[0-9:.,]+)) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/
 				: /^((?<srtNum>\d+)(\r\n|\r|\n))?(?<timeLine>(?<startTime>[0-9:]+)[0-9.,]+ --> (?<endTime>[0-9:]+)[0-9.,]+) ?(?<options>.+)?[^](?<text>[\s\S]*)?$/
 			const Array = vtt.split(/\r\n\r\n|\r\r|\n\n/);
+			$.log(`🚧 ${$.name}`, `Array: ${Array}`);
 			const Json = {
 				headers: {},
 				note: [],
@@ -858,13 +859,13 @@ function WebVTT(opts) {
 						break;
 					};
 					case "NOTE": {
-						let array = item.split(/\r\n|\r|\n/);
-						$.log(`🚧 ${$.name}`, `array: ${array}`);
-						Json.note = array;
+						Json.note.push(item);
 						break;
 					};
 					case "STYLE": {
-						Json.style = item;
+						let array = item.split(/\r\n|\r|\n/);
+						array.shift();
+						Json.style = array.join(this.newLine);
 						break;
 					};
 					default:
@@ -872,6 +873,9 @@ function WebVTT(opts) {
 						break;
 				}
 			});
+			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.headers: ${JSON.stringify(Json.headers)}`, "");
+			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.note: ${JSON.stringify(Json.note)}`, "");
+			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.style: ${JSON.stringify(Json.style)}`, "");
 			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.body: ${JSON.stringify(Json.body)}`, "");
 			Json.body = Json.body.filter(Boolean);
 			$.log(`🚧 ${this.name}, parse WebVTT`, `Json.body: ${JSON.stringify(Json.body)}`, "");
@@ -900,8 +904,8 @@ function WebVTT(opts) {
 		stringify(json = this.json) {
 			let vtt = [
 				json.headers = [json.headers?.type || "", json.headers?.options || ""].flat(Infinity).join(this.newLine),
-				json.note = (json.note ?? "").join(this.newLine),
-				json.style = json.style ?? "",
+				json.note = (json?.note).join(this.newLine),
+				json.style = (json?.style?.length > 0) ? ["STYLE", json.style].join(this.newLine) : "",
 				json.body = json.body.map(item => {
 					if (Array.isArray(item.text)) item.text = item.text.join(this.newLine);
 					item = `${(item.srtNum) ? item.srtNum + this.newLine : ""}${item.timeLine} ${item?.options ?? ""}${this.newLine}${item.text}`;

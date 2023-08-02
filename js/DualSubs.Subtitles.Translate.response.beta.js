@@ -69,10 +69,7 @@ const DataBase = {
 				Settings.Languages[0] = url.query.tlang.split("-")[0].toUpperCase();
 				Settings.Languages[1] = url.query.lang.split("-")[0].toUpperCase();
 			};
-			// 设置自定义参数
-			const Type = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
-			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
-			// 检测字幕格式与字幕类型;
+			// 检测字幕格式与字幕类型
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream") {
 				$.log(`🚧 ${$.name}, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
@@ -108,6 +105,9 @@ const DataBase = {
 				if ($response?.headers?.["content-type"]) $response.headers["content-type"] = FORMAT;
 			};
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
+			// 设置自定义参数
+			const Type = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
+			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建空数据
 			let DualSub = {}, fullText = [];
 			// 格式判断

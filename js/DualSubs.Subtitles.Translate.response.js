@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.8(24) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.9(10) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -64,37 +64,28 @@ const DataBase = {
 		default:
 			let url = URL.parse($request?.url);
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-			const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			if (Platform === "YouTube") {
 				if (Caches?.tlang) url.query.tlang = Caches.tlang; // 翻译字幕语言
 				Settings.Languages[0] = url.query.tlang.split("-")[0].toUpperCase();
 				Settings.Languages[1] = url.query.lang.split("-")[0].toUpperCase();
 			};
+			// 检测字幕格式与字幕类型
+			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") {
+				FORMAT = detectFormat(url, $response?.body);
+				if (FORMAT) {
+					if ($response?.headers?.["Content-Type"]) $response.headers["Content-Type"] = FORMAT;
+					if ($response?.headers?.["content-type"]) $response.headers["content-type"] = FORMAT;
+				};
+			};
+			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数
 			const Type = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
-			// 获取字幕格式与字幕类型
-			let format = url?.query?.fmt || url?.query?.format || url?.type, kind = url?.query?.kind;
-			if (FORMAT === "application/octet-stream") {
-				switch ($response?.body?.substring(0, 6)) {
-					case "<?xml ":
-						format = "text/xml";
-						break;
-					case "WEBVTT":
-					default:
-						format = "text/vtt";
-						break;
-					case undefined:
-						break;
-				};
-				$.log(`🚧 ${$.name}, $response.body.substring(0, 6): ${$response?.body?.substring(0, 6)}`, "");
-			};
-			$.log(`🚧 ${$.name}, format: ${format}, kind: ${kind}`, "");
 			// 创建空数据
 			let DualSub = {}, fullText = [];
 			// 格式判断
-			switch (format || FORMAT) {
+			switch (FORMAT) {
 				case undefined: // 视为无body
 					break;
 				case "application/x-www-form-urlencoded":
@@ -319,6 +310,48 @@ function setENV(name, platforms, database) {
 	if (typeof Caches?.Subtitles !== "object") Caches.Subtitles = new Map(JSON.parse(Caches?.Subtitles || "[]")); // Strings转Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
+};
+
+/**
+ * detect Format
+ * @author VirgilClyne
+ * @param {Object} url - Parsed URL
+ * @param {String} body - response body
+ * @return {String} format - format
+ */
+function detectFormat(url, body) {
+	let format = undefined;
+	$.log(`☑️ ${$.name}`, `detectFormat`, "");
+	$.log(`🚧 ${$.name}`, `detectFormat, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
+	switch (url?.type ?? url?.query?.fmt ?? url?.query?.format) {
+		case "xml":
+		case "srv3":
+		case "ttml":
+		case "ttml2":
+		case "imsc":
+			format = "text/xml";
+			break;
+		case "webvtt":
+		case "vtt":
+			format = "text/vtt";
+			break;
+		case undefined:
+			$.log(`🚧 ${$.name}`, `detectFormat, $response.body.substring(0, 6): ${body?.substring(0, 6)}`, "");
+			switch (body?.substring(0, 6)) {
+				case "<?xml ":
+					format = "text/xml";
+					break;
+				case "WEBVTT":
+				default:
+					format = "text/vtt";
+					break;
+				case undefined:
+					break;
+			};
+			break;
+	};
+	$.log(`✅ ${$.name}`, `detectFormat, format: ${format}`, "");
+	return format;
 };
 
 /**

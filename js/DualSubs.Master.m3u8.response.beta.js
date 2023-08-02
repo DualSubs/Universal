@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(10) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(13) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -206,13 +206,6 @@ function setENV(name, platforms, database) {
 	let { Settings, Caches, Configs } = getENV(name, platforms, database);
 	/***************** Settings *****************/
 	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
-	/*
-	if (Array.isArray(Settings?.Types)) {
-		if (!Settings?.API?.GoogleCloud?.Auth) Settings.Types = Settings.Types.filter(e => e !== "GoogleCloud"); // 移除不可用类型
-		if (!Settings?.API?.Azure?.Auth) Settings.Types = Settings.Types.filter(e => e !== "Azure");
-		if (!Settings?.API?.DeepL?.Auth) Settings.Types = Settings.Types.filter(e => e !== "DeepL");
-	}
-	*/
 	$.log(`✅ ${$.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
@@ -294,22 +287,22 @@ function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, t
 				playlist1?.forEach(playlist1 => {
 					if (playlist0?.OPTION?.["GROUP-ID"] === playlist1?.OPTION?.["GROUP-ID"]) {
 						let index = m3u8.findIndex(item => item?.OPTION?.URI === playlist0.OPTION.URI);
-						// 兼容性修正
-						switch (platform) {
+						let options = undefined;
+						switch (platform) { // 兼容性修正
 							case "Apple":
 								if (playlist0?.OPTION.CHARACTERISTICS == playlist1?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
 									// 创建字幕选项
-									let options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
-									if (standard == true) m3u8.splice(index + 1, 0, ...options)
-									else m3u8.splice(index, 1, ...options);
+									options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
 								}
 								break;
 							default:
 								// 创建字幕选项
-								let options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
-								if (standard == true) m3u8.splice(index + 1, 0, ...options)
-								else m3u8.splice(index, 1, ...options);
+								options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
 								break;
+						};
+						if (options) {
+							if (standard) m3u8.splice(index + 1, 0, ...options)
+							else m3u8.splice(index, 1, ...options);
 						};
 					};
 				});
@@ -334,7 +327,7 @@ function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, t
 				if (index) {
 					// 创建字幕选项
 					let options = types.map(type => setOption(platform, playlist1, playlist0, type, standard));
-					if (standard == true) m3u8.splice(index + 1, 0, ...options)
+					if (standard) m3u8.splice(index + 1, 0, ...options)
 					else m3u8.splice(index, 1, ...options);
 				};
 			});
@@ -368,9 +361,9 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	// 修改名称
 	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
 	// 修改语言代码
-	newOption.OPTION.LANGUAGE = LANGUAGE1.toLowerCase();
+	newOption.OPTION.LANGUAGE = LANGUAGE1;
 	// 增加副语言
-	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2.toLowerCase();
+	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接
 	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&subtype=${type}`
 		: `${newOption?.OPTION?.URI}?subtype=${type}`;
@@ -392,7 +385,7 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 		case "Max":
 		case "HBO_Max":
 		case "Viki":
-			//newOption.OPTION.NAME = (standard) ? `${NAME1} / ${NAME2} [${type}]` : NAME1;
+			//if (!standard) newOption.OPTION.NAME = NAME1;
 			//if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
 			break;
 		case "Hulu":
@@ -403,6 +396,7 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
 	};
+	if (!standard) newOption.OPTION.DEFAULT = "YES";
 	$.log(`✅ ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
 	return newOption;
 };

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.9(6) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.9(10) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -71,38 +71,12 @@ const DataBase = {
 			};
 			// 检测字幕格式与字幕类型
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-			if (FORMAT === "application/octet-stream") {
-				$.log(`🚧 ${$.name}, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
-				switch (url?.type ?? url?.query?.fmt ?? url?.query?.format) {
-					case "xml":
-					case "srv3":
-					case "ttml":
-					case "ttml2":
-					case "imsc":
-						FORMAT = "text/xml";
-						break;
-					case "webvtt":
-					case "vtt":
-						FORMAT = "text/vtt";
-						break;
+			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") {
+				FORMAT = detectFormat(url, $response?.body);
+				if (FORMAT) {
+					if ($response?.headers?.["Content-Type"]) $response.headers["Content-Type"] = FORMAT;
+					if ($response?.headers?.["content-type"]) $response.headers["content-type"] = FORMAT;
 				};
-				if (FORMAT === "application/octet-stream") {
-					$.log(`🚧 ${$.name}, $response.body.substring(0, 6): ${$response?.body?.substring(0, 6)}`, "");
-					switch ($response?.body?.substring(0, 6)) {
-						case "<?xml ":
-							FORMAT = "text/xml";
-							break;
-						case "WEBVTT":
-						default:
-							FORMAT = "text/vtt";
-							break;
-						case undefined:
-							break;
-					};
-				};
-				$.log(`🚧 ${$.name}, FORMAT: ${FORMAT}`, "");
-				if ($response?.headers?.["Content-Type"]) $response.headers["Content-Type"] = FORMAT;
-				if ($response?.headers?.["content-type"]) $response.headers["content-type"] = FORMAT;
 			};
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数
@@ -183,7 +157,7 @@ const DataBase = {
 				case "webvtt":
 				case "text/vtt":
 				case "application/vtt": {
-					$.log(`🚧 ${$.name}`, `response.body: ${JSON.stringify($response.body)}`, "");
+					//$.log(`🚧 ${$.name}`, `response.body: ${JSON.stringify($response.body)}`, "");
 					DualSub = VTT.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
 					fullText = DualSub?.body.map(item => item.text.replace(/<\/?[^<>]+>/g, ""));
@@ -201,7 +175,7 @@ const DataBase = {
 				case "text/json":
 				case "application/json":
 					DualSub = JSON.parse($response.body);
-					$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
+					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
 					DualSub.events = DualSub.events.map(event => {
 						if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
 						fullText.push(event?.segs?.[0]?.utf8 ?? "null");
@@ -363,6 +337,48 @@ function setENV(name, platforms, database) {
 	if (typeof Caches?.Subtitles !== "object") Caches.Subtitles = new Map(JSON.parse(Caches?.Subtitles || "[]")); // Strings转Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
+};
+
+/**
+ * detect Format
+ * @author VirgilClyne
+ * @param {Object} url - Parsed URL
+ * @param {String} body - response body
+ * @return {String} format - format
+ */
+function detectFormat(url, body) {
+	let format = undefined;
+	$.log(`☑️ ${$.name}`, `detectFormat`, "");
+	$.log(`🚧 ${$.name}`, `detectFormat, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
+	switch (url?.type ?? url?.query?.fmt ?? url?.query?.format) {
+		case "xml":
+		case "srv3":
+		case "ttml":
+		case "ttml2":
+		case "imsc":
+			format = "text/xml";
+			break;
+		case "webvtt":
+		case "vtt":
+			format = "text/vtt";
+			break;
+		case undefined:
+			$.log(`🚧 ${$.name}`, `detectFormat, $response.body.substring(0, 6): ${body?.substring(0, 6)}`, "");
+			switch (body?.substring(0, 6)) {
+				case "<?xml ":
+					format = "text/xml";
+					break;
+				case "WEBVTT":
+				default:
+					format = "text/vtt";
+					break;
+				case undefined:
+					break;
+			};
+			break;
+	};
+	$.log(`✅ ${$.name}`, `detectFormat, format: ${format}`, "");
+	return format;
 };
 
 /**

@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(13) Master.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(16) Master.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -380,7 +380,7 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
 			break;
 		case "Prime_Video":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
+			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
 			break;
 		case "Max":
 		case "HBO_Max":

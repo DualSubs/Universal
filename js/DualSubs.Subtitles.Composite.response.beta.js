@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(4) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(2) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -64,14 +64,19 @@ const DataBase = {
 		default:
 			let url = URL.parse($request?.url);
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-			const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+			// 检测Content-Type
+			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") {
+				FORMAT = detectFormat(url, $response?.body);
+				if (FORMAT) {
+					if ($response?.headers?.["Content-Type"]) $response.headers["Content-Type"] = FORMAT;
+					if ($response?.headers?.["content-type"]) $response.headers["content-type"] = FORMAT;
+				};
+			};
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
-			// 获取字幕格式与字幕类型
-			const Format = url?.query?.fmt || url?.query?.format || url?.type, Kind = url?.query?.kind;
-			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
-			// 设置自定义参数
-			const Type = url?.query?.subtype || url?.query?.dualsubs || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
-			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			// 设置自定义参数与字幕类型
+			const Type = url?.query?.subtype || url?.query?.dualsubs || Settings.Type, Languages = url?.query?.sublang || Settings.Languages, Kind = url?.query?.kind;
+			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}, Kind: ${Kind}`, "");
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
@@ -154,7 +159,7 @@ const DataBase = {
 			// 创建字幕Object
 			let OriginSub = {}, SecondSub = {};
 			// 格式判断
-			switch (Format || FORMAT) {
+			switch (FORMAT) {
 				case undefined: // 视为无body
 					break;
 				case "application/x-www-form-urlencoded":
@@ -162,15 +167,12 @@ const DataBase = {
 				case "text/html":
 				default:
 					break;
-				case "m3u8":
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
 					//body = M3U8.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(PlayList);
 					break;
-				case "xml":
-				case "srv3":
 				case "text/xml":
 				case "application/xml":
 					OriginSub = XML.parse($response.body);
@@ -179,12 +181,11 @@ const DataBase = {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = XML.parse(SecondSub);
 						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = XML.stringify(OriginSub);
 					break;
-				case "plist":
 				case "text/plist":
 				case "application/plist":
 				case "application/x-plist":
@@ -194,14 +195,12 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = await PLIST("plist2json", SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$request.body = await PLIST("json2plist", OriginSub);
 					*/
 					break;
-				case "vtt":
-				case "webvtt":
 				case "text/vtt":
 				case "application/vtt":
 					OriginSub = VTT.parse($response.body);
@@ -209,13 +208,11 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = VTT.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = VTT.stringify(OriginSub);
 					break;
-				case "json":
-				case "json3":
 				case "text/json":
 				case "application/json":
 					OriginSub = JSON.parse($response.body);
@@ -223,7 +220,7 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = JSON.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = JSON.stringify(OriginSub);
@@ -372,6 +369,75 @@ function setENV(name, platforms, database) {
 	if (typeof Caches?.Subtitles !== "object") Caches.Subtitles = new Map(JSON.parse(Caches?.Subtitles || "[]")); // Strings转Array转Map
 	/***************** Configs *****************/
 	return { Settings, Caches, Configs };
+};
+
+/**
+ * detect Format
+ * @author VirgilClyne
+ * @param {Object} url - Parsed URL
+ * @param {String} body - response body
+ * @return {String} format - format
+ */
+function detectFormat(url, body) {
+	let format = undefined;
+	$.log(`☑️ ${$.name}`, `detectFormat`, "");
+	$.log(`🚧 ${$.name}`, `detectFormat, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
+	switch (url?.type ?? url?.query?.fmt ?? url?.query?.format) {
+		case "txt":
+			format = "text/plain";
+			break;
+		case "xml":
+		case "srv3":
+		case "ttml":
+		case "ttml2":
+		case "imsc":
+			format = "text/xml";
+			break;
+		case "vtt":
+		case "webvtt":
+			format = "text/vtt";
+			break;
+		case "json":
+		case "json3":
+			format = "application/json";
+			break;
+		case "m3u":
+		case "m3u8":
+			format = "application/x-mpegurl";
+			break;
+		case "plist":
+			format = "application/plist";
+			break;
+		case undefined:
+			const HEADER = body?.substring?.(0, 6).trim?.();
+			$.log(`🚧 ${$.name}`, `detectFormat, HEADER: ${HEADER}`, "");
+			$.log(`🚧 ${$.name}`, `detectFormat, HEADER?.substring?.(0): ${HEADER?.substring?.(0)}`, "");
+			switch (HEADER?.substring?.(0)) {
+				case "<":
+				case "W":
+				default:
+					switch (HEADER) {
+						case "<?xml":
+							format = "text/xml";
+							break;
+						case "WEBVTT":
+						default:
+							format = "text/vtt";
+							break;
+						case undefined:
+							break;
+					};
+					break;
+				case "{":
+					format = "application/json";
+					break;
+				case undefined:
+					break;
+			};
+			break;
+	};
+	$.log(`✅ ${$.name}`, `detectFormat, format: ${format}`, "");
+	return format;
 };
 
 /**

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(8) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(11) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -174,13 +174,14 @@ const DataBase = {
 				case "text/xml":
 				case "application/xml":
 					OriginSub = XML.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = XML.parse(SecondSub);
+						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = CombineDualSubs(OriginSub, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = XML.stringify(OriginSub);
 					break;
 				case "plist":
@@ -606,14 +607,14 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					index0 = 1, index1 = 1, index2 = 1;
 					Sub1.events = Sub1.events.map(event => {
 						if (event?.segs) {
-							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join(" ") }];
+							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
 						};
 						delete event.wWinId;
 						return event;
 					});
 					Sub2.events = Sub2.events.map(event => {
 						if (event?.segs) {
-							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join(" ") }];
+							if (Array.isArray(event?.segs)) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
 						};
 						delete event.wWinId;
 						return event;
@@ -654,7 +655,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					DualSub.timedtext.head.wp[1]["@rc"] = "1";
 					Sub1.timedtext.body.p = Sub1.timedtext.body.p.map(para => {
 						if (para?.s) {
-							if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join(" ");
+							if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join("");
 							else para["#"] = para.s?.["#"] ?? "";
 							delete para.s;
 						};
@@ -662,7 +663,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					});
 					Sub2.timedtext.body.p = Sub2.timedtext.body.p.map(para => {
 						if (para?.s) {
-							if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join(" ");
+							if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join("");
 							else para["#"] = para.s?.["#"] ?? "";
 							delete para.s;
 						};

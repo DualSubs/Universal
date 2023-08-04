@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(4) Subtitles.Composite.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(2) Subtitles.Composite.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -56,7 +56,7 @@ const DataBase = {
 /***************** Processing *****************/
 (async () => {
 	// 获取平台
-	const Platform = getPlatform($request?.url);
+	const Platform = detectPlatform($request?.url);
 	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(Platform)) ? Platform : "Universal", "Official"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
@@ -64,21 +64,37 @@ const DataBase = {
 		default:
 			let url = URL.parse($request?.url);
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-			const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+			// 解析格式
+			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
-			// 获取字幕格式与字幕类型
-			const Format = url?.query?.fmt || url?.query?.format || url?.type, Kind = url?.query?.kind;
-			$.log(`🚧 ${$.name}, Format: ${Format}, Kind: ${Kind}`, "");
-			// 设置自定义参数
-			const Type = url?.query?.subtype || url?.query?.dualsubs || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
-			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			// 设置自定义参数与字幕类型
+			const TYPE = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages, KIND = url?.query?.kind;
+			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, Languages: ${Languages}, KIND: ${KIND}`, "");
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
-			switch (Type) {
+			switch (TYPE) {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					switch (Platform) {
+						default:
+							// 获取字幕文件地址vtt缓存（map）
+							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Settings.Languages);
+							// 获取字幕播放列表m3u8缓存（map）
+							const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, Settings.Languages);
+							// 获取字幕文件地址vtt缓存（map）
+							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Settings.Languages);
+							// 获取官方字幕请求
+							if (subtitlesURIArray1.length) {
+								$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
+								// 获取字幕文件名
+								let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, Platform);
+								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
+								// 构造请求队列
+								requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
+							};
+							break;
 						case "YouTube":
 							$.log(`🚧 ${$.name}`, "YouTube", "");
 							switch (url?.query?.tlang) {
@@ -115,24 +131,6 @@ const DataBase = {
 						case "Bilibili":
 							$.log(`🚧 ${$.name}`, "Bilibili", "");
 							break;
-						case undefined:
-						default:
-							// 获取字幕文件地址vtt缓存（map）
-							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Settings.Languages);
-							// 获取字幕播放列表m3u8缓存（map）
-							const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, Settings.Languages);
-							// 获取字幕文件地址vtt缓存（map）
-							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Settings.Languages);
-							// 获取官方字幕请求
-							if (subtitlesURIArray1.length) {
-								$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
-								// 获取字幕文件名
-								let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, Platform);
-								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
-								// 构造请求队列
-								requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
-							};
-							break;
 					};
 					break;
 				case "Translate":
@@ -154,7 +152,7 @@ const DataBase = {
 			// 创建字幕Object
 			let OriginSub = {}, SecondSub = {};
 			// 格式判断
-			switch (Format || FORMAT) {
+			switch (FORMAT) {
 				case undefined: // 视为无body
 					break;
 				case "application/x-www-form-urlencoded":
@@ -162,48 +160,41 @@ const DataBase = {
 				case "text/html":
 				default:
 					break;
-				case "m3u8":
+				case "application/x-mpegURL":
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
 					break;
-				case "xml":
-				case "srv3":
 				case "text/xml":
 				case "application/xml":
 					OriginSub = XML.parse($response.body);
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = XML.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$response.body = XML.stringify(OriginSub);
 					break;
-				case "plist":
 				case "text/plist":
 				case "application/plist":
 				case "application/x-plist":
 					break;
-				case "vtt":
-				case "webvtt":
 				case "text/vtt":
 				case "application/vtt":
 					OriginSub = VTT.parse($response.body);
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = VTT.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$response.body = VTT.stringify(OriginSub);
 					break;
-				case "json":
-				case "json3":
 				case "text/json":
 				case "application/json":
 					OriginSub = JSON.parse($response.body);
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = JSON.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, Format || FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$response.body = JSON.stringify(OriginSub);
 					break;
@@ -233,28 +224,6 @@ const DataBase = {
 							// 返回普通数据
 							$.done({ headers: $response.headers });
 							break;
-						case "application/x-www-form-urlencoded":
-						case "text/plain":
-						case "text/html":
-						case "m3u8":
-						case "application/x-mpegurl":
-						case "application/vnd.apple.mpegurl":
-						case "xml":
-						case "srv3":
-						case "text/xml":
-						case "application/xml":
-						case "plist":
-						case "text/plist":
-						case "application/plist":
-						case "application/x-plist":
-						case "vtt":
-						case "webvtt":
-						case "text/vtt":
-						case "application/vtt":
-						case "json":
-						case "json3":
-						case "text/json":
-						case "application/json":
 						default:
 							// 返回普通数据
 							$.done({ headers: $response.headers, body: $response.body });
@@ -262,7 +231,7 @@ const DataBase = {
 						case "application/x-protobuf":
 						case "application/grpc":
 						case "application/grpc+proto":
-						case "applecation/octet-stream":
+						//case "applecation/octet-stream":
 							// 返回二进制数据
 							//$.log(`${$response.bodyBytes.byteLength}---${$response.bodyBytes.buffer.byteLength}`);
 							$.done({ headers: $response.headers, bodyBytes: $response.bodyBytes.buffer.slice($response.bodyBytes.byteOffset, $response.bodyBytes.byteLength + $response.bodyBytes.byteOffset) });
@@ -278,24 +247,25 @@ const DataBase = {
 	})
 
 /***************** Function *****************/
-function getPlatform(host) {
-	$.log(`☑️ ${$.name}, Get Platform`, "");
+function detectPlatform(url) {
+	$.log(`☑️ ${$.name}, Detect Platform`, "");
 	/***************** Platform *****************/
-	let Platform = /\.apple\.com/i.test(host) ? "Apple"
-		: /\.(dssott|starott)\.com/i.test(host) ? "Disney_Plus"
-			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(host) ? "Prime_Video"
-				: /prd\.media\.h264\.io/i.test(host) ? "Max"
-					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
-						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
-							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
-								: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
-									: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
-										: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
-											: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
-												: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
-													: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
-														: "Universal";
-	$.log(`✅ ${$.name}, Get Platform, Platform: ${Platform}`, "");
+	let Platform = /\.apple\.com/i.test(url) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
+			: /(\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
+				: /prd\.media\.h264\.io/i.test(url) ? "Max"
+					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
+						: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
+								: /dplus-ph-/i.test(url) ? "Discovery+Ph"
+									: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
+										: /\.uplynk\.com/i.test(url) ? "Discovery+"
+											: /\.fubo\.tv/i.test(url) ? "FuboTV"
+												: /\.viki\.io/i.test(url) ? "Viki"
+													: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
+														: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+															: "Universal";
+	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };
 

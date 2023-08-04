@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(2) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(6) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -68,22 +68,41 @@ const DataBase = {
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") {
 				FORMAT = detectFormat(url, $response?.body);
+				/*
 				if (FORMAT) {
 					if ($response?.headers?.["Content-Type"]) $response.headers["Content-Type"] = FORMAT;
 					if ($response?.headers?.["content-type"]) $response.headers["content-type"] = FORMAT;
 				};
+				*/
 			};
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数与字幕类型
-			const Type = url?.query?.subtype || url?.query?.dualsubs || Settings.Type, Languages = url?.query?.sublang || Settings.Languages, Kind = url?.query?.kind;
-			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}, Kind: ${Kind}`, "");
+			const TYPE = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages, KIND = url?.query?.kind;
+			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, Languages: ${Languages}, KIND: ${KIND}`, "");
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
-			switch (Type) {
+			switch (TYPE) {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					switch (Platform) {
+						default:
+							// 获取字幕文件地址vtt缓存（map）
+							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Settings.Languages);
+							// 获取字幕播放列表m3u8缓存（map）
+							const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, Settings.Languages);
+							// 获取字幕文件地址vtt缓存（map）
+							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Settings.Languages);
+							// 获取官方字幕请求
+							if (subtitlesURIArray1.length) {
+								$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
+								// 获取字幕文件名
+								let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, Platform);
+								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
+								// 构造请求队列
+								requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
+							};
+							break;
 						case "YouTube":
 							$.log(`🚧 ${$.name}`, "YouTube", "");
 							switch (url?.query?.tlang) {
@@ -119,24 +138,6 @@ const DataBase = {
 							break;
 						case "Bilibili":
 							$.log(`🚧 ${$.name}`, "Bilibili", "");
-							break;
-						case undefined:
-						default:
-							// 获取字幕文件地址vtt缓存（map）
-							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Settings.Languages);
-							// 获取字幕播放列表m3u8缓存（map）
-							const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, Settings.Languages);
-							// 获取字幕文件地址vtt缓存（map）
-							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Settings.Languages);
-							// 获取官方字幕请求
-							if (subtitlesURIArray1.length) {
-								$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
-								// 获取字幕文件名
-								let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, Platform);
-								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
-								// 构造请求队列
-								requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
-							};
 							break;
 					};
 					break;
@@ -176,14 +177,14 @@ const DataBase = {
 				case "text/xml":
 				case "application/xml":
 					OriginSub = XML.parse($response.body);
-					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = XML.parse(SecondSub);
-						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
-					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = XML.stringify(OriginSub);
 					break;
 				case "text/plist":
@@ -195,7 +196,8 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = await PLIST("plist2json", SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$request.body = await PLIST("json2plist", OriginSub);
@@ -204,13 +206,14 @@ const DataBase = {
 				case "text/vtt":
 				case "application/vtt":
 					OriginSub = VTT.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = VTT.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = VTT.stringify(OriginSub);
 					break;
 				case "text/json":
@@ -220,7 +223,8 @@ const DataBase = {
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = JSON.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, Kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = JSON.stringify(OriginSub);
@@ -248,7 +252,7 @@ const DataBase = {
 			default: { // 有回复数据，返回回复数据
 				const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
+				$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
@@ -257,28 +261,6 @@ const DataBase = {
 							// 返回普通数据
 							$.done({ headers: $response.headers });
 							break;
-						case "application/x-www-form-urlencoded":
-						case "text/plain":
-						case "text/html":
-						case "m3u8":
-						case "application/x-mpegurl":
-						case "application/vnd.apple.mpegurl":
-						case "xml":
-						case "srv3":
-						case "text/xml":
-						case "application/xml":
-						case "plist":
-						case "text/plist":
-						case "application/plist":
-						case "application/x-plist":
-						case "vtt":
-						case "webvtt":
-						case "text/vtt":
-						case "application/vtt":
-						case "json":
-						case "json3":
-						case "text/json":
-						case "application/json":
 						default:
 							// 返回普通数据
 							$.done({ headers: $response.headers, body: $response.body });
@@ -286,7 +268,7 @@ const DataBase = {
 						case "application/x-protobuf":
 						case "application/grpc":
 						case "application/grpc+proto":
-						case "applecation/octet-stream":
+						//case "applecation/octet-stream":
 							// 返回二进制数据
 							//$.log(`${$response.bodyBytes.byteLength}---${$response.bodyBytes.buffer.byteLength}`);
 							$.done({ headers: $response.headers, bodyBytes: $response.bodyBytes.buffer.slice($response.bodyBytes.byteOffset, $response.bodyBytes.byteLength + $response.bodyBytes.byteOffset) });
@@ -650,7 +632,7 @@ function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
  * @param {Array} Options - options = ["Forward", "Reverse", "ShowOnly"]
  * @return {String} DualSub
  */
-function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions", Offset = 0, Tolerance = 0, Options = ["Forward"]) {
+function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions", Offset = 0, Tolerance = 0, Options = ["Forward"]) {
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Options:${Options}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
@@ -662,7 +644,6 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 	let index0 = 0, index1 = 0, index2 = 0;
 	// 双指针法查找两个数组中的相同元素
 	switch (Format) {
-		case "json3":
 		case "text/json":
 		case "application/json": {
 			const length1 = Sub1?.events?.length, length2 = Sub2?.events?.length;
@@ -687,6 +668,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					});
 					//break; 不要break，连续处理
 				case "captions":
+				default:
 					// 处理普通字幕
 					while (index1 < length1 && index2 < length2) {
 						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
@@ -710,7 +692,6 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 			};
 			break;
 		};
-		case "srv3":
 		case "text/xml":
 		case "application/xml": {
 			const length1 = Sub1?.timedtext?.body?.p?.length, length2 = Sub2?.timedtext?.body?.p?.length;
@@ -737,6 +718,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					});
 					//break; 不要break，连续处理
 				case "captions":
+				default:
 					// 处理普通字幕
 					while (index1 < length1 && index2 < length2) {
 						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
@@ -760,8 +742,6 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 			};
 			break;
 		};
-		case "vtt":
-		case "webvtt":
 		case "text/vtt":
 		case "application/vtt": {
 			const length1 = Sub1?.body?.length, length2 = Sub2?.body?.length;
@@ -772,6 +752,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					// vtt字幕不需要特殊处理
 					//break; 不要break，连续处理
 				case "captions":
+				default:
 					// 处理普通字幕
 					while (index1 < length1 && index2 < length2) {
 						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");

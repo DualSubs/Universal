@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(1) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(2) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -64,17 +64,9 @@ const DataBase = {
 		default:
 			let url = URL.parse($request?.url);
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-			// 检测Content-Type
+			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") {
-				FORMAT = detectFormat(url, $response?.body);
-				/*
-				if (FORMAT) {
-					if ($response?.headers?.["Content-Type"]) $response.headers["Content-Type"] = FORMAT;
-					if ($response?.headers?.["content-type"]) $response.headers["content-type"] = FORMAT;
-				};
-				*/
-			};
+			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数与字幕类型
 			const TYPE = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages, KIND = url?.query?.kind;
@@ -168,6 +160,7 @@ const DataBase = {
 				case "text/html":
 				default:
 					break;
+				case "application/x-mpegURL":
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
 					//body = M3U8.parse($response.body);
@@ -252,7 +245,7 @@ const DataBase = {
 			default: { // 有回复数据，返回回复数据
 				const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
+				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {

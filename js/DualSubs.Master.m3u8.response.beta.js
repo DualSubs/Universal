@@ -2,7 +2,7 @@
 README:https://github.com/DualSubs/DualSubs/
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.10(16) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(1) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -54,7 +54,9 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
-	const { Settings, Caches, Configs } = setENV("DualSubs", ["Universal", "Official"], DataBase);
+	// 获取平台
+	const Platform = detectPlatform($request?.url);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(Platform)) ? Platform : "Universal", "Official"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings?.Switch) {
 		case true:
@@ -70,9 +72,6 @@ const DataBase = {
 			// 设置自定义参数
 			const Type = url?.query?.subtype || url?.query?.dualsubs || Settings.Type, Languages = url?.query?.sublang || Settings.Languages;
 			$.log(`🚧 ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
-			// 获取平台
-			const Platform = getPlatform(HOST);
-			$.log(`⚠ ${$.name}`, `Platform: ${Platform}`, "");
 			// 兼容性判断
 			const Standard = isStandard(Platform, $request.url, $request.headers);
 			// 创建空数据
@@ -171,25 +170,25 @@ const DataBase = {
 	})
 
 /***************** Function *****************/
-function getPlatform(host) {
-	$.log(`☑️ ${$.name}, Get Platform`, "");
+function detectPlatform(url) {
+	$.log(`☑️ ${$.name}, Detect Platform`, "");
 	/***************** Platform *****************/
-	let Platform = /\.apple\.com/i.test(host) ? "Apple"
-		: /\.(dssott|starott)\.com/i.test(host) ? "Disney_Plus"
-			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(host) ? "Prime_Video"
-				: /prd\.media\.h264\.io/i.test(host) ? "Max"
-					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
-						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
-							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
-								: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
-									: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
-										: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
-											: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
-												: /\.viki\.io/i.test(host) ? "Viki"
-													: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
-														: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
+	let Platform = /\.apple\.com/i.test(url) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
+			: /(\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
+				: /prd\.media\.h264\.io/i.test(url) ? "Max"
+					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
+						: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
+								: /dplus-ph-/i.test(url) ? "Discovery+Ph"
+									: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
+										: /\.uplynk\.com/i.test(url) ? "Discovery+"
+											: /\.fubo\.tv/i.test(url) ? "FuboTV"
+												: /\.viki\.io/i.test(url) ? "Viki"
+													: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
+														: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
 															: "Universal";
-	$.log(`✅ ${$.name}, Get Platform`, `Platform: ${Platform}`, "");
+	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };
 
@@ -379,7 +378,7 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
 			break;
-		case "Prime_Video":
+		case "PrimeVideo":
 			//newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
 			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;

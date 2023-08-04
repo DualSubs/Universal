@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(6) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(1) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -56,7 +56,7 @@ const DataBase = {
 /***************** Processing *****************/
 (async () => {
 	// 获取平台
-	const Platform = getPlatform($request?.url);
+	const Platform = detectPlatform($request?.url);
 	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(Platform)) ? Platform : "Universal", "Official"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
@@ -284,24 +284,25 @@ const DataBase = {
 	})
 
 /***************** Function *****************/
-function getPlatform(host) {
-	$.log(`☑️ ${$.name}, Get Platform`, "");
+function detectPlatform(url) {
+	$.log(`☑️ ${$.name}, Detect Platform`, "");
 	/***************** Platform *****************/
-	let Platform = /\.apple\.com/i.test(host) ? "Apple"
-		: /\.(dssott|starott)\.com/i.test(host) ? "Disney_Plus"
-			: /\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net/i.test(host) ? "Prime_Video"
-				: /prd\.media\.h264\.io/i.test(host) ? "Max"
-					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBO_Max"
-						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
-							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount_Plus"
-								: /dplus-ph-/i.test(host) ? "Discovery_Plus_Ph"
-									: /\.peacocktv\.com/i.test(host) ? "Peacock_TV"
-										: /\.uplynk\.com/i.test(host) ? "Discovery_Plus"
-											: /\.fubo\.tv/i.test(host) ? "Fubo_TV"
-												: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
-													: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
-														: "Universal";
-	$.log(`✅ ${$.name}, Get Platform, Platform: ${Platform}`, "");
+	let Platform = /\.apple\.com/i.test(url) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
+			: /(\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
+				: /prd\.media\.h264\.io/i.test(url) ? "Max"
+					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
+						: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
+								: /dplus-ph-/i.test(url) ? "Discovery+Ph"
+									: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
+										: /\.uplynk\.com/i.test(url) ? "Discovery+"
+											: /\.fubo\.tv/i.test(url) ? "FuboTV"
+												: /\.viki\.io/i.test(url) ? "Viki"
+													: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
+														: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+															: "Universal";
+	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };
 
@@ -543,14 +544,14 @@ function getSubtitlesFileName(url, platform) {
 		case "Apple":
 			fileName = request.url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1]; // Apple 片段分型序号不同
 			break;
-		case "Disney_Plus":
+		case "Disney+":
 			fileName = request.url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Disney+ 片段名称相同
 			break;
 		case "Hulu":
 			fileName = request.url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Hulu 片段分型序号相同
 			break;
-		case "Prime_Video":
-		case "HBO_Max":
+		case "PrimeVideo":
+		case "HBOMax":
 		default:
 			fileName = null; // Amazon Prime Video HBO_Max不拆分字幕片段
 			break;

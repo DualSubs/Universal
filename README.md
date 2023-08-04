@@ -28,9 +28,9 @@
 | [功能列表](../../wiki/🍿-DualSubs:-🎦-Streaming-Media#功能列表) | [功能列表](../../../Netflix/wiki/🍿-DualSubs:-🇳-Netflix#功能列表) | [功能列表](../../../YouTube/wiki/🍿-DualSubs:-▶-YouTube#功能列表) |
 | [使用说明](../../wiki/🍿-DualSubs:-🎦-Streaming-Media#使用说明) | [使用说明](../../../Netflix/wiki/🍿-DualSubs:-🇳-Netflix#使用说明) | [使用说明](../../../YouTube/wiki/🍿-DualSubs:-▶-YouTube#使用说明) |
 | [安装链接](../../wiki/🍿-DualSubs:-🎦-Streaming-Media#安装链接) | [安装链接](../../../Netflix/wiki/🍿-DualSubs:-🇳-Netflix#安装链接) | [安装链接](../../../YouTube/wiki/🍿-DualSubs:-▶-YouTube#安装链接) |
-| 🆕新版<br>v0.7.x | 未发布 | 🆕新版<br>v0.6.x |
+| 🆕新版<br>v0.8.x | 🆕新版<br>v0.5.x | 🆕新版<br>v0.8.x |
 | [更新日志](../../wiki/🍿-DualSubs:-🎦-Streaming-Media#更新日志) | [更新日志](../../../Netflix/wiki/🍿-DualSubs:-🇳-Netflix#更新日志) | [更新日志](../../../YouTube/wiki/🍿-DualSubs:-▶-YouTube#更新日志) |
-| [说明/讨论](https://t.me/GetSomeFriesChannel/121) | 说明/讨论 | [说明/讨论](https://t.me/GetSomeFriesChannel/165) |
+| [说明/讨论](https://t.me/GetSomeFriesChannel/208) | [说明/讨论](https://t.me/GetSomeFriesChannel/246) | [说明/讨论](https://t.me/GetSomeFriesChannel/248) |
 
 ---
 ## How To

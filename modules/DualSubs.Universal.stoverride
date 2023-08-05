@@ -8,8 +8,6 @@ icon: "https://github.com/DualSubs/Universal/raw/main/database/icon_rounded.png"
 
 http:
   force-http-engine:
-    - "*.hls.row.aiv-cdn.net:80"
-    - "*avodhlss3ww-a.akamaihd.net:80"
     - "assets.huluim.com"
     - "vod-*.live.cf.md.bbci.co.uk"
     - "vod-*-live.akamaized.net"
@@ -23,9 +21,14 @@ http:
     - "atv-ps.amazon.com"
     - "atv-ps-fe.primevideo.com"
     - "*.hls.row.aiv-cdn.net"
-    - "cf-timedtext.aux.pv-cdn.net"
     - "*avodhlss3ww-a.akamaihd.net"
     - "s3.amazonaws.com"
+    - "cf-timedtext.aux.pv-cdn.net"
+    - "d25xi40x97liuc.cloudfront.net"
+    - "dmqdd6hw24ucf.cloudfront.net"
+    - "d22qjgkvxw22r6.cloudfront.net"
+    - "d1v5ir2lpwr8os.cloudfront.net"
+    - "d27xxe7juh1us6.cloudfront.net"
     - "*.prd.media.h264.io"
     - "manifests.api.hbo.com"
     - "manifests.v2.api.hbo.com"
@@ -132,19 +135,31 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/(.+)\.(hls\.row\.aiv-cdn|akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8
+    - match: ^https?:\/\/(.+)(\.hls\.row\.aiv-cdn|avodhlss3ww-a.akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=(\w+)$
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt(\?.*subtype=(Official|External).*)$
+    - match: (d25xi40x97liuc|dmqdd6hw24ucf|d1v5ir2lpwr8os|d1v5ir2lpwr8os|d27xxe7juh1us6)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=(\w+)$
+      name: DualSubs.Subtitles.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=(Official|External)$
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/(d25xi40x97liuc|dmqdd6hw24ucf|d1v5ir2lpwr8os|d1v5ir2lpwr8os|d27xxe7juh1us6)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=(Official|External)$
+      name: DualSubs.Subtitles.Composite.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate$
+      name: DualSubs.Subtitles.Translate.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(d25xi40x97liuc|dmqdd6hw24ucf|d1v5ir2lpwr8os|d1v5ir2lpwr8os|d27xxe7juh1us6)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate$
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true

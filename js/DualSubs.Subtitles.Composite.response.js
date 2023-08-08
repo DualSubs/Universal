@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(2) Subtitles.Composite.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(3) Subtitles.Composite.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -438,14 +438,14 @@ function getSubtitlesFileName(url, platform) {
 		case "Apple":
 			fileName = request.url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1]; // Apple 片段分型序号不同
 			break;
-		case "Disney_Plus":
+		case "Disney+":
 			fileName = request.url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Disney+ 片段名称相同
 			break;
 		case "Hulu":
 			fileName = request.url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Hulu 片段分型序号相同
 			break;
-		case "Prime_Video":
-		case "HBO_Max":
+		case "PrimeVideo":
+		case "HBOMax":
 		default:
 			fileName = null; // Amazon Prime Video HBO_Max不拆分字幕片段
 			break;
@@ -527,7 +527,7 @@ function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
  * @param {Array} Options - options = ["Forward", "Reverse", "ShowOnly"]
  * @return {String} DualSub
  */
-function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions", Offset = 0, Tolerance = 0, Options = ["Forward"]) {
+function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions", Offset = 0, Tolerance = 0, Options = ["Forward"]) {
 	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Options:${Options}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub1内容: ${JSON.stringify(Sub1)}`, "");
 	//$.log(`🚧 ${$.name}, Combine Dual Subtitles`,`Sub2内容: ${JSON.stringify(Sub2)}`, "");
@@ -539,7 +539,6 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 	let index0 = 0, index1 = 0, index2 = 0;
 	// 双指针法查找两个数组中的相同元素
 	switch (Format) {
-		case "json3":
 		case "text/json":
 		case "application/json": {
 			const length1 = Sub1?.events?.length, length2 = Sub2?.events?.length;
@@ -564,6 +563,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					});
 					//break; 不要break，连续处理
 				case "captions":
+				default:
 					// 处理普通字幕
 					while (index1 < length1 && index2 < length2) {
 						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
@@ -587,7 +587,6 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 			};
 			break;
 		};
-		case "srv3":
 		case "text/xml":
 		case "application/xml": {
 			const length1 = Sub1?.timedtext?.body?.p?.length, length2 = Sub2?.timedtext?.body?.p?.length;
@@ -614,6 +613,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					});
 					//break; 不要break，连续处理
 				case "captions":
+				default:
 					// 处理普通字幕
 					while (index1 < length1 && index2 < length2) {
 						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");
@@ -637,8 +637,6 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 			};
 			break;
 		};
-		case "vtt":
-		case "webvtt":
 		case "text/vtt":
 		case "application/vtt": {
 			const length1 = Sub1?.body?.length, length2 = Sub2?.body?.length;
@@ -649,6 +647,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "srv3", Kind = "captions
 					// vtt字幕不需要特殊处理
 					//break; 不要break，连续处理
 				case "captions":
+				default:
 					// 处理普通字幕
 					while (index1 < length1 && index2 < length2) {
 						//$.log(`🚧`, `index1/length1: ${index1}/${length1}`, `index2/length2: ${index2}/${length2}`, "");

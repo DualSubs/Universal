@@ -139,6 +139,10 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
+    - match: ^https?:\/\/(.+)(\.(hls|dash)\.row\.aiv-cdn|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=(\w+)$
+      name: DualSubs.Subtitles.m3u8.response
+      type: response
+      require-body: true
     - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=(\w+)$
       name: DualSubs.Subtitles.m3u8.response
       type: response

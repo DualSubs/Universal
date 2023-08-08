@@ -2,13 +2,13 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(3) Subtitles.Composite.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.14(4) Subtitles.Composite.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Type":"Official","Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100}
+		"Settings":{"Switch":true,"Type":"Translate","Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100}
 	},
 	"Universal":{
 		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"]}
@@ -55,29 +55,32 @@ const DataBase = {
 
 /***************** Processing *****************/
 (async () => {
+	// 解构URL
+	let url = URL.parse($request?.url);
+	// 获取连接参数
+	const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
+	$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
+	// 获取自定义参数与字幕类型
+	const TYPE = url?.query?.subtype, LANGUAGES = url?.query?.sublang, KIND = url?.query?.kind;
+	$.log(`⚠ ${$.name}, TYPE: ${TYPE}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 	// 获取平台
-	const Platform = detectPlatform($request?.url);
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(Platform)) ? Platform : "Universal", "Official"], DataBase);
+	const PLATFORM = detectPlatform(HOST);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", [TYPE]], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
-			let url = URL.parse($request?.url);
-			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
-			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
-			// 设置自定义参数与字幕类型
-			const TYPE = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages, KIND = url?.query?.kind;
-			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, Languages: ${Languages}, KIND: ${KIND}`, "");
+			$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
 			switch (TYPE) {
 				case "Official":
-					$.log(`🚧 ${$.name}`, "官方字幕", "");
-					switch (Platform) {
+					$.log(`⚠ ${$.name}`, "官方字幕", "");
+					switch (PLATFORM) {
 						default:
 							// 获取字幕文件地址vtt缓存（map）
 							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Settings.Languages);
@@ -247,23 +250,23 @@ const DataBase = {
 	})
 
 /***************** Function *****************/
-function detectPlatform(url) {
+function detectPlatform(host) {
 	$.log(`☑️ ${$.name}, Detect Platform`, "");
 	/***************** Platform *****************/
-	let Platform = /\.apple\.com/i.test(url) ? "Apple"
-		: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
-			: /(\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
-				: /prd\.media\.h264\.io/i.test(url) ? "Max"
-					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
-						: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
-							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
-								: /dplus-ph-/i.test(url) ? "Discovery+Ph"
-									: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
-										: /\.uplynk\.com/i.test(url) ? "Discovery+"
-											: /\.fubo\.tv/i.test(url) ? "FuboTV"
-												: /\.viki\.io/i.test(url) ? "Viki"
-													: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
-														: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+	let Platform = /\.apple\.com/i.test(host) ? "Apple"
+		: /\.(dssott|starott)\.com/i.test(host) ? "Disney+"
+			: /\.aiv-cdn\.net|avodhlss3ww-a\.akamaihd\.net|s3\.amazonaws\.com|\.cloudfront\.net/i.test(host) ? "PrimeVideo"
+				: /prd\.media\.h264\.io/i.test(host) ? "Max"
+					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBOMax"
+						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
+							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount+"
+								: /dplus-ph-/i.test(host) ? "Discovery+Ph"
+									: /\.peacocktv\.com/i.test(host) ? "PeacockTV"
+										: /\.uplynk\.com/i.test(host) ? "Discovery+"
+											: /\.fubo\.tv/i.test(host) ? "FuboTV"
+												: /\.viki\.io/i.test(host) ? "Viki"
+													: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
+														: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
 															: "Universal";
 	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(8) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(9) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -349,10 +349,10 @@ async function setSubtitlesCache(platform, playlist, cache, language) {
 		let array = cache.get(data.URL) ?? [];
 		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
 		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `data?.URL: ${data?.URL}`, "");
-		// 获取字幕文件地址vtt缓存（按语言）
-		array = await getVTTs(data?.URL, $request.headers, platform);
+		// 获取字幕文件地址vtt/ttml缓存（按语言）
+		array = await getSubs(data?.URL, $request.headers, platform);
 		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
-		// 写入字幕文件地址vtt缓存到map
+		// 写入字幕文件地址vtt/ttml缓存到map
 		cache = cache.set(data.URL, array);
 		//$.log(`✅ ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(cache.get(data.URL))}`, "");
 		$.log(`✅ ${$.name}, setSubtitlesCache`, `data?.URL: ${data?.URL}`, "");
@@ -383,22 +383,22 @@ function setCache(cache, cacheSize = 100) {
  * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-async function getVTTs(url, headers, platform) {
-	$.log(`☑️ ${$.name}, Get Subtitle *.vtt URLs`, "");
+async function getSubs(url, headers, platform) {
+	$.log(`☑️ ${$.name}, Get Subtitle *.vtt *.ttml URLs`, "");
 	let response = await $.http.get({ url: url, headers: headers });
-	//$.log(`🚧 ${$.name}, Get Subtitle *.vtt URLs`, `response: ${JSON.stringify(response)}`, "");
+	//$.log(`🚧 ${$.name}, Get Subtitle *.vtt *.ttml URLs`, `response: ${JSON.stringify(response)}`, "");
 	let subtitlePlayList = M3U8.parse(response.body);
-	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.(web)?vtt(\?.*)?$/.test(URI)));
+	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?)(\?.+)?$/.test(URI)));
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/empty/.test(URI));
-	let VTTs = subtitlePlayList.map(({ URI }) => aPath(url, URI));
+	let Subs = subtitlePlayList.map(({ URI }) => aPath(url, URI));
 	switch (platform) {
 		case "Disney+":
-			if (VTTs.some(item => /\/.+-MAIN\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+			if (Subs.some(item => /\/.+-MAIN\//.test(item))) Subs = Subs.filter(item => /\/.+-MAIN\//.test(item))
 			break;
 		case "PrimeVideo":
-			if (VTTs.some(item => /\/aiv-prod-timedtext\//.test(item))) VTTs = VTTs.filter(item => /\/aiv-prod-timedtext\//.test(item));
-			//Array.from(new Set(VTTs));
-			VTTs = VTTs.filter((item, index, array) => {
+			if (Subs.some(item => /\/aiv-prod-timedtext\//.test(item))) Subs = Subs.filter(item => /\/aiv-prod-timedtext\//.test(item));
+			//Array.from(new Set(Subs));
+			Subs = Subs.filter((item, index, array) => {
 				//当前元素，在原始数组中的第一个索引==当前索引值，否则返回当前元素
 				return array.indexOf(item, 0) === index;
 			}); // 数组去重
@@ -406,8 +406,8 @@ async function getVTTs(url, headers, platform) {
 		default:
 			break;
 	};
-	$.log(`✅ ${$.name}, Get Subtitle *.vtt URLs`, `VTTs: ${VTTs}`, "");
-	return VTTs;
+	$.log(`✅ ${$.name}, Get Subtitle *.vtt *.ttml URLs`, `Subs: ${Subs}`, "");
+	return Subs;
 	/***************** Fuctions *****************/
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 };

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(2) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(8) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -111,8 +111,9 @@ const DataBase = {
 					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// WebVTT.m3u8加参数
 					body = body.map(item => {
-						if (item?.URI?.includes("vtt") && !item?.URI?.includes("empty")) {
-							const symbol = (item.URI.includes("?")) ? "&" : "?"
+						if (item?.URI?.includes("vtt")) {
+							const symbol = (item.URI.includes("?")) ? "&" : "?";
+							if (!item?.URI?.includes("empty") && !item?.URI?.includes("default"))
 							item.URI = item.URI + symbol + `subtype=${TYPE}`
 							//item.URI = item.URI + symbol + `subtype=${TYPE}&sublang=${"vtt"}`
 						}
@@ -391,8 +392,16 @@ async function getVTTs(url, headers, platform) {
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/empty/.test(URI));
 	let VTTs = subtitlePlayList.map(({ URI }) => aPath(url, URI));
 	switch (platform) {
-		case "Disney_Plus":
+		case "Disney+":
 			if (VTTs.some(item => /\/.+-MAIN\//.test(item))) VTTs = VTTs.filter(item => /\/.+-MAIN\//.test(item))
+			break;
+		case "PrimeVideo":
+			if (VTTs.some(item => /\/aiv-prod-timedtext\//.test(item))) VTTs = VTTs.filter(item => /\/aiv-prod-timedtext\//.test(item));
+			//Array.from(new Set(VTTs));
+			VTTs = VTTs.filter((item, index, array) => {
+				//当前元素，在原始数组中的第一个索引==当前索引值，否则返回当前元素
+				return array.indexOf(item, 0) === index;
+			}); // 数组去重
 			break;
 		default:
 			break;

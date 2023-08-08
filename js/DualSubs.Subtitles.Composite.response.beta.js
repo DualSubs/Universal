@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(2) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(3) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -199,14 +199,14 @@ const DataBase = {
 				case "text/vtt":
 				case "application/vtt":
 					OriginSub = VTT.parse($response.body);
-					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = VTT.parse(SecondSub);
-						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
-					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = VTT.stringify(OriginSub);
 					break;
 				case "text/json":

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.14(4) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.15(2) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -565,13 +565,18 @@ function getSubtitlesFileName(url, platform) {
  * @return {Array<*>} Subtitles Requests Queue
  */
 function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
-	$.log(`☑️ ${$.name}, Construct Subtitles Queue`, `fileName: ${fileName}`, "");
+	$.log(`☑️ ${$.name}`, `Construct Subtitles Queue, fileName: ${fileName}`, "");
 	let requests = [];
-	$.log(`🚧 ${$.name}, Construct Subtitles Queue, VTTs0.length: ${VTTs0.length}, VTTs1.length: ${VTTs1.length}`, "")
+	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, VTTs0.length: ${VTTs0.length}, VTTs1.length: ${VTTs1.length}`, "")
+	// 查询当前字幕在原字幕队列中的位置
+	const Index0 = VTTs0.findIndex(item => item?.includes(fileName));
+	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index0: ${Index0}`, "");
 	switch (VTTs1.length) {
 		case 0: // 长度为0，无须计算
+			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 0`, "")
 			break;
 		case 1: // 长度为1，无须计算
+			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 1`, "")
 			let _request = {
 				"url": VTTs1[0],
 				"headers": request.headers
@@ -579,30 +584,33 @@ function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
 			requests.push(_request);
 			break;
 		case VTTs0.length: { // 长度相等，一一对应，无须计算
-			//request.url = VTTs1.find(item => item?.includes(fileName)) || VTTs1[0];
-			let Index1 = VTTs1.findIndex(item => item?.includes(fileName));
-			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index1: ${Index1}`, "");
+			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度相等`, "")
 			let _request = {
-				"url": VTTs1[Index1],
+				"url": VTTs1[Index0],
 				"headers": request.headers
 			};
 			requests.push(_request);
 			break;
 		};
 		default: { // 长度不等，需要计算
-			$.log(`⚠ ${$.name}, Construct Subtitles Queue, 长度不等，需要计算`, "")
-			// 查询当前字幕在原字幕队列中的位置
-			let Index0 = VTTs0.findIndex(item => item?.includes(fileName));
-			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index0: ${Index0}`, "")
+			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度不等，需要计算`, "")
 			// 计算当前字幕在原字幕队列中的百分比
-			let Position0 = Index0 / VTTs0.length;
-			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Position0: ${Position0}`, "");
+			const Position0 = Index0 / VTTs0.length;
+			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Position0: ${Position0}`, "");
 			// 根据百分比计算当前字幕在新字幕队列中的位置
 			//let Index1 = VTTs1.findIndex(item => item.includes(fileName));
-			let Index1 = Math.round(Position0 * VTTs1.length);
-			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index1: ${Index1}`, "");
-			// 获取当前字幕在新字幕队列中的前后4个字幕
-			nearlyVTTs = VTTs1.slice((Index1 - 2 < 0) ? 0 : Index1 - 2, Index1 + 2);
+			const Index1 = Math.round(Position0 * VTTs1.length);
+			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index1: ${Index1}`, "");
+			// 获取当前字幕在新字幕队列中的前后2个字幕
+			const nearlyVTTs = VTTs1.slice((Index1 - 1 < 0) ? 0 : Index1 - 1, Index1 + 1);
+			nearlyVTTs.forEach(url => {
+				let _request = {
+					"url": url,
+					"headers": request.headers
+				};
+				requests.push(_request);
+			});
+			/*
 			requests = nearlyVTTs.map(url => {
 				let _request = {
 					"url": url,
@@ -610,11 +618,12 @@ function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
 				};
 				return _request;
 			});
+			*/
 			break;
 		};
 	};
-	//$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `requests: ${JSON.stringify(requests)}`, "");
-	$.log(`✅ ${$.name}, Construct Subtitles Queue`, "");
+	//$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, requests: ${JSON.stringify(requests)}`, "");
+	$.log(`✅ ${$.name}`, `Construct Subtitles Queue`, "");
 	return requests;
 };
 

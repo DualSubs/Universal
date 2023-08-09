@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.14(4) Subtitles.Composite.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.15(2) Subtitles.Composite.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -321,6 +321,75 @@ function setENV(name, platforms, database) {
 };
 
 /**
+ * detect Format
+ * @author VirgilClyne
+ * @param {Object} url - Parsed URL
+ * @param {String} body - response body
+ * @return {String} format - format
+ */
+function detectFormat(url, body) {
+	let format = undefined;
+	$.log(`☑️ ${$.name}`, `detectFormat`, "");
+	$.log(`🚧 ${$.name}`, `detectFormat, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
+	switch (url?.type ?? url?.query?.fmt ?? url?.query?.format) {
+		case "txt":
+			format = "text/plain";
+			break;
+		case "xml":
+		case "srv3":
+		case "ttml":
+		case "ttml2":
+		case "imsc":
+			format = "text/xml";
+			break;
+		case "vtt":
+		case "webvtt":
+			format = "text/vtt";
+			break;
+		case "json":
+		case "json3":
+			format = "application/json";
+			break;
+		case "m3u":
+		case "m3u8":
+			format = "application/x-mpegurl";
+			break;
+		case "plist":
+			format = "application/plist";
+			break;
+		case undefined:
+			const HEADER = body?.substring?.(0, 6).trim?.();
+			$.log(`🚧 ${$.name}`, `detectFormat, HEADER: ${HEADER}`, "");
+			$.log(`🚧 ${$.name}`, `detectFormat, HEADER?.substring?.(0): ${HEADER?.substring?.(0)}`, "");
+			switch (HEADER?.substring?.(0)) {
+				case "<":
+				case "W":
+				default:
+					switch (HEADER) {
+						case "<?xml":
+							format = "text/xml";
+							break;
+						case "WEBVTT":
+						default:
+							format = "text/vtt";
+							break;
+						case undefined:
+							break;
+					};
+					break;
+				case "{":
+					format = "application/json";
+					break;
+				case undefined:
+					break;
+			};
+			break;
+	};
+	$.log(`✅ ${$.name}`, `detectFormat, format: ${format}`, "");
+	return format;
+};
+
+/**
  * Get Playlist Cache
  * @author VirgilClyne
  * @param {String} url - Request URL / Master Playlist URL
@@ -466,13 +535,18 @@ function getSubtitlesFileName(url, platform) {
  * @return {Array<*>} Subtitles Requests Queue
  */
 function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
-	$.log(`☑️ ${$.name}, Construct Subtitles Queue`, `fileName: ${fileName}`, "");
+	$.log(`☑️ ${$.name}`, `Construct Subtitles Queue, fileName: ${fileName}`, "");
 	let requests = [];
-	$.log(`🚧 ${$.name}, Construct Subtitles Queue, VTTs0.length: ${VTTs0.length}, VTTs1.length: ${VTTs1.length}`, "")
+	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, VTTs0.length: ${VTTs0.length}, VTTs1.length: ${VTTs1.length}`, "")
+	// 查询当前字幕在原字幕队列中的位置
+	const Index0 = VTTs0.findIndex(item => item?.includes(fileName));
+	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index0: ${Index0}`, "");
 	switch (VTTs1.length) {
 		case 0: // 长度为0，无须计算
+			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 0`, "")
 			break;
 		case 1: // 长度为1，无须计算
+			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 1`, "")
 			let _request = {
 				"url": VTTs1[0],
 				"headers": request.headers
@@ -480,42 +554,37 @@ function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
 			requests.push(_request);
 			break;
 		case VTTs0.length: { // 长度相等，一一对应，无须计算
-			//request.url = VTTs1.find(item => item?.includes(fileName)) || VTTs1[0];
-			let Index1 = VTTs1.findIndex(item => item?.includes(fileName));
-			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index1: ${Index1}`, "");
+			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度相等`, "")
 			let _request = {
-				"url": VTTs1[Index1],
+				"url": VTTs1[Index0],
 				"headers": request.headers
 			};
 			requests.push(_request);
 			break;
 		};
 		default: { // 长度不等，需要计算
-			$.log(`⚠ ${$.name}, Construct Subtitles Queue, 长度不等，需要计算`, "")
-			// 查询当前字幕在原字幕队列中的位置
-			let Index0 = VTTs0.findIndex(item => item?.includes(fileName));
-			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index0: ${Index0}`, "")
+			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度不等，需要计算`, "")
 			// 计算当前字幕在原字幕队列中的百分比
-			let Position0 = Index0 / VTTs0.length;
-			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Position0: ${Position0}`, "");
+			const Position0 = Index0 / VTTs0.length;
+			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Position0: ${Position0}`, "");
 			// 根据百分比计算当前字幕在新字幕队列中的位置
 			//let Index1 = VTTs1.findIndex(item => item.includes(fileName));
-			let Index1 = Math.round(Position0 * VTTs1.length);
-			$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `Index1: ${Index1}`, "");
-			// 获取当前字幕在新字幕队列中的前后4个字幕
-			nearlyVTTs = VTTs1.slice((Index1 - 2 < 0) ? 0 : Index1 - 2, Index1 + 2);
-			requests = nearlyVTTs.map(url => {
+			const Index1 = Math.round(Position0 * VTTs1.length);
+			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index1: ${Index1}`, "");
+			// 获取当前字幕在新字幕队列中的前后2个字幕
+			const nearlyVTTs = VTTs1.slice((Index1 - 1 < 0) ? 0 : Index1 - 1, Index1 + 1);
+			nearlyVTTs.forEach(url => {
 				let _request = {
 					"url": url,
 					"headers": request.headers
 				};
-				return _request;
+				requests.push(_request);
 			});
 			break;
 		};
 	};
-	//$.log(`🚧 ${$.name}, Construct Subtitles Queue`, `requests: ${JSON.stringify(requests)}`, "");
-	$.log(`✅ ${$.name}, Construct Subtitles Queue`, "");
+	//$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, requests: ${JSON.stringify(requests)}`, "");
+	$.log(`✅ ${$.name}`, `Construct Subtitles Queue`, "");
 	return requests;
 };
 

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(2) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(1) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -412,8 +412,9 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	// 增加副语言
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接
-	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&subtype=${type}`
-		: `${newOption?.OPTION?.URI}?subtype=${type}`;
+	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
+	newOption.OPTION.URI += `${symbol}subtype=${type}`;
+	//if (!standard) newOption.OPTION.URI += `&sublang=${LANGUAGE1}`;
 	// 自动选择
 	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正

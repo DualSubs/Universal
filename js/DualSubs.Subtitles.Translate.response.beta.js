@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.11(1) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.11(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -74,7 +74,7 @@ const DataBase = {
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数与字幕类型
-			const TYPE = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages, KIND = url?.query?.kind;
+			const TYPE = url?.query?.subtype || Settings.Type, Languages = [Settings.Languages[0], url?.query?.sublang ?? Settings.Languages[1]], KIND = url?.query?.kind;
 			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, Languages: ${Languages}, KIND: ${KIND}`, "");
 			// 创建空数据
 			let DualSub = {}, fullText = [];

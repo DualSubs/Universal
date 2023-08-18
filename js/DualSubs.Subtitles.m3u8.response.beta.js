@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(9) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(1) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -68,7 +68,7 @@ const DataBase = {
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数与字幕类型
-			const TYPE = url?.query?.subtype || Settings.Type, Languages = url?.query?.sublang || Settings.Languages, KIND = url?.query?.kind;
+			const TYPE = url?.query?.subtype || Settings.Type, Languages = [Settings.Languages[0], url?.query?.sublang ?? Settings.Languages[1]], KIND = url?.query?.kind;
 			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, Languages: ${Languages}, KIND: ${KIND}`, "");
 			// 创建空数据
 			let body = {};
@@ -111,11 +111,14 @@ const DataBase = {
 					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
 					// WebVTT.m3u8加参数
 					body = body.map(item => {
-						if (item?.URI?.includes("vtt")) {
+						if (item?.URI?.includes("vtt") || item?.URI?.includes("ttml")) {
 							const symbol = (item.URI.includes("?")) ? "&" : "?";
-							if (!item?.URI?.includes("empty") && !item?.URI?.includes("default"))
-							item.URI = item.URI + symbol + `subtype=${TYPE}`
-							//item.URI = item.URI + symbol + `subtype=${TYPE}&sublang=${"vtt"}`
+							if (!item?.URI?.includes("empty") && !item?.URI?.includes("default")){
+								//if (url?.query?.sublang) item.URI += `${symbol}subtype=${TYPE}&sublang=${url.query.sublang}`;
+								//else item.URI += `${symbol}subtype=${TYPE}`;
+								item.URI += `${symbol}subtype=${TYPE}`;
+								if (url?.query?.sublang) item.URI += `&sublang=${url.query.sublang}`;
+							};
 						}
 						return item;
 					})

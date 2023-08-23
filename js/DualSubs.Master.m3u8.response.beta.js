@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(1) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(9) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -407,7 +407,7 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	// 复制此语言选项
 	let newOption = JSON.parse(JSON.stringify(playlist0));
 	// 修改名称
-	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
+	newOption.OPTION.NAME = `${NAME1}/${NAME2} [${type}]`;
 	// 修改语言代码
 	newOption.OPTION.LANGUAGE = LANGUAGE1;
 	// 增加副语言
@@ -420,19 +420,13 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正
 	switch (platform) {
-		case "Apple": // AVKit
-		case "MGM+": // AVKit
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
+		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
+		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
+			newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
 			break;
-		case "Disney+": // AppleCoreMedia
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
-			break;
-		case "PrimeVideo": // AppleCoreMedia
-			//newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
+		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
+		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
-			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
 		case "Max": // AppleCoreMedia
 		case "HBOMax": // AppleCoreMedia

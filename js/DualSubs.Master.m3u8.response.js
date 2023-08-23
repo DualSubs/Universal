@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(10) Master.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(9) Master.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -159,14 +159,15 @@ function detectPlatform(url) {
 					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
 						: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
 							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
-								: /dplus-ph-/i.test(url) ? "Discovery+Ph"
-									: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
-										: /\.uplynk\.com/i.test(url) ? "Discovery+"
+								: /\.uplynk\.com/i.test(url) ? "Discovery+"
+									: /dplus-ph-/i.test(url) ? "Discovery+Ph"
+										: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
 											: /\.fubo\.tv/i.test(url) ? "FuboTV"
 												: /\.viki\.io/i.test(url) ? "Viki"
-													: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
-														: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
-															: "Universal";
+													: /(epixhls\.akamaized\.net|epix\.services\.io)/i.test(url) ? "MGM+"
+														: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
+															: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+																: "Universal";
 	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };
@@ -406,7 +407,7 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	// 复制此语言选项
 	let newOption = JSON.parse(JSON.stringify(playlist0));
 	// 修改名称
-	newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
+	newOption.OPTION.NAME = `${NAME1}/${NAME2} [${type}]`;
 	// 修改语言代码
 	newOption.OPTION.LANGUAGE = LANGUAGE1;
 	// 增加副语言
@@ -418,24 +419,21 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正
 	switch (platform) {
-		case "Apple":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
+		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
+		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
+			newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
+			break;
+		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
+		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
 			break;
-		case "Disney+":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
-			break;
-		case "PrimeVideo":
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
-			break;
-		case "Max":
-		case "HBOMax":
+		case "Max": // AppleCoreMedia
+		case "HBOMax": // AppleCoreMedia
 		case "Viki":
 			//if (!standard) newOption.OPTION.NAME = NAME1;
 			//if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
 			break;
-		case "Hulu":
+		case "Hulu": // AppleCoreMedia
 		case "Paramount+":
 		case "Discovery+Ph":
 			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(11) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(1) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -159,14 +159,15 @@ function detectPlatform(url) {
 					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
 						: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
 							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
-								: /dplus-ph-/i.test(url) ? "Discovery+Ph"
-									: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
-										: /\.uplynk\.com/i.test(url) ? "Discovery+"
+								: /\.uplynk\.com/i.test(url) ? "Discovery+"
+									: /dplus-ph-/i.test(url) ? "Discovery+Ph"
+										: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
 											: /\.fubo\.tv/i.test(url) ? "FuboTV"
 												: /\.viki\.io/i.test(url) ? "Viki"
-													: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
-														: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
-															: "Universal";
+													: /(epixhls\.akamaized\.net|epix\.services\.io)/i.test(url) ? "MGM+"
+														: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
+															: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+																: "Universal";
 	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };
@@ -419,26 +420,27 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正
 	switch (platform) {
-		case "Apple":
+		case "Apple": // AVKit
+		case "MGM+": // AVKit
 			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
 			break;
-		case "Disney+":
+		case "Disney+": // AppleCoreMedia
 			newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
 			break;
-		case "PrimeVideo":
+		case "PrimeVideo": // AppleCoreMedia
 			//newOption.OPTION.NAME = `${NAME1}/${NAME2}[${type}]`;
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
 			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
-		case "Max":
-		case "HBOMax":
+		case "Max": // AppleCoreMedia
+		case "HBOMax": // AppleCoreMedia
 		case "Viki":
 			//if (!standard) newOption.OPTION.NAME = NAME1;
 			//if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
 			break;
-		case "Hulu":
+		case "Hulu": // AppleCoreMedia
 		case "Paramount+":
 		case "Discovery+Ph":
 			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;

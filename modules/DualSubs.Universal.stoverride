@@ -84,15 +84,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -101,24 +101,28 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
 
-    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.m3u8
+      name: DualSubs.Subtitles.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -127,23 +131,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
-      name: DualSubs.Subtitles.Composite.response
-      type: response
-      require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt(\?.*subtype=Translate.*)$
-      name: DualSubs.Subtitles.Translate.response
-      type: response
-      require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -152,31 +148,31 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)(\.(hls|dash)\.row\.aiv-cdn|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=(\w+)$
+    - match: ^https?:\/\/(.+)(\.(hls|dash)\.row\.aiv-cdn|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=(\w+)$
+    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(d25xi40x97liuc|dmqdd6hw24ucf|d1v5ir2lpwr8os|d1v5ir2lpwr8os|d27xxe7juh1us6)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=(\w+)$
+    - match: ^https?:\/\/(d25xi40x97liuc|dmqdd6hw24ucf|d1v5ir2lpwr8os|d1v5ir2lpwr8os|d27xxe7juh1us6)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=(Official|External)$
+    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(d184dfn36gombl|d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=(Official|External)$
+    - match: ^https?:\/\/(d184dfn36gombl|d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate$
+    - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(d184dfn36gombl|d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate$
+    - match: ^https?:\/\/(d184dfn36gombl|d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -185,15 +181,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/r\/hlsMedia\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/r\/hlsMedia\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/(.+)\.vtt(\?.*subtype=Translate.*)?$
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/(.+)\.vtt
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -202,15 +198,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/hlsMedia\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/hlsMedia\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.hbomaxcdn\.com\/videos\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)\.hbomaxcdn\.com\/videos\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.hbomaxcdn\.com\/videos\/(.+)\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/(.+)\.hbomaxcdn\.com\/videos\/(.+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -219,15 +215,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/manifest-dp\.hulustream\.com\/webvtt(\?.*subtype=.+)$
+    - match: ^https?:\/\/manifest-dp\.hulustream\.com\/webvtt\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+[^blank])\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -236,23 +232,23 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(stream_vtt|manifest_.*)\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(stream_vtt|manifest_.*)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
-    - match: ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.+)\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -265,15 +261,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\/captions\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\/captions\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -282,15 +278,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/[^\/]*subtitles[^\/]*\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/[^\/]*subtitles[^\/]*\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/[^\/]*subtitles[^\/]*\.webvtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/[^\/]*subtitles[^\/]*\.webvtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/[^\/]*subtitles[^\/]*\.webvtt(\?.*subtype=Translate.*)?$
+    - match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/[^\/]*subtitles[^\/]*\.webvtt
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -299,15 +295,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\/media\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\/media\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\.vtt(\?.*subtype=Translate.*)?$
+    - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\.vtt
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -316,15 +312,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/hls\.ted\.com\/(.+)\/subtitles\/(.+)\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/hls\.ted\.com\/(.+)\/subtitles\/(.+)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/hls\.ted\.com\/(.+)\/subtitles\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/hls\.ted\.com\/(.+)\/subtitles\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/hls\.ted\.com\/(.+)\/subtitles\/(.+)\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/hls\.ted\.com\/(.+)\/subtitles\/(.+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -333,15 +329,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/media\/tt-(.+)\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/media\/tt-(.+)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/(hls-webvtt|vtt)\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/(hls-webvtt|vtt)\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/(hls-webvtt|vtt)\/(.+)\.vtt(\?.*subtype=Translate.*)?$
+    - match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/(hls-webvtt|vtt)\/(.+)\.vtt
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -354,28 +350,28 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.webvtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.webvtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\/Subtitles\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\/Subtitles\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.webvtt(\?.*subtype=Translate.*)?$
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.webvtt
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\/Subtitles\/(.+)\.vtt(\?.*subtype=Translate.*)?$
+    - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\/Subtitles\/(.+)\.vtt
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
 
-    - match: ^https?:\/\/api\.britbox\.com\/v1\/subtitles(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/api\.britbox\.com\/v1\/subtitles\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
@@ -388,15 +384,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.vtt(\?.*subtype=Translate.*)?$
+    - match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.vtt
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -405,23 +401,23 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/ssaimanifest\.prod\.boltdns\.net\/(.+)\/playback\/once\/v1\/hls\/(.+)\/subtitle_(.+)\/media\.m3u8(\?.*subtype=.+)$
+    - match: ^https?:\/\/ssaimanifest\.prod\.boltdns\.net\/(.+)\/playback\/once\/v1\/hls\/(.+)\/subtitle_(.+)\/media\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/amcplus-(.+)\.akamaized\.net\/composite-media\/v1\/hls\/(.+)\/segment(\d+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/amcplus-(.+)\.akamaized\.net\/composite-media\/v1\/hls\/(.+)\/segment(\d+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/redirector\.playback\.(.+)\.prod\.deploys\.brightcove\.com\/v1\/(.+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/redirector\.playback\.(.+)\.prod\.deploys\.brightcove\.com\/v1\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/amcplus-(.+)\.akamaized\.net\/composite-media\/v1\/hls\/(.+)\/segment(\d+)\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/amcplus-(.+)\.akamaized\.net\/composite-media\/v1\/hls\/(.+)\/segment(\d+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
-    - match: ^https?:\/\/redirector\.playback\.(.+)\.prod\.deploys\.brightcove\.com\/v1\/(.+)\.vtt(\?.*subtype=Translate.*)?$
+    - match: ^https?:\/\/redirector\.playback\.(.+)\.prod\.deploys\.brightcove\.com\/v1\/(.+)\.vtt
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -430,7 +426,7 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/ap-hls-vod\.cdn\d\.showtime.com\/live\/sho(e|w)ast\/showtime.isml//\.m3u8
+    - match: ^https?:\/\/ap-hls-vod\.cdn\d\.showtime.com\/live\/sho(e|w)ast\/showtime.isml\.m3u8
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
@@ -439,15 +435,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/(.+)\/(.+)\.subtitles\.\d+\.m3u8(\?.*subtype=.+)?$
+    - match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/(.+)\/(.+)\.subtitles\.\d+\.m3u8
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/(.+)\/(.+)\.subtitles\.\d+\.split\.\d+\.webvtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/(.+)\/(.+)\.subtitles\.\d+\.split\.\d+\.webvtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/(.+)\/(.+)\.subtitles\.\d+\.split\.\d+\.webvtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/(.+)\/(.+)\.subtitles\.\d+\.split\.\d+\.webvtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -456,41 +452,41 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/manifest-viki\.viki\.io\/(.+)\/streams\/(.+)\/subtitles\.m3u8(\?.*subtype=.+)?$
+    - match: ^https?:\/\/manifest-viki\.viki\.io\/(.+)\/streams\/(.+)\/subtitles\.m3u8
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/api\.viki\.io\/(.+)\/auth_subtitles\/(\w+)\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/api\.viki\.io\/(.+)\/auth_subtitles\/(\w+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/api\.viki\.io\/(.+)\/auth_subtitles\/(\w+)\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/api\.viki\.io\/(.+)\/auth_subtitles\/(\w+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
 
-    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\.m3u8(\?.*subtype=.+)?$
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\.m3u8
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
 
-    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+\.m3u8(\?.*subtype=.+)?$
+    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+\.m3u8
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt(\?.*subtype=(Official|External).*)$
+    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt(\?.*subtype=Translate.*)$
+    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true

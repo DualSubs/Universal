@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.11(3) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.11(9) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -106,7 +106,7 @@ const DataBase = {
 						const span = para?.span ?? para;
 						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"]).join(breakLine);
 						else sentences = span?.["#"];
-						fullText.push(sentences ?? "null");
+						fullText.push(sentences ?? "\u200b");
 						return para;
 					});
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
@@ -128,10 +128,10 @@ const DataBase = {
 				case "text/vtt":
 				case "application/vtt": {
 					DualSub = VTT.parse($response.body);
-					fullText = DualSub?.body.map(item => item.text.replace(/<\/?[^<>]+>/g, ""));
+					fullText = DualSub?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					DualSub.body = DualSub.body.map((item, i) => {
-						item.text = combineText(item.text, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
 					});
 					$response.body = VTT.stringify(DualSub);
@@ -142,7 +142,7 @@ const DataBase = {
 					DualSub = JSON.parse($response.body);
 					DualSub.events = DualSub.events.map(event => {
 						if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
-						fullText.push(event?.segs?.[0]?.utf8 ?? "null");
+						fullText.push(event?.segs?.[0]?.utf8 ?? "\u200b");
 						delete event.wWinId;
 						return event;
 					});

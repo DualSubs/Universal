@@ -7,7 +7,7 @@ const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Type":"Official","Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100}
+		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100}
 	},
 	"Universal":{
 		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"]}

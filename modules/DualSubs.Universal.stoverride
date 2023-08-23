@@ -448,7 +448,7 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/manifest-viki\.viki\.io\/(.+)\/manifest.m3u8
+    - match: ^https?:\/\/manifest-viki\.viki\.io\/(.+)\/manifest\.m3u8
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
@@ -465,7 +465,11 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\.m3u8
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(master|playlist_\d+)\.m3u8
+      name: DualSubs.Master.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
@@ -478,7 +482,11 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+\.m3u8
+    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index\.m3u8
+      name: DualSubs.Master.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true

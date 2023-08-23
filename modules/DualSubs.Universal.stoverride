@@ -77,6 +77,8 @@ http:
     - "*.cssott.com"
     - "manifest-viki.viki.io"
     - "api.viki.io"
+    - "epixhls.akamaized.net"
+    - "*.live.epix.services"
   script:
     - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8
       name: DualSubs.Master.m3u8.response
@@ -463,6 +465,32 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/api\.viki\.io\/(.+)\/auth_subtitles\/(\w+)\.vtt(\?.*subtype=Translate.*)$
+      name: DualSubs.Subtitles.Translate.response
+      type: response
+      require-body: true
+
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\.m3u8(\?.*subtype=.+)?$
+      name: DualSubs.Subtitles.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})(\?.*subtype=(Official|External).*)$
+      name: DualSubs.Subtitles.Composite.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})(\?.*subtype=Translate.*)$
+      name: DualSubs.Subtitles.Translate.response
+      type: response
+      require-body: true
+
+    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+\.m3u8(\?.*subtype=.+)?$
+      name: DualSubs.Subtitles.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt(\?.*subtype=(Official|External).*)$
+      name: DualSubs.Subtitles.Composite.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt(\?.*subtype=Translate.*)$
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true

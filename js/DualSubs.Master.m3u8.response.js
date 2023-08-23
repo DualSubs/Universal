@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.11(2) Master.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(9) Master.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -412,8 +412,8 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	// 增加副语言
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接
-	newOption.OPTION.URI = (newOption?.OPTION?.URI?.includes("?")) ? `${newOption?.OPTION?.URI}&subtype=${type}`
-		: `${newOption?.OPTION?.URI}?subtype=${type}`;
+	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
+	newOption.OPTION.URI += `${symbol}subtype=${type}`;
 	// 自动选择
 	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正
@@ -515,4 +515,4 @@ function getENV(key,names,database){let BoxJs=$.getjson(key,database),Argument={
 function URLs(t){return new class{constructor(t=[]){this.name="URL v1.2.2",this.opts=t,this.json={scheme:"",host:"",path:"",type:"",query:{}}}parse(t){let s=t.match(/(?:(?<scheme>.+):\/\/(?<host>[^/]+))?\/?(?<path>[^?]+)?\??(?<query>[^?]+)?/)?.groups??null;return s?.path?s.paths=s?.path?.split("/"):s.path="",s?.paths&&(s.type=s?.paths?.[s?.paths?.length-1]?.split(".")?.[1]),s?.query&&(s.query=Object.fromEntries(s.query.split("&").map((t=>t.split("="))))),s}stringify(t=this.json){let s="";return t?.scheme&&t?.host&&(s+=t.scheme+"://"+t.host),t?.path&&(s+=t?.host?"/"+t.path:t.path),t?.query&&(s+="?"+Object.entries(t.query).map((t=>t.join("="))).join("&")),s}}(t)}
 
 // https://github.com/DualSubs/EXTM3U/blob/main/EXTM3U.min.js
-function EXTM3U(n){return new class{constructor(n){this.name="EXTM3U v0.8.3",this.opts=n,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(n=new String){return[...n.matchAll(/^(?:[\s\r\n]{1})|(?:(?<TAG>#(?:EXT|AIV)[^#:\s\r\n]+)|(?<NOTE>#.+))(?::(?<OPTION>.+))?[\s\r\n]?(?<URI>[^#\s\r\n]+)?$/gm)].map((n=>(n=n?.groups||n,/=/.test(n?.OPTION)&&(n.OPTION=Object.fromEntries(`${n.OPTION},`.split(/,\s*(?![^"]*",)/).slice(0,-1).map((n=>((n=n.split(/=(.*)/))[1]=isNaN(n[1])?n[1].replace(/^"(.*)"$/,"$1"):parseInt(n[1],10),n))))),n)))}stringify(n=new Array){"#EXTM3U"!==n?.[0]?.TAG&&n.unshift({TAG:"#EXTM3U"});const s=/^((-?\d+[x.\d]+)|[0-9A-Z-]+)$/;return n.map((n=>("object"==typeof n?.OPTION&&(n.OPTION=Object.entries(n.OPTION).map((t=>("#EXT-X-SESSION-DATA"===n?.TAG?t[1]=`"${t[1]}"`:isNaN(t[1])?"INSTREAM-ID"===t[0]||"KEYFORMAT"===t[0]?t[1]=`"${t[1]}"`:s.test(t[1])||(t[1]=`"${t[1]}"`):t[1]="number"==typeof t[1]?t[1]:`"${t[1]}"`,t.join("=")))).join(",")),n=n?.URI?n.TAG+":"+n.OPTION+this.newLine+n.URI:n?.OPTION?n.TAG+":"+n.OPTION:n?.TAG?n.TAG:n?.NOTE?n.NOTE:""))).join(this.newLine)}}(n)}
+function EXTM3U(opts){return new class{constructor(opts){this.name="EXTM3U v0.8.4",this.opts=opts,this.newLine=this.opts.includes("\n")?"\n":this.opts.includes("\r")?"\r":this.opts.includes("\r\n")?"\r\n":"\n"}parse(m3u8=new String){return[...m3u8.matchAll(/^(?:(?<TAG>#(?:EXT|AIV)[^#:\s\r\n]+)(?::(?<OPTION>[^\r\n]+))?(?:[\r\n](?<URI>[^#\s\r\n]+))?|(?<NOTE>#[^\r\n]+)?)[\r\n]?$/gm)].map((item=>(item=item?.groups||item,/=/.test(item?.OPTION)&&(item.OPTION=Object.fromEntries(`${item.OPTION},`.split(/,\s*(?![^"]*",)/).slice(0,-1).map((option=>((option=option.split(/=(.*)/))[1]=isNaN(option[1])?option[1].replace(/^"(.*)"$/,"$1"):parseInt(option[1],10),option))))),item)))}stringify(json=new Array){"#EXTM3U"!==json?.[0]?.TAG&&json.unshift({TAG:"#EXTM3U"});const OPTION_value_Regex=/^((-?\d+[x.\d]+)|[0-9A-Z-]+)$/;return json.map((item=>("object"==typeof item?.OPTION&&(item.OPTION=Object.entries(item.OPTION).map((option=>("#EXT-X-SESSION-DATA"===item?.TAG?option[1]=`"${option[1]}"`:isNaN(option[1])?"INSTREAM-ID"===option[0]||"KEYFORMAT"===option[0]?option[1]=`"${option[1]}"`:OPTION_value_Regex.test(option[1])||(option[1]=`"${option[1]}"`):option[1]="number"==typeof option[1]?option[1]:`"${option[1]}"`,option.join("=")))).join(",")),item=item?.URI?item.TAG+":"+item.OPTION+this.newLine+item.URI:item?.OPTION?item.TAG+":"+item.OPTION:item?.TAG?item.TAG:item?.NOTE?item.NOTE:""))).join(this.newLine)}}(opts)}

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(10) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.14(4) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -68,7 +68,7 @@ const DataBase = {
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数与字幕类型
-			const TYPE = url?.query?.subtype ?? Settings?.Type ?? "Translate", Languages = [Settings.Languages[0], url?.query?.sublang ?? Settings.Languages[1]], KIND = url?.query?.kind;
+			const TYPE = url?.query?.subtype ?? Settings?.Type ?? "Translate", Languages = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
 			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, Languages: ${Languages}, KIND: ${KIND}`, "");
 			// 兼容性判断
 			const Standard = isStandard(Platform, $request.url, $request.headers);
@@ -317,73 +317,64 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  * @author VirgilClyne
  * @param {String} platform - Platform
  * @param {Object} m3u8 - Parsed m3u8
- * @param {Array} playlist0 - Languages1 (First Choice) Playlist
- * @param {Array} playlist1 - Languages2 (Second Choice) Playlist
+ * @param {Array} playlists1 - Primary (Source) Languages Playlists
+ * @param {Array} playlists2 - Second (Target) Languages Playlists
  * @param {Array} types - Types
  * @param {Array} languages - Languages
  * @param {Boolean} Standard - Standard
  * @return {Object} m3u8
  */
-function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, types = [], languages = [], standard = true) {
+function setAttrList(platform = "", m3u8 = {}, playlists1 = [], playlists2 = [], types = [], languages = [], standard = true) {
 	types = (standard == true) ? types : ["Translate"];
+	if (playlists1?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有主字幕语言（源语言）字幕`, "");
+	else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
+	if (playlists2?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有副字幕语言（目标语言）字幕`, "");
+	else types = types.filter(e => e !== "Official"); // 无目标语言字幕时删除官方字幕选项
 	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
-	if (playlist0?.length !== 0) {
-		$.log(`🚧 ${$.name}, 有首选字幕`, "");
-		if (playlist1?.length !== 0) {
-			$.log(`🚧 ${$.name}, 有次选字幕`, "");
-			playlist0?.forEach(playlist0 => {
-				playlist1?.forEach(playlist1 => {
-					if (playlist0?.OPTION?.["GROUP-ID"] === playlist1?.OPTION?.["GROUP-ID"]) {
-						let index = m3u8.findIndex(item => item?.OPTION?.URI === playlist0.OPTION.URI);
-						let options = undefined;
-						switch (platform) { // 兼容性修正
-							case "Apple":
-								if (playlist0?.OPTION.CHARACTERISTICS == playlist1?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-									// 创建字幕选项
-									options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
-								}
-								break;
-							default:
-								// 创建字幕选项
-								options = types.map(type => setOption(platform, playlist0, playlist1, type, standard));
-								break;
+	playlists1?.forEach(playlist1 => {
+		const index1 = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 副字幕语言（目标语言）字幕位置
+		types.forEach(type => {
+			$.log(`🚧 ${$.name}, Set Attribute List, type: ${type}`, "");
+			let option = {};
+			switch (type) {
+				case "Official":
+					playlists2?.forEach(playlist2 => {
+						const index2 = m3u8.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 主字幕语言（源语言）字幕位置
+						if (playlist1?.OPTION?.["GROUP-ID"] === playlist2?.OPTION?.["GROUP-ID"]) {
+							switch (platform) { // 兼容性修正
+								case "Apple":
+									if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
+										option = setOption(platform, playlist2, playlist1, type, standard);
+									};
+									break;
+								default:
+									option = setOption(platform, playlist2, playlist1, type, standard);
+									break;
+							};
+							if (standard) m3u8.splice(index2 + 1, 0, option)
+							else m3u8.splice(index2, 1, option);
 						};
-						if (options) {
-							if (standard) m3u8.splice(index + 1, 0, ...options)
-							else m3u8.splice(index, 1, ...options);
-						};
+					});
+					break;
+				case "Translate":
+				case "External":
+					const playlist2 = {
+						"OPTION": {
+							"TYPE": "SUBTITLES",
+							//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
+							"NAME": languages[1].toLowerCase(),
+							"LANGUAGE": languages[1].toLowerCase(),
+							//"URI": playlist?.URI,
+						}
 					};
-				});
-			});
-		}
-	} else if (playlist0?.length === 0) {
-		$.log(`🚧 ${$.name}, 无首选字幕`, "");
-		types = types.filter(e => e !== "Official"); // 无首选语言时删除官方字幕选项
-		let playlist0 = {
-			"OPTION": {
-				"TYPE": "SUBTITLES",
-				//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
-				"NAME": languages[0].toLowerCase(),
-				"LANGUAGE": languages[0].toLowerCase(),
-				//"URI": playlist?.URI,
-			}
-		};
-		if (playlist1?.length !== 0) {
-			$.log(`🚧 ${$.name}, 有次选字幕`, "");
-			playlist1?.forEach(playlist1 => {
-				let index = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI);
-				if (index) {
-					// 创建字幕选项
-					let options = types.map(type => setOption(platform, playlist1, playlist0, type, standard));
-					if (standard) m3u8.splice(index + 1, 0, ...options)
-					else m3u8.splice(index, 1, ...options);
-				};
-			});
-		} else {
-			$.log(`🚧 ${$.name}, 无任何字幕`, "");
-			// 新增字幕选项，待完成
-		};
-	};
+					option = setOption(platform, playlist1, playlist2, type, standard);
+					option.OPTION.URI += `&sublang=${playlist1?.OPTION?.LANGUAGE}`;
+					if (standard) m3u8.splice(index1 + 1, 0, option)
+					else m3u8.splice(index1, 1, option);
+					break;
+			};
+		});
+	});
 	//$.log(`✅ ${$.name}, Set Attribute List`, `m3u8: ${JSON.stringify(m3u8)}`, "");
 	$.log(`✅ ${$.name}, Set Attribute List`, "");
 	return m3u8;
@@ -393,32 +384,30 @@ function setAttrList(platform = "", m3u8 = {}, playlist0 = {}, playlist1 = {}, t
  * Set DualSubs Subtitle Options
  * @author VirgilClyne
  * @param {String} platform - platform
- * @param {Array} playlist0 - Subtitles Playlist (Languages 0)
- * @param {Array} playlist1 - Subtitles Playlist (Languages 1)
+ * @param {Array} playlist1 - Subtitles Playlist (Languages 0)
+ * @param {Array} playlist2 - Subtitles Playlist (Languages 1)
  * @param {Array} enabledTypes - Enabled Types
  * @param {Array} translateTypes - Translate Types
  * @param {String} Standard - Standard
  * @return {Promise<*>}
  */
-function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", standard) {
+function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", standard) {
 	$.log(`☑️ ${$.name}, Set DualSubs Subtitle Option, type: ${type}`, "");
-	const NAME1 = playlist0?.OPTION?.NAME, NAME2 = playlist1?.OPTION?.NAME;
-	const LANGUAGE1 = playlist0?.OPTION?.LANGUAGE, LANGUAGE2 = playlist1?.OPTION?.LANGUAGE;
+	const NAME1 = playlist1?.OPTION?.NAME, NAME2 = playlist2?.OPTION?.NAME;
+	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE, LANGUAGE2 = playlist2?.OPTION?.LANGUAGE;
 	// 复制此语言选项
-	let newOption = JSON.parse(JSON.stringify(playlist0));
+	let newOption = JSON.parse(JSON.stringify(playlist1));
 	// 修改名称
-	newOption.OPTION.NAME = `${NAME1}/${NAME2} [${type}]`;
+	switch (type) {
+		case "Official":
+		case "Translate":
+			newOption.OPTION.NAME = `${NAME1}/${NAME2} [${type}]`;
+			break;
+		case "External":
+			newOption.OPTION.NAME = `${NAME1} [${type}]`;
+			break;
+	};
 	// 修改语言代码
-	newOption.OPTION.LANGUAGE = LANGUAGE1;
-	// 增加副语言
-	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
-	// 修改链接
-	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
-	newOption.OPTION.URI += `${symbol}subtype=${type}`;
-	//if (!standard) newOption.OPTION.URI += `&sublang=${LANGUAGE1}`;
-	// 自动选择
-	newOption.OPTION.AUTOSELECT = "YES";
-	// 兼容性修正
 	switch (platform) {
 		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
 		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
@@ -439,7 +428,19 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
 			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
+		default:
+			newOption.OPTION.LANGUAGE = LANGUAGE1;
+			break;
 	};
+	// 增加副语言
+	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
+	// 修改链接
+	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
+	newOption.OPTION.URI += `${symbol}subtype=${type}`;
+	//if (!standard) newOption.OPTION.URI += `&sublang=${LANGUAGE1}`;
+	// 自动选择
+	newOption.OPTION.AUTOSELECT = "YES";
+	// 兼容性修正
 	if (!standard) newOption.OPTION.DEFAULT = "YES";
 	$.log(`✅ ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
 	return newOption;

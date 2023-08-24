@@ -4,7 +4,7 @@
 			"Switch":true,
 			"Type": "Official",
 			"Types": ["Official", "Translate"],
-			"Languages": ["ZH", "EN"],
+			"Languages": ["EN", "ZH"],
 			"CacheSize": 100
 		}
 	},
@@ -12,7 +12,7 @@
 		"Settings": {
 			"Switch": true,
 			"Types": ["Official", "Translate"],
-			"Languages": ["ZH", "EN"]
+			"Languages": ["EN", "ZH"]
 		}
 	},
 	"YouTube": {
@@ -25,21 +25,20 @@
 		"Settings": {
 			"Switch": true,
 			"Type": "Translate",
-			"Languages": ["ZH", "EN"]
+			"Languages": ["EN", "ZH"]
 		}
 	},
 	"Official": {
 		"Settings": {
 			"CacheSize": 100,
-			"Position": "Forward",
+			"Position": "Reverse",
 			"Offset": 0,
 			"Tolerance": 1000
 		}
 	},
 	"Translate": {
 		"Settings": {
-			"Type": "Google",
-			"Types": ["Google", "GoogleCloud", "Azure", "DeepL"],
+			"Vendor": "Google",
 			"ShowOnly": false,
 			"Position": "Forward",
 			"CacheSize": 10,

@@ -2,16 +2,16 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.11(9) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.12(1) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100}
+		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
 	},
 	"Universal":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"]}
+		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"]}
 	},
 	"YouTube": {
 		"Settings":{"Switch":true,"Type":"Official","Languages":["AUTO","AUTO"],"AutoCC":true,"ShowOnly":false},
@@ -23,10 +23,10 @@ const DataBase = {
 		}
 	},
 	"Netflix":{
-		"Settings":{"Switch":true,"Type":"Translate","Languages":["ZH","EN"]}
+		"Settings":{"Switch":true,"Type":"Translate","Languages":["EN","ZH"]}
 	},
 	"Official":{
-		"Settings":{"CacheSize":100,"Position":"Forward","Offset":0,"Tolerance":1000},
+		"Settings":{"CacheSize":100,"Position":"Reverse","Offset":0,"Tolerance":1000},
 		"Configs":{
 			"Languages":{
 				"Universal":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]},
@@ -66,16 +66,16 @@ const DataBase = {
 			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 			if (Platform === "YouTube") {
 				if (Caches?.tlang) url.query.tlang = Caches.tlang; // 翻译字幕语言
-				Settings.Languages[0] = url.query.tlang.split("-")[0].toUpperCase();
-				Settings.Languages[1] = url.query.lang.split("-")[0].toUpperCase();
+				Settings.Languages[0] = url.query.lang.split("-")[0].toUpperCase();
+				Settings.Languages[1] = url.query.tlang.split("-")[0].toUpperCase();
 			};
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数与字幕类型
-			const TYPE = url?.query?.subtype ?? Settings?.Type ?? "Translate", Languages = [Settings.Languages[0], url?.query?.sublang ?? Settings.Languages[1]], KIND = url?.query?.kind;
-			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, Languages: ${Languages}, KIND: ${KIND}`, "");
+			const TYPE = url?.query?.subtype ?? Settings?.Type ?? "Translate", LANGUAGES = [Settings.Languages[0], url?.query?.sublang ?? Settings.Languages[1]], KIND = url?.query?.kind;
+			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 			// 创建空数据
 			let DualSub = {}, fullText = [];
 			// 格式判断
@@ -120,7 +120,7 @@ const DataBase = {
 						*/
 						return para;
 					});
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, LANGUAGES[0], LANGUAGES[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					paragraph = paragraph.map((para, i) => {
 						const span = para?.span ?? para;
 						if (Array.isArray(span)) translation?.[i]?.split(breakLine).forEach((text, j) => {
@@ -147,7 +147,7 @@ const DataBase = {
 					DualSub = VTT.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
 					fullText = DualSub?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, LANGUAGES[0], LANGUAGES[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					DualSub.body = DualSub.body.map((item, i) => {
 						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
@@ -166,7 +166,7 @@ const DataBase = {
 						delete event.wWinId;
 						return event;
 					});
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Settings?.Languages?.[1], Settings?.Languages?.[0], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, LANGUAGES[0], LANGUAGES[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					DualSub.events = DualSub.events.map((event, i) => {
 						if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return event

@@ -2,16 +2,16 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.16(1) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.0(1) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100}
+		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
 	},
 	"Universal":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"]}
+		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"]}
 	},
 	"YouTube": {
 		"Settings":{"Switch":true,"Type":"Official","Languages":["AUTO","AUTO"],"AutoCC":true,"ShowOnly":false},
@@ -23,10 +23,10 @@ const DataBase = {
 		}
 	},
 	"Netflix":{
-		"Settings":{"Switch":true,"Type":"Translate","Languages":["ZH","EN"]}
+		"Settings":{"Switch":true,"Type":"Translate","Languages":["EN","ZH"]}
 	},
 	"Official":{
-		"Settings":{"CacheSize":100,"Position":"Forward","Offset":0,"Tolerance":1000},
+		"Settings":{"CacheSize":100,"Position":"Reverse","Offset":0,"Tolerance":1000},
 		"Configs":{
 			"Languages":{
 				"Universal":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]},
@@ -61,7 +61,7 @@ const DataBase = {
 	const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 	$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
 	// 获取自定义参数与字幕类型
-	const TYPE = url?.query?.subtype, LANGUAGES = url?.query?.sublang, KIND = url?.query?.kind;
+	const TYPE = url?.query?.subtype, LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
 	$.log(`⚠ ${$.name}, TYPE: ${TYPE}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 	// 获取平台
 	const PLATFORM = detectPlatform(HOST);
@@ -83,14 +83,14 @@ const DataBase = {
 					switch (PLATFORM) {
 						default:
 							// 获取字幕文件地址vtt缓存（map）
-							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Settings.Languages);
+							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, LANGUAGES);
 							// 获取字幕播放列表m3u8缓存（map）
-							const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, Settings.Languages);
+							const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, LANGUAGES);
 							// 获取字幕文件地址vtt缓存（map）
-							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Settings.Languages);
+							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, LANGUAGES);
 							// 获取官方字幕请求
-							if (subtitlesURIArray1.length) {
-								$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
+							if (subtitlesURIArray0.length) {
+								$.log(`🚧 ${$.name}, subtitlesURIArray0.length: ${subtitlesURIArray0.length}`, "");
 								// 获取字幕文件名
 								let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, Platform);
 								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
@@ -560,17 +560,17 @@ function getSubtitlesFileName(url, platform) {
  * Construct Subtitles Queue
  * @author VirgilClyne
  * @param {String} fileName - Request URL
- * @param {Array} VTTs0 - First Language Subtitles Array
- * @param {Array} VTTs1 - Second Language Subtitles Array
+ * @param {Array} VTTs1 - Primary (Source) Language Subtitles Array
+ * @param {Array} VTTs2 - Second (Target) Language Subtitles Array
  * @return {Array<*>} Subtitles Requests Queue
  */
-function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
+function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 	$.log(`☑️ ${$.name}`, `Construct Subtitles Queue, fileName: ${fileName}`, "");
 	let requests = [];
-	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, VTTs0.length: ${VTTs0.length}, VTTs1.length: ${VTTs1.length}`, "")
+	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, VTTs1.length: ${VTTs1.length}, VTTs2.length: ${VTTs2.length}`, "")
 	// 查询当前字幕在原字幕队列中的位置
-	const Index0 = VTTs0.findIndex(item => item?.includes(fileName));
-	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index0: ${Index0}`, "");
+	const Index2 = VTTs2.findIndex(item => item?.includes(fileName));
+	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index2: ${Index2}`, "");
 	switch (VTTs1.length) {
 		case 0: // 长度为0，无须计算
 			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 0`, "")
@@ -583,10 +583,10 @@ function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
 			};
 			requests.push(_request);
 			break;
-		case VTTs0.length: { // 长度相等，一一对应，无须计算
+		case VTTs2.length: { // 长度相等，一一对应，无须计算
 			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度相等`, "")
 			let _request = {
-				"url": VTTs1[Index0],
+				"url": VTTs1[Index2],
 				"headers": request.headers
 			};
 			requests.push(_request);
@@ -595,11 +595,11 @@ function constructSubtitlesQueue(request, fileName, VTTs0 = [], VTTs1 = []) {
 		default: { // 长度不等，需要计算
 			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度不等，需要计算`, "")
 			// 计算当前字幕在原字幕队列中的百分比
-			const Position0 = Index0 / VTTs0.length;
-			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Position0: ${Position0}`, "");
+			const Position2 = Index2 / VTTs2.length;
+			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Position2: ${Position2}`, "");
 			// 根据百分比计算当前字幕在新字幕队列中的位置
 			//let Index1 = VTTs1.findIndex(item => item.includes(fileName));
-			const Index1 = Math.round(Position0 * VTTs1.length);
+			const Index1 = Math.round(Position2 * VTTs1.length);
 			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index1: ${Index1}`, "");
 			// 获取当前字幕在新字幕队列中的前后2个字幕
 			const nearlyVTTs = VTTs1.slice((Index1 - 1 < 0) ? 0 : Index1 - 1, Index1 + 1);

@@ -2,15 +2,15 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.12(6) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.0(1) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"],"CacheSize":100}
+		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
 	},
 	"Universal":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["ZH","EN"]}
+		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"]}
 	},
 	"YouTube": {
 		"Settings":{"Switch":true,"Type":"Official","Languages":["AUTO","AUTO"],"AutoCC":true,"ShowOnly":false},
@@ -22,10 +22,10 @@ const DataBase = {
 		}
 	},
 	"Netflix":{
-		"Settings":{"Switch":true,"Type":"Translate","Languages":["ZH","EN"]}
+		"Settings":{"Switch":true,"Type":"Translate","Languages":["EN","ZH"]}
 	},
 	"Official":{
-		"Settings":{"CacheSize":100,"Position":"Forward","Offset":0,"Tolerance":1000},
+		"Settings":{"CacheSize":100,"Position":"Reverse","Offset":0,"Tolerance":1000},
 		"Configs":{
 			"Languages":{
 				"Universal":{"AUTO":"","AR":["ar","ar-001"],"BG":["bg","bg-BG","bul"],"CS":["cs","cs-CZ","ces"],"DA":["da","da-DK","dan"],"DE":["de","de-DE","deu"],"EL":["el","el-GR","ell"],"EN":["en","en-US","eng","en-GB","en-UK","en-CA","en-US SDH"],"EN-CA":["en-CA","en","eng"],"EN-GB":["en-UK","en","eng"],"EN-US":["en-US","en","eng"],"EN-US SDH":["en-US SDH","en-US","en","eng"],"ES":["es","es-419","es-ES","spa","es-419 SDH"],"ES-419":["es-419","es","spa"],"ES-419 SDH":["es-419 SDH","es-419","es","spa"],"ES-ES":["es-ES","es","spa"],"ET":["et","et-EE","est"],"FI":["fi","fi-FI","fin"],"FR":["fr","fr-CA","fr-FR","fra"],"FR-CA":["fr-CA","fr","fra"],"FR-DR":["fr-FR","fr","fra"],"HU":["hu","hu-HU","hun"],"ID":["id","id-id"],"IT":["it","it-IT","ita"],"JA":["ja","ja-JP","jpn"],"KO":["ko","ko-KR","kor"],"LT":["lt","lt-LT","lit"],"LV":["lv","lv-LV","lav"],"NL":["nl","nl-NL","nld"],"NO":["no","nb-NO","nor"],"PL":["pl","pl-PL"],"PT":["pt","pt-PT","pt-BR","por"],"PT-PT":["pt-PT","pt","por"],"PT-BR":["pt-BR","pt","por"],"RO":["ro","ro-RO","ron"],"RU":["ru","ru-RU","rus"],"SK":["sk","sk-SK","slk"],"SL":["sl","sl-SI","slv"],"SV":["sv","sv-SE","swe"],"IS":["is","is-IS","isl"],"ZH":["zh","cmn","zho","zh-CN","zh-Hans","cmn-Hans","zh-TW","zh-Hant","cmn-Hant","zh-HK","yue-Hant","yue"],"ZH-CN":["zh-CN","zh-Hans","cmn-Hans","zho"],"ZH-HANS":["zh-Hans","cmn-Hans","zh-CN","zho"],"ZH-HK":["zh-HK","yue-Hant","yue","zho"],"ZH-TW":["zh-TW","zh-Hant","cmn-Hant","zho"],"ZH-HANT":["zh-Hant","cmn-Hant","zh-TW","zho"],"YUE":["yue","yue-Hant","zh-HK","zho"],"YUE-HK":["yue-Hant","yue","zh-HK","zho"]},
@@ -68,8 +68,8 @@ const DataBase = {
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
 			// 设置自定义参数与字幕类型
-			const TYPE = url?.query?.subtype ?? Settings?.Type ?? "Translate", Languages = [Settings.Languages[0], url?.query?.sublang ?? Settings.Languages[1]], KIND = url?.query?.kind;
-			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, Languages: ${Languages}, KIND: ${KIND}`, "");
+			const TYPE = url?.query?.subtype ?? Settings?.Type ?? "Translate", LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
+			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 			// 创建空数据
 			let body = {};
 			// 处理类型
@@ -77,10 +77,10 @@ const DataBase = {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 获取字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists.Master, Settings.Languages);
+					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, Settings.Languages[0]);
-					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, Settings.Languages[1]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[0]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[1]);
 					// 格式化缓存
 					Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.CacheSize);
 					// 写入缓存

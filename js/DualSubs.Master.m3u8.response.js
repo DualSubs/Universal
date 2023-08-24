@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(9) Master.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.8.13(10) Master.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -421,10 +421,9 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 	switch (platform) {
 		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
 		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
-			newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
-			break;
 		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
 		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
+		case "Hulu": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 空格分割
 			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
 			break;
 		case "Max": // AppleCoreMedia
@@ -433,7 +432,6 @@ function setOption(platform = "", playlist0 = {}, playlist1 = {}, type = "", sta
 			//if (!standard) newOption.OPTION.NAME = NAME1;
 			//if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
 			break;
-		case "Hulu": // AppleCoreMedia
 		case "Paramount+":
 		case "Discovery+Ph":
 			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;

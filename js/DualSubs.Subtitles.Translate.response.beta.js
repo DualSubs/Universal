@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.12(1) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.12(3) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -54,28 +54,34 @@ const DataBase = {
 };
 
 /***************** Processing *****************/
+// 解构URL
+let url = URL.parse($request?.url);
+// 获取连接参数
+const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
+$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
+// 获取平台与字幕类型
+const PLATFORM = detectPlatform(HOST), TYPE = url?.query?.subtype ?? "Translate";
+$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}, TYPE: ${TYPE}`, "");
+// 读取设置
+const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", "Translate", "API"], DataBase);
+// 兼容性设置
+if (PLATFORM === "YouTube") {
+	if (Caches?.tlang) url.query.tlang = Caches.tlang; // 翻译字幕语言
+	Settings.Languages[0] = url.query.lang.split("-")[0].toUpperCase();
+	Settings.Languages[1] = url.query.tlang.split("-")[0].toUpperCase();
+};
+// 获取语言与种类参数
+const LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
+$.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 (async () => {
-	// 获取平台
-	const Platform = detectPlatform($request?.url);
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(Platform)) ? Platform : "Universal", "Translate", "API"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
-			let url = URL.parse($request?.url);
-			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-			if (Platform === "YouTube") {
-				if (Caches?.tlang) url.query.tlang = Caches.tlang; // 翻译字幕语言
-				Settings.Languages[0] = url.query.lang.split("-")[0].toUpperCase();
-				Settings.Languages[1] = url.query.tlang.split("-")[0].toUpperCase();
-			};
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
-			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
-			// 设置自定义参数与字幕类型
-			const TYPE = url?.query?.subtype ?? Settings?.Type ?? "Translate", LANGUAGES = [Settings.Languages[0], url?.query?.sublang ?? Settings.Languages[1]], KIND = url?.query?.kind;
-			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
+			$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			// 创建空数据
 			let DualSub = {}, fullText = [];
 			// 格式判断

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.0(1) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.0(4) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -53,23 +53,28 @@ const DataBase = {
 };
 
 /***************** Processing *****************/
+// 解构URL
+let url = URL.parse($request?.url);
+// 获取连接参数
+const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
+$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
+// 获取平台与字幕类型
+const PLATFORM = detectPlatform(HOST), TYPE = url?.query?.subtype ?? "Translate";
+$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}, TYPE: ${TYPE}`, "");
+// 读取设置
+const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", [TYPE]], DataBase);
+// 获取语言与种类参数
+const LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
+$.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 (async () => {
-	// 获取平台
-	const Platform = detectPlatform($request?.url);
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(Platform)) ? Platform : "Universal", "Official"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
-			let url = URL.parse($request?.url);
-			const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
-			$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, `FORMAT: ${FORMAT}`, "");
-			// 设置自定义参数与字幕类型
-			const TYPE = url?.query?.subtype ?? Settings?.Type ?? "Translate", LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
-			$.log(`🚧 ${$.name}, TYPE: ${TYPE}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
+			$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			// 创建空数据
 			let body = {};
 			// 处理类型
@@ -79,8 +84,8 @@ const DataBase = {
 					// 获取字幕播放列表m3u8缓存（map）
 					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[0]);
-					Caches.Playlists.Subtitle = await setSubtitlesCache(Platform, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[1]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(PLATFORM, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[0]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(PLATFORM, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[1]);
 					// 格式化缓存
 					Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.CacheSize);
 					// 写入缓存
@@ -123,7 +128,7 @@ const DataBase = {
 						};
 						return item;
 					})
-					if (Platform === "PrimeVideo") {
+					if (PLATFORM === "PrimeVideo") {
 						// 删除BYTERANGE
 						//body = body.filter(({ TAG }) => TAG !== "#EXT-X-BYTERANGE");
 						body = body.map((item, i) => {

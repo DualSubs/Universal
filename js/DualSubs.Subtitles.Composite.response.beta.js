@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.0(1) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.0(4) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -54,18 +54,20 @@ const DataBase = {
 };
 
 /***************** Processing *****************/
+// 解构URL
+let url = URL.parse($request?.url);
+// 获取连接参数
+const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
+$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
+// 获取平台与字幕类型
+const PLATFORM = detectPlatform(HOST), TYPE = url?.query?.subtype ?? "Translate";
+$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}, TYPE: ${TYPE}`, "");
+// 读取设置
+const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", [TYPE]], DataBase);
+// 获取语言与种类参数
+const LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
+$.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 (async () => {
-	// 解构URL
-	let url = URL.parse($request?.url);
-	// 获取连接参数
-	const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-	$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
-	// 获取自定义参数与字幕类型
-	const TYPE = url?.query?.subtype, LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
-	$.log(`⚠ ${$.name}, TYPE: ${TYPE}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
-	// 获取平台
-	const PLATFORM = detectPlatform(HOST);
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", [TYPE]], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -92,7 +94,7 @@ const DataBase = {
 							if (subtitlesURIArray0.length) {
 								$.log(`🚧 ${$.name}, subtitlesURIArray0.length: ${subtitlesURIArray0.length}`, "");
 								// 获取字幕文件名
-								let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, Platform);
+								let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, PLATFORM);
 								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
 								// 构造请求队列
 								requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);

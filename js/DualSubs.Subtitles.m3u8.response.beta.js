@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.1(1) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(3) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -82,10 +82,10 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 获取字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylist } = getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES);
+					const { subtitlesPlaylist, subtitlesPlaylistIndex } = getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[1]); // ?? getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[1]);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Playlists.Subtitle = await setSubtitlesCache(PLATFORM, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[0]);
-					Caches.Playlists.Subtitle = await setSubtitlesCache(PLATFORM, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[1]);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(PLATFORM, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[0], subtitlesPlaylistIndex);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(PLATFORM, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[1], subtitlesPlaylistIndex);
 					// 格式化缓存
 					Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.CacheSize);
 					// 写入缓存
@@ -311,21 +311,19 @@ function detectFormat(url, body) {
  * @author VirgilClyne
  * @param {String} url - Request URL / Master Playlist URL
  * @param {Map} cache - Playlist Cache
- * @param {Array} languages - Languages
+ * @param {Array} language - Language
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
-function getPlaylistCache(url, cache, languages) {
-	$.log(`☑️ ${$.name}, getPlaylistCache`, "");
+function getPlaylistCache(url, cache, language) {
+	$.log(`☑️ ${$.name}, getPlaylistCache, language: ${language}`, "");
 	let masterPlaylistURL = "";
 	let subtitlesPlaylist = {};
 	let subtitlesPlaylistIndex = 0;
 	cache?.forEach((Value, Key) => {
-		$.log(`🚧 ${$.name}, getPlaylistCache, Key: ${Key}, Value: ${JSON.stringify(Value)}`, "");
-		languages?.forEach(language => {
-			$.log(`🚧 ${$.name}, getPlaylistCache, language: ${language}`, "");
+		//$.log(`🚧 ${$.name}, getPlaylistCache, Key: ${Key}, Value: ${JSON.stringify(Value)}`, "");
 			if (Array.isArray(Value?.[language])) {
 				let Array = Value?.[language];
-				$.log(`🚧 ${$.name}, getPlaylistCache`, `Array: ${JSON.stringify(Array)}`, "");
+				//$.log(`🚧 ${$.name}, getPlaylistCache`, `Array: ${JSON.stringify(Array)}`, "");
 				if (Array?.some((Object, Index) => {
 					if (url.includes(Object?.URI ?? Object?.OPTION?.URI ?? null)) {
 						subtitlesPlaylistIndex = Index;
@@ -338,7 +336,6 @@ function getPlaylistCache(url, cache, languages) {
 					//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
 				};
 			};
-		});
 	});
 	$.log(`✅ ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
 	return { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex };
@@ -351,10 +348,24 @@ function getPlaylistCache(url, cache, languages) {
  * @param {Object} playlist - Subtitles Playlist Cache
  * @param {Map} cache - Subtitles Cache
  * @param {Array} language - Language
+ * @param {Number} index - Subtitles Playlist Index
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
-async function setSubtitlesCache(platform, playlist, cache, language) {
+async function setSubtitlesCache(platform, playlist, cache, language, index = undefined) {
 	$.log(`☑️ ${$.name}, setSubtitlesCache, language: ${language}`, "");
+	if (playlist?.[language]?.[index]) {
+		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `playlist[index]: ${JSON.stringify(playlist[index])}`, "");
+		// 查找字幕文件地址vtt缓存（map）
+		let array = cache.get(playlist[language][index]?.URL) ?? [];
+		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
+		// 获取字幕文件地址vtt/ttml缓存（按语言）
+		array = await getSubtitles(playlist[language][index]?.URL, $request.headers, platform);
+		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
+		// 写入字幕文件地址vtt/ttml缓存到map
+		cache = cache.set(playlist[language][index]?.URL, array);
+		//$.log(`✅ ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(cache.get(playlist[language][index]?.URL))}`, "");
+		$.log(`✅ ${$.name}, setSubtitlesCache`, `playlist[language][index]?.URL: ${playlist[language][index]?.URL}`, "");
+	} else 
 	await Promise.all(playlist?.[language]?.map(async data => {
 		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `data: ${JSON.stringify(data)}`, "");
 		// 查找字幕文件地址vtt缓存（map）
@@ -362,7 +373,7 @@ async function setSubtitlesCache(platform, playlist, cache, language) {
 		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
 		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `data?.URL: ${data?.URL}`, "");
 		// 获取字幕文件地址vtt/ttml缓存（按语言）
-		array = await getSubs(data?.URL, $request.headers, platform);
+		array = await getSubtitles(data?.URL, $request.headers, platform);
 		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
 		// 写入字幕文件地址vtt/ttml缓存到map
 		cache = cache.set(data.URL, array);
@@ -395,7 +406,7 @@ function setCache(cache, cacheSize = 100) {
  * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-async function getSubs(url, headers, platform) {
+async function getSubtitles(url, headers, platform) {
 	$.log(`☑️ ${$.name}, Get Subtitle *.vtt *.ttml URLs`, "");
 	let response = await $.http.get({ url: url, headers: headers });
 	//$.log(`🚧 ${$.name}, Get Subtitle *.vtt *.ttml URLs`, `response: ${JSON.stringify(response)}`, "");

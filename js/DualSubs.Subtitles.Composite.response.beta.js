@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(2) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(3) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -94,7 +94,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 							if (subtitlesURIArray1.length) {
 								$.log(`🚧 ${$.name}, subtitlesURIArray0.length: ${subtitlesURIArray1.length}`, "");
 								// 获取字幕文件名
-								let fileName = PATHs?.[PATHs?.length - 1] || getSubtitlesFileName($request.url, PLATFORM);
+								let fileName = PATHs?.[PATHs?.length - 1] ?? getSubtitlesFileName($request.url, PLATFORM);
 								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
 								// 构造请求队列
 								requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
@@ -540,13 +540,13 @@ function getSubtitlesFileName(url, platform) {
 	let fileName = undefined;
 	switch (platform) {
 		case "Apple":
-			fileName = request.url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)(\?.*dualsubs=\w+)$/)[1]; // Apple 片段分型序号不同
+			fileName = request.url.match(/.+_(subtitles(_V\d)?-\d+\.webvtt)\?(.*)subtype=/)[1]; // Apple 片段分型序号不同
 			break;
 		case "Disney+":
-			fileName = request.url.match(/([^\/]+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Disney+ 片段名称相同
+			fileName = request.url.match(/([^\/]+\.vtt)\?(.*)subtype=/)[1]; // Disney+ 片段名称相同
 			break;
 		case "Hulu":
-			fileName = request.url.match(/.+_(SEGMENT\d+_.+\.vtt)(\?.*dualsubs=\w+)$/)[1]; // Hulu 片段分型序号相同
+			fileName = request.url.match(/.+_(SEGMENT\d+_.+\.vtt)\?(.*)subtype=/)[1]; // Hulu 片段分型序号相同
 			break;
 		case "PrimeVideo":
 		case "HBOMax":
@@ -569,7 +569,7 @@ function getSubtitlesFileName(url, platform) {
 function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 	$.log(`☑️ ${$.name}`, `Construct Subtitles Queue, fileName: ${fileName}`, "");
 	let requests = [];
-	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, VTTs2.length: ${VTTs2.length}, VTTs1.length: ${VTTs1.length}`, "")
+	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, VTTs1.length: ${VTTs1.length}, VTTs2.length: ${VTTs2.length}`, "")
 	// 查询当前字幕在原字幕队列中的位置
 	const Index1 = VTTs1.findIndex(item => item?.includes(fileName));
 	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index1: ${Index1}`, "");

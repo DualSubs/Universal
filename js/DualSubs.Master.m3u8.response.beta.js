@@ -76,7 +76,7 @@ $.log(`⚠ ${$.name},  LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			// 兼容性判断
-			const Standard = isStandard(PLATFORM, $request.url, $request.headers);
+			const { standard: STANDARD, device: DEVICE } = isStandard(url, $request.headers, PLATFORM);
 			// 创建空数据
 			let body = {};
 			// 格式判断
@@ -106,7 +106,7 @@ $.log(`⚠ ${$.name},  LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 					// 写入持久化储存
 					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Official"}.Caches.Playlists.Master`);
 					// 写入选项
-					body = setAttrList(PLATFORM, body, playlistCache[LANGUAGES[0]], playlistCache[LANGUAGES[1]], Settings.Types, LANGUAGES, Standard);
+					body = setAttrList(PLATFORM, body, playlistCache[LANGUAGES[0]], playlistCache[LANGUAGES[1]], Settings.Types, LANGUAGES, STANDARD);
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -469,47 +469,53 @@ function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", sta
  * is Standard?
  * Determine whether Standard Media Player
  * @author VirgilClyne
- * @param {String} url - Request URL
+ * @param {String} _url - Parsed Request URL
  * @param {Object} headers - Request Headers
  * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-function isStandard(platform, url, headers) {
+function isStandard(_url, headers, platform) {
 	$.log(`☑️ ${$.name}, is Standard`, "");
-	let _url = URL.parse(url);
-	for(const [key, value] of Object.entries(headers)) {
-		delete headers[key]
-		headers[key.toLowerCase()] = value
-	};
+	//let _url = URL.parse(url);
+	const UA = (headers?.["user-agent"] ?? headers?.["User-Agent"]);
+	$.log(`🚧 ${$.name}, is Standard, UA: ${UA}`, "");
 	let standard = true;
+	let device = "iPhone";
+	if (UA?.includes("Mozilla/5.0")) device = "Web";
+	else if (UA?.includes("iPhone")) device = "iPhone";
+	else if (UA?.includes("iPad")) device = "iPad";
+	else if (UA?.includes("Macintosh")) device = "Macintosh";
+	else if (UA?.includes("AppleTV")) device = "AppleTV";
+	else if (UA?.includes("Apple TV")) device = "AppleTV";
 	switch (platform) {
 		case "Max":
 		case "HBOMax":
 		case "Viki":
-			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
-			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
-			else if (headers?.["x-hbo-device-name"]?.includes("ios")) standard = false;
-			else if (_url?.query?.["device-code"] === "iphone") standard = false;
+			if (UA?.includes("Mozilla/5.0")) standard = false;
+			else if (UA?.includes("iPhone")) standard = false;
+			else if (UA?.includes("iPad")) standard = false;
+			else if (UA?.includes("Macintosh")) standard = false;
+			else if (headers?.["x-hbo-device-name"]?.includes("ios")) standard = false, device = "iPhone";
+			else if (_url?.query?.["device-code"] === "iphone") standard = false, device = "iPhone";
 			break;
 		case "PeacockTV":
-			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
-			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
-			else if (headers?.["user-agent"]?.includes("PeacockMobile")) standard = false;
+			if (UA?.includes("Mozilla/5.0")) standard = false;
+			else if (UA?.includes("iPhone")) standard = false;
+			else if (UA?.includes("iPad")) standard = false;
+			else if (UA?.includes("Macintosh")) standard = false;
+			else if (UA?.includes("PeacockMobile")) standard = false;
 			break;
 		case "FuboTV":
-			if (headers?.["user-agent"]?.includes("iPhone")) standard = false;
-			else if (headers?.["user-agent"]?.includes("iPad")) standard = false;
-			else if (headers?.["user-agent"]?.includes("Macintosh")) standard = false;
+			if (UA?.includes("iPhone")) standard = false;
+			else if (UA?.includes("iPad")) standard = false;
+			else if (UA?.includes("Macintosh")) standard = false;
 			break;
 		case "TED":
-			if (headers?.["user-agent"]?.includes("Mozilla/5.0")) standard = false;
+			if (UA?.includes("Mozilla/5.0")) standard = false;
+			break;
 	}
-	$.log(`✅ ${$.name}, is Standard`, `standard: ${standard}`, "");
-	return standard
+	$.log(`✅ ${$.name}, is Standard, standard: ${standard}, device: ${device}`, "");
+	return {standard, device};
 };
 
 /***************** Env *****************/

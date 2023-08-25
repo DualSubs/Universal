@@ -2,12 +2,12 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(17) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(1) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
+		"Settings":{"Switch":true,"Type":"Translate","Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
 	},
 	"Universal":{
 		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"]},
@@ -58,19 +58,19 @@ let url = URL.parse($request?.url);
 // 获取连接参数
 const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
-// 获取平台与字幕类型
-const PLATFORM = detectPlatform(HOST), TYPE = url?.query?.subtype ?? "Translate";
-$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}, TYPE: ${TYPE}`, "");
-// 读取设置
-const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", [TYPE]], DataBase);
-// 获取自定义参数与字幕类型
-const LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
-$.log(`⚠ ${$.name},  LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
+// 获取平台
+const PLATFORM = detectPlatform(HOST);
+$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 (async () => {
+	// 读取设置
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", url?.query?.subtype], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
+			// 获取字幕类型与语言
+			const Type = url?.query?.subtype ?? Settings.Type, Languages = [url?.query?.lang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[0], url?.query?.tlang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[1]];
+			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
@@ -97,8 +97,8 @@ $.log(`⚠ ${$.name},  LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 					// 读取已存数据
 					let playlistCache = Caches.Playlists.Master.get($request.url) || {};
 					// 获取特定语言的字幕
-					playlistCache[LANGUAGES[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[LANGUAGES[0]]);
-					playlistCache[LANGUAGES[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[LANGUAGES[1]]);
+					playlistCache[Languages[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]]);
+					playlistCache[Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]]);
 					// 写入数据
 					Caches.Playlists.Master.set($request.url, playlistCache);
 					// 格式化缓存
@@ -106,7 +106,7 @@ $.log(`⚠ ${$.name},  LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 					// 写入持久化储存
 					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Official"}.Caches.Playlists.Master`);
 					// 写入选项
-					body = setAttrList(body, playlistCache, Settings.Types, LANGUAGES, PLATFORM, STANDARD, DEVICE);
+					body = setAttrList(body, playlistCache, Settings.Types, Languages, PLATFORM, STANDARD, DEVICE);
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -373,7 +373,7 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 						}
 					};
 					option = setOption(playlist1, playlist2, type, platform, standard, device);
-					option.OPTION.URI += `&sublang=${playlist1?.OPTION?.LANGUAGE?.toUpperCase()}`;
+					option.OPTION.URI += `&lang=${playlist1?.OPTION?.LANGUAGE?.toUpperCase()}`;
 					break;
 			};
 			if (Object.keys(option).length !== 0) {
@@ -465,7 +465,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	// 修改链接
 	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
 	newOption.OPTION.URI += `${symbol}subtype=${type}`;
-	//if (!standard) newOption.OPTION.URI += `&sublang=${LANGUAGE1}`;
+	//if (!standard) newOption.OPTION.URI += `&lang=${LANGUAGE1}`;
 	// 自动选择
 	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正

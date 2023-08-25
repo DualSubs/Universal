@@ -2,13 +2,13 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(4) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(1) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
+		"Settings":{"Switch":true,"Type":"Translate","Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
 	},
 	"Universal":{
 		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"]},
@@ -59,19 +59,19 @@ let url = URL.parse($request?.url);
 // 获取连接参数
 const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
-// 获取平台与字幕类型
-const PLATFORM = detectPlatform(HOST), TYPE = url?.query?.subtype ?? "Translate";
-$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}, TYPE: ${TYPE}`, "");
-// 读取设置
-const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", [TYPE]], DataBase);
-// 获取语言与种类参数
-const LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
-$.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
+// 获取平台
+const PLATFORM = detectPlatform(HOST);
+$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 (async () => {
+	// 读取设置
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", url?.query?.subtype], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
+			// 获取字幕类型与语言
+			const Type = url?.query?.subtype ?? Settings.Type, Languages = [url?.query?.lang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[0], url?.query?.tlang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[1]];
+			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
@@ -79,17 +79,17 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
-			switch (TYPE) {
+			switch (Type) {
 				case "Official":
 					$.log(`⚠ ${$.name}`, "官方字幕", "");
 					switch (PLATFORM) {
 						default:
 							// 获取字幕文件地址vtt缓存（map）
-							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, LANGUAGES);
+							const { subtitlesPlaylistURL } = getSubtitlesCache($request.url, Caches.Playlists.Subtitle, Languages);
 							// 获取字幕播放列表m3u8缓存（map）
-							const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, LANGUAGES);
+							const { masterPlaylistURL, subtitlesPlaylistIndex } = getPlaylistCache(subtitlesPlaylistURL, Caches.Playlists.Master, Languages);
 							// 获取字幕文件地址vtt缓存（map）
-							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, LANGUAGES);
+							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Languages);
 							// 获取官方字幕请求
 							if (subtitlesURIArray1.length) {
 								$.log(`🚧 ${$.name}, subtitlesURIArray0.length: ${subtitlesURIArray1.length}`, "");
@@ -180,7 +180,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = XML.parse(SecondSub);
 						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = XML.stringify(OriginSub);
@@ -195,7 +195,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = await PLIST("plist2json", SecondSub);
 						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$request.body = await PLIST("json2plist", OriginSub);
@@ -209,7 +209,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = VTT.parse(SecondSub);
 						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = VTT.stringify(OriginSub);
@@ -222,7 +222,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = JSON.parse(SecondSub);
 						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = JSON.stringify(OriginSub);

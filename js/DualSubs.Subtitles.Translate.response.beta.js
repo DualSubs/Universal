@@ -8,7 +8,7 @@ const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
+		"Settings":{"Switch":true,"Type":"Translate","Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
 	},
 	"Universal":{
 		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"]},
@@ -59,25 +59,20 @@ let url = URL.parse($request?.url);
 // 获取连接参数
 const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
-// 获取平台与字幕类型
-const PLATFORM = detectPlatform(HOST), TYPE = url?.query?.subtype ?? "Translate";
-$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}, TYPE: ${TYPE}`, "");
-// 读取设置
-const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", "Translate", "API"], DataBase);
-// 兼容性设置
-if (PLATFORM === "YouTube") {
-	if (Caches?.tlang) url.query.tlang = Caches.tlang; // 翻译字幕语言
-	Settings.Languages[0] = url.query.lang.split("-")[0].toUpperCase();
-	Settings.Languages[1] = url.query.tlang.split("-")[0].toUpperCase();
-};
-// 获取语言与种类参数
-const LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
-$.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
+// 获取平台
+const PLATFORM = detectPlatform(HOST);
+$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 (async () => {
+	// 读取设置
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", "Translate", "API"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
+			if (Caches?.tlang) url.query.tlang = Caches.tlang; // YouTube 翻译字幕语言
+			// 获取字幕类型与语言
+			const Type = url?.query?.subtype ?? Settings.Type, Languages = [url?.query?.lang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[0], url?.query?.tlang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[1]];
+			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
@@ -126,7 +121,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 						*/
 						return para;
 					});
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, LANGUAGES[0], LANGUAGES[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					paragraph = paragraph.map((para, i) => {
 						const span = para?.span ?? para;
 						if (Array.isArray(span)) translation?.[i]?.split(breakLine).forEach((text, j) => {
@@ -153,7 +148,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 					DualSub = VTT.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
 					fullText = DualSub?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, LANGUAGES[0], LANGUAGES[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					DualSub.body = DualSub.body.map((item, i) => {
 						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
@@ -172,7 +167,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 						delete event.wWinId;
 						return event;
 					});
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, LANGUAGES[0], LANGUAGES[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					DualSub.events = DualSub.events.map((event, i) => {
 						if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return event

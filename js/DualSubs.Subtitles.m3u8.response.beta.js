@@ -2,12 +2,12 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(5) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(1) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
 	"Default":{
-		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
+		"Settings":{"Switch":true,"Type":"Translate","Types":["Official","Translate"],"Languages":["EN","ZH"],"CacheSize":100}
 	},
 	"Universal":{
 		"Settings":{"Switch":true,"Types":["Official","Translate"],"Languages":["EN","ZH"]},
@@ -58,19 +58,19 @@ let url = URL.parse($request?.url);
 // 获取连接参数
 const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
-// 获取平台与字幕类型
-const PLATFORM = detectPlatform(HOST), TYPE = url?.query?.subtype ?? "Translate";
-$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}, TYPE: ${TYPE}`, "");
-// 读取设置
-const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", [TYPE]], DataBase);
-// 获取语言与种类参数
-const LANGUAGES = [url?.query?.sublang ?? Settings.Languages[0], Settings.Languages[1]], KIND = url?.query?.kind;
-$.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
+// 获取平台
+const PLATFORM = detectPlatform(HOST);
+$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 (async () => {
+	// 读取设置
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", url?.query?.subtype ?? "Translate"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
+			// 获取字幕类型与语言
+			const Type = url?.query?.subtype ?? Settings.Type, Languages = [url?.query?.lang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[0], url?.query?.tlang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[1]];
+			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
@@ -78,14 +78,14 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 			// 创建空数据
 			let body = {};
 			// 处理类型
-			switch (TYPE) {
+			switch (Type) {
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 获取字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylist, subtitlesPlaylistIndex } = getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[0]) ?? getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[1]);
+					const { subtitlesPlaylist, subtitlesPlaylistIndex } = getPlaylistCache($request.url, Caches.Playlists.Master, Languages[0]) ?? getPlaylistCache($request.url, Caches.Playlists.Master, Languages[1]);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Playlists.Subtitle = await setSubtitlesCache(Caches.Playlists.Subtitle, subtitlesPlaylist, LANGUAGES[0], subtitlesPlaylistIndex, PLATFORM);
-					Caches.Playlists.Subtitle = await setSubtitlesCache(Caches.Playlists.Subtitle, subtitlesPlaylist, LANGUAGES[1], subtitlesPlaylistIndex, PLATFORM);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Caches.Playlists.Subtitle, subtitlesPlaylist, Languages[0], subtitlesPlaylistIndex, PLATFORM);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Caches.Playlists.Subtitle, subtitlesPlaylist, Languages[1], subtitlesPlaylistIndex, PLATFORM);
 					// 格式化缓存
 					Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.CacheSize);
 					// 写入缓存
@@ -120,10 +120,10 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 						//if (item?.URI?.includes("vtt") || item?.URI?.includes("ttml")) {
 							const symbol = (item.URI.includes("?")) ? "&" : "?";
 							if (!item?.URI?.includes("empty") && !item?.URI?.includes("default")) {
-								//if (url?.query?.sublang) item.URI += `${symbol}subtype=${TYPE}&sublang=${url.query.sublang}`;
-								//else item.URI += `${symbol}subtype=${TYPE}`;
-								item.URI += `${symbol}subtype=${TYPE}`;
-								if (url?.query?.sublang) item.URI += `&sublang=${url.query.sublang}`;
+								//if (url?.query?.sublang) item.URI += `${symbol}subtype=${Type}&sublang=${url.query.sublang}`;
+								//else item.URI += `${symbol}subtype=${Type}`;
+								item.URI += `${symbol}subtype=${Type}`;
+								if (url?.query?.lang) item.URI += `&lang=${url.query.lang}`;
 							};
 						};
 						return item;

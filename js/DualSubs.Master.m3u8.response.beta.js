@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(16) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(17) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -106,7 +106,7 @@ $.log(`⚠ ${$.name},  LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 					// 写入持久化储存
 					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Official"}.Caches.Playlists.Master`);
 					// 写入选项
-					body = setAttrList(body, playlistCache[LANGUAGES[0]], playlistCache[LANGUAGES[1]], Settings.Types, LANGUAGES, PLATFORM, STANDARD, DEVICE);
+					body = setAttrList(body, playlistCache, Settings.Types, LANGUAGES, PLATFORM, STANDARD, DEVICE);
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -329,8 +329,10 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  * @param {Boolean} Standard - Standard
  * @return {Object} m3u8
  */
-function setAttrList(m3u8 = {}, playlists1 = [], playlists2 = [], types = [], languages = [], platform = "", standard = true, device = "iPhone") {
+function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], platform = "", standard = true, device = "iPhone") {
 	types = (standard == true) ? types : ["Translate"];
+	const playlists1 = playlists?.[languages?.[0]];
+	const playlists2 = playlists?.[languages?.[1]];
 	//if (playlists1?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有主字幕语言（源语言）字幕`, "");
 	//else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
 	//if (playlists2?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有副字幕语言（目标语言）字幕`, "");
@@ -371,7 +373,7 @@ function setAttrList(m3u8 = {}, playlists1 = [], playlists2 = [], types = [], la
 						}
 					};
 					option = setOption(playlist1, playlist2, type, platform, standard, device);
-					option.OPTION.URI += `&sublang=${playlist1?.OPTION?.LANGUAGE}`;
+					option.OPTION.URI += `&sublang=${playlist1?.OPTION?.LANGUAGE?.toUpperCase()}`;
 					break;
 			};
 			if (Object.keys(option).length !== 0) {

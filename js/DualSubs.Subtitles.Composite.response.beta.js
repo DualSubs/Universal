@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(1) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(2) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -204,14 +204,14 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 				case "text/vtt":
 				case "application/vtt":
 					OriginSub = VTT.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = VTT.parse(SecondSub);
-						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, KIND, Settings.Offset, Settings.Tolerance, [Settings.Position]);
 					};
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = VTT.stringify(OriginSub);
 					break;
 				case "text/json":
@@ -684,7 +684,8 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "capt
 						const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
 						//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
 						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
-							index0 = Options.includes("Reverse") ? index2 : index1;
+							//index0 = Options.includes("Reverse") ? index2 : index1;
+							index0 = index1;
 							// 处理普通字幕
 							const text1 = Sub1.events[index1]?.segs?.[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs?.[0].utf8 ?? "";
 							//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
@@ -734,7 +735,8 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "capt
 						const timeStamp1 = parseInt(Sub1.timedtext.body.p[index1]["@t"], 10), timeStamp2 = parseInt(Sub2.timedtext.body.p[index2]["@t"], 10);
 						//$.log(`🚧`, `timeStamp1: ${timeStamp1}`, `timeStamp2: ${timeStamp2}`, "");
 						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
-							index0 = Options.includes("Reverse") ? index2 : index1;
+							//index0 = Options.includes("Reverse") ? index2 : index1;
+							index0 = index1;
 							// 处理普通字幕
 							const text1 = Sub1.timedtext.body.p[index1]?.["#"] ?? "", text2 = Sub2.timedtext.body.p[index2]?.["#"] ?? "";
 							//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
@@ -771,9 +773,10 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "capt
 						const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
 						//$.log(`🚧`, `text1: ${text1}`, `text2: ${text2}`, "");
 						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
-							index0 = Options.includes("Reverse") ? index2 : index1;
+							//index0 = Options.includes("Reverse") ? index2 : index1;
+							index0 = index1;
 							// 处理普通字幕
-							DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}` : Options.includes("ShowOnly") ? text2 : `${text1}\n${text2}`;
+							DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}`: `${text1}\n${text2}`;
 							//$.log(`🚧`, `index0: ${index0}`, `text: ${DualSub.body[index0].text}`, "");
 							//DualSub.body[index0].timeStamp = Options.includes("Reverse") ? timeStamp2 : timeStamp1;
 							//DualSub.body[index0].index = Options.includes("Reverse") ? index2 : index1;

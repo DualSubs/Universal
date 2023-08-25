@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(13) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(16) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -106,7 +106,7 @@ $.log(`⚠ ${$.name},  LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 					// 写入持久化储存
 					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Official"}.Caches.Playlists.Master`);
 					// 写入选项
-					body = setAttrList(PLATFORM, body, playlistCache[LANGUAGES[0]], playlistCache[LANGUAGES[1]], Settings.Types, LANGUAGES, STANDARD);
+					body = setAttrList(body, playlistCache[LANGUAGES[0]], playlistCache[LANGUAGES[1]], Settings.Types, LANGUAGES, PLATFORM, STANDARD, DEVICE);
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
 					break;
@@ -329,7 +329,7 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  * @param {Boolean} Standard - Standard
  * @return {Object} m3u8
  */
-function setAttrList(platform = "", m3u8 = {}, playlists1 = [], playlists2 = [], types = [], languages = [], standard = true) {
+function setAttrList(m3u8 = {}, playlists1 = [], playlists2 = [], types = [], languages = [], platform = "", standard = true, device = "iPhone") {
 	types = (standard == true) ? types : ["Translate"];
 	//if (playlists1?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有主字幕语言（源语言）字幕`, "");
 	//else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
@@ -349,11 +349,11 @@ function setAttrList(platform = "", m3u8 = {}, playlists1 = [], playlists2 = [],
 							switch (platform) { // 兼容性修正
 								case "Apple":
 									if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-										option = setOption(platform, playlist1, playlist2, type, standard);
+										option = setOption(playlist1, playlist2, type, platform, standard, device);
 									};
 									break;
 								default:
-									option = setOption(platform, playlist1, playlist2, type, standard);
+									option = setOption(playlist1, playlist2, type, platform, standard, device);
 									break;
 							};
 						};
@@ -370,7 +370,7 @@ function setAttrList(platform = "", m3u8 = {}, playlists1 = [], playlists2 = [],
 							//"URI": playlist?.URI,
 						}
 					};
-					option = setOption(platform, playlist1, playlist2, type, standard);
+					option = setOption(playlist1, playlist2, type, platform, standard, device);
 					option.OPTION.URI += `&sublang=${playlist1?.OPTION?.LANGUAGE}`;
 					break;
 			};
@@ -396,8 +396,8 @@ function setAttrList(platform = "", m3u8 = {}, playlists1 = [], playlists2 = [],
  * @param {String} Standard - Standard
  * @return {Promise<*>}
  */
-function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", standard) {
-	$.log(`☑️ ${$.name}, Set DualSubs Subtitle Option, type: ${type}`, "");
+function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", standard = true, device = "iPhone") {
+	$.log(`☑️ ${$.name}, Set DualSubs Subtitle Option, type: ${type}, standard: ${standard}, device: ${device}`, "");
 	const NAME1 = playlist1?.OPTION?.NAME.trim(), NAME2 = playlist2?.OPTION?.NAME.trim();
 	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE.trim(), LANGUAGE2 = playlist2?.OPTION?.LANGUAGE.trim();
 	let typeName = "";
@@ -421,7 +421,14 @@ function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", sta
 	// 修改语言代码
 	switch (platform) {
 		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
-			newOption.OPTION.LANGUAGE = `${typeName}（${NAME1}/${NAME2}）`;
+			switch (device) {
+				case "Macintosh":
+					newOption.OPTION.LANGUAGE = LANGUAGE1;
+					break;
+				default:
+					newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
+					break;
+			};
 			break;
 		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
 			//newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
@@ -430,7 +437,7 @@ function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", sta
 		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
 		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
 		case "Hulu": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 空格分割
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1}/${LANGUAGE2} [${type}]`;
+			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
 			break;
 		case "Max": // AppleCoreMedia
 		case "HBOMax": // AppleCoreMedia
@@ -441,7 +448,7 @@ function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", sta
 		case "Paramount+":
 		case "Discovery+Ph":
 			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
-			newOption.OPTION.LANGUAGE = `${LANGUAGE1} / ${LANGUAGE2} [${type}]`;
+			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
 			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
 		default:

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(1) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(13) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -398,25 +398,34 @@ function setAttrList(platform = "", m3u8 = {}, playlists1 = [], playlists2 = [],
  */
 function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", standard) {
 	$.log(`☑️ ${$.name}, Set DualSubs Subtitle Option, type: ${type}`, "");
-	const NAME1 = playlist1?.OPTION?.NAME, NAME2 = playlist2?.OPTION?.NAME;
-	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE, LANGUAGE2 = playlist2?.OPTION?.LANGUAGE;
+	const NAME1 = playlist1?.OPTION?.NAME.trim(), NAME2 = playlist2?.OPTION?.NAME.trim();
+	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE.trim(), LANGUAGE2 = playlist2?.OPTION?.LANGUAGE.trim();
+	let typeName = "";
 	// 复制此语言选项
 	let newOption = JSON.parse(JSON.stringify(playlist1));
 	// 修改名称
 	switch (type) {
 		case "Official":
+			typeName = "官方字幕";
+			newOption.OPTION.NAME = `${typeName} (${NAME1}/${NAME2})`;
+			break;
 		case "Translate":
-			newOption.OPTION.NAME = `${NAME1}/${NAME2} [${type}]`;
+			typeName = "翻译字幕";
+			newOption.OPTION.NAME = `${typeName} (${NAME1}/${NAME2})`;
 			break;
 		case "External":
-			newOption.OPTION.NAME = `${NAME1} [${type}]`;
+			typeName = "外挂字幕";
+			newOption.OPTION.NAME = `${typeName} (${NAME1})`;
 			break;
 	};
 	// 修改语言代码
 	switch (platform) {
 		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
+			newOption.OPTION.LANGUAGE = `${typeName}（${NAME1}/${NAME2}）`;
+			break;
 		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
-			newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
+			//newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
+			newOption.OPTION.LANGUAGE = `${typeName} (${NAME1}/${NAME2})`;
 			break;
 		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
 		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
@@ -439,6 +448,9 @@ function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", sta
 			newOption.OPTION.LANGUAGE = LANGUAGE1;
 			break;
 	};
+	// 增加/修改类型参数
+	//const separator = (newOption?.OPTION?.CHARACTERISTICS) ? "," : "";
+	//newOption.OPTION.CHARACTERISTICS += `${separator ?? ""}DualSubs.${type}`;
 	// 增加副语言
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接

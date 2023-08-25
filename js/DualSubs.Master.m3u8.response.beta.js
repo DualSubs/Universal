@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.1(1) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(1) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -331,33 +331,31 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  */
 function setAttrList(platform = "", m3u8 = {}, playlists1 = [], playlists2 = [], types = [], languages = [], standard = true) {
 	types = (standard == true) ? types : ["Translate"];
-	if (playlists1?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有主字幕语言（源语言）字幕`, "");
-	else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
-	if (playlists2?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有副字幕语言（目标语言）字幕`, "");
-	else types = types.filter(e => e !== "Official"); // 无目标语言字幕时删除官方字幕选项
+	//if (playlists1?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有主字幕语言（源语言）字幕`, "");
+	//else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
+	//if (playlists2?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有副字幕语言（目标语言）字幕`, "");
+	//else types = types.filter(e => e !== "Official"); // 无目标语言字幕时删除官方字幕选项
 	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
 	playlists1?.forEach(playlist1 => {
-		const index1 = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 副字幕语言（目标语言）字幕位置
+		const index1 = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
 		types.forEach(type => {
 			$.log(`🚧 ${$.name}, Set Attribute List, type: ${type}`, "");
 			let option = {};
 			switch (type) {
 				case "Official":
 					playlists2?.forEach(playlist2 => {
-						const index2 = m3u8.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 主字幕语言（源语言）字幕位置
+						//const index2 = m3u8.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 副语言（源语言）字幕位置
 						if (playlist1?.OPTION?.["GROUP-ID"] === playlist2?.OPTION?.["GROUP-ID"]) {
 							switch (platform) { // 兼容性修正
 								case "Apple":
 									if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-										option = setOption(platform, playlist2, playlist1, type, standard);
+										option = setOption(platform, playlist1, playlist2, type, standard);
 									};
 									break;
 								default:
-									option = setOption(platform, playlist2, playlist1, type, standard);
+									option = setOption(platform, playlist1, playlist2, type, standard);
 									break;
 							};
-							if (standard) m3u8.splice(index2 + 1, 0, option)
-							else m3u8.splice(index2, 1, option);
 						};
 					});
 					break;
@@ -367,16 +365,18 @@ function setAttrList(platform = "", m3u8 = {}, playlists1 = [], playlists2 = [],
 						"OPTION": {
 							"TYPE": "SUBTITLES",
 							//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
-							"NAME": languages[1].toLowerCase(),
-							"LANGUAGE": languages[1].toLowerCase(),
+							"NAME": playlists2?.[0]?.OPTION?.NAME ?? languages[1].toLowerCase(),
+							"LANGUAGE": playlists2?.[0]?.OPTION?.LANGUAGE ?? languages[1].toLowerCase(),
 							//"URI": playlist?.URI,
 						}
 					};
 					option = setOption(platform, playlist1, playlist2, type, standard);
 					option.OPTION.URI += `&sublang=${playlist1?.OPTION?.LANGUAGE}`;
-					if (standard) m3u8.splice(index1 + 1, 0, option)
-					else m3u8.splice(index1, 1, option);
 					break;
+			};
+			if (Object.keys(option).length !== 0) {
+				if (standard) m3u8.splice(index1 + 1, 0, option)
+				else m3u8.splice(index1, 1, option);
 			};
 		});
 	});
@@ -416,6 +416,8 @@ function setOption(platform = "", playlist1 = {}, playlist2 = {}, type = "", sta
 	switch (platform) {
 		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
 		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
+			newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
+			break;
 		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
 		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
 		case "Hulu": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 空格分割

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(4) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(5) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -82,7 +82,7 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 				case "Official":
 					$.log(`🚧 ${$.name}`, "官方字幕", "");
 					// 获取字幕播放列表m3u8缓存（map）
-					const { subtitlesPlaylist, subtitlesPlaylistIndex } = getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[1]); // ?? getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[1]);
+					const { subtitlesPlaylist, subtitlesPlaylistIndex } = getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[0]) ?? getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[1]);
 					// 写入字幕文件地址vtt缓存（map）
 					Caches.Playlists.Subtitle = await setSubtitlesCache(Caches.Playlists.Subtitle, subtitlesPlaylist, LANGUAGES[0], subtitlesPlaylistIndex, PLATFORM);
 					Caches.Playlists.Subtitle = await setSubtitlesCache(Caches.Playlists.Subtitle, subtitlesPlaylist, LANGUAGES[1], subtitlesPlaylistIndex, PLATFORM);

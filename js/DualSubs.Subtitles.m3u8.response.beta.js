@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(3) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(4) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -84,8 +84,8 @@ $.log(`⚠ ${$.name}, LANGUAGES: ${LANGUAGES}, KIND: ${KIND}`, "");
 					// 获取字幕播放列表m3u8缓存（map）
 					const { subtitlesPlaylist, subtitlesPlaylistIndex } = getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[1]); // ?? getPlaylistCache($request.url, Caches.Playlists.Master, LANGUAGES[1]);
 					// 写入字幕文件地址vtt缓存（map）
-					Caches.Playlists.Subtitle = await setSubtitlesCache(PLATFORM, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[0], subtitlesPlaylistIndex);
-					Caches.Playlists.Subtitle = await setSubtitlesCache(PLATFORM, subtitlesPlaylist, Caches.Playlists.Subtitle, LANGUAGES[1], subtitlesPlaylistIndex);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Caches.Playlists.Subtitle, subtitlesPlaylist, LANGUAGES[0], subtitlesPlaylistIndex, PLATFORM);
+					Caches.Playlists.Subtitle = await setSubtitlesCache(Caches.Playlists.Subtitle, subtitlesPlaylist, LANGUAGES[1], subtitlesPlaylistIndex, PLATFORM);
 					// 格式化缓存
 					Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.CacheSize);
 					// 写入缓存
@@ -344,41 +344,30 @@ function getPlaylistCache(url, cache, language) {
 /**
  * Set Subtitles Cache
  * @author VirgilClyne
- * @param {String} platform - Steaming Media Platform
- * @param {Object} playlist - Subtitles Playlist Cache
- * @param {Map} cache - Subtitles Cache
- * @param {Array} language - Language
- * @param {Number} index - Subtitles Playlist Index
+ * @param {Map} Cache - Subtitles Cache
+ * @param {Object} Playlist - Subtitles Playlist Cache
+ * @param {Array} Language - Language
+ * @param {Number} Index - Subtitles Playlist Index
+ * @param {String} Platform - Steaming Media Platform
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
-async function setSubtitlesCache(platform, playlist, cache, language, index = undefined) {
-	$.log(`☑️ ${$.name}, setSubtitlesCache, language: ${language}`, "");
-	if (playlist?.[language]?.[index]) {
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `playlist[index]: ${JSON.stringify(playlist[index])}`, "");
-		// 查找字幕文件地址vtt缓存（map）
-		let array = cache.get(playlist[language][index]?.URL) ?? [];
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
-		// 获取字幕文件地址vtt/ttml缓存（按语言）
-		array = await getSubtitles(playlist[language][index]?.URL, $request.headers, platform);
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
-		// 写入字幕文件地址vtt/ttml缓存到map
-		cache = cache.set(playlist[language][index]?.URL, array);
-		//$.log(`✅ ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(cache.get(playlist[language][index]?.URL))}`, "");
-		$.log(`✅ ${$.name}, setSubtitlesCache`, `playlist[language][index]?.URL: ${playlist[language][index]?.URL}`, "");
-	} else 
-	await Promise.all(playlist?.[language]?.map(async data => {
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `data: ${JSON.stringify(data)}`, "");
-		// 查找字幕文件地址vtt缓存（map）
-		let array = cache.get(data.URL) ?? [];
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `data?.URL: ${data?.URL}`, "");
-		// 获取字幕文件地址vtt/ttml缓存（按语言）
-		array = await getSubtitles(data?.URL, $request.headers, platform);
-		//$.log(`🚧 ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(array)}`, "");
-		// 写入字幕文件地址vtt/ttml缓存到map
-		cache = cache.set(data.URL, array);
-		//$.log(`✅ ${$.name}, setSubtitlesCache`, `array: ${JSON.stringify(cache.get(data.URL))}`, "");
-		$.log(`✅ ${$.name}, setSubtitlesCache`, `data?.URL: ${data?.URL}`, "");
+async function setSubtitlesCache(cache, playlist, language, index = 0, platform = "Universal") {
+	$.log(`☑️ ${$.name}, setSubtitlesCache, language: ${language}, index: ${index}`, "");
+	await Promise.all(playlist?.[language]?.map(async (val, ind, arr) => {
+		//$.log(`🚧 ${$.name}, setSubtitlesCache, ind: ${ind}, val: ${JSON.stringify(val)}`, "");
+		if ((arr[index] && (ind === index)) || (!arr[index])) {
+			// 查找字幕文件地址vtt缓存（map）
+			let subtitlesURLarray = cache.get(val.URL) ?? [];
+			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(subtitlesURLarray)}`, "");
+			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
+			// 获取字幕文件地址vtt/ttml缓存（按语言）
+			subtitlesURLarray = await getSubtitles(val?.URL, $request.headers, platform);
+			//$.log(`🚧 ${$.name}, setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(subtitlesURLarray)}`, "");
+			// 写入字幕文件地址vtt/ttml缓存到map
+			cache = cache.set(val.URL, subtitlesURLarray);
+			//$.log(`✅ ${$.name}, setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(cache.get(val?.URL))}`, "");
+			$.log(`✅ ${$.name}, setSubtitlesCache`, `value?.URL: ${val?.URL}`, "");
+		};
 	}));
 	return cache;
 };
@@ -413,15 +402,16 @@ async function getSubtitles(url, headers, platform) {
 	let subtitlePlayList = M3U8.parse(response.body);
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?)(\?.+)?$/.test(URI)));
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/empty/.test(URI));
-	let Subs = subtitlePlayList.map(({ URI }) => aPath(url, URI));
+	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/blank/.test(URI));
+	let subtitles = subtitlePlayList.map(({ URI }) => aPath(url, URI));
 	switch (platform) {
 		case "Disney+":
-			if (Subs.some(item => /\/.+-MAIN\//.test(item))) Subs = Subs.filter(item => /\/.+-MAIN\//.test(item))
+			if (subtitles.some(item => /\/.+-MAIN\//.test(item))) subtitles = subtitles.filter(item => /\/.+-MAIN\//.test(item))
 			break;
 		case "PrimeVideo":
-			if (Subs.some(item => /\/aiv-prod-timedtext\//.test(item))) Subs = Subs.filter(item => /\/aiv-prod-timedtext\//.test(item));
-			//Array.from(new Set(Subs));
-			Subs = Subs.filter((item, index, array) => {
+			if (subtitles.some(item => /\/aiv-prod-timedtext\//.test(item))) subtitles = subtitles.filter(item => /\/aiv-prod-timedtext\//.test(item));
+			//Array.from(new Set(subtitles));
+			subtitles = subtitles.filter((item, index, array) => {
 				//当前元素，在原始数组中的第一个索引==当前索引值，否则返回当前元素
 				return array.indexOf(item, 0) === index;
 			}); // 数组去重
@@ -429,8 +419,8 @@ async function getSubtitles(url, headers, platform) {
 		default:
 			break;
 	};
-	$.log(`✅ ${$.name}, Get Subtitle *.vtt *.ttml URLs`, `Subs: ${Subs}`, "");
-	return Subs;
+	$.log(`✅ ${$.name}, Get Subtitle *.vtt *.ttml URLs, subtitles: ${subtitles}`, "");
+	return subtitles;
 	/***************** Fuctions *****************/
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };
 };

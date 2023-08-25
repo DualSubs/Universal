@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(3) Subtitles.Composite.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.2(4) Subtitles.Composite.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -604,7 +604,7 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 			const Index2 = Math.round(Position1 * VTTs2.length);
 			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index2: ${Index2}`, "");
 			// 获取当前字幕在新字幕队列中的前后1个字幕
-			const nearlyVTTs = VTTs2.slice((Index2 - 1 < 0) ? 0 : Index2 - 1, Index2 + 1);
+			const nearlyVTTs = VTTs2.slice((Index2 - 1 < 0) ? 0 : Index2 - 1, Index2 + 2);
 			nearlyVTTs.forEach(url => {
 				let _request = {
 					"url": url,

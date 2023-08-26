@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.13(2) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.13(3) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -77,7 +77,7 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
 			$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			// 创建空数据
-			let DualSub = {}, fullText = [];
+			let body = {};
 			// 格式判断
 			switch (FORMAT) {
 				case undefined: // 视为无body
@@ -96,11 +96,12 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 					break;
 				case "text/xml":
 				case "application/xml": {
-					DualSub = XML.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
-					const breakLine = (DualSub?.tt) ? "<br/>" : (DualSub?.timedtext) ? "&#x000A;" : "&#x000A;";
-					if (DualSub?.timedtext?.head?.wp?.[1]?.["@rc"]) DualSub.timedtext.head.wp[1]["@rc"] = "1";
-					let paragraph = DualSub?.tt?.body?.div?.p ?? DualSub?.timedtext?.body?.p;
+					body = XML.parse($response.body);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					const breakLine = (body?.tt) ? "<br/>" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
+					if (body?.timedtext?.head?.wp?.[1]?.["@rc"]) body.timedtext.head.wp[1]["@rc"] = "1";
+					let paragraph = body?.tt?.body?.div?.p ?? body?.timedtext?.body?.p;
+					let fullText = [];
 					paragraph = paragraph.map(para => {
 						if (para?.s) {
 							if (Array.isArray(para.s)) para["#"] = para.s.map(seg => seg["#"]).join(" ");
@@ -130,8 +131,8 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 						else if (span?.["#"]) span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
 						return para;
 					});
-					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
-					$response.body = XML.stringify(DualSub);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					$response.body = XML.stringify(body);
 					break;
 				};
 				case "text/plist":
@@ -144,35 +145,36 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 				case "text/vtt":
 				case "application/vtt": {
 					//$.log(`🚧 ${$.name}`, `response.body: ${JSON.stringify($response.body)}`, "");
-					DualSub = VTT.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
-					fullText = DualSub?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
+					body = VTT.parse($response.body);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					let fullText = body?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-					DualSub.body = DualSub.body.map((item, i) => {
+					body.body = body.body.map((item, i) => {
 						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
 					});
-					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
-					$response.body = VTT.stringify(DualSub);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					$response.body = VTT.stringify(body);
 					break;
 				};
 				case "text/json":
 				case "application/json": {
-					DualSub = JSON.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `DualSub: ${JSON.stringify(DualSub)}`, "");
-					DualSub.events = DualSub.events.map(event => {
+					body = JSON.parse($response.body);
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					let fullText = [];
+					body.events = body.events.map(event => {
 						if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
 						fullText.push(event?.segs?.[0]?.utf8 ?? "\u200b");
 						delete event.wWinId;
 						return event;
 					});
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-					DualSub.events = DualSub.events.map((event, i) => {
+					body.events = body.events.map((event, i) => {
 						if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return event
 					});
 					//$.log(`🚧 ${$.name}`, `TransSub: ${JSON.stringify(TransSub)}`, "");
-					$response.body = JSON.stringify(DualSub);
+					$response.body = JSON.stringify(body);
 					break;
 				};
 				case "application/x-protobuf":

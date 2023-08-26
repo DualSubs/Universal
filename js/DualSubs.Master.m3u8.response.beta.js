@@ -69,7 +69,7 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = url?.query?.subtype ?? Settings.Type, Languages = [url?.query?.lang?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[0], (Caches?.tlang ?? url?.query?.tlang)?.split?.("-")?.[0]?.toUpperCase() ?? Settings.Languages[1]];
+			const Type = url?.query?.subtype ?? Settings.Type, Languages = [(url?.query?.lang ?? Settings.Languages[0])?.split?.(/[-_]/)?.[0]?.toUpperCase(), (url?.query?.tlang ?? Caches?.tlang ?? Settings.Languages[1])?.split?.(/[-_]/)?.[0]?.toUpperCase()];
 			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 解析格式
 			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];

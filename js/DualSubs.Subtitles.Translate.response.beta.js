@@ -62,6 +62,10 @@ $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `P
 // 获取平台
 const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
+// 解析格式
+let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
+$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", "Translate", "API"], DataBase);
@@ -72,10 +76,6 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 			// 获取字幕类型与语言
 			const Type = url?.query?.subtype ?? Settings.Type, Languages = [(url?.query?.lang ?? Settings.Languages[0])?.split?.(/[-_]/)?.[0]?.toUpperCase(), (url?.query?.tlang ?? Caches?.tlang ?? Settings.Languages[1])?.split?.(/[-_]/)?.[0]?.toUpperCase()];
 			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
-			// 解析格式
-			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
-			$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			// 创建空数据
 			let body = {};
 			// 格式判断
@@ -95,7 +95,10 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 					//$response.body = M3U8.stringify(PlayList);
 					break;
 				case "text/xml":
-				case "application/xml": {
+				case "text/plist":
+				case "application/xml":
+				case "application/plist":
+				case "application/x-plist": {
 					body = XML.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					const breakLine = (body?.tt) ? "<br/>" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
@@ -135,13 +138,6 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 					$response.body = XML.stringify(body);
 					break;
 				};
-				case "text/plist":
-				case "application/plist":
-				case "application/x-plist":
-					//body = await PLIST("plist2json", $request.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-					//$request.body = await PLIST("json2plist", body);
-					break;
 				case "text/vtt":
 				case "application/vtt": {
 					//$.log(`🚧 ${$.name}`, `response.body: ${JSON.stringify($response.body)}`, "");
@@ -198,7 +194,7 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
 				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";

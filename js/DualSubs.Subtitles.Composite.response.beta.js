@@ -62,6 +62,10 @@ $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `P
 // 获取平台
 const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
+// 解析格式
+let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
+$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", url?.query?.subtype], DataBase);
@@ -72,10 +76,6 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 			// 获取字幕类型与语言
 			const Type = url?.query?.subtype ?? Settings.Type, Languages = [(url?.query?.lang ?? Settings.Languages[0])?.split?.(/[-_]/)?.[0]?.toUpperCase(), (url?.query?.tlang ?? Caches?.tlang ?? Settings.Languages[1])?.split?.(/[-_]/)?.[0]?.toUpperCase()];
 			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
-			// 解析格式
-			let FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-			if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body);
-			$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
@@ -173,7 +173,10 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 					//$response.body = M3U8.stringify(PlayList);
 					break;
 				case "text/xml":
+				case "text/plist":
 				case "application/xml":
+				case "application/plist":
+				case "application/x-plist":
 					OriginSub = XML.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
@@ -184,22 +187,6 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 					};
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = XML.stringify(OriginSub);
-					break;
-				case "text/plist":
-				case "application/plist":
-				case "application/x-plist":
-					/*
-					OriginSub = await PLIST("plist2json", $request.body);
-					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = await PLIST("plist2json", SecondSub);
-						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
-					};
-					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					$request.body = await PLIST("json2plist", OriginSub);
-					*/
 					break;
 				case "text/vtt":
 				case "application/vtt":
@@ -248,7 +235,7 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
+				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
 				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";

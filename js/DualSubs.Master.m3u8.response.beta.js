@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(2) Master.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(5) Master.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -402,39 +402,34 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	$.log(`☑️ ${$.name}, Set DualSubs Subtitle Option, type: ${type}, standard: ${standard}, device: ${device}`, "");
 	const NAME1 = playlist1?.OPTION?.NAME.trim(), NAME2 = playlist2?.OPTION?.NAME.trim();
 	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE.trim(), LANGUAGE2 = playlist2?.OPTION?.LANGUAGE.trim();
-	let typeName = "";
 	// 复制此语言选项
 	let newOption = JSON.parse(JSON.stringify(playlist1));
 	// 修改名称
 	switch (type) {
 		case "Official":
-			typeName = "官方字幕";
-			newOption.OPTION.NAME = `${typeName} (${NAME1}/${NAME2})`;
+			newOption.OPTION.NAME = `官方字幕 (${NAME1}/${NAME2})`;
 			break;
 		case "Translate":
-			typeName = "翻译字幕";
-			newOption.OPTION.NAME = `${typeName} (${NAME1}/${NAME2})`;
+			newOption.OPTION.NAME = `翻译字幕 (${NAME1}/${NAME2})`;
 			break;
 		case "External":
-			typeName = "外挂字幕";
-			newOption.OPTION.NAME = `${typeName} (${NAME1})`;
+			newOption.OPTION.NAME = `外挂字幕 (${NAME1})`;
 			break;
 	};
 	// 修改语言代码
 	switch (platform) {
 		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
+		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
 			switch (device) {
+				case "Web":
 				case "Macintosh":
 					newOption.OPTION.LANGUAGE = LANGUAGE1;
 					break;
 				default:
+					//newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
 					newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
 					break;
 			};
-			break;
-		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
-			//newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
-			newOption.OPTION.LANGUAGE = `${typeName} (${NAME1}/${NAME2})`;
 			break;
 		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
 		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
@@ -445,6 +440,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 		case "HBOMax": // AppleCoreMedia
 		case "Viki":
 			//if (!standard) newOption.OPTION.NAME = NAME1;
+			newOption.OPTION.LANGUAGE = LANGUAGE1;
 			//if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
 			break;
 		case "Paramount+":

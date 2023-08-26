@@ -92,7 +92,7 @@ $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Languages);
 							// 获取官方字幕请求
 							if (subtitlesURIArray1.length) {
-								$.log(`🚧 ${$.name}, subtitlesURIArray0.length: ${subtitlesURIArray1.length}`, "");
+								$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
 								// 获取字幕文件名
 								let fileName = PATHs?.[PATHs?.length - 1] ?? getSubtitlesFileName($request.url, PLATFORM);
 								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")

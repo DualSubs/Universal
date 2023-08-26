@@ -518,7 +518,7 @@ function isStandard(_url, headers, platform) {
 		case "TED":
 			if (UA?.includes("Mozilla/5.0")) standard = false;
 			break;
-	}
+	};
 	$.log(`✅ ${$.name}, is Standard, standard: ${standard}, device: ${device}`, "");
 	return {standard, device};
 };

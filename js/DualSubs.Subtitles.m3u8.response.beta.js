@@ -311,7 +311,7 @@ function detectFormat(url, body) {
  * @author VirgilClyne
  * @param {String} url - Request URL / Master Playlist URL
  * @param {Map} cache - Playlist Cache
- * @param {Array} language - Language
+ * @param {String} language - Language
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
 function getPlaylistCache(url, cache, language) {
@@ -321,21 +321,21 @@ function getPlaylistCache(url, cache, language) {
 	let subtitlesPlaylistIndex = 0;
 	cache?.forEach((Value, Key) => {
 		//$.log(`🚧 ${$.name}, getPlaylistCache, Key: ${Key}, Value: ${JSON.stringify(Value)}`, "");
-			if (Array.isArray(Value?.[language])) {
-				let Array = Value?.[language];
-				//$.log(`🚧 ${$.name}, getPlaylistCache`, `Array: ${JSON.stringify(Array)}`, "");
-				if (Array?.some((Object, Index) => {
-					if (url.includes(Object?.URI ?? Object?.OPTION?.URI ?? null)) {
-						subtitlesPlaylistIndex = Index;
-						$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
-						return true;
-					} else return false;
-				})) {
-					masterPlaylistURL = Key;
-					subtitlesPlaylist = Value;
-					//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
-				};
+		if (Array.isArray(Value?.[language])) {
+			let Array = Value?.[language];
+			//$.log(`🚧 ${$.name}, getPlaylistCache`, `Array: ${JSON.stringify(Array)}`, "");
+			if (Array?.some((Object, Index) => {
+				if (url.includes(Object?.URI ?? Object?.OPTION?.URI ?? null)) {
+					subtitlesPlaylistIndex = Index;
+					$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+					return true;
+				} else return false;
+			})) {
+				masterPlaylistURL = Key;
+				subtitlesPlaylist = Value;
+				//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
 			};
+		};
 	});
 	$.log(`✅ ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
 	return { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex };
@@ -344,11 +344,11 @@ function getPlaylistCache(url, cache, language) {
 /**
  * Set Subtitles Cache
  * @author VirgilClyne
- * @param {Map} Cache - Subtitles Cache
- * @param {Object} Playlist - Subtitles Playlist Cache
- * @param {Array} Language - Language
- * @param {Number} Index - Subtitles Playlist Index
- * @param {String} Platform - Steaming Media Platform
+ * @param {Map} cache - Subtitles Cache
+ * @param {Object} playlist - Subtitles Playlist Cache
+ * @param {Array} language - Language
+ * @param {Number} index - Subtitles Playlist Index
+ * @param {String} platform - Steaming Media Platform
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
 async function setSubtitlesCache(cache, playlist, language, index = 0, platform = "Universal") {
@@ -366,7 +366,7 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
 			// 写入字幕文件地址vtt/ttml缓存到map
 			cache = cache.set(val.URL, subtitlesURLarray);
 			//$.log(`✅ ${$.name}, setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(cache.get(val?.URL))}`, "");
-			$.log(`✅ ${$.name}, setSubtitlesCache`, `value?.URL: ${val?.URL}`, "");
+			$.log(`✅ ${$.name}, setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
 		};
 	}));
 	return cache;
@@ -412,7 +412,7 @@ async function getSubtitles(url, headers, platform) {
 			if (subtitles.some(item => /\/aiv-prod-timedtext\//.test(item))) subtitles = subtitles.filter(item => /\/aiv-prod-timedtext\//.test(item));
 			//Array.from(new Set(subtitles));
 			subtitles = subtitles.filter((item, index, array) => {
-				//当前元素，在原始数组中的第一个索引==当前索引值，否则返回当前元素
+				// 当前元素，在原始数组中的第一个索引==当前索引值，否则返回当前元素
 				return array.indexOf(item, 0) === index;
 			}); // 数组去重
 			break;

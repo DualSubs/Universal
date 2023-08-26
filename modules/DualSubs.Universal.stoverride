@@ -12,7 +12,6 @@ http:
     - "*avodhlss3ww-a.akamaihd.net"
     - "s3.amazonaws.com"
     - "cf-timedtext.aux.pv-cdn.net"
-    - "d184dfn36gombl.cloudfront.net"
     - "d1v5ir2lpwr8os.cloudfront.net"
     - "d22qjgkvxw22r6.cloudfront.net"
     - "d25xi40x97liuc.cloudfront.net"
@@ -34,7 +33,6 @@ http:
     - "*avodhlss3ww-a.akamaihd.net"
     - "s3.amazonaws.com"
     - "cf-timedtext.aux.pv-cdn.net"
-    - "d184dfn36gombl.cloudfront.net"
     - "d1v5ir2lpwr8os.cloudfront.net"
     - "d22qjgkvxw22r6.cloudfront.net"
     - "d25xi40x97liuc.cloudfront.net"
@@ -148,6 +146,10 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
+    - match: ^https?:\/\/(.+)(\.(hls|dash)\.row\.aiv-cdn|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})_subtitles\.m3u8\?(.*)subtype=
+      name: DualSubs.Subtitles.m3u8.response
+      type: response
+      require-body: true
     - match: ^https?:\/\/(.+)(\.(hls|dash)\.row\.aiv-cdn|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
@@ -156,7 +158,7 @@ http:
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(d25xi40x97liuc|dmqdd6hw24ucf|d1v5ir2lpwr8os|d1v5ir2lpwr8os|d27xxe7juh1us6)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
@@ -164,7 +166,7 @@ http:
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(d184dfn36gombl|d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=(Official|External)
+    - match: ^https?:\/\/(d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
@@ -172,7 +174,7 @@ http:
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(d184dfn36gombl|d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate
+    - match: ^https?:\/\/(d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true

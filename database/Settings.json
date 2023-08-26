@@ -1,45 +1,78 @@
 {
-	"Switch": true,
-	"Types": ["Official", "Translate"],
-	"Languages": ["ZH", "EN"],
+	"Default": {
+		"Settings": {
+			"Switch":true,
+			"Type": "Official",
+			"Types": ["Official", "Translate"],
+			"Languages": ["EN", "ZH"],
+			"CacheSize": 100
+		}
+	},
+	"Universal": {
+		"Settings": {
+			"Switch": true,
+			"Types": ["Official", "Translate"],
+			"Languages": ["EN", "ZH"]
+		}
+	},
+	"YouTube": {
+		"Settings": {
+			"Switch": true,
+			"Type": "Official"
+		}
+	},
+	"Netflix": {
+		"Settings": {
+			"Switch": true,
+			"Type": "Translate",
+			"Languages": ["EN", "ZH"]
+		}
+	},
 	"Official": {
-		"CacheSize": 100,
-		"Position": "Forward",
-		"Offset": 0,
-		"Tolerance": 1000
+		"Settings": {
+			"CacheSize": 100,
+			"Position": "Reverse",
+			"Offset": 0,
+			"Tolerance": 1000
+		}
 	},
 	"Translate": {
-		"Type": "Google",
-		"Types": ["Google", "GoogleCloud", "Azure", "DeepL"],
-		"ShowOnly": false,
-		"Position": "Forward",
-		"CacheSize": 10,
-		"Method": "Part",
-		"Times": 3,
-		"Interval": 100,
-		"Exponential": true
+		"Settings": {
+			"Vendor": "Google",
+			"ShowOnly": false,
+			"Position": "Forward",
+			"CacheSize": 10,
+			"Method": "Part",
+			"Times": 3,
+			"Interval": 500,
+			"Exponential": true
+		}
 	},
 	"External": {
-		"URL": null,
-		"ShowOnly": false,
-		"Position": "Forward",
-		"Offset": 0,
-		"Tolerance": 1000
+		"Settings": {
+			"URL": null,
+			"ShowOnly": false,
+			"Position": "Forward",
+			"Offset": 0,
+			"Tolerance": 1000
+		}
 	},
 	"API": {
-		"GoogleCloud": {
-			"Mode": "Key",
-			"Auth": null
-		},
-		"Azure": {
-			"Version": "Azure",
-			"Region": null,
-			"Mode": "Key",
-			"Auth": null
-		},
-		"DeepL": {
-			"Version": "Free",
-			"Auth": null
+		"Settings": {
+			"GoogleCloud": {
+				"Mode": "Key",
+				"Auth": null
+			},
+			"Azure": {
+				"Version": "Azure",
+				"Region": null,
+				"Mode": "Key",
+				"Auth": null
+			},
+			"DeepL": {
+				"Version": "Free",
+				"Auth": null
+			}
 		}
 	}
 }

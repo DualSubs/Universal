@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(2) Subtitles.Composite.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(4) Subtitles.Composite.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -565,11 +565,12 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 		default: { // 长度不等，需要计算
 			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度不等，需要计算`, "")
 			// 计算当前字幕在原字幕队列中的百分比
-			const Position1 = Index1 / VTTs1.length;
+			const Position1 = (Index1 + 1) / VTTs1.length; // 从 0 开始计数，所以要加 1
 			// 根据百分比计算当前字幕在新字幕队列中的位置
 			const Index2 = Math.round(Position1 * VTTs2.length);
 			// 获取当前字幕在新字幕队列中的前后1个字幕
-			const nearlyVTTs = VTTs2.slice((Index2 - 1 < 0) ? 0 : Index2 - 1, Index2 + 2);
+			const BeginIndex = (Index2 - 1 < 0) ? 0 : Index2 - 1, EndIndex = Index2 + 1;
+			const nearlyVTTs = VTTs2.slice(BeginIndex, EndIndex + 1); // slice 不取 EndIndex 本身
 			nearlyVTTs.forEach(url => {
 				let _request = {
 					"url": url,

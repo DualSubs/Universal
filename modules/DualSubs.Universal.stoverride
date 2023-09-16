@@ -480,7 +480,7 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(master|playlist_\d+)\.m3u8
+    - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(master|prog_index|playlist_\d+)\.m3u8
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true

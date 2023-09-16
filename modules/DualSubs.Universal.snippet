@@ -207,7 +207,7 @@
 ^https?:\/\/api\.viki\.io\/(.+)\/auth_subtitles\/(\w+)\.vtt\?(.*)subtype=Translate url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Translate.response.js
 
 # DualSubs.EpixNow.Master.m3u8.response
-^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(master|playlist_\d+)\.m3u8 url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js
+^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(master|prog_index|playlist_\d+)\.m3u8 url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js
 # DualSubs.EpixNow.Subtitles.m3u8.response
 ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/media\.m3u8\?(.*)subtype= url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
 ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\.m3u8\?(.*)subtype= url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js

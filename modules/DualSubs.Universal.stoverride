@@ -104,11 +104,15 @@ http:
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=(Official|External)
+    - match: ^https?:\/\/vod-(.+)-svod\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles_V\d\.m3u8\?(.*)subtype=
+      name: DualSubs.Subtitles.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/vod-(.+)-(aoc|svod)\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
+    - match: ^https?:\/\/vod-(.+)-(aoc|svod)\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true
@@ -117,7 +121,7 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.m3u8
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles_V\d\\.m3u8
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true

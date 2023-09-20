@@ -20,15 +20,16 @@
 ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8 url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js
 # DualSubs.TV+.Subtitles.m3u8.response
 ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8\?(.*)subtype= url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
+^https?:\/\/vod-(.+)-svod\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles_V\d\.m3u8\?(.*)subtype= url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
 # DualSubs.TV+.Subtitles.Composite.response
-^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=(Official|External) url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Composite.response.js
+^https?:\/\/vod-(.+)-(aoc|svod)\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=(Official|External) url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Composite.response.js
 # DualSubs.TV+.Subtitles.Translate.response
-^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Translate.response.js
+^https?:\/\/vod-(.+)-(aoc|svod)\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Translate.response.js
 
 # DualSubs.Fitness.Master.m3u8.response
 ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\/playlist\.m3u8 url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js
 # DualSubs.Fitness.Subtitles.m3u8.response
-^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.m3u8 url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
+^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles_V\d\.m3u8 url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
 # DualSubs.Fitness.Subtitles.Composite.response
 ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=(Official|External) url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Composite.response.js
 # DualSubs.Fitness.Subtitles.Translate.response

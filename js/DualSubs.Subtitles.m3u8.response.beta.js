@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(2) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(3) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -119,7 +119,10 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 						if (item?.URI) {
 						//if (item?.URI?.includes("vtt") || item?.URI?.includes("ttml")) {
 							const symbol = (item.URI.includes("?")) ? "&" : "?";
-							if (!item?.URI?.includes("empty") && !item?.URI?.includes("default")) {
+							if (item?.URI?.includes("empty")) {}
+							else if (item?.URI?.includes("blank")) {}
+							else if (item?.URI?.includes("default")) {}
+							else {
 								//if (url?.query?.sublang) item.URI += `${symbol}subtype=${Type}&sublang=${url.query.sublang}`;
 								//else item.URI += `${symbol}subtype=${Type}`;
 								item.URI += `${symbol}subtype=${Type}`;
@@ -400,9 +403,10 @@ async function getSubtitles(url, headers, platform) {
 	let response = await $.http.get({ url: url, headers: headers });
 	//$.log(`🚧 ${$.name}, Get Subtitle *.vtt *.ttml URLs`, `response: ${JSON.stringify(response)}`, "");
 	let subtitlePlayList = M3U8.parse(response.body);
-	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?)(\?.+)?$/.test(URI)));
+	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml)(\?.+)?$/.test(URI)));
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/empty/.test(URI));
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/blank/.test(URI));
+	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/default/.test(URI));
 	let subtitles = subtitlePlayList.map(({ URI }) => aPath(url, URI));
 	switch (platform) {
 		case "Disney+":

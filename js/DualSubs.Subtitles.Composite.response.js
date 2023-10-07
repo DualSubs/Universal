@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(4) Subtitles.Composite.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(5) Subtitles.Composite.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -111,6 +111,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									// 设置参数
 									Settings.Offset = 0;
 									Settings.Tolerance = 100;
+									Settings.Position = (Settings.Position === "Reverse") ? "Forward" : "Reverse";
 									switch (Settings.ShowOnly) {
 										case true:
 											$.log(`⚠ ${$.name}, 仅显示翻译后字幕，跳过`, "");
@@ -178,7 +179,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = XML.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
 					$response.body = XML.stringify(OriginSub);
 					break;
@@ -188,7 +189,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = VTT.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
 					$response.body = VTT.stringify(OriginSub);
 					break;
@@ -198,7 +199,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = JSON.parse(SecondSub);
-						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, [Settings.Position]);
+						OriginSub = CombineDualSubs(OriginSub, SecondSub, FORMAT, url?.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
 					$response.body = JSON.stringify(OriginSub);
 					break;
@@ -593,11 +594,11 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
  * @param {Array} Kind - options = ["asr", "captions"]
  * @param {Number} Offset - Offset
  * @param {Number} Tolerance - Tolerance
- * @param {Array} Options - options = ["Forward", "Reverse", "ShowOnly"]
+ * @param {Array} Position - Position = ["Forward", "Reverse"]
  * @return {String} DualSub
  */
-function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions", Offset = 0, Tolerance = 0, Options = ["Forward"]) {
-	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Options:${Options}`, "");
+function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions", Offset = 0, Tolerance = 0, Position = "Forward") {
+	$.log(`⚠ ${$.name}, Combine Dual Subtitles`, `Offset:${Offset}, Tolerance:${Tolerance}, Position:${Position}`, "");
 	let DualSub = Sub1;
 	// 有序数列 用不着排序
 	let index0 = 0, index1 = 0, index2 = 0;
@@ -635,7 +636,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "capt
 							index0 = index1;
 							// 处理普通字幕
 							const text1 = Sub1.events[index1]?.segs?.[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs?.[0].utf8 ?? "";
-							DualSub.events[index0].segs = [{ "utf8": Options.includes("Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}` }];
+							DualSub.events[index0].segs = [{ "utf8": (Position === "Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}` }];
 						};
 						if (timeStamp2 > timeStamp1) index1++
 						else if (timeStamp2 < timeStamp1) index2++
@@ -679,7 +680,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "capt
 							index0 = index1;
 							// 处理普通字幕
 							const text1 = Sub1.timedtext.body.p[index1]?.["#"] ?? "", text2 = Sub2.timedtext.body.p[index2]?.["#"] ?? "";
-							DualSub.timedtext.body.p[index0]["#"] = Options.includes("Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`;
+							DualSub.timedtext.body.p[index0]["#"] = (Position === "Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`;
 						};
 						if (timeStamp2 > timeStamp1) index1++
 						else if (timeStamp2 < timeStamp1) index2++
@@ -707,7 +708,7 @@ function CombineDualSubs(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "capt
 						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 							index0 = index1;
 							// 处理普通字幕
-							DualSub.body[index0].text = Options.includes("Reverse") ? `${text2}\n${text1}`: `${text1}\n${text2}`;
+							DualSub.body[index0].text = (Position === "Reverse") ? `${text2}\n${text1}`: `${text1}\n${text2}`;
 						};
 						if (timeStamp2 > timeStamp1) index1++
 						else if (timeStamp2 < timeStamp1) index2++

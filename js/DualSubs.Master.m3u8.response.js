@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(7) Master.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(9) Master.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -329,7 +329,7 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  * @return {Object} m3u8
  */
 function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], platform = "", standard = true, device = "iPhone") {
-	types = (standard == true) ? types : ["Translate"];
+	types = (standard == true) ? types : [types.at(-1)];
 	const playlists1 = playlists?.[languages?.[0]];
 	const playlists2 = playlists?.[languages?.[1]];
 	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");

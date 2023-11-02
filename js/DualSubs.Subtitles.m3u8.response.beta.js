@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(6) Subtitles.m3u8.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(7) Subtitles.m3u8.response.beta");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -57,7 +57,7 @@ const DataBase = {
 let url = URL.parse($request?.url);
 // 获取连接参数
 const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `HOST: ${HOST}`, `PATH: ${PATH}`, `PATHs: ${PATHs}`, "");
+$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `URL: ${JSON.stringify(url)}`, "");
 // 获取平台
 const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
@@ -250,8 +250,8 @@ function setENV(name, platforms, database) {
 function detectFormat(url, body) {
 	let format = undefined;
 	$.log(`☑️ ${$.name}`, `detectFormat`, "");
-	$.log(`🚧 ${$.name}`, `detectFormat, format: ${url?.type ?? url?.query?.fmt ?? url?.query?.format}`, "");
-	switch (url?.type ?? url?.query?.fmt ?? url?.query?.format) {
+	$.log(`🚧 ${$.name}`, `detectFormat, format: ${url?.format ?? url?.query?.fmt ?? url?.query?.format}`, "");
+	switch (url?.format ?? url?.query?.fmt ?? url?.query?.format) {
 		case "txt":
 			format = "text/plain";
 			break;

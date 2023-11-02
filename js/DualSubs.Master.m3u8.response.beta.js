@@ -55,9 +55,10 @@ const DataBase = {
 /***************** Processing *****************/
 // 解构URL
 let url = URL.parse($request?.url);
+$.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(url)}`, "");
 // 获取连接参数
 const METHOD = $request?.method, HOST = url?.host, PATH = url?.path, PATHs = url?.paths;
-$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, `URL: ${JSON.stringify(url)}`, "");
+$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
 // 获取平台
 const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");

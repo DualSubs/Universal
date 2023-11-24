@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.13(7) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.14(1) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -49,7 +49,7 @@ const DataBase = {
 		"Settings":{"URL":undefined,"ShowOnly":false,"Position":"Forward","Offset":0,"Tolerance":1000}
 	},
 	"API":{
-		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Azure":{"Version":"Azure","Region":undefined,"Mode":"Key","Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined}}
+		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Azure":{"Version":"Azure","Region":undefined,"Mode":"Key","Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined,"Endpoint":undefined}}
 	}
 };
 
@@ -610,29 +610,49 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 			case "DeepL":
 				switch (api?.Version) {
 					case "Free":
-					default:
-						BaseURL = "https://api-free.deepl.com";
-						break;
 					case "Pro":
-						BaseURL = "https://api.deepl.com";
+					default:
+						switch (api?.Version) {
+							case "Free":
+								BaseURL = "https://api-free.deepl.com";
+								break;
+							case "Pro":
+								BaseURL = "https://api.deepl.com";
+								break;
+						};
+						request.url = `${BaseURL}/v2/translate`;
+						request.headers = {
+							"Accept": "*/*",
+							"User-Agent": "DualSubs",
+							"Content-Type": "application/x-www-form-urlencoded"
+						};
+						const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
+							: (database.DeepL[source].includes("PT")) ? "PT"
+								: database.DeepL[source];
+						const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
+							: (database.DeepL[target] == "PT") ? "PT-PT"
+								: database.DeepL[target];
+						const BaseBody = `auth_key=${api?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+						text = (Array.isArray(text)) ? text : [text];
+						texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
+						request.body = BaseBody + texts.join("");
+						break;
+					case "X":
+						BaseURL = api?.Endpoint;
+						request.url = BaseURL;
+						request.headers = {
+							"Accept": "*/*",
+							"User-Agent": "DualSubs",
+							"Content-Type": "application/json"
+						};
+						if (api?.Auth) request.headers.Authorization = `Bearer ${api.Auth}`;
+						request.body = JSON.stringify({
+							"text": (Array.isArray(text)) ? text.join("\r") : text,
+							"source_lang": database.DeepL[source],
+							"target_lang": database.DeepL[target],
+						});
 						break;
 				};
-				request.url = `${BaseURL}/v2/translate`
-				request.headers = {
-					"Accept": "*/*",
-					"User-Agent": "DualSubs",
-					"Content-Type": "application/x-www-form-urlencoded"
-				};
-				const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
-					: (database.DeepL[source].includes("PT")) ? "PT"
-						: database.DeepL[source];
-				const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
-					: (database.DeepL[target] == "PT") ? "PT-PT"
-						: database.DeepL[target];
-				const BaseBody = `auth_key=${api?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
-				text = (Array.isArray(text)) ? text : [text];
-				texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
-				request.body = BaseBody + texts.join("");
 				break;
 			case "BaiduFanyi":
 				// https://fanyi-api.baidu.com/doc/24
@@ -710,7 +730,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 								texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
 								break;
 							case "DeepL":
-								texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`)
+								texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`) ?? _data?.text ?? `翻译失败, 类型: ${type}`;
 								break;
 							case "BaiduFanyi":
 								break;
@@ -736,24 +756,24 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
  */
 async function Fetch(request = {}) {
 	$.log(`☑️ ${$.name}, Fetch Ruled Reqeust`, "");
-	const FORMAT = (request?.headers?.["Content-Type"] ?? request?.headers?.["content-type"])?.split(";")?.[0];
+	//const FORMAT = (request?.headers?.["Content-Type"] ?? request?.headers?.["content-type"])?.split(";")?.[0];
 	$.log(`⚠ ${$.name}, Fetch Ruled Reqeust`, `FORMAT: ${FORMAT}`, "");
 	if ($.isQuanX()) {
 		switch (FORMAT) {
-			case "application/json":
-			case "text/xml":
+			case undefined: // 视为无body
+				// 返回普通数据
+				break;
 			default:
 				// 返回普通数据
 				delete request.bodyBytes;
 				break;
 			case "application/x-protobuf":
 			case "application/grpc":
+			case "application/grpc+proto":
+			//case "applecation/octet-stream":
 				// 返回二进制数据
 				delete request.body;
 				if (ArrayBuffer.isView(request.bodyBytes)) request.bodyBytes = request.bodyBytes.buffer.slice(request.bodyBytes.byteOffset, request.bodyBytes.byteLength + request.bodyBytes.byteOffset);
-				break;
-			case undefined: // 视为无body
-				// 返回普通数据
 				break;
 		};
 	};

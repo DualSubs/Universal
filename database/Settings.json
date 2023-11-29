@@ -5,7 +5,7 @@
 			"Type": "Official",
 			"Types": ["Official", "Translate"],
 			"Languages": ["EN", "ZH"],
-			"CacheSize": 100
+			"CacheSize": 50
 		}
 	},
 	"Universal": {
@@ -30,7 +30,7 @@
 	},
 	"Official": {
 		"Settings": {
-			"CacheSize": 100,
+			"CacheSize": 50,
 			"Position": "Reverse",
 			"Offset": 0,
 			"Tolerance": 1000

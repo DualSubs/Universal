@@ -72,6 +72,11 @@
 			"DeepL": {
 				"Version": "Free",
 				"Auth": null
+			},
+			"DeepLX":
+			{
+				"Endpoint": null,
+				"Key": null
 			}
 		}
 	}

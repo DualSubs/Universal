@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.14(1) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.14(16) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -49,7 +49,7 @@ const DataBase = {
 		"Settings":{"URL":undefined,"ShowOnly":false,"Position":"Forward","Offset":0,"Tolerance":1000}
 	},
 	"API":{
-		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Azure":{"Version":"Azure","Region":undefined,"Mode":"Key","Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined,"Endpoint":undefined}}
+		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Azure":{"Version":"Azure","Region":undefined,"Mode":"Key","Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined},"DeepLX":{"Endpoint":undefined,"Key":undefined}}
 	}
 };
 
@@ -91,6 +91,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/x-mpegURL":
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
+				case "audio/mpegurl":
 					//body = M3U8.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(PlayList);
@@ -426,6 +427,9 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
 		case "DeepL":
 			length = 49;
 			break;
+		case "DeepLX":
+			length = 20;
+			break;
 	};
 	let Translation = [];
 	switch (method) {
@@ -607,53 +611,56 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				}]);
 				*/
 				break;
-			case "DeepL":
+			case "DeepL": {
 				switch (api?.Version) {
 					case "Free":
-					case "Pro":
 					default:
-						switch (api?.Version) {
-							case "Free":
-								BaseURL = "https://api-free.deepl.com";
-								break;
-							case "Pro":
-								BaseURL = "https://api.deepl.com";
-								break;
-						};
-						request.url = `${BaseURL}/v2/translate`;
-						request.headers = {
-							"Accept": "*/*",
-							"User-Agent": "DualSubs",
-							"Content-Type": "application/x-www-form-urlencoded"
-						};
-						const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
-							: (database.DeepL[source].includes("PT")) ? "PT"
-								: database.DeepL[source];
-						const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
-							: (database.DeepL[target] == "PT") ? "PT-PT"
-								: database.DeepL[target];
-						const BaseBody = `auth_key=${api?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
-						text = (Array.isArray(text)) ? text : [text];
-						texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
-						request.body = BaseBody + texts.join("");
+						BaseURL = "https://api-free.deepl.com";
 						break;
-					case "X":
-						BaseURL = api?.Endpoint;
-						request.url = BaseURL;
-						request.headers = {
-							"Accept": "*/*",
-							"User-Agent": "DualSubs",
-							"Content-Type": "application/json"
-						};
-						if (api?.Auth) request.headers.Authorization = `Bearer ${api.Auth}`;
-						request.body = JSON.stringify({
-							"text": (Array.isArray(text)) ? text.join("\r") : text,
-							"source_lang": database.DeepL[source],
-							"target_lang": database.DeepL[target],
-						});
+					case "Pro":
+						BaseURL = "https://api.deepl.com";
 						break;
 				};
+				request.url = `${BaseURL}/v2/translate`;
+				request.headers = {
+					"Accept": "*/*",
+					"User-Agent": "DualSubs",
+					"Content-Type": "application/x-www-form-urlencoded"
+				};
+				const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
+					: (database.DeepL[source].includes("PT")) ? "PT"
+						: database.DeepL[source];
+				const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
+					: (database.DeepL[target] == "PT") ? "PT-PT"
+						: database.DeepL[target];
+				const BaseBody = `auth_key=${api?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+				text = (Array.isArray(text)) ? text : [text];
+				texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
+				request.body = BaseBody + texts.join("");
 				break;
+			}
+			case "DeepLX": {
+				BaseURL = api?.Endpoint;
+				request.url = BaseURL;
+				request.headers = {
+					"Accept": "*/*",
+					"User-Agent": "DualSubs",
+					"Content-Type": "application/json"
+				};
+				if (api?.Key) request.headers.Authorization = `Bearer ${api.Key}`;
+				const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
+					: (database.DeepL[source].includes("PT")) ? "PT"
+						: database.DeepL[source];
+				const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
+					: (database.DeepL[target] == "PT") ? "PT-PT"
+						: database.DeepL[target];
+				request.body = JSON.stringify({
+					"text": (Array.isArray(text)) ? text.join("||") : text,
+					"source_lang": source_lang,
+					"target_lang": target_lang,
+				});
+				break;
+			}
 			case "BaiduFanyi":
 				// https://fanyi-api.baidu.com/doc/24
 				BaseURL = "https://fanyi-api.baidu.com";
@@ -691,7 +698,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				};
 				break;
 		}
-		//$.log(`✅ ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
+		$.log(`✅ ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	};
 	// Get Translate Data
@@ -708,7 +715,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 							default:
 							case "Google":
 								if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
-								else if (Array.isArray(_data)) texts = _data ?? `翻译失败, 类型: ${type}`;
+								else if (Array.isArray(_data)) texts = _data;
 								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
 								break;
 						};
@@ -718,19 +725,23 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					case "Bing":
 					case "Azure":
 					case "DeepL":
+					case "DeepLX":
 					case "BaiduFanyi":
 					case "YoudaoAI":
 						switch (type) {
 							default:
 							case "GoogleCloud":
-								texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`)
+								texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`);
 								break;
 							case "Bing":
 							case "Azure":
-								texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`)
+								texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`);
 								break;
 							case "DeepL":
-								texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`) ?? _data?.text ?? `翻译失败, 类型: ${type}`;
+								texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`);
+								break;
+							case "DeepLX":
+								texts = _data?.data?.split("||") ?? _data?.data;
 								break;
 							case "BaiduFanyi":
 								break;
@@ -781,7 +792,7 @@ async function Fetch(request = {}) {
 		? await $.http.post(request)
 		: await $.http.get(request);
 	$.log(`✅ ${$.name}, Fetch Ruled Reqeust`, "");
-	//$.log(`🚧 ${$.name}, Fetch Ruled Reqeust`, `Response:${JSON.stringify(response)}`, "");
+	$.log(`🚧 ${$.name}, Fetch Ruled Reqeust`, `Response:${JSON.stringify(response)}`, "");
 	return response;
 };
 

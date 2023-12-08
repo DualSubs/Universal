@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(13) Master.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(1) Master.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -158,22 +158,24 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 function detectPlatform(url) {
 	$.log(`☑️ ${$.name}, Detect Platform`, "");
 	/***************** Platform *****************/
-	let Platform = /\.apple\.com/i.test(url) ? "Apple"
-		: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
-			: /(\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
-				: /prd\.media\.h264\.io/i.test(url) ? "Max"
-					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
-						: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
-							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
-								: /\.uplynk\.com/i.test(url) ? "Discovery+"
-									: /dplus-ph-/i.test(url) ? "Discovery+Ph"
-										: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
-											: /\.fubo\.tv/i.test(url) ? "FuboTV"
-												: /\.viki\.io/i.test(url) ? "Viki"
-													: /(epixhls\.akamaized\.net|epix\.services\.io)/i.test(url) ? "MGM+"
-														: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
-															: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
-																: "Universal";
+	let Platform =
+		/\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+			: /\.apple\.com/i.test(url) ? "Apple"
+				: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
+					: /(\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
+						: /prd\.media\.h264\.io/i.test(url) ? "Max"
+							: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
+								: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+									: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
+										: /\.uplynk\.com/i.test(url) ? "Discovery+"
+											: /dplus-ph-/i.test(url) ? "Discovery+Ph"
+												: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
+													: /\.fubo\.tv/i.test(url) ? "FuboTV"
+														: /\.viki\.io/i.test(url) ? "Viki"
+															: /(epixhls\.akamaized\.net|epix\.services\.io)/i.test(url) ? "MGM+"
+																: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
+																	: /\.nebula\.app|/i.test(url) ? "Nebula"
+																		: "Universal";
 	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };
@@ -426,6 +428,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
 		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
 		case "Hulu": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 空格分割
+		case "Nebula":  // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
 			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
 			break;
 		case "Max": // AppleCoreMedia

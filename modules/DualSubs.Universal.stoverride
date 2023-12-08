@@ -138,15 +138,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/composite_(.+)\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)(composite_(.+)|subtitles)\.m3u8\?(.*)subtype=
       name: DualSubs.Subtitles.m3u8.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt\?(.*)subtype=(Official|External)
+    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: DualSubs.Subtitles.Composite.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt\?(.*)subtype=Translate
+    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true

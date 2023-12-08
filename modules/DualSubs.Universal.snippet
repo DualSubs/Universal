@@ -38,11 +38,11 @@
 # DualSubs.Disney+.Master.m3u8.response
 ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(cbcs|ctr)-all-(.+)\.m3u8 url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js
 # DualSubs.Disney+.Subtitles.m3u8.response
-^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/composite_(.+)\.m3u8\?(.*)subtype= url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
+^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)(composite_(.+)|subtitles)\.m3u8\?(.*)subtype= url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
 # DualSubs.Disney+.Subtitles.Composite.response
-^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt\?(.*)subtype=(Official|External) url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Composite.response.js
+^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=(Official|External) url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Composite.response.js
 # DualSubs.Disney+.Subtitles.Translate.response
-^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.vtt\?(.*)subtype=Translate url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Translate.response.js
+^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=Translate url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Translate.response.js
 
 # DualSubs.PrimeVideo.Master.m3u8.response
 ^https?:\/\/(.+)(\.hls\.row\.aiv-cdn|avodhlss3ww-a.akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8 url script-response-body https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js

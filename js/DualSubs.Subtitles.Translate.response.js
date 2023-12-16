@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.14(16) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.14(17) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -573,9 +573,16 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					//"Ocp-Apim-Subscription-Region": api?.Region, // chinanorth, chinaeast2
 					//"X-ClientTraceId": uuidv4().toString()
 				};
-				if (api?.Region) request.headers["Ocp-Apim-Subscription-Region"] = api.Region;
-				if (api?.Mode == "Key") request.headers["Ocp-Apim-Subscription-Key"] = api.Auth;
-				else if (api?.Mode == "Token") request.headers.Authorization = `Bearer ${api.Auth}`;
+				switch (api?.Mode) {
+					case "Token":
+					default:
+						request.headers.Authorization = `Bearer ${api.Auth}`;
+						break;
+					case "Key":
+						request.headers["Ocp-Apim-Subscription-Key"] = api.Auth;
+						request.headers["Ocp-Apim-Subscription-Region"] = api.Region;
+						break;
+				};
 				text = (Array.isArray(text)) ? text : [text];
 				texts = await Promise.all(text?.map(async item => { return { "text": item } }))
 				request.body = JSON.stringify(texts);

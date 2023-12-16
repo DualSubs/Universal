@@ -1,18 +1,30 @@
 {
 	"Default": {
 		"Settings": {
-			"Switch":true,
+			"Switch": true,
 			"Type": "Official",
-			"Types": ["Official", "Translate"],
-			"Languages": ["EN", "ZH"],
+			"Types": [
+				"Official",
+				"Translate"
+			],
+			"Languages": [
+				"EN",
+				"ZH"
+			],
 			"CacheSize": 50
 		}
 	},
 	"Universal": {
 		"Settings": {
 			"Switch": true,
-			"Types": ["Official", "Translate"],
-			"Languages": ["EN", "ZH"]
+			"Types": [
+				"Official",
+				"Translate"
+			],
+			"Languages": [
+				"EN",
+				"ZH"
+			]
 		}
 	},
 	"YouTube": {
@@ -25,7 +37,10 @@
 		"Settings": {
 			"Switch": true,
 			"Type": "Translate",
-			"Languages": ["EN", "ZH"]
+			"Languages": [
+				"EN",
+				"ZH"
+			]
 		}
 	},
 	"Official": {
@@ -63,18 +78,17 @@
 				"Mode": "Key",
 				"Auth": null
 			},
-			"Azure": {
+			"Microsoft": {
 				"Version": "Azure",
+				"Mode": "Token",
 				"Region": null,
-				"Mode": "Key",
 				"Auth": null
 			},
 			"DeepL": {
 				"Version": "Free",
 				"Auth": null
 			},
-			"DeepLX":
-			{
+			"DeepLX": {
 				"Endpoint": null,
 				"Key": null
 			}

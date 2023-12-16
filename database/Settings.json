@@ -63,10 +63,10 @@
 				"Mode": "Key",
 				"Auth": null
 			},
-			"Azure": {
+			"Microsoft": {
 				"Version": "Azure",
+				"Mode": "Token",
 				"Region": null,
-				"Mode": "Key",
 				"Auth": null
 			},
 			"DeepL": {

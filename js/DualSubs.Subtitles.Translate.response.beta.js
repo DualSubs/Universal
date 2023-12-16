@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.14(17) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.15(1) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -49,7 +49,7 @@ const DataBase = {
 		"Settings":{"URL":undefined,"ShowOnly":false,"Position":"Forward","Offset":0,"Tolerance":1000}
 	},
 	"API":{
-		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Azure":{"Version":"Azure","Region":undefined,"Mode":"Key","Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined},"DeepLX":{"Endpoint":undefined,"Key":undefined}}
+		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Microsoft":{"Version":"Azure","Mode":"Token","Region":undefined,"Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined},"DeepLX":{"Endpoint":undefined,"Key":undefined}}
 	}
 };
 
@@ -421,6 +421,7 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
 		default:
 			length = 120;
 			break;
+		case "Microsoft":
 		case "Azure":
 			length = 99;
 			break;
@@ -574,6 +575,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					"to": database.Microsoft[target]
 				});
 				break;
+			case "Microsoft":
 			case "Azure":
 				// https://docs.microsoft.com/zh-cn/azure/cognitive-services/translator/
 				// https://docs.azure.cn/zh-cn/cognitive-services/translator/
@@ -730,6 +732,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 						break;
 					case "GoogleCloud":
 					case "Bing":
+					case "Microsoft":
 					case "Azure":
 					case "DeepL":
 					case "DeepLX":
@@ -741,6 +744,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 								texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`);
 								break;
 							case "Bing":
+							case "Microsoft":
 							case "Azure":
 								texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`);
 								break;

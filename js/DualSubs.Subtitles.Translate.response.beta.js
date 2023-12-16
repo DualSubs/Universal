@@ -588,7 +588,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 						BaseURL = "https://api.translator.azure.cn";
 						break;
 					case "AzureUS":
-						BaseURL = "https://api.cognitive.microsofttranslator.us"
+						BaseURL = "https://api.cognitive.microsofttranslator.us";
 						break;
 				};
 				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&${(source !== "AUTO") ? `from=${ database.Microsoft[source]}` : ""}&to=${database.Microsoft[target]}`;

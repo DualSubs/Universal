@@ -79,6 +79,8 @@ http:
     - "epixhls.akamaized.net"
     - "*.live.epix.services"
     - "media-production.nebula.app"
+    - "*.prd.pluto.tv"
+    - "*.plutotv.net"
   script:
     - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8
       name: DualSubs.Master.m3u8.response
@@ -544,6 +546,23 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/media-production\.nebula\.app\/(.+)\/subtitles\/(.+)\/main\.(\w+)\.vtt\?(.*)subtype=Translate
+      name: DualSubs.Subtitles.Translate.response
+      type: response
+      require-body: true
+
+    - match: ^https?:\/\/(.+)\.prd\.pluto\.tv\/v2\/stitch\/hls\/(channel|episode)\/(\w+)\/master\.m3u8
+      name: DualSubs.Master.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.prd\.pluto\.tv\/v2\/stitch\/hls\/(channel|episode)\/(\w+)\/subtitle\/(\w+)\/playlist\.m3u8\?(.*)subtype=
+      name: DualSubs.Subtitles.m3u8.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.plutotv\.net\/(.+)\/hls\/(.+)\/(\w+\.m3u8_)?(\d+)\.vtt\?(.*)subtype=(Official|External)
+      name: DualSubs.Subtitles.Composite.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.plutotv\.net\/(.+)\/hls\/(.+)\/(\w+\.m3u8_)?(\d+)\.vtt\?(.*)subtype=Translate
       name: DualSubs.Subtitles.Translate.response
       type: response
       require-body: true

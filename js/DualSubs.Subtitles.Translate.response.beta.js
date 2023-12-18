@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.15(1) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.15(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -527,13 +527,13 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
+				BaseURL = "https://translation.googleapis.com";
 				switch (api?.Version) {
 					case "v2":
 					default:
-						BaseURL = "https://translation.googleapis.com";
-						request.url = `${BaseURL}/language/translate/v2/?key=${api?.Auth}`;
+						request.url = `${BaseURL}/language/translate/v2`;
 						request.headers = {
-							//"Authorization": `Bearer ${api?.Auth}`,
+							//"Authorization": `Bearer ${api?.Token ?? api?.Auth}`,
 							"User-Agent": "DualSubs",
 							"Content-Type": "application/json; charset=utf-8"
 						};
@@ -544,8 +544,30 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 							"format": "html",
 							//"key": api?.Key
 						});
+						switch (api?.Mode) {
+							case "Token":
+								request.headers.Authorization = `Bearer ${api?.Token ?? api?.Auth}`;
+								break;
+							case "Key":
+							default:
+								request.url += `?key=${api?.Key ?? api?.Auth}`;
+								break;
+						};
 						break;
 					case "v3":
+						request.url = `${BaseURL}/v3/projects/${api?.ID}`;
+						request.headers = {
+							"Authorization": `Bearer ${api?.Token ?? api?.Auth}`,
+							"x-goog-user-project": api?.ID,
+							"User-Agent": "DualSubs",
+							"Content-Type": "application/json; charset=utf-8"
+						};
+						request.body = JSON.stringify({
+							"sourceLanguageCode": database.Google[source],
+							"targetLanguageCode": database.Google[target],
+							"contents": (Array.isArray(text)) ? text : [text],
+							"mimeType": "text/html"
+						});
 						break;
 				}
 				break;
@@ -604,11 +626,11 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				switch (api?.Mode) {
 					case "Token":
 					default:
-						request.headers.Authorization = `Bearer ${api.Auth}`;
+						request.headers.Authorization = `Bearer ${api?.Token ?? api?.Auth}`;
 						break;
 					case "Key":
-						request.headers["Ocp-Apim-Subscription-Key"] = api.Auth;
-						request.headers["Ocp-Apim-Subscription-Region"] = api.Region;
+						request.headers["Ocp-Apim-Subscription-Key"] = api?.Key ?? api?.Auth;
+						request.headers["Ocp-Apim-Subscription-Region"] = api?.Region;
 						break;
 				};
 				text = (Array.isArray(text)) ? text : [text];
@@ -642,7 +664,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
 					: (database.DeepL[target] == "PT") ? "PT-PT"
 						: database.DeepL[target];
-				const BaseBody = `auth_key=${api?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+				const BaseBody = `auth_key=${api?.Key ?? api?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
 				text = (Array.isArray(text)) ? text : [text];
 				texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
 				request.body = BaseBody + texts.join("");
@@ -656,7 +678,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					"User-Agent": "DualSubs",
 					"Content-Type": "application/json"
 				};
-				if (api?.Key) request.headers.Authorization = `Bearer ${api.Key}`;
+				if (api?.Token) request.headers.Authorization = `Bearer ${api?.Token ?? api?.Auth}`;
 				const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
 					: (database.DeepL[source].includes("PT")) ? "PT"
 						: database.DeepL[source];

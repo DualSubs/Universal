@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.3(9) Subtitles.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(1) Subtitles.m3u8.response");
 const URL = new URLs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -48,7 +48,7 @@ const DataBase = {
 		"Settings":{"URL":undefined,"ShowOnly":false,"Position":"Forward","Offset":0,"Tolerance":1000}
 	},
 	"API":{
-		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Microsoft":{"Version":"Azure","Mode":"Token","Region":undefined,"Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined},"DeepLX":{"Endpoint":undefined,"Key":undefined}}
+		"Settings":{"GoogleCloud":{"Version":"v2","Mode":"Key","Auth":undefined},"Microsoft":{"Version":"Azure","Mode":"Token","Region":undefined,"Auth":undefined},"DeepL":{"Version":"Free","Auth":undefined},"DeepLX":{"Endpoint":undefined,"Auth":undefined}}
 	}
 };
 
@@ -239,7 +239,7 @@ function setENV(name, platforms, database) {
  */
 function detectFormat(url, body) {
 	let format = undefined;
-	$.log(`☑️ ${$.name}`, `detectFormat`, "");
+	$.log(`☑️ ${$.name}`, `detectFormat, format: ${url?.format ?? url?.query?.fmt ?? url?.query?.format}`, "");
 	switch (url?.format ?? url?.query?.fmt ?? url?.query?.format) {
 		case "txt":
 			format = "text/plain";
@@ -269,25 +269,35 @@ function detectFormat(url, body) {
 		case undefined:
 			const HEADER = body?.substring?.(0, 6).trim?.();
 			$.log(`🚧 ${$.name}`, `detectFormat, HEADER: ${HEADER}`, "");
-			$.log(`🚧 ${$.name}`, `detectFormat, HEADER?.substring?.(0): ${HEADER?.substring?.(0)}`, "");
-			switch (HEADER?.substring?.(0)) {
-				case "<":
-				case "W":
+			$.log(`🚧 ${$.name}`, `detectFormat, HEADER?.substring?.(0, 1): ${HEADER?.substring?.(0, 1)}`, "");
+			switch (HEADER) {
+				case "<?xml":
+					format = "text/xml";
+					break;
+				case "WEBVTT":
+					format = "text/vtt";
+					break;
 				default:
-					switch (HEADER) {
-						case "<?xml":
-							format = "text/xml";
-							break;
-						case "WEBVTT":
-						default:
+					switch (HEADER?.substring?.(0, 1)) {
+						case "0":
+						case "1":
+						case "2":
+						case "3":
+						case "4":
+						case "5":
+						case "6":
+						case "7":
+						case "8":
+						case "9":
 							format = "text/vtt";
 							break;
+						case "{":
+							format = "application/json";
+							break;
 						case undefined:
+						default:
 							break;
 					};
-					break;
-				case "{":
-					format = "application/json";
 					break;
 				case undefined:
 					break;

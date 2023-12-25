@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.0.0(3) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.1.0(3) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -160,18 +160,35 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					body = JSON.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					let fullText = [];
-					body.events = body.events.map(event => {
-						if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
-						fullText.push(event?.segs?.[0]?.utf8 ?? "\u200b");
-						delete event.wWinId;
-						return event;
-					});
-					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-					body.events = body.events.map((event, i) => {
-						if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
-						return event
-					});
-					//$.log(`🚧 ${$.name}`, `TransSub: ${JSON.stringify(TransSub)}`, "");
+					switch (PLATFORM) {
+						case "YouTube": {
+							body.events = body.events.map(event => {
+								if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
+								fullText.push(event?.segs?.[0]?.utf8 ?? "\u200b");
+								delete event.wWinId;
+								return event;
+							});
+							const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+							body.events = body.events.map((event, i) => {
+								if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+								return event;
+							});
+							break;
+						};
+						case "Spotify": {
+							body.lyrics.lines = body.lyrics.lines.map(line => {
+								fullText.push(line.words ?? "\u200b");
+								return line;
+							});
+							const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+							body.lyrics.lines = body.lyrics.lines.map((line, i) => {
+								if (line?.words) line.words = combineText(line.words, translation?.[i], Settings?.ShowOnly, Settings?.Position, "\r\n");
+								return line;
+							});
+							break;
+						};
+					};
+					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				};
@@ -247,7 +264,8 @@ function detectPlatform(url) {
 												: /\.viki\.io/i.test(url) ? "Viki"
 													: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
 														: /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
-															: "Universal";
+															: /\.spotify\.com/i.test(url) ? "Spotify"
+																: "Universal";
 	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };

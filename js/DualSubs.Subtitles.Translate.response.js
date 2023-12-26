@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.1.1(17) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.1.2(1) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -237,7 +237,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 									const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 									if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];
-									body.lyrics.alternatives.push({
+									body.lyrics.alternatives.unshift({
 										"language": Languages[1].toLowerCase(),
 										"lines": translation
 									});

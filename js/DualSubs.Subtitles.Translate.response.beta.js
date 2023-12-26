@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.1.2(1) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.1.2(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -228,7 +228,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 											super("Lyrics", [
 												{ no: 2, name: "lines", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Lines },
 												{ no: 9, name: "alternatives", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Alternatives },
-												{ no: 10, name: "language", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+												{ no: 10, name: "language", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
 											]);
 										}
 									};

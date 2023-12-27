@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.1.2(4) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.2.0(9) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -161,18 +161,35 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 					switch (PLATFORM) {
 						case "YouTube": {
-							let fullText = [];
-							body.events = body.events.map(event => {
-								if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
-								fullText.push(event?.segs?.[0]?.utf8 ?? "\u200b");
-								delete event.wWinId;
-								return event;
-							});
-							const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-							body.events = body.events.map((event, i) => {
-								if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
-								return event;
-							});
+							if (body?.events) {
+								let fullText = [];
+								body.events = body.events.map(event => {
+									if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
+									fullText.push(event?.segs?.[0]?.utf8 ?? "\u200b");
+									delete event.wWinId;
+									return event;
+								});
+								const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+								body.events = body.events.map((event, i) => {
+									if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+									return event;
+								});
+							} else if (body?.contents?.sectionListRenderer?.contents) {
+								let musicDescriptions = body.contents.sectionListRenderer.contents;
+								musicDescriptions = await Promise.all(musicDescriptions.map(async musicDescription => {
+									if (musicDescription?.musicDescriptionShelfRenderer?.description?.runs) {
+										let lyrics = musicDescription.musicDescriptionShelfRenderer.description.runs;
+										lyrics = await Promise.all(lyrics.map(async run => {
+											let fullText = run?.text?.split?.("\n")?.map(text => text?.trim() ?? "\u200b");
+											const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+											fullText = fullText.map((line, i) => combineText(line, translation?.[i], Settings?.ShowOnly, Settings?.Position, " | "));
+											run.text = fullText.join("\n");
+											return run;
+										}));
+									};
+									return musicDescription;
+								}));
+							};
 							break;
 						};
 						case "Spotify": {

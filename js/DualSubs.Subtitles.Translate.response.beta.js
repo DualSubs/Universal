@@ -865,45 +865,32 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				switch (type) {
 					case "Google":
 					default:
-						switch (type) {
-							default:
-							case "Google":
-								if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
-								else if (Array.isArray(_data)) texts = _data;
-								else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
-								break;
-						};
+						if (Array.isArray(_data)) {
+							if (_data.length === 1) {
+								_data[0].pop();
+								texts = _data[0];
+							} else if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+							else texts = _data;
+						} else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
 						texts = texts?.join("")?.split(/\r/);
 						break;
 					case "GoogleCloud":
+						texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`);
+						break;
 					case "Bing":
 					case "Microsoft":
 					case "Azure":
+						texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`);
+						break;
 					case "DeepL":
+						texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`);
+						break;
 					case "DeepLX":
+						texts = _data?.data?.split("||") ?? _data?.data;
+						break;
 					case "BaiduFanyi":
+						break;
 					case "YoudaoAI":
-						switch (type) {
-							default:
-							case "GoogleCloud":
-								texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`);
-								break;
-							case "Bing":
-							case "Microsoft":
-							case "Azure":
-								texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`);
-								break;
-							case "DeepL":
-								texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`);
-								break;
-							case "DeepLX":
-								texts = _data?.data?.split("||") ?? _data?.data;
-								break;
-							case "BaiduFanyi":
-								break;
-							case "YoudaoAI":
-								break;
-						};
 						break;
 				};
 			})

@@ -193,8 +193,9 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							break;
 						};
 						case "Spotify": {
-							if (body?.lyrics?.language === "z1") Languages[0] = "ZH-HANT";
-							else if (body?.lyrics?.language) Languages[0] = body.lyrics.language.toUpperCase();
+							Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
+								: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
+									: "AUTO";
 							let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 							const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 							body.lyrics.lines = body.lyrics.lines.map((line, i) => {
@@ -286,8 +287,9 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 										});
 									};
 									*/
-									if (body?.lyrics?.language === "z1") Languages[0] = "ZH-HANT";
-									else if (body?.lyrics?.language) Languages[0] = body.lyrics.language.toUpperCase();
+									Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
+									: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
+										: "AUTO";
 									let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 									const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 									/*

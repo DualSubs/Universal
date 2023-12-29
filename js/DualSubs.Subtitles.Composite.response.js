@@ -255,24 +255,27 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 	})
 
 /***************** Function *****************/
-function detectPlatform(host) {
+function detectPlatform(url) {
 	$.log(`☑️ ${$.name}, Detect Platform`, "");
 	/***************** Platform *****************/
-	let Platform = /\.apple\.com/i.test(host) ? "Apple"
-		: /\.(dssott|starott)\.com/i.test(host) ? "Disney+"
-			: /(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
-				: /prd\.media\.h264\.io/i.test(host) ? "Max"
-					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBOMax"
-						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"
-							: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(host) ? "Paramount+"
-								: /dplus-ph-/i.test(host) ? "Discovery+Ph"
-									: /\.peacocktv\.com/i.test(host) ? "PeacockTV"
-										: /\.uplynk\.com/i.test(host) ? "Discovery+"
-											: /\.fubo\.tv/i.test(host) ? "FuboTV"
-												: /\.viki\.io/i.test(host) ? "Viki"
-													: /(\.youtube|youtubei\.googleapis)\.com/i.test(host) ? "YouTube"
-														: /\.(netflix\.com|nflxvideo\.net)/i.test(host) ? "Netflix"
-															: "Universal";
+	let Platform = /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+		: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
+			: /\.spotify\.com/i.test(url) ? "Spotify"
+				: /\.apple\.com/i.test(url) ? "Apple"
+					: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
+						: /(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
+							: /prd\.media\.h264\.io/i.test(url) ? "Max"
+								: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
+									: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"
+										: /\.(cbsaavideo|cbsivideo|cbs)\.com/i.test(url) ? "Paramount+"
+											: /\.uplynk\.com/i.test(url) ? "Discovery+"
+												: /dplus-ph-/i.test(url) ? "Discovery+Ph"
+													: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
+														: /\.fubo\.tv/i.test(url) ? "FuboTV"
+															: /\.viki\.io/i.test(url) ? "Viki"
+																: /(epixhls\.akamaized\.net|epix\.services\.io)/i.test(url) ? "MGM+"
+																	: /\.nebula\.app|/i.test(url) ? "Nebula"
+																		: "Universal";
 	$.log(`✅ ${$.name}, Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };

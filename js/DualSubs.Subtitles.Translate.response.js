@@ -181,10 +181,25 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									: "AUTO";
 							let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 							const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-							body.lyrics.lines = body.lyrics.lines.map((line, i) => {
-								if (line?.words) line.words = combineText(line.words, translation?.[i], Settings?.ShowOnly, Settings?.Position);
-								return line;
-							});
+							switch ($request?.headers?.["app-platform"]) {
+								case "OSX": // macOS App 暂不支持翻译功能
+								case "Win32_x86_64": // Windows App 暂不支持翻译功能	
+								case "WebPlayer": // Web App
+								case undefined:
+								default:
+									body.lyrics.lines = body.lyrics.lines.map((line, i) => {
+										if (line?.words) line.words = combineText(line.words, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+										return line;
+									});
+									//break; 不中断，继续处理
+								case "iOS":
+									if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];
+									body.lyrics.alternatives.unshift({
+										"language": Languages[1].toLowerCase(),
+										"lines": translation
+									});
+									break;
+							};
 							break;
 						};
 					};

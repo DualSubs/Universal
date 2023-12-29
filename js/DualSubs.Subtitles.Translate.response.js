@@ -1163,10 +1163,10 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
 			switch (position) {
 				case "Forward":
 				default:
-					text = `${transText}${lineBreak}${originText}`;
+					text = `${originText}${lineBreak}${transText}`;
 					break;
 				case "Reverse":
-					text = `${originText}${lineBreak}${transText}`;
+					text = `${transText}${lineBreak}${originText}`;
 					break;
 			}
 	}

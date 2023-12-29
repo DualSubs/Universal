@@ -170,6 +170,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/x-mpegURL":
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
+				case "audio/mpegurl":
 					break;
 				case "text/xml":
 				case "text/plist":
@@ -205,6 +206,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					$response.body = JSON.stringify(OriginSub);
 					break;
 				case "application/x-protobuf":
+				case "application/vnd.google.protobuf":
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "applecation/octet-stream":
@@ -234,6 +236,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							$.done({ headers: $response.headers, body: $response.body });
 							break;
 						case "application/x-protobuf":
+						case "application/vnd.google.protobuf":
 						case "application/grpc":
 						case "application/grpc+proto":
 						//case "applecation/octet-stream":
@@ -257,7 +260,7 @@ function detectPlatform(host) {
 	/***************** Platform *****************/
 	let Platform = /\.apple\.com/i.test(host) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(host) ? "Disney+"
-			: /\.aiv-cdn\.net|avodhlss3ww-a\.akamaihd\.net|s3\.amazonaws\.com|\.cloudfront\.net/i.test(host) ? "PrimeVideo"
+			: /(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
 				: /prd\.media\.h264\.io/i.test(host) ? "Max"
 					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(host) ? "HBOMax"
 						: /\.(hulustream|huluim)\.com/i.test(host) ? "Hulu"

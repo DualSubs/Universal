@@ -166,6 +166,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							$.done({ headers: $response.headers, body: $response.body });
 							break;
 						case "application/x-protobuf":
+						case "application/vnd.google.protobuf":
 						case "application/grpc":
 						case "application/grpc+proto":
 						//case "applecation/octet-stream":
@@ -189,7 +190,7 @@ function detectPlatform(url) {
 	/***************** Platform *****************/
 	let Platform = /\.apple\.com/i.test(url) ? "Apple"
 		: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
-			: /(\.(hls\.row\.aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
+			: /(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
 				: /prd\.media\.h264\.io/i.test(url) ? "Max"
 					: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
 						: /\.(hulustream|huluim)\.com/i.test(url) ? "Hulu"

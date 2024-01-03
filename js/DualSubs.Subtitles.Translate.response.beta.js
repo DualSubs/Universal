@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.2.3(1) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.2.3(2) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -558,223 +558,79 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									break;
 								};
 								case "Spotify": {
-									switch (HOST) {
-										case "spclient.wg.spotify.com": {
-											if (PATH.startsWith("color-lyrics/v2/track/")) {
-												/******************  initialization start  *******************/
-												class TrackReply$Type extends MessageType {
-													constructor() {
-														super("TrackReply", [
-															{ no: 1, name: "lyrics", kind: "message", T: () => Lyrics }
-														]);
-													}
-												};
-												const TrackReply = new TrackReply$Type();
-												class Lyrics$Type extends MessageType {
-													constructor() {
-														super("Lyrics", [
-															{ no: 2, name: "lines", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Lines },
-															{ no: 9, name: "alternatives", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Alternatives },
-															{ no: 10, name: "language", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
-														]);
-													}
-												};
-												const Lyrics = new Lyrics$Type();
-												class Lines$Type extends MessageType {
-													constructor() {
-														super("Lines", [
-															{ no: 1, name: "startTimeMs", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-															{ no: 2, name: "words", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
-														]);
-													}
-												};
-												const Lines = new Lines$Type();
-												class Alternatives$Type extends MessageType {
-													constructor() {
-														super("Alternatives", [
-															{ no: 1, name: "language", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-															{ no: 2, name: "lines", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ }
-														]);
-													}
-												};
-												const Alternatives = new Alternatives$Type();
-												/******************  initialization finish  *******************/
-												body = TrackReply.fromBinary(rawBody);
-												$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-												/*
-												let UF = UnknownFieldHandler.list(body);
-												//$.log(`🚧 ${$.name}`, `UF: ${JSON.stringify(UF)}`, "");
-												if (UF) {
-													UF = UF.map(uf => {
-														//uf.no; // 22
-														//uf.wireType; // WireType.Varint
-														// use the binary reader to decode the raw data:
-														let reader = new BinaryReader(uf.data);
-														let addedNumber = reader.int32(); // 7777
-														$.log(`🚧 ${$.name}`, `no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
-													});
-												};
-												*/
-												Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
-													: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
-														: "AUTO";
-												let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
-												const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-												/*
-												body.lyrics.alternatives = [{
-													"language": Languages[1].toLowerCase(),
-													"lines": translation
-												}];
-												*/
-												if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];
-												body.lyrics.alternatives.unshift({
-													"language": Languages[1].toLowerCase(),
-													"lines": translation
-												});
-												$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-												rawBody = TrackReply.toBinary(body);
-											} else if (PATH.startsWith("transcript-read-along/v2/episode/")) {
-												/******************  initialization start  *******************/
-												class Transcript$Type extends MessageType {
-													constructor() {
-														super("Transcript", [
-															{ no: 1, name: "version", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-															{ no: 3, name: "uri", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-															{ no: 4, name: "timeStamp", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-															{ no: 6, name: "sections", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Section }
-														]);
-													}
-												}
-												const Transcript = new Transcript$Type();
-												class Section$Type extends MessageType {
-													constructor() {
-														super("Section", [
-															{ no: 1, name: "startMs", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-															{ no: 3, name: "content", kind: "message", T: () => Content },
-															{ no: 4, name: "header", kind: "message", T: () => Header }
-														]);
-													}
-												}
-												const Section = new Section$Type();
-												class Content$Type extends MessageType {
-													constructor() {
-														super("Content", [
-															{ no: 1, name: "line", kind: "message", T: () => Line }
-														]);
-													}
-												}
-												const Content = new Content$Type();
-												class Line$Type extends MessageType {
-													constructor() {
-														super("Line", [
-															{ no: 1, name: "startMs", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-															{ no: 2, name: "text", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
-														]);
-													}
-												}
-												const Line = new Line$Type();
-												class Header$Type extends MessageType {
-													constructor() {
-														super("Header", [
-															{ no: 1, name: "texts", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
-														]);
-													}
-												}
-												const Header = new Header$Type();
-												/******************  initialization finish  *******************/
-												body = Transcript.fromBinary(rawBody);
-												$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-												/*
-												let UF = UnknownFieldHandler.list(body);
-												//$.log(`🚧 ${$.name}`, `UF: ${JSON.stringify(UF)}`, "");
-												if (UF) {
-													UF = UF.map(uf => {
-														//uf.no; // 22
-														//uf.wireType; // WireType.Varint
-														// use the binary reader to decode the raw data:
-														let reader = new BinaryReader(uf.data);
-														let addedNumber = reader.int32(); // 7777
-														$.log(`🚧 ${$.name}`, `no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
-													});
-												};
-												*/
-												Languages[0] = "AUTO";
-												let fullText = body.sections.map(section => section?.content?.line?.text ?? "\u200b");
-												const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-												const translationMap = new Map();
-												fullText.forEach((text, i) => translationMap.set(text, translation?.[i]));
-												body.sections = body.sections.map(section => {
-													let text = section?.content?.line?.text;
-													if (text) section.content.line.text = combineText(text, translationMap.get(text), Settings?.ShowOnly, Settings?.Position);
-													return section;
-												});
-												$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-												rawBody = Transcript.toBinary(body);
-											};
-											break;
-										};
-										case "episode-transcripts.spotifycdn.com": {
-											/******************  initialization start  *******************/
-											class Transcript$Type extends MessageType {
-												constructor() {
-													super("Transcript", [
-														{ no: 1, name: "version", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-														{ no: 2, name: "uri", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-														{ no: 3, name: "timeStamp", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-														{ no: 4, name: "sections", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Section }
-													]);
-												}
-											}
-											const Transcript = new Transcript$Type();
-											class Section$Type extends MessageType {
-												constructor() {
-													super("Section", [
-														{ no: 2, name: "startMs", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-														{ no: 3, name: "content", kind: "message", T: () => Content }
-													]);
-												}
-											}
-											const Section = new Section$Type();
-											class Content$Type extends MessageType {
-												constructor() {
-													super("Content", [
-														{ no: 1, name: "texts", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ }
-													]);
-												}
-											}
-											const Content = new Content$Type();
-											/******************  initialization finish  *******************/
-											body = Transcript.fromBinary(rawBody);
-											$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-											/*
-											let UF = UnknownFieldHandler.list(body);
-											//$.log(`🚧 ${$.name}`, `UF: ${JSON.stringify(UF)}`, "");
-											if (UF) {
-												UF = UF.map(uf => {
-													//uf.no; // 22
-													//uf.wireType; // WireType.Varint
-													// use the binary reader to decode the raw data:
-													let reader = new BinaryReader(uf.data);
-													let addedNumber = reader.int32(); // 7777
-													$.log(`🚧 ${$.name}`, `no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
-												});
-											};
-											*/
-											Languages[0] = "AUTO";
-											let fullText = body.sections.map(section => section?.content?.texts?.map(text => text ?? "\u200b")).flat(Infinity);
-											const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-											const translationMap = new Map();
-											fullText.forEach((text, i) => translationMap.set(text, translation?.[i]));
-											body.sections = body.sections.map(section => {
-												//section.content.texts = section?.content?.texts?.map(text => combineText(text, translationMap.get(text), Settings?.ShowOnly, Settings?.Position));
-												section.content.texts = section?.content?.texts?.map(text => [text, translationMap.get(text)]).flat(Infinity);
-												return section;
-											});
-											$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-											rawBody = Transcript.toBinary(body);
-											break;
-										};
+									/******************  initialization start  *******************/
+									class TrackReply$Type extends MessageType {
+										constructor() {
+											super("TrackReply", [
+												{ no: 1, name: "lyrics", kind: "message", T: () => Lyrics }
+											]);
+										}
 									};
+									const TrackReply = new TrackReply$Type();
+									class Lyrics$Type extends MessageType {
+										constructor() {
+											super("Lyrics", [
+												{ no: 2, name: "lines", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Lines },
+												{ no: 9, name: "alternatives", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Alternatives },
+												{ no: 10, name: "language", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
+											]);
+										}
+									};
+									const Lyrics = new Lyrics$Type();
+									class Lines$Type extends MessageType {
+										constructor() {
+											super("Lines", [
+												{ no: 1, name: "startTimeMs", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+												{ no: 2, name: "words", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
+											]);
+										}
+									};
+									const Lines = new Lines$Type();
+									class Alternatives$Type extends MessageType {
+										constructor() {
+											super("Alternatives", [
+												{ no: 1, name: "language", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 2, name: "lines", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ }
+											]);
+										}
+									};
+									const Alternatives = new Alternatives$Type();
+									/******************  initialization finish  *******************/
+									body = TrackReply.fromBinary(rawBody);
+									$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+									/*
+									let UF = UnknownFieldHandler.list(body);
+									//$.log(`🚧 ${$.name}`, `UF: ${JSON.stringify(UF)}`, "");
+									if (UF) {
+										UF = UF.map(uf => {
+											//uf.no; // 22
+											//uf.wireType; // WireType.Varint
+											// use the binary reader to decode the raw data:
+											let reader = new BinaryReader(uf.data);
+											let addedNumber = reader.int32(); // 7777
+											$.log(`🚧 ${$.name}`, `no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+										});
+									};
+									*/
+									Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
+										: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
+											: "AUTO";
+									let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
+									const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+									/*
+									body.lyrics.alternatives = [{
+										"language": Languages[1].toLowerCase(),
+										"lines": translation
+									}];
+									*/
+									if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];
+									body.lyrics.alternatives.unshift({
+										"language": Languages[1].toLowerCase(),
+										"lines": translation
+									});
+									$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+									rawBody = TrackReply.toBinary(body);
+									break;
 								};
 							};
 							break;
@@ -1412,6 +1268,7 @@ async function Fetch(request = {}) {
 				// 返回普通数据
 				delete request.bodyBytes;
 				break;
+			case "application/protobuf":
 			case "application/x-protobuf":
 			case "application/vnd.google.protobuf":
 			case "application/grpc":

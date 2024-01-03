@@ -217,6 +217,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = JSON.stringify(OriginSub);
 					break;
+				case "application/protobuf":
 				case "application/x-protobuf":
 				case "application/vnd.google.protobuf":
 				case "application/grpc":
@@ -254,6 +255,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							// 返回普通数据
 							$.done({ headers: $response.headers, body: $response.body });
 							break;
+						case "application/protobuf":
 						case "application/x-protobuf":
 						case "application/vnd.google.protobuf":
 						case "application/grpc":
@@ -279,7 +281,7 @@ function detectPlatform(url) {
 	/***************** Platform *****************/
 	let Platform = /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
 		: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
-			: /\.spotify\.com/i.test(url) ? "Spotify"
+			: /\.spotify(cdn)?\.com/i.test(url) ? "Spotify"
 				: /\.apple\.com/i.test(url) ? "Apple"
 					: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
 						: /(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"

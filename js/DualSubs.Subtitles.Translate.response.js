@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.2.3(2) Subtitles.Translate.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.2.3(3) Subtitles.Translate.response");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -1071,11 +1071,12 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					case "Google":
 					default:
 						if (Array.isArray(_data)) {
-							if (_data.length === 1) {
-								_data[0].pop();
-								texts = _data[0];
-							} else if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
-							else texts = _data;
+							if (Array.isArray(_data?.[0])) {
+								if (_data.length === 1) {
+									_data[0].pop();
+									texts = _data[0];
+								} else texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+							} else texts = _data;
 						} else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
 						texts = texts?.join("")?.split(/\r/);
 						break;

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.2.3(3) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.2.3(4) Subtitles.Translate.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -559,44 +559,94 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 								};
 								case "Spotify": {
 									/******************  initialization start  *******************/
-									class TrackReply$Type extends MessageType {
+									var SyncType;
+									(function (SyncType) {
+										SyncType[SyncType["UNSYNCED"] = 0] = "UNSYNCED";
+										SyncType[SyncType["LINE_SYNCED"] = 1] = "LINE_SYNCED";
+										SyncType[SyncType["SYLLABLE_SYNCED"] = 2] = "SYLLABLE_SYNCED";
+									})(SyncType || (SyncType = {}));
+									class ColorLyricsResponse$Type extends MessageType {
 										constructor() {
-											super("TrackReply", [
-												{ no: 1, name: "lyrics", kind: "message", T: () => Lyrics }
+											super("com.spotify.lyrics.endpointretrofit.proto.ColorLyricsResponse", [
+												{ no: 1, name: "lyrics", kind: "message", T: () => LyricsResponse },
+												{ no: 2, name: "colors", kind: "message", T: () => ColorData },
+												{ no: 3, name: "has_vocal_removal", kind: "scalar", opt: true, T: 8 /*ScalarType.BOOL*/ },
+												{ no: 4, name: "vocal_removal_colors", kind: "message", T: () => ColorData }
 											]);
 										}
-									};
-									const TrackReply = new TrackReply$Type();
-									class Lyrics$Type extends MessageType {
+									}
+									const ColorLyricsResponse = new ColorLyricsResponse$Type();
+									class LyricsResponse$Type extends MessageType {
 										constructor() {
-											super("Lyrics", [
-												{ no: 2, name: "lines", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Lines },
-												{ no: 9, name: "alternatives", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Alternatives },
-												{ no: 10, name: "language", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
+											super("com.spotify.lyrics.endpointretrofit.proto.LyricsResponse", [
+												{ no: 1, name: "sync_type", kind: "enum", T: () => ["com.spotify.lyrics.endpointretrofit.proto.SyncType", SyncType] },
+												{ no: 2, name: "lines", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => LyricsLine },
+												{ no: 3, name: "provider", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 4, name: "provider_lyrics_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 5, name: "provider_display_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 6, name: "sync_lyrics_android_intent", kind: "message", T: () => AndroidIntent },
+												{ no: 7, name: "sync_lyrics_uri", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 8, name: "is_dense_typeface", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+												{ no: 9, name: "alternatives", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Alternative },
+												{ no: 10, name: "lang", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 11, name: "rtl_lang", kind: "scalar", opt: true, T: 8 /*ScalarType.BOOL*/ },
+												{ no: 13, name: "show_upsell", kind: "scalar", opt: true, T: 8 /*ScalarType.BOOL*/ }
 											]);
 										}
-									};
-									const Lyrics = new Lyrics$Type();
-									class Lines$Type extends MessageType {
+									}
+									const LyricsResponse = new LyricsResponse$Type();
+									class LyricsLine$Type extends MessageType {
 										constructor() {
-											super("Lines", [
-												{ no: 1, name: "startTimeMs", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-												{ no: 2, name: "words", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
+											super("com.spotify.lyrics.endpointretrofit.proto.LyricsLine", [
+												{ no: 1, name: "start_time_ms", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+												{ no: 2, name: "text", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ },
+												{ no: 3, name: "syllables", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Syllable }
 											]);
 										}
-									};
-									const Lines = new Lines$Type();
-									class Alternatives$Type extends MessageType {
+									}
+									const LyricsLine = new LyricsLine$Type();
+									class Syllable$Type extends MessageType {
 										constructor() {
-											super("Alternatives", [
+											super("com.spotify.lyrics.endpointretrofit.proto.Syllable", [
+												{ no: 1, name: "start_time_ms", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+												{ no: 2, name: "num_chars", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
+											]);
+										}
+									}
+									const Syllable = new Syllable$Type();
+									class ColorData$Type extends MessageType {
+										constructor() {
+											super("com.spotify.lyrics.endpointretrofit.proto.ColorData", [
+												{ no: 1, name: "background", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+												{ no: 2, name: "text", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+												{ no: 3, name: "highlight_text", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+											]);
+										}
+									}
+									const ColorData = new ColorData$Type();
+									class AndroidIntent$Type extends MessageType {
+										constructor() {
+											super("com.spotify.lyrics.endpointretrofit.proto.AndroidIntent", [
+												{ no: 1, name: "provider", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 2, name: "provider_android_app_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 3, name: "action", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 4, name: "data", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 5, name: "content_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+											]);
+										}
+									}
+									const AndroidIntent = new AndroidIntent$Type();
+									class Alternative$Type extends MessageType {
+										constructor() {
+											super("com.spotify.lyrics.endpointretrofit.proto.Alternative", [
 												{ no: 1, name: "language", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
 												{ no: 2, name: "lines", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ }
 											]);
 										}
-									};
-									const Alternatives = new Alternatives$Type();
+									}
+									const Alternative = new Alternative$Type();
 									/******************  initialization finish  *******************/
-									body = TrackReply.fromBinary(rawBody);
+									body = ColorLyricsResponse.fromBinary(rawBody);
 									$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 									/*
 									let UF = UnknownFieldHandler.list(body);
@@ -615,7 +665,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
 										: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
 											: "AUTO";
-									let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
+									let fullText = body.lyrics.lines.map(line => line?.text ?? "\u200b");
 									const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 									/*
 									body.lyrics.alternatives = [{
@@ -629,7 +679,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 										"lines": translation
 									});
 									$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-									rawBody = TrackReply.toBinary(body);
+									rawBody = ColorLyricsResponse.toBinary(body);
 									break;
 								};
 							};

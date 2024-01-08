@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.0(7) Lyrics.External.response");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.1(1) Lyrics.External.response");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -660,6 +660,27 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 			break;
 		case "QQMusic":
 			trackInfo.QQMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
+			if (trackInfo?.QQMusic?.mid) {
+				externalLyric = await searchLyric(vendor, trackInfo.QQMusic.mid, UAPool);
+				switch (PLATFORM) {
+					case "Spotify":
+						body.lyrics.lines = LRC.toSpotify(externalLyric?.lyric);
+						if (externalLyric?.trans) {
+							let tlyric = LRC.toSpotify(externalLyric?.trans);
+							let duolyric = LRC.combineSpotify(body.lyrics.lines, tlyric);
+							body.lyrics.alternatives.push({
+								"language": "zh",
+								"lines": duolyric.map(line => line?.twords ?? "♪")
+							});
+						}
+						body.lyrics.provider = "QQMusic";
+						body.lyrics.providerLyricsId = trackInfo.QQMusic.mid.toString();
+						body.lyrics.providerDisplayName = `QQ音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
+						body.colors.background = -11038189; // QQ音乐绿 5739027 579213 rgb(87,146,19)
+						//$.log(`🚧 ${$.name}, 调试信息`, `body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
+						break
+				};
+			};
 			break;
 	};
 	$.log(`✅ ${$.name}, Injection Lyric`, "");
@@ -727,6 +748,11 @@ async function searchTrack(vendor = "NeteaseMusicNodeJS", keyword = "", UAPool =
 			searchRequest.headers.Referer = "https://music.163.com";
 			const searchResult = await $.http.get(searchRequest).then(response => {
 				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response)}`, "");
+				body = JSON.parse(response.body);
+				trackInfo.id = body?.result?.songs?.[0]?.id;
+				trackInfo.track = body?.result?.songs?.[0]?.name;
+				trackInfo.album = body?.result?.songs?.[0]?.ar?.name;
+				trackInfo.artist = body?.result?.songs?.[0]?.al?.name;
 			});
 			break;
 		};
@@ -758,7 +784,12 @@ async function searchTrack(vendor = "NeteaseMusicNodeJS", keyword = "", UAPool =
 			searchRequest.url = URL.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://c.y.qq.com";
 			const searchResult = await $.http.get(searchRequest).then(response => {
-				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response)}`, "");
+				//$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response)}`, "");
+				body = JSON.parse(response.body);
+				trackInfo.mid = body?.data?.song?.list?.[0]?.songmid;
+				trackInfo.track = body?.data?.song?.list?.[0]?.songname;
+				trackInfo.album = body?.data?.song?.list?.[0]?.albumname;
+				trackInfo.artist = body?.data?.song?.list?.[0]?.singer?.[0]?.name;
 			});
 			break;
 		};
@@ -799,9 +830,36 @@ async function searchLyric(vendor = "NeteaseMusicNodeJS", trackId = undefined, U
 			break;
 		};
 		case "NeteaseMusic": {
+			const lyricUrl = {
+				"scheme": "https",
+				"host": "music.163.com",
+				"path": "api/song/media",
+				"query": {
+					"id": trackId // trackInfo.NeteaseMusic.id
+				}
+			};
+			$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
+			lyricRequest.url = URL.stringify(lyricUrl);
+			lyricRequest.headers.Referer = "https://music.163.com";
+			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));
 			break;
 		};
 		case "QQMusic": {
+			const lyricUrl = {
+				"scheme": "https",
+				"host": "c.y.qq.com",
+				"path": "lyric/fcgi-bin/fcg_query_lyric_new.fcg",
+				"query": {
+					"g_tk": "5381",
+					"format": "json",
+					"nobase64": "1",
+					"songmid": trackId // trackInfo.QQMusic.mid
+				}
+			};
+			//$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
+			lyricRequest.url = URL.stringify(lyricUrl);
+			lyricRequest.headers.Referer = "https://lyric.music.qq.com";
+			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));
 			break;
 		};
 	};

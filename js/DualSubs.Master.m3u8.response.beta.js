@@ -74,7 +74,7 @@ if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = d
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", url?.query?.subtype], DataBase);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -112,7 +112,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					// 格式化缓存
 					Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.CacheSize);
 					// 写入持久化储存
-					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Official"}.Caches.Playlists.Master`);
+					$.setjson(Caches.Playlists.Master, `@DualSubs.${"Composite"}.Caches.Playlists.Master`);
 					// 写入选项
 					body = setAttrList(body, playlistCache, Settings.Types, Languages, PLATFORM, STANDARD, DEVICE);
 					// 字符串M3U8

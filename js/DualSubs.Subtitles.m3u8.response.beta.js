@@ -74,7 +74,7 @@ if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = d
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", url?.query?.subtype ?? "Translate"], DataBase);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -96,7 +96,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					// 格式化缓存
 					Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.CacheSize);
 					// 写入缓存
-					$.setjson(Caches.Playlists.Subtitle, `@DualSubs.${"Official"}.Caches.Playlists.Subtitle`);
+					$.setjson(Caches.Playlists.Subtitle, `@DualSubs.${"Composite"}.Caches.Playlists.Subtitle`);
 					break;
 				case "Translate":
 				default:

@@ -36,7 +36,7 @@ const DataBase = {
 		"Settings":{"Switch":true,"Types":["Translate","External"],"Languages":["AUTO","ZH"]}
 	},
 	"Composite":{
-		"Settings":{"CacheSize":20,"ShowOnly":false,"Position":"Reverse","Offset":0,"Tolerance":1000}
+		"Settings":{"CacheSize":20,"Position":"Reverse","Offset":0,"Tolerance":1000}
 	},
 	"Translate":{
 		"Settings":{"Vendor":"Google","ShowOnly":false,"Position":"Forward","CacheSize":10,"Method":"Part","Times":3,"Interval":500,"Exponential":true},
@@ -75,7 +75,7 @@ if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = d
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", url?.query?.subtype], DataBase);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], DataBase);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -118,7 +118,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									// 设置参数
 									Settings.Offset = 0;
 									Settings.Tolerance = 100;
-									Settings.Position = (Settings.Position === "Reverse") ? "Forward" : "Reverse";
+									Settings.Position = (Settings.Position === "Reverse") ? "Forward" : "Reverse"; // 链接主字幕为翻译字幕，副字幕为原字幕，所以需要翻转一下
 									switch (Settings.ShowOnly) {
 										case true:
 											$.log(`⚠ ${$.name}, 仅显示翻译后字幕，跳过`, "");

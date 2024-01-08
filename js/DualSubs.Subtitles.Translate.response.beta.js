@@ -688,14 +688,6 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									});
 									$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 									rawBody = ColorLyricsResponse.toBinary(body);
-									let testData = ColorLyricsResponse.fromBinary(rawBody);
-									delete testData.lyrics;
-									//delete testData.colors;
-									testData.colors.background = -8249806; // 网易红 8527410 821E32 rgb(130,30,50)
-									delete testData.hasVocalRemoval;
-									delete testData.vocalRemovalColors;
-									testRaw = ColorLyricsResponse.toBinary(testData);
-									$.log(`🚧 ${$.name}`, `isBuffer? ${ArrayBuffer.isView(testRaw)}: ${JSON.stringify(testRaw)}`, "");
 									break;
 								};
 							};

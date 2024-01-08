@@ -792,7 +792,7 @@ async function searchLyric(vendor = "NeteaseMusicNodeJS", trackId = undefined, U
 					"id": trackId // trackInfo.NeteaseMusic.id
 				}
 			};
-			$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
+			//$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
 			lyricRequest.url = URL.stringify(lyricUrl);
 			lyricRequest.headers.Referer = "https://music.163.com";
 			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));

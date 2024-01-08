@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.0(6) Lyrics.External.response");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.0(7) Lyrics.External.response");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -636,26 +636,26 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 		case "NeteaseMusic":
 		default:
 			trackInfo.NeteaseMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
-			if (trackInfo?.NeteaseMusic?.id) externalLyric = await searchLyric(vendor, trackInfo.NeteaseMusic.id, UAPool);
-			switch (PLATFORM) {
-				case "Spotify":
-					body.lyrics.lines = LRC.toSpotify(externalLyric?.lrc?.lyric);
-
-					if (externalLyric?.tlyric?.lyric) {
-						let tlyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
-						let duolyric = LRC.combineSpotify(body.lyrics.lines, tlyric);
-						body.lyrics.alternatives.push({
-							"language": "zh",
-							"lines": duolyric.map(line => line?.twords ?? "♪")
-						});
-					}
-					
-					body.lyrics.provider = "NeteaseMusic";
-					body.lyrics.providerLyricsId = trackInfo.NeteaseMusic.id.toString();
-					body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
-					body.colors.background = -8249806; // 网易红 8527410 821E32 rgb(130,30,50)
-					//$.log(`🚧 ${$.name}, 调试信息`, `body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
-					break
+			if (trackInfo?.NeteaseMusic?.id) {
+				externalLyric = await searchLyric(vendor, trackInfo.NeteaseMusic.id, UAPool);
+				switch (PLATFORM) {
+					case "Spotify":
+						body.lyrics.lines = LRC.toSpotify(externalLyric?.lrc?.lyric);
+						if (externalLyric?.tlyric?.lyric) {
+							let tlyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
+							let duolyric = LRC.combineSpotify(body.lyrics.lines, tlyric);
+							body.lyrics.alternatives.push({
+								"language": "zh",
+								"lines": duolyric.map(line => line?.twords ?? "♪")
+							});
+						}
+						body.lyrics.provider = "NeteaseMusic";
+						body.lyrics.providerLyricsId = trackInfo.NeteaseMusic.id.toString();
+						body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
+						body.colors.background = -8249806; // 网易红 8527410 821E32 rgb(130,30,50)
+						//$.log(`🚧 ${$.name}, 调试信息`, `body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
+						break
+				};
 			};
 			break;
 		case "QQMusic":

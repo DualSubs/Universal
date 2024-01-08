@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.0(5) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.0(6) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -89,11 +89,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			$.log(`🚧 ${$.name}, 调试信息`, `trackId: ${trackId}`, "");
 			const trackInfo = Caches.Metadatas.Tracks.get(trackId);
 			$.log(`🚧 ${$.name}, 调试信息`, `trackInfo: ${JSON.stringify(trackInfo)}`, "");
-			if (trackInfo && !FORMAT) {
-				FORMAT = $request?.headers?.Accept ?? $request?.headers?.accept;
-				$response.headers["Content-Type"] = FORMAT;
-				$response.status = 200;
-			};
+			if (trackInfo && !FORMAT) FORMAT = $request?.headers?.Accept ?? $request?.headers?.accept;
 			// 格式判断
 			switch (FORMAT) {
 				case undefined: // 视为无body
@@ -140,6 +136,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 						};
 						case "Spotify": {
 							body = await injectionLyric(Settings.LrcVendor, trackInfo, body);
+							if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;								$response.headers["Content-Type"] = FORMAT;
+							$response.status = ($.isQuanX()) ? "HTTP/1.1 200 OK" : 200;
 							break;
 						};
 					};
@@ -295,6 +293,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 											break;
 									};
 									body.lyrics.fullscreenAction = 0;
+									if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;								$response.headers["Content-Type"] = FORMAT;
+									$response.status = ($.isQuanX()) ? "HTTP/1.1 200 OK" : 200;
 									$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 									rawBody = ColorLyricsResponse.toBinary(body);
 									break;

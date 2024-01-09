@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.1(1) Lyrics.External.response");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.2(2) Lyrics.External.response");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -310,6 +310,15 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					if ($.isQuanX()) $response.bodyBytes = rawBody
 					else $response.body = rawBody;
 					break;
+			};
+			// 缓存查询信息
+			if (trackInfo?.NeteaseMusic?.id ?? trackInfo?.QQMusic?.mid) {
+				Caches.Metadatas.Tracks.set(trackInfo.id, trackInfo);
+				// 格式化缓存
+				$.log(`🚧 ${$.name}`, `Caches.Metadatas.Tracks: ${JSON.stringify([...Caches.Metadatas.Tracks.entries()])}`, "");
+				Caches.Metadatas.Tracks = setCache(Caches.Metadatas.Tracks, Settings.CacheSize);
+				// 写入持久化储存
+				$.setjson(Caches.Metadatas.Tracks, `@DualSubs.${PLATFORM}.Caches.Metadatas.Tracks`);
 			};
 			break;
 		case false:
@@ -635,7 +644,7 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 		case "NeteaseMusicNodeJS":
 		case "NeteaseMusic":
 		default:
-			trackInfo.NeteaseMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
+			if (!trackInfo?.NeteaseMusic?.id) trackInfo.NeteaseMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.NeteaseMusic?.id) {
 				externalLyric = await searchLyric(vendor, trackInfo.NeteaseMusic.id, UAPool);
 				switch (PLATFORM) {
@@ -659,7 +668,7 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 			};
 			break;
 		case "QQMusic":
-			trackInfo.QQMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
+			if (!trackInfo?.QQMusic?.mid) trackInfo.QQMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.QQMusic?.mid) {
 				externalLyric = await searchLyric(vendor, trackInfo.QQMusic.mid, UAPool);
 				switch (PLATFORM) {
@@ -973,6 +982,7 @@ function LRCs(opts) {
 				switch (line?.trim?.()?.substring?.(0, 1)) {
 					case "{":
 						line = JSON.parse(line);
+						//$.log(`🚧 ${$.name}, 调试信息`, `line: ${JSON.stringify(line)}`, "");
 						Line = {
 							"startTimeMs": (line.t < 0) ? 0 : line.t,
 							"words": line?.c?.map?.(word => word.tx).join(" "),

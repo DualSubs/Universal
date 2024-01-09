@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v1.2.3(6) Subtitles.Translate.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.4(3) Translator.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -207,14 +207,31 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							$.log(`🚧 ${$.name}, 调试信息`, `$request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
 							switch ($request?.headers?.["app-platform"]) {
 								case "OSX": // macOS App 暂不支持翻译功能
-								case "Win32_x86_64": // Windows App 暂不支持翻译功能	
+								case "Win32_x86_64": // Windows App 暂不支持翻译功能
 								case "WebPlayer": // Web App
 								case undefined:
 								default:
+									/*
 									body.lyrics.lines = body.lyrics.lines.map((line, i) => {
 										if (line?.words) line.words = combineText(line.words, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 										return line;
 									});
+									*/
+									body.lyrics.lines = body.lyrics.lines.map((line, i) => {
+										let line1 = {
+											"startTimeMs": line.startTimeMs,
+											"words": line?.words ?? "",
+											"syllables": [],
+											"endTimeMs": "0"
+										};
+										let line2 = {
+											"startTimeMs": line.startTimeMs + 1,
+											"words": translation?.[i] ?? "",
+											"syllables": [],
+											"endTimeMs": "0"
+										};
+										return [line1, line2];
+									}).flat(Infinity);
 									//break; 不中断，继续处理
 								case "iOS":
 									if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.4(8) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.4(9) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -695,14 +695,11 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 					return line;
 				});
 				*/
-				/*
 				body.lyrics.lines = LRC.separateSpotify(duolyric).map(line => {
 					line.startTimeMs = line.startTimeMs.toString();
 					line.endTimeMs = line.endTimeMs.toString();
 					return line;
 				});
-				*/
-				body.lyrics.lines = LRC.separateSpotify(duolyric);
 				//break; 不中断，继续处理
 			case "iOS":
 				body.lyrics.alternatives.unshift({

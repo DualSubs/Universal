@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.4(3) Translator.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.4(4) Translator.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -219,13 +219,13 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									*/
 									body.lyrics.lines = body.lyrics.lines.map((line, i) => {
 										let line1 = {
-											"startTimeMs": line.startTimeMs,
+											"startTimeMs": line.startTimeMs.toString(),
 											"words": line?.words ?? "",
 											"syllables": [],
 											"endTimeMs": "0"
 										};
 										let line2 = {
-											"startTimeMs": line.startTimeMs + 1,
+											"startTimeMs": line.startTimeMs.toString(),
 											"words": translation?.[i] ?? "",
 											"syllables": [],
 											"endTimeMs": "0"

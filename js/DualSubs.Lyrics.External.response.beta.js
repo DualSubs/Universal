@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.2(2) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.3(1) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -602,6 +602,7 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 	];
 	// 外部歌词
 	let externalLyric = undefined;
+	let transLyric = undefined;
 	// 构建歌词结构
 	if (!body) body = {};
 	// 按平台填充必要歌词信息
@@ -650,14 +651,7 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 				switch (PLATFORM) {
 					case "Spotify":
 						body.lyrics.lines = LRC.toSpotify(externalLyric?.lrc?.lyric);
-						if (externalLyric?.tlyric?.lyric) {
-							let tlyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
-							let duolyric = LRC.combineSpotify(body.lyrics.lines, tlyric);
-							body.lyrics.alternatives.push({
-								"language": "zh",
-								"lines": duolyric.map(line => line?.twords ?? "♪")
-							});
-						}
+						if (externalLyric?.tlyric?.lyric) transLyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
 						body.lyrics.provider = "NeteaseMusic";
 						body.lyrics.providerLyricsId = trackInfo.NeteaseMusic.id.toString();
 						body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
@@ -675,14 +669,7 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 				switch (PLATFORM) {
 					case "Spotify":
 						body.lyrics.lines = LRC.toSpotify(externalLyric?.lyric);
-						if (externalLyric?.trans) {
-							let tlyric = LRC.toSpotify(externalLyric?.trans);
-							let duolyric = LRC.combineSpotify(body.lyrics.lines, tlyric);
-							body.lyrics.alternatives.push({
-								"language": "zh",
-								"lines": duolyric.map(line => line?.twords ?? "♪")
-							});
-						}
+						if (externalLyric?.trans) transLyric = LRC.toSpotify(externalLyric?.trans);
 						body.lyrics.provider = "QQMusic";
 						body.lyrics.providerLyricsId = trackInfo.QQMusic.mid.toString();
 						body.lyrics.providerDisplayName = `QQ音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
@@ -692,6 +679,28 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 				};
 			};
 			break;
+	};
+	// 翻译歌词
+	if (transLyric) {
+		let duolyric = LRC.combineSpotify(body.lyrics.lines, transLyric);
+		switch ($request?.headers?.["app-platform"]) {
+			case "OSX": // macOS App 暂不支持翻译功能
+			case "Win32_x86_64": // Windows App 暂不支持翻译功能
+			case "WebPlayer": // Web App
+			case undefined:
+			default:
+				body.lyrics.lines = body.lyrics.lines.map((line, i) => {
+					if (line?.words) line.words = combineText(line.words, duolyric?.[i]?.twords ?? "♪");
+					return line;
+				});
+				//break; 不中断，继续处理
+			case "iOS":
+				body.lyrics.alternatives.unshift({
+					"language": "zh",
+					"lines": duolyric.map(line => line?.twords ?? "♪")
+				});
+				break;
+		};
 	};
 	$.log(`✅ ${$.name}, Injection Lyric`, "");
 	$.log(`🚧 ${$.name}, Injection Lyric`, `body: ${JSON.stringify(body)}`, "");

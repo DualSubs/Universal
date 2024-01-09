@@ -661,7 +661,8 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 						body.lyrics.provider = "NeteaseMusic";
 						body.lyrics.providerLyricsId = trackInfo.NeteaseMusic.id.toString();
 						body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
-						body.colors.background = -8249806; // 网易红 8527410 821E32 rgb(130,30,50)
+						//body.colors.background = -8249806; // 网易红 8527410 #821E32 rgb(130,30,50)
+						body.colors.background = -55775; // 网易红 16721441 #FF2621 rgb(255,38,33)
 						$.log(`🚧 ${$.name}, 调试信息`, `body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
 						break
 				};
@@ -685,7 +686,7 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 						body.lyrics.provider = "QQMusic";
 						body.lyrics.providerLyricsId = trackInfo.QQMusic.mid.toString();
 						body.lyrics.providerDisplayName = `QQ音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
-						body.colors.background = -11038189; // QQ音乐绿 5739027 579213 rgb(87,146,19)
+						body.colors.background = -11038189; // QQ音乐绿 5739027 #579213 rgb(87,146,19)
 						$.log(`🚧 ${$.name}, 调试信息`, `body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
 						break
 				};

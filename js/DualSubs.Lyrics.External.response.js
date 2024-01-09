@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.3(1) Lyrics.External.response");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.4(8) Lyrics.External.response");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -689,10 +689,13 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 			case "WebPlayer": // Web App
 			case undefined:
 			default:
+				/*
 				body.lyrics.lines = body.lyrics.lines.map((line, i) => {
 					if (line?.words) line.words = combineText(line.words, duolyric?.[i]?.twords ?? "♪");
 					return line;
 				});
+				*/
+				body.lyrics.lines = LRC.separateSpotify(duolyric);
 				//break; 不中断，继续处理
 			case "iOS":
 				body.lyrics.alternatives.unshift({
@@ -980,7 +983,7 @@ function URLs(t){return new class{constructor(t=[]){this.name="URL v1.2.5",this.
 function LRCs(opts) {
 	return new (class {
 		constructor(opts) {
-			this.name = "LRC v0.2.1";
+			this.name = "LRC v0.3.1";
 			this.opts = opts;
 			this.newLine = "\n";
 		};
@@ -1030,16 +1033,44 @@ function LRCs(opts) {
 			//console.log(`☑️ ${this.name}, LRC.combineSpotify`, "");
 			let combineLyric = [];
 			for (let line1 of array1) {
+				let line = line1;
 				for (let line2 of array2) {
 					if (line1.startTimeMs === line2.startTimeMs) {
-						line1.twords = line2?.words ?? "♪";
+						line = {
+							"startTimeMs": line1.startTimeMs,
+							"words": line1?.words ?? "",
+							"twords": line2?.words ?? "",
+							"syllables": [],
+							"endTimeMs": 0
+						};
 						break;
 					};
 				};
-				combineLyric.push(line1);
+				combineLyric.push(line);
 			};
 			//console.log(`✅ ${this.name}, LRC.combineSpotify, combineLyric: ${JSON.stringify(combineLyric)}`, "");
 			return combineLyric;
+		};
+
+		separateSpotify(array = new Array) {
+			//console.log(`☑️ ${this.name}, LRC.separateSpotify`, "");
+			let separateLyric = array.map(line => {
+				let line1 = {
+					"startTimeMs": line.startTimeMs,
+					"words": line?.words ?? "",
+					"syllables": [],
+					"endTimeMs": 0
+				};
+				let line2 = {
+					"startTimeMs": line.startTimeMs + 1,
+					"words": line?.twords ?? "",
+					"syllables": [],
+					"endTimeMs": 0
+				};
+				return [line1, line2];
+			}).flat(Infinity);
+			//console.log(`✅ ${this.name}, LRC.separateSpotify, separateLyric: ${JSON.stringify(separateLyric)}`, "");
+			return separateLyric;
 		};
 	})(opts)
 };

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(1) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(2) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -1048,7 +1048,7 @@ function LRCs(opts) {
 						if (line.startTimeMs < 0) line.startTimeMs = 0;
 						Line = {
 							"startTimeMs": line.startTimeMs,
-							"words": line?.words ?? "♪",
+							"words": line?.words?.decodeHTML?.() ?? "",
 							"syllables": [],
 							"endTimeMs": 0
 						};
@@ -1109,4 +1109,12 @@ function LRCs(opts) {
 			return separateLyric;
 		};
 	})(opts)
+};
+
+String.prototype.decodeHTML = function () {
+	return this.replace(/&apos;/g, "'")
+		.replace(/&quot;/g, '"')
+		.replace(/&gt;/g, '>')
+		.replace(/&lt;/g, '<')
+		.replace(/&amp;/g, '&');
 };

@@ -49,7 +49,7 @@ const DataBase = {
 		}
 	},
 	"External":{
-		"Settings":{"SubVendor":"URL","LrcVendor":"NeteaseMusicNodeJS","CacheSize":50}
+		"Settings":{"SubVendor":"URL","LrcVendor":"QQMusic","CacheSize":50}
 	},
 	"API":{
 		"Settings":{

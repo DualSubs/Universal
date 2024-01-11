@@ -48,7 +48,7 @@ const DataBase = {
 		}
 	},
 	"External":{
-		"Settings":{"SubVendor":"URL","LrcVendor":"NeteaseMusicNodeJS","CacheSize":50}
+		"Settings":{"SubVendor":"URL","LrcVendor":"QQMusic","CacheSize":50}
 	},
 	"API":{
 		"Settings":{
@@ -584,7 +584,7 @@ async function Fetch(request = {}) {
 	return response;
 };
 
-async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, body = $response.body){
+async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $response.body){
 	$.log(`☑️ ${$.name}, Injection Lyric`, `vendor: ${vendor}, trackInfo: ${JSON.stringify(trackInfo)}`, "");
 	const UAPool = [
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
@@ -644,7 +644,6 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 	switch (vendor) {
 		case "NeteaseMusicNodeJS":
 		case "NeteaseMusic":
-		default:
 			if (!trackInfo?.NeteaseMusic?.id) trackInfo.NeteaseMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.NeteaseMusic?.id) {
 				externalLyric = await searchLyric(vendor, trackInfo.NeteaseMusic.id, UAPool);
@@ -663,7 +662,8 @@ async function injectionLyric(vendor = "NeteaseMusicNodeJS", trackInfo = {}, bod
 			};
 			break;
 		case "QQMusic":
-			if (!trackInfo?.QQMusic?.mid) trackInfo.QQMusic = await searchTrack(vendor, `${trackInfo.track} ${trackInfo.artist}`, UAPool);
+		default:
+				if (!trackInfo?.QQMusic?.mid) trackInfo.QQMusic = await searchTrack(vendor, `${trackInfo.track} ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.QQMusic?.mid) {
 				externalLyric = await searchLyric(vendor, trackInfo.QQMusic.mid, UAPool);
 				switch (PLATFORM) {

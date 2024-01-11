@@ -1066,7 +1066,7 @@ function LRCs(opts) {
 					"endTimeMs": 0
 				};
 				let line2 = {
-					"startTimeMs": line.startTimeMs + 1,
+					"startTimeMs": line.startTimeMs + 100,
 					"words": line?.twords ?? "",
 					"syllables": [],
 					"endTimeMs": 0

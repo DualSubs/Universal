@@ -225,7 +225,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 											"endTimeMs": "0"
 										};
 										let line2 = {
-											"startTimeMs": line.startTimeMs.toString(),
+											"startTimeMs": (line.startTimeMs + 100).toString(),
 											"words": translation?.[i] ?? "",
 											"syllables": [],
 											"endTimeMs": "0"

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.4(11) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(1) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -783,6 +783,38 @@ async function searchTrack(vendor = "NeteaseMusicNodeJS", keyword = "", UAPool =
 			break;
 		};
 		case "QQMusic": {
+			const searchUrl = {
+				"scheme": "https",
+				"host": "u.y.qq.com",
+				"path": "cgi-bin/musicu.fcg"
+			};
+			$.log(`🚧 ${$.name}, 调试信息`, `searchUrl: ${JSON.stringify(searchUrl)}`, "");
+			searchRequest.url = URL.stringify(searchUrl);
+			searchRequest.headers.Referer = "https://c.y.qq.com";
+			searchRequest.body = JSON.stringify({
+				"music.search.SearchCgiService": {
+					"method": "DoSearchForQQMusicDesktop",
+					"module": "music.search.SearchCgiService",
+					"param": {
+						"num_per_page": 1,
+						"page_num": 1,
+						"query": keyword,
+						"search_type": 0
+					}
+				}
+			});
+			const searchResult = await $.http.post(searchRequest).then(response => {
+				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response)}`, "");
+				body = JSON.parse(response.body);
+				body = body["music.search.SearchCgiService"].data.body;
+				trackInfo.mid = body?.song?.list?.[0]?.mid;
+				trackInfo.track = body?.song?.list?.[0]?.name;
+				trackInfo.album = body?.song?.list?.[0]?.album?.name;
+				trackInfo.artist = body?.song?.list?.[0]?.singer?.[0]?.name;
+			});
+			break;
+		};
+		case "QQMusicOld": {
 			const searchUrl = {
 				"scheme": "https",
 				"host": "c.y.qq.com",

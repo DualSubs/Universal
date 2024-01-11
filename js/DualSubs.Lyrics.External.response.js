@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.4(11) Lyrics.External.response");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(1) Lyrics.External.response");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -785,37 +785,32 @@ async function searchTrack(vendor = "NeteaseMusicNodeJS", keyword = "", UAPool =
 		case "QQMusic": {
 			const searchUrl = {
 				"scheme": "https",
-				"host": "c.y.qq.com",
-				"path": "soso/fcgi-bin/search_for_qq_cp",
-				//"path": "soso/fcgi-bin/client_search_cp",
-				"query": {
-					"format": "json",
-					//"outCharset": 'utf-8',
-					//"ct": 24,
-					//"qqmusic_ver": 1298,
-					"p": 1,
-					"n": 1,
-					"w": encodeURIComponent(keyword),
-					//"key": encodeURIComponent(keyword),
-					"remoteplace": 'txt.yqq.song',
-					//"t": 0,
-					//"aggr": 1,
-					//"cr": 1,
-					//"lossless": 0,
-					//"flag_qc": 0,
-					//"platform": 'yqq.json',
-				}
+				"host": "u.y.qq.com",
+				"path": "cgi-bin/musicu.fcg"
 			};
 			//$.log(`🚧 ${$.name}, 调试信息`, `searchUrl: ${JSON.stringify(searchUrl)}`, "");
 			searchRequest.url = URL.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://c.y.qq.com";
-			const searchResult = await $.http.get(searchRequest).then(response => {
+			searchRequest.body = JSON.stringify({
+				"music.search.SearchCgiService": {
+					"method": "DoSearchForQQMusicDesktop",
+					"module": "music.search.SearchCgiService",
+					"param": {
+						"num_per_page": 1,
+						"page_num": 1,
+						"query": keyword,
+						"search_type": 0
+					}
+				}
+			});
+			const searchResult = await $.http.post(searchRequest).then(response => {
 				//$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response)}`, "");
 				body = JSON.parse(response.body);
-				trackInfo.mid = body?.data?.song?.list?.[0]?.songmid;
-				trackInfo.track = body?.data?.song?.list?.[0]?.songname;
-				trackInfo.album = body?.data?.song?.list?.[0]?.albumname;
-				trackInfo.artist = body?.data?.song?.list?.[0]?.singer?.[0]?.name;
+				body = body["music.search.SearchCgiService"].data.body;
+				trackInfo.mid = body?.song?.list?.[0]?.mid;
+				trackInfo.track = body?.song?.list?.[0]?.name;
+				trackInfo.album = body?.song?.list?.[0]?.album?.name;
+				trackInfo.artist = body?.song?.list?.[0]?.singer?.[0]?.name;
 			});
 			break;
 		};

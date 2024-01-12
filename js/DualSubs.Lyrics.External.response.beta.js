@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(2) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(3) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -714,7 +714,7 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 	return body;
 };
 
-async function searchTrack(vendor = "NeteaseMusicNodeJS", keyword = "", UAPool = []){
+async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 	$.log(`☑️ ${$.name}, Search Track`, `vendor: ${vendor}, keyword: ${keyword}`, "");
 	const searchRequest = {
 		"headers": {
@@ -724,8 +724,7 @@ async function searchTrack(vendor = "NeteaseMusicNodeJS", keyword = "", UAPool =
 	};
 	const trackInfo = {};
 	switch (vendor) {
-		case "NeteaseMusicNodeJS":
-		default: {
+		case "NeteaseMusicNodeJS": {
 			const HostPool = [
 				"api.music.areschang.top",
 				"mu-api.yuk0.com",
@@ -782,7 +781,8 @@ async function searchTrack(vendor = "NeteaseMusicNodeJS", keyword = "", UAPool =
 			});
 			break;
 		};
-		case "QQMusic": {
+		case "QQMusic":
+		default: {
 			const searchUrl = {
 				"scheme": "https",
 				"host": "u.y.qq.com",
@@ -856,7 +856,7 @@ async function searchTrack(vendor = "NeteaseMusicNodeJS", keyword = "", UAPool =
 	return trackInfo;
 };
 
-async function searchLyric(vendor = "NeteaseMusicNodeJS", trackId = undefined, UAPool = []){
+async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = []){
 	$.log(`☑️ ${$.name}, Search Lyric`, `vendor: ${vendor}, trackId: ${trackId}`, "");
 	const lyricRequest = {
 		"headers": {
@@ -866,8 +866,7 @@ async function searchLyric(vendor = "NeteaseMusicNodeJS", trackId = undefined, U
 	};
 	let lyricResult = {};
 	switch (vendor) {
-		case "NeteaseMusicNodeJS":
-		default: {
+		case "NeteaseMusicNodeJS": {
 			const HostPool = [
 				"api.music.areschang.top",
 				"mu-api.yuk0.com",
@@ -902,7 +901,8 @@ async function searchLyric(vendor = "NeteaseMusicNodeJS", trackId = undefined, U
 			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));
 			break;
 		};
-		case "QQMusic": {
+		case "QQMusic":
+		default: {
 			const lyricUrl = {
 				"scheme": "https",
 				"host": "c.y.qq.com",

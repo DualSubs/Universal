@@ -779,7 +779,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			searchRequest.url = URL.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://music.163.com";
 			const searchResult = await $.http.get(searchRequest).then(response => {
-				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response)}`, "");
+				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
 				body = JSON.parse(response.body);
 				trackInfo.id = body?.result?.songs?.[0]?.id;
 				trackInfo.track = body?.result?.songs?.[0]?.name;
@@ -811,7 +811,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 				}
 			});
 			const searchResult = await $.http.post(searchRequest).then(response => {
-				//$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response)}`, "");
+				//$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
 				body = JSON.parse(response.body);
 				body = body["music.search.SearchCgiService"].data.body;
 				trackInfo.mid = body?.song?.list?.[0]?.mid;

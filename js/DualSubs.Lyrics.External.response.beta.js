@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(5) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(6) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -685,7 +685,7 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 		let duolyric = LRC.combineSpotify(body.lyrics.lines, transLyric);
 		switch (PLATFORM) {
 			case "Spotify":
-				switch ($request?.headers?.["app-platform"]) {
+				switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
 					case "OSX": // macOS App 暂不支持翻译功能
 					case "Win32_x86_64": // Windows App 暂不支持翻译功能
 					case "WebPlayer": // Web App

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.4(5) Translator.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.4(6) Translator.response.beta");
 const URL = new URLs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -205,7 +205,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 							const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 							$.log(`🚧 ${$.name}, 调试信息`, `$request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
-							switch ($request?.headers?.["app-platform"]) {
+							switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
 								case "OSX": // macOS App 暂不支持翻译功能
 								case "Win32_x86_64": // Windows App 暂不支持翻译功能
 								case "WebPlayer": // Web App

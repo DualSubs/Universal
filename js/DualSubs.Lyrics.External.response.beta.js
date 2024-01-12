@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(3) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(4) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -1019,7 +1019,7 @@ function URLs(t){return new class{constructor(t=[]){this.name="URL v1.2.5",this.
 function LRCs(opts) {
 	return new (class {
 		constructor(opts) {
-			this.name = "LRC v0.3.1";
+			this.name = "LRC v0.3.2";
 			this.opts = opts;
 			this.newLine = "\n";
 		};
@@ -1034,13 +1034,13 @@ function LRCs(opts) {
 						//$.log(`🚧 ${$.name}, 调试信息`, `line: ${JSON.stringify(line)}`, "");
 						Line = {
 							"startTimeMs": (line.t < 0) ? 0 : line.t,
-							"words": line?.c?.map?.(word => word.tx).join(" "),
+							"words": line?.c?.map?.(word => word.tx).join(""),
 							"syllables": [],
 							"endTimeMs": 0
 						};
 						break;
 					case "[":
-						const LineRegex = /^(?:\[(?<startTimeMs>[:.1234567890]+)\])?(?<words>.*)/;
+						const LineRegex = /^\[(?:(?<startTimeMs>\d\d:\d\d\.\d\d\d?)|(?<tag>\w+:.*))\](?<words>.*)?/;
 						line = line.match(LineRegex)?.groups;
 						//$.log(`🚧 ${$.name}, 调试信息`, `line: ${JSON.stringify(line)}`, "");
 						let startTimeMs = (line?.startTimeMs ?? "0:0").split(":");

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(7) Lyrics.External.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.5.0(5) Lyrics.External.response.beta");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -609,7 +609,7 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 	switch (PLATFORM) {
 		case "Spotify":
 			body.lyrics = {
-				"syncType": "LINE_SYNCED",
+				"syncType": "UNSYNCED",
 				//"syncType": 1,
 				"lines": [
 					{
@@ -646,10 +646,16 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 		case "NeteaseMusic":
 			if (!trackInfo?.NeteaseMusic?.id) trackInfo.NeteaseMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.NeteaseMusic?.id) externalLyric = await searchLyric(vendor, trackInfo.NeteaseMusic.id, UAPool);
+			if (externalLyric?.tlyric?.lyric) transLyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
 			switch (PLATFORM) {
 				case "Spotify":
-					if (externalLyric?.lrc?.lyric) body.lyrics.lines = LRC.toSpotify(externalLyric?.lrc?.lyric);
-					if (externalLyric?.tlyric?.lyric) transLyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
+					if (externalLyric?.yrc?.lyric) {
+						body.lyrics.syncType = "SYLLABLE_SYNCED";
+						body.lyrics.lines = LRC.toSpotify(externalLyric?.yrc?.lyric);
+					} else if (externalLyric?.lrc?.lyric) {
+						body.lyrics.syncType = "LINE_SYNCED";
+						body.lyrics.lines = LRC.toSpotify(externalLyric?.lrc?.lyric);
+					};
 					body.lyrics.provider = "NeteaseMusic";
 					body.lyrics.providerLyricsId = trackInfo?.NeteaseMusic?.id?.toString?.();
 					body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
@@ -665,10 +671,13 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 		default:
 			if (!trackInfo?.QQMusic?.mid) trackInfo.QQMusic = await searchTrack(vendor, `${trackInfo.track} ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.QQMusic?.mid) externalLyric = await searchLyric(vendor, trackInfo.QQMusic.mid, UAPool);
+			if (externalLyric?.trans) transLyric = LRC.toSpotify(externalLyric?.trans);
 			switch (PLATFORM) {
 				case "Spotify":
-					if (externalLyric?.lyric) body.lyrics.lines = LRC.toSpotify(externalLyric?.lyric);
-					if (externalLyric?.trans) transLyric = LRC.toSpotify(externalLyric?.trans);
+					if (externalLyric?.lyric) {
+						body.lyrics.syncType = "LINE_SYNCED";
+						body.lyrics.lines = LRC.toSpotify(externalLyric?.lyric);
+					};
 					body.lyrics.provider = "QQMusic";
 					body.lyrics.providerLyricsId = trackInfo?.QQMusic?.mid?.toString?.();
 					body.lyrics.providerDisplayName = `QQ音乐`;
@@ -1026,7 +1035,7 @@ function URLs(t){return new class{constructor(t=[]){this.name="URL v1.2.5",this.
 function LRCs(opts) {
 	return new (class {
 		constructor(opts) {
-			this.name = "LRC v0.3.2";
+			this.name = "LRC v0.4.0";
 			this.opts = opts;
 			this.newLine = "\n";
 		};
@@ -1034,34 +1043,46 @@ function LRCs(opts) {
 		toSpotify(txt = new String) {
 			console.log(`☑️ ${this.name}, LRC.toSpotify`, "");
 			let json = txt?.split?.(this.newLine)?.filter?.(Boolean)?.map?.(line=> {
-				let Line = {};
+				const Line = {
+					"startTimeMs": 0,
+					"words": "",
+					"syllables": [],
+					"endTimeMs": 0
+				};
 				switch (line?.trim?.()?.substring?.(0, 1)) {
 					case "{":
 						line = JSON.parse(line);
 						//$.log(`🚧 ${$.name}, 调试信息`, `line: ${JSON.stringify(line)}`, "");
-						Line = {
-							"startTimeMs": (line.t < 0) ? 0 : line.t,
-							"words": line?.c?.map?.(word => word.tx).join(""),
-							"syllables": [],
-							"endTimeMs": 0
-						};
+						Line.startTimeMs = (line.t < 0) ? 0 : line.t;
+						Line.words = line?.c?.map?.(word => word.tx).join("");
 						break;
 					case "[":
-						const LineRegex = /^\[(?:(?<startTimeMs>\d\d:\d\d\.\d\d\d?)|(?<tag>\w+:.*))\](?<words>.*)?/;
+						const LineRegex = /^\[(?:(?<startTimeMs>(\d\d:\d\d\.\d\d\d?|\d+,\d+))|(?<tag>\w+:.*))\](?<words>.*)?/;
+						const SyllableRegex = /\((?<startTimeMs>\d+),\d+,\d+\)/g;
 						line = line.match(LineRegex)?.groups;
 						//$.log(`🚧 ${$.name}, 调试信息`, `line: ${JSON.stringify(line)}`, "");
-						let startTimeMs = (line?.startTimeMs ?? "0:0").split(":");
-						line.startTimeMs = Math.round((parseInt(startTimeMs[0], 10) * 60 + parseFloat(startTimeMs[1], 10)) * 1000);
-						if (line.startTimeMs < 0) line.startTimeMs = 0;
-						Line = {
-							"startTimeMs": line.startTimeMs,
-							"words": line?.words?.decodeHTML?.() ?? "",
-							"syllables": [],
-							"endTimeMs": 0
-						};
+						if (line?.startTimeMs?.includes(":")) {
+							Line.startTimeMs = (line?.startTimeMs ?? "0:0").split(":");
+							Line.startTimeMs = Math.round((parseInt(Line.startTimeMs[0], 10) * 60 + parseFloat(Line.startTimeMs[1], 10)) * 1000);
+							if (Line.startTimeMs < 0) Line.startTimeMs = 0;
+						} else if (line?.startTimeMs?.includes(",")) Line.startTimeMs = parseInt(line?.startTimeMs?.split(",")?.[0], 10);
+						if (SyllableRegex.test(line?.words)) {
+							let index = 0, syllablesArray = [], syllablesOriginArray = line?.words?.split(SyllableRegex);
+							syllablesOriginArray.shift();
+							$.log(`🚧 ${$.name}, 调试信息`, `syllablesOriginArray: ${JSON.stringify(syllablesOriginArray)}`, "");
+    						while(index < syllablesOriginArray.length) syllablesArray.push(syllablesOriginArray.slice(index, index += 2));
+							syllablesArray.forEach((syllables) => {
+								Line.words += syllables[1];
+								let syllable = {
+									"startTimeMs": parseInt(syllables[0], 10),
+									"numChars": syllables[1].length
+								};
+								Line.syllables.push(syllable);
+							});
+						} else Line.words = line?.words?.decodeHTML?.() ?? "";
 						break;
 				};
-				//$.log(`🚧 ${$.name}, 调试信息`, `Line: ${JSON.stringify(Line)}`, "");
+				$.log(`🚧 ${$.name}, 调试信息`, `Line: ${JSON.stringify(Line)}`, "");
 				return Line;
 			});
 			console.log(`✅ ${this.name}, LRC.toSpotify, json: ${JSON.stringify(json)}`, "");
@@ -1078,12 +1099,12 @@ function LRCs(opts) {
 			for (let line1 of array1) {
 				let line = line1;
 				for (let line2 of array2) {
-					if (line1.startTimeMs === line2.startTimeMs) {
+					if (Math.abs(line1.startTimeMs - line2.startTimeMs) < 1000) {
 						line = {
 							"startTimeMs": line1.startTimeMs,
 							"words": line1?.words ?? "",
 							"twords": line2?.words ?? "",
-							"syllables": [],
+							"syllables": line1?.syllables ?? [],
 							"endTimeMs": 0
 						};
 						break;
@@ -1101,7 +1122,7 @@ function LRCs(opts) {
 				let line1 = {
 					"startTimeMs": line.startTimeMs,
 					"words": line?.words ?? "",
-					"syllables": [],
+					"syllables": line?.syllables ?? [],
 					"endTimeMs": 0
 				};
 				let line2 = {

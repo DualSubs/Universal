@@ -744,7 +744,9 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			const HostPool = [
 				"api.music.areschang.top",
 				"mu-api.yuk0.com",
-				"netease.happyking.top"
+				"netease.happyking.top",
+				"music.lovethewind.cn",
+				"neteasecloudmusicapi.nanocat.cloud"
 			];
 			// 搜索歌曲
 			const searchUrl = {
@@ -886,7 +888,9 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 			const HostPool = [
 				"api.music.areschang.top",
 				"mu-api.yuk0.com",
-				"netease.happyking.top"
+				"netease.happyking.top",
+				"music.lovethewind.cn",
+				"neteasecloudmusicapi.nanocat.cloud"
 			];
 			const lyricUrl = {
 				"scheme": "https",

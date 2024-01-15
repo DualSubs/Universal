@@ -1,7 +1,7 @@
 {
 	"Default": {
 		"Settings": {
-			"Switch":true,
+			"Switch": true,
 			"Type": "Official",
 			"Types": ["Official", "Translate"],
 			"Languages": ["EN", "ZH"],
@@ -18,19 +18,31 @@
 	"YouTube": {
 		"Settings": {
 			"Switch": true,
-			"Type": "Official"
+			"Type": "Official",
+			"Types": ["Translate", "External"],
+			"Languages": ["AUTO", "ZH"],
+			"AutoCC": true,
+			"ShowOnly": false
 		}
 	},
 	"Netflix": {
 		"Settings": {
 			"Switch": true,
 			"Type": "Translate",
-			"Languages": ["EN", "ZH"]
+			"Languages": ["AUTO", "ZH"]
 		}
 	},
-	"Official": {
+	"Spotify": {
 		"Settings": {
-			"CacheSize": 50,
+			"Switch": true,
+			"Types": ["Translate", "External"],
+			"Languages": ["AUTO", "ZH"]
+		}
+	},
+	"Composite": {
+		"Settings": {
+			"CacheSize": 20,
+			"ShowOnly": false,
 			"Position": "Reverse",
 			"Offset": 0,
 			"Tolerance": 1000
@@ -50,28 +62,35 @@
 	},
 	"External": {
 		"Settings": {
-			"URL": null,
-			"ShowOnly": false,
-			"Position": "Forward",
-			"Offset": 0,
-			"Tolerance": 1000
+			"SubVendor": "URL",
+			"LrcVendor": "QQMusic",
+			"CacheSize": 50
 		}
 	},
 	"API": {
 		"Settings": {
 			"GoogleCloud": {
 				"Mode": "Key",
-				"Auth": null
+				"Auth": undefined
 			},
 			"Microsoft": {
 				"Version": "Azure",
 				"Mode": "Token",
-				"Region": null,
-				"Auth": null
+				"Region": undefined,
+				"Auth": undefined
 			},
 			"DeepL": {
 				"Version": "Free",
-				"Auth": null
+				"Auth": undefined
+			},
+			"DeepLX": {
+				"Endpoint": undefined,
+				"Auth": undefined
+			},
+			"URL": undefined,
+			"NeteaseMusic": {
+				"PhoneNumber": undefined,
+				"Password": undefined
 			}
 		}
 	}

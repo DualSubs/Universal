@@ -51,7 +51,7 @@
 			["YUE-HK", ["yue-Hant", "yue", "zh-HK", "zho"]]
 		],
 		"Google": [
-			["AUTO", ""],
+			["AUTO", "auto"],
 			["AR", "ar"],
 			["BG", "bg"],
 			["CS", "cs"],

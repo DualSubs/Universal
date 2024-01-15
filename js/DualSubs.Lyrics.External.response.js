@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs/Universal
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.4.5(7) Lyrics.External.response");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.5.0(5) Lyrics.External.response");
 const URL = new URLs();
 const LRC = new LRCs();
 const DataBase = {
@@ -264,7 +264,6 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									const Alternative = new Alternative$Type();
 									/******************  initialization finish  *******************/
 									body = ColorLyricsResponse.fromBinary(rawBody);
-									//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 									/*
 									let UF = UnknownFieldHandler.list(body);
 									$.log(`🚧 ${$.name}`, `UF: ${JSON.stringify(UF)}`, "");
@@ -295,7 +294,6 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									body.lyrics.fullscreenAction = 0;
 									if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;								$response.headers["Content-Type"] = FORMAT;
 									$response.status = ($.isQuanX()) ? "HTTP/1.1 200 OK" : 200;
-									//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
 									rawBody = ColorLyricsResponse.toBinary(body);
 									break;
 								};
@@ -580,7 +578,6 @@ async function Fetch(request = {}) {
 		? await $.http.post(request)
 		: await $.http.get(request);
 	$.log(`✅ ${$.name}, Fetch Ruled Reqeust`, "");
-	//$.log(`🚧 ${$.name}, Fetch Ruled Reqeust`, `Response:${JSON.stringify(response)}`, "");
 	return response;
 };
 
@@ -609,7 +606,7 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 	switch (PLATFORM) {
 		case "Spotify":
 			body.lyrics = {
-				"syncType": "LINE_SYNCED",
+				"syncType": "UNSYNCED",
 				//"syncType": 1,
 				"lines": [
 					{
@@ -646,16 +643,21 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 		case "NeteaseMusic":
 			if (!trackInfo?.NeteaseMusic?.id) trackInfo.NeteaseMusic = await searchTrack(vendor, `${trackInfo.track} - ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.NeteaseMusic?.id) externalLyric = await searchLyric(vendor, trackInfo.NeteaseMusic.id, UAPool);
+			if (externalLyric?.tlyric?.lyric) transLyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
 			switch (PLATFORM) {
 				case "Spotify":
-					if (externalLyric?.lrc?.lyric) body.lyrics.lines = LRC.toSpotify(externalLyric?.lrc?.lyric);
-					if (externalLyric?.tlyric?.lyric) transLyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
+					if (externalLyric?.yrc?.lyric) {
+						body.lyrics.syncType = "SYLLABLE_SYNCED";
+						body.lyrics.lines = LRC.toSpotify(externalLyric?.yrc?.lyric);
+					} else if (externalLyric?.lrc?.lyric) {
+						body.lyrics.syncType = "LINE_SYNCED";
+						body.lyrics.lines = LRC.toSpotify(externalLyric?.lrc?.lyric);
+					};
 					body.lyrics.provider = "NeteaseMusic";
 					body.lyrics.providerLyricsId = trackInfo?.NeteaseMusic?.id?.toString?.();
 					body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric?.lyricUser?.nickname ?? "未知"}`;
 					body.colors.background = -8249806; // 网易红 8527410 #821E32 rgb(130,30,50)
 					//body.colors.background = -55775; // 网易红 16721441 #FF2621 rgb(255,38,33)
-					//$.log(`🚧 ${$.name}, 调试信息`, `body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
 					break
 				case "YouTube":
 					break;
@@ -665,15 +667,17 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 		default:
 			if (!trackInfo?.QQMusic?.mid) trackInfo.QQMusic = await searchTrack(vendor, `${trackInfo.track} ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.QQMusic?.mid) externalLyric = await searchLyric(vendor, trackInfo.QQMusic.mid, UAPool);
+			if (externalLyric?.trans) transLyric = LRC.toSpotify(externalLyric?.trans);
 			switch (PLATFORM) {
 				case "Spotify":
-					if (externalLyric?.lyric) body.lyrics.lines = LRC.toSpotify(externalLyric?.lyric);
-					if (externalLyric?.trans) transLyric = LRC.toSpotify(externalLyric?.trans);
+					if (externalLyric?.lyric) {
+						body.lyrics.syncType = "LINE_SYNCED";
+						body.lyrics.lines = LRC.toSpotify(externalLyric?.lyric);
+					};
 					body.lyrics.provider = "QQMusic";
 					body.lyrics.providerLyricsId = trackInfo?.QQMusic?.mid?.toString?.();
 					body.lyrics.providerDisplayName = `QQ音乐`;
 					body.colors.background = -11038189; // QQ音乐绿 5739027 #579213 rgb(87,146,19)
-					//$.log(`🚧 ${$.name}, 调试信息`, `body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
 					break
 				case "YouTube":
 					break;
@@ -717,7 +721,6 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 	};
 
 	$.log(`✅ ${$.name}, Injection Lyric`, "");
-	//$.log(`🚧 ${$.name}, Injection Lyric`, `body: ${JSON.stringify(body)}`, "");
 	return body;
 };
 
@@ -750,7 +753,6 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 					"keywords": encodeURIComponent(keyword),
 				}
 			};
-			//$.log(`🚧 ${$.name}, 调试信息`, `searchUrl: ${JSON.stringify(searchUrl)}`, "");
 			searchRequest.url = URL.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://music.163.com";
 			const searchResult = await $.http.get(searchRequest).then(response => {
@@ -775,7 +777,6 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 					"s": encodeURIComponent(keyword),
 				}
 			};
-			//$.log(`🚧 ${$.name}, 调试信息`, `searchUrl: ${JSON.stringify(searchUrl)}`, "");
 			searchRequest.url = URL.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://music.163.com";
 			const searchResult = await $.http.get(searchRequest).then(response => {
@@ -795,7 +796,6 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 				"host": "u.y.qq.com",
 				"path": "cgi-bin/musicu.fcg"
 			};
-			//$.log(`🚧 ${$.name}, 调试信息`, `searchUrl: ${JSON.stringify(searchUrl)}`, "");
 			searchRequest.url = URL.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://c.y.qq.com";
 			searchRequest.body = JSON.stringify({
@@ -811,7 +811,6 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 				}
 			});
 			const searchResult = await $.http.post(searchRequest).then(response => {
-				//$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
 				body = JSON.parse(response.body);
 				body = body["music.search.SearchCgiService"].data.body;
 				trackInfo.mid = body?.song?.list?.[0]?.mid;
@@ -850,7 +849,6 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 					"id": trackId // trackInfo.NeteaseMusic.id
 				}
 			};
-			//$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
 			lyricRequest.url = URL.stringify(lyricUrl);
 			lyricRequest.headers.Referer = "https://music.163.com";
 			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));
@@ -884,7 +882,6 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 					"songmid": trackId // trackInfo.QQMusic.mid
 				}
 			};
-			//$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
 			lyricRequest.url = URL.stringify(lyricUrl);
 			lyricRequest.headers.Referer = "https://lyric.music.qq.com";
 			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));
@@ -892,7 +889,6 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 		};
 	};
 	$.log(`✅ ${$.name}, Search Lyric`, "");
-	//$.log(`🚧 ${$.name}, Search Lyric`, `lyricResult: ${JSON.stringify(lyricResult)}`, "");
 	return lyricResult;
 };
 
@@ -989,7 +985,7 @@ function URLs(t){return new class{constructor(t=[]){this.name="URL v1.2.5",this.
 function LRCs(opts) {
 	return new (class {
 		constructor(opts) {
-			this.name = "LRC v0.3.2";
+			this.name = "LRC v0.4.0";
 			this.opts = opts;
 			this.newLine = "\n";
 		};
@@ -997,34 +993,43 @@ function LRCs(opts) {
 		toSpotify(txt = new String) {
 			//console.log(`☑️ ${this.name}, LRC.toSpotify`, "");
 			let json = txt?.split?.(this.newLine)?.filter?.(Boolean)?.map?.(line=> {
-				let Line = {};
+				const Line = {
+					"startTimeMs": 0,
+					"words": "",
+					"syllables": [],
+					"endTimeMs": 0
+				};
 				switch (line?.trim?.()?.substring?.(0, 1)) {
 					case "{":
 						line = JSON.parse(line);
 						//$.log(`🚧 ${$.name}, 调试信息`, `line: ${JSON.stringify(line)}`, "");
-						Line = {
-							"startTimeMs": (line.t < 0) ? 0 : line.t,
-							"words": line?.c?.map?.(word => word.tx).join(""),
-							"syllables": [],
-							"endTimeMs": 0
-						};
+						Line.startTimeMs = (line.t < 0) ? 0 : line.t;
+						Line.words = line?.c?.map?.(word => word.tx).join("");
 						break;
 					case "[":
-						const LineRegex = /^\[(?:(?<startTimeMs>\d\d:\d\d\.\d\d\d?)|(?<tag>\w+:.*))\](?<words>.*)?/;
+						const LineRegex = /^\[(?:(?<startTimeMs>(\d\d:\d\d\.\d\d\d?|\d+,\d+))|(?<tag>\w+:.*))\](?<words>.*)?/;
+						const SyllableRegex = /\((?<startTimeMs>\d+),\d+,\d+\)/g;
 						line = line.match(LineRegex)?.groups;
-						//$.log(`🚧 ${$.name}, 调试信息`, `line: ${JSON.stringify(line)}`, "");
-						let startTimeMs = (line?.startTimeMs ?? "0:0").split(":");
-						line.startTimeMs = Math.round((parseInt(startTimeMs[0], 10) * 60 + parseFloat(startTimeMs[1], 10)) * 1000);
-						if (line.startTimeMs < 0) line.startTimeMs = 0;
-						Line = {
-							"startTimeMs": line.startTimeMs,
-							"words": line?.words?.decodeHTML?.() ?? "",
-							"syllables": [],
-							"endTimeMs": 0
-						};
+						if (line?.startTimeMs?.includes(":")) {
+							Line.startTimeMs = (line?.startTimeMs ?? "0:0").split(":");
+							Line.startTimeMs = Math.round((parseInt(Line.startTimeMs[0], 10) * 60 + parseFloat(Line.startTimeMs[1], 10)) * 1000);
+							if (Line.startTimeMs < 0) Line.startTimeMs = 0;
+						} else if (line?.startTimeMs?.includes(",")) Line.startTimeMs = parseInt(line?.startTimeMs?.split(",")?.[0], 10);
+						if (SyllableRegex.test(line?.words)) {
+							let index = 0, syllablesArray = [], syllablesOriginArray = line?.words?.split(SyllableRegex);
+							syllablesOriginArray.shift();
+    						while(index < syllablesOriginArray.length) syllablesArray.push(syllablesOriginArray.slice(index, index += 2));
+							syllablesArray.forEach((syllables) => {
+								Line.words += syllables[1];
+								let syllable = {
+									"startTimeMs": parseInt(syllables[0], 10),
+									"numChars": syllables[1].length
+								};
+								Line.syllables.push(syllable);
+							});
+						} else Line.words = line?.words?.decodeHTML?.() ?? "";
 						break;
 				};
-				//$.log(`🚧 ${$.name}, 调试信息`, `Line: ${JSON.stringify(Line)}`, "");
 				return Line;
 			});
 			//console.log(`✅ ${this.name}, LRC.toSpotify, json: ${JSON.stringify(json)}`, "");
@@ -1041,12 +1046,12 @@ function LRCs(opts) {
 			for (let line1 of array1) {
 				let line = line1;
 				for (let line2 of array2) {
-					if (line1.startTimeMs === line2.startTimeMs) {
+					if (Math.abs(line1.startTimeMs - line2.startTimeMs) < 1000) {
 						line = {
 							"startTimeMs": line1.startTimeMs,
 							"words": line1?.words ?? "",
 							"twords": line2?.words ?? "",
-							"syllables": [],
+							"syllables": line1?.syllables ?? [],
 							"endTimeMs": 0
 						};
 						break;
@@ -1064,7 +1069,7 @@ function LRCs(opts) {
 				let line1 = {
 					"startTimeMs": line.startTimeMs,
 					"words": line?.words ?? "",
-					"syllables": [],
+					"syllables": line?.syllables ?? [],
 					"endTimeMs": 0
 				};
 				let line2 = {

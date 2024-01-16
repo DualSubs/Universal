@@ -171,7 +171,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 										lyrics = await Promise.all(lyrics.map(async run => {
 											let fullText = run?.text?.split?.("\n")?.map(text => text?.trim() ?? "\u200b");
 											const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-											fullText = fullText.map((line, i) => combineText(line, translation?.[i], Settings?.ShowOnly, Settings?.Position, " ♫ "));
+											fullText = fullText.map((line, i) => { if (line) return combineText(line, translation?.[i], Settings?.ShowOnly, Settings?.Position, "\n  └ ") });
 											run.text = fullText.join("\n");
 											return run;
 										}));
@@ -444,7 +444,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 												lyrics = await Promise.all(lyrics.map(async run => {
 													let fullText = run?.text?.split?.("\n")?.map(text => text?.trim() ?? "\u200b");
 													const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-													fullText = fullText.map((line, i) => combineText(line, translation?.[i], Settings?.ShowOnly, Settings?.Position, " ♫ "));
+													fullText = fullText.map((line, i) => { if (line) return combineText(line, translation?.[i], Settings?.ShowOnly, Settings?.Position, "\n  └ ") });
 													run.text = fullText.join("\n");
 													return run;
 												}));

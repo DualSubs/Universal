@@ -203,7 +203,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					break;
 				case "text/json":
 				case "application/json":
-					OriginSub = JSON.parse($response.body);
+					OriginSub = JSON.parse($response.body ?? "{}");
 					for await (let request of requests) {
 						SecondSub = await $.http.get(request).then(response => response.body);
 						SecondSub = JSON.parse(SecondSub);
@@ -217,9 +217,6 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "applecation/octet-stream":
-					let rawBody = $.isQuanX() ? new Uint8Array($response?.bodyBytes ?? []) : $response?.body ?? new Uint8Array();
-					if ($.isQuanX()) $response.bodyBytes = rawBody
-					else $response.body = rawBody;
 					break;
 			};
 			break;

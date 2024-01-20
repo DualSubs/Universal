@@ -5,6 +5,7 @@
 #!homepage=https://github.com/DualSubs
 #!manual=https://github.com/DualSubs/Universal/wiki/🍿-DualSubs:-🎦-Universal
 #!icon=https://github.com/DualSubs/Universal/raw/main/database/icon_rounded.png
+#!category=🍿️ DualSubs
 
 [General]
 force-http-engine-hosts = %APPEND% *.hls.pv-cdn.net, *.hls.row.aiv-cdn.net, *.dash.row.aiv-cdn.net, *avodhlss3ww-a.akamaihd.net, s3.amazonaws.com, cf-timedtext.aux.pv-cdn.net, d25xi40x97liuc.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d1v5ir2lpwr8os.cloudfront.net, d27xxe7juh1us6.cloudfront.net, assets.huluim.com, vod-*.live.cf.md.bbci.co.uk, vod-*-live.akamaized.net

@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(5) Subtitles.Composite.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.4(8) Subtitles.Composite.response");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -583,21 +583,22 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 		case 0: // 长度为0，无须计算
 			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 0`, "")
 			break;
-		case 1: // 长度为1，无须计算
+		case 1: { // 长度为1，无须计算
 			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 1`, "")
-			let _request = {
+			let request2 = {
 				"url": VTTs2[0],
 				"headers": request.headers
 			};
-			requests.push(_request);
+			requests.push(request2);
 			break;
+		};
 		case VTTs1.length: { // 长度相等，一一对应，无须计算
 			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度相等`, "")
-			let _request = {
+			let request2 = {
 				"url": VTTs2[Index1],
 				"headers": request.headers
 			};
-			requests.push(_request);
+			requests.push(request2);
 			break;
 		};
 		default: { // 长度不等，需要计算
@@ -605,16 +606,20 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 			// 计算当前字幕在原字幕队列中的百分比
 			const Position1 = (Index1 + 1) / VTTs1.length; // 从 0 开始计数，所以要加 1
 			// 根据百分比计算当前字幕在新字幕队列中的位置
-			const Index2 = Math.round(Position1 * VTTs2.length);
+			const Index2 = Math.round(Position1 * VTTs2.length - 1); // 从 0 开始计数，所以要减 1
+			// 获取两字幕队列长度差值
+			const diffLength = VTTs2.length - VTTs1.length;
 			// 获取当前字幕在新字幕队列中的前后1个字幕
-			const BeginIndex = (Index2 - 1 < 0) ? 0 : Index2 - 1, EndIndex = Index2 + 1;
-			const nearlyVTTs = VTTs2.slice(BeginIndex, EndIndex + 1); // slice 不取 EndIndex 本身
+			const BeginIndex = (Index2 > Index1) ? Index1 : Index2;
+			const EndIndex = (Index2 > Index1) ? Index2 : Index1;
+			const nearlyVTTs = (diffLength < 0) ? VTTs2.slice((BeginIndex < diffLength) ? 0 : BeginIndex - diffLength, EndIndex + 1)
+				: VTTs2.slice(BeginIndex, EndIndex + diffLength + 1); // slice 不取 EndIndex 本身
 			nearlyVTTs.forEach(url => {
-				let _request = {
+				let request2 = {
 					"url": url,
 					"headers": request.headers
 				};
-				requests.push(_request);
+				requests.push(request2);
 			});
 			break;
 		};

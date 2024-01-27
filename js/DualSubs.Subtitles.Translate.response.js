@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.4(9) Translator.response");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.4(10) Translator.response");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -850,7 +850,7 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
 /**
  * Translator
  * @author VirgilClyne
- * @param {String} type - type
+ * @param {String} vendor - vendor
  * @param {String} source - source
  * @param {String} target - target
  * @param {String} text - text
@@ -858,17 +858,43 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
  * @param {Object} database - Languages Database
  * @return {Promise<*>}
  */
-async function Translator(type = "Google", source = "", target = "", text = "", api = {}, database) {
+async function Translator(vendor = "Google", source = "", target = "", text = "", api = {}, database) {
 	$.log(`☑️ ${$.name}, Translator`, `orig: ${text}`, "");
+	// 转换语言代码
+	switch (vendor) {
+		case "Google":
+		case "GoogleCloud":
+			source = database.Google[source] ?? database.Google[source?.split?.(/[-_]/)?.[0]];
+			target = database.Google[target] ?? database.Google[source?.split?.(/[-_]/)?.[0]];
+			break;
+		case "Bing":
+		case "Microsoft":
+		case "Azure":
+			source = database.Microsoft[source] ?? database.Microsoft[source?.split?.(/[-_]/)?.[0]];
+			target = database.Microsoft[target] ?? database.Microsoft[source?.split?.(/[-_]/)?.[0]];
+			break;
+		case "DeepL":
+		case "DeepLX":
+			source = database.DeepL[source] ?? database.DeepL[source?.split?.(/[-_]/)?.[0]];
+			target = database.DeepL[target] ?? database.DeepL[source?.split?.(/[-_]/)?.[0]];
+			break;
+		case "BaiduFanyi":
+			source = database.Baidu[source] ?? database.Baidu[source?.split?.(/[-_]/)?.[0]];
+			target = database.Baidu[target] ?? database.Baidu[source?.split?.(/[-_]/)?.[0]];
+		case "YoudaoAI":
+			source = database.Youdao[source] ?? database.Youdao[source?.split?.(/[-_]/)?.[0]];
+			target = database.Youdao[target] ?? database.Youdao[source?.split?.(/[-_]/)?.[0]];
+			break;
+	};
 	// 构造请求
-	let request = await GetRequest(type, source, target, text, database);
+	let request = await GetRequest(vendor, source, target, text);
 	// 发送请求
-	let trans = await GetData(type, request);
+	let trans = await GetData(vendor, request);
 	$.log(`🚧 ${$.name}, Translator`, `trans: ${trans}`, "");
 	return trans
 	/***************** Fuctions *****************/
 	// Get Translate Request
-	async function GetRequest(type = "", source = "", target = "", text = "", database) {
+	async function GetRequest(vendor = "", source = "", target = "", text = "") {
 		$.log(`☑️ ${$.name}, Get Translate Request`, "");
 		const UAPool = [
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
@@ -887,7 +913,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 		let request = {};
 		let BaseURL = "";
 		let texts = "";
-		switch (type) {
+		switch (vendor) {
 			default:
 			case "Google":
 				const BaseRequest = [
@@ -923,7 +949,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				]
 				request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))] // 随机Request, 排除最后两项
 				text = (Array.isArray(text)) ? text.join("\r") : text;
-				request.url = request.url + `&sl=${database.Google[source]}&tl=${database.Google[target]}&q=${encodeURIComponent(text)}`;
+				request.url = request.url + `&sl=${source}&tl=${target}&q=${encodeURIComponent(text)}`;
 				break;
 			case "GoogleCloud":
 				BaseURL = "https://translation.googleapis.com";
@@ -938,8 +964,8 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 						};
 						request.body = JSON.stringify({
 							"q": text,
-							"source": database.Google[source],
-							"target": database.Google[target],
+							"source": source,
+							"target": target,
 							"format": "html",
 							//"key": api?.Key
 						});
@@ -962,8 +988,8 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 							"Content-Type": "application/json; charset=utf-8"
 						};
 						request.body = JSON.stringify({
-							"sourceLanguageCode": database.Google[source],
-							"targetLanguageCode": database.Google[target],
+							"sourceLanguageCode": source,
+							"targetLanguageCode": target,
 							"contents": (Array.isArray(text)) ? text : [text],
 							"mimeType": "text/html"
 						});
@@ -992,8 +1018,8 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					"fromLang": "auto-detect",
 					//"text": '%s' % trans,
 					"text": text,
-					//"from": database.Microsoft[source],
-					"to": database.Microsoft[target]
+					//"from": source,
+					"to": target
 				});
 				break;
 			case "Microsoft":
@@ -1012,7 +1038,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 						BaseURL = "https://api.cognitive.microsofttranslator.us";
 						break;
 				};
-				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&${(source !== "AUTO") ? `from=${ database.Microsoft[source]}` : ""}&to=${database.Microsoft[target]}`;
+				request.url = `${BaseURL}/translate?api-version=3.0&textType=html&${(source) ? `from=${source}` : ""}&to=${target}`;
 				request.headers = {
 					"Content-Type": "application/json; charset=UTF-8",
 					"Accept": "application/json, text/javascript, */*; q=0.01",
@@ -1057,13 +1083,7 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					"User-Agent": "DualSubs",
 					"Content-Type": "application/x-www-form-urlencoded"
 				};
-				const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
-					: (database.DeepL[source].includes("PT")) ? "PT"
-						: database.DeepL[source];
-				const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
-					: (database.DeepL[target] == "PT") ? "PT-PT"
-						: database.DeepL[target];
-				const BaseBody = `auth_key=${api?.Key ?? api?.Auth}&source_lang=${source_lang}&target_lang=${target_lang}&tag_handling=html`;
+				const BaseBody = `auth_key=${api?.Key ?? api?.Auth}&source_lang=${source}&target_lang=${target}&tag_handling=html`;
 				text = (Array.isArray(text)) ? text : [text];
 				texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
 				request.body = BaseBody + texts.join("");
@@ -1078,16 +1098,10 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 					"Content-Type": "application/json"
 				};
 				if (api?.Token) request.headers.Authorization = `Bearer ${api?.Token ?? api?.Auth}`;
-				const source_lang = (database.DeepL[source].includes("EN")) ? "EN"
-					: (database.DeepL[source].includes("PT")) ? "PT"
-						: database.DeepL[source];
-				const target_lang = (database.DeepL[target] == "EN") ? "EN-US"
-					: (database.DeepL[target] == "PT") ? "PT-PT"
-						: database.DeepL[target];
 				request.body = JSON.stringify({
 					"text": (Array.isArray(text)) ? text.join("||") : text,
-					"source_lang": source_lang,
-					"target_lang": target_lang,
+					"source_lang": source,
+					"target_lang": target,
 				});
 				break;
 			}
@@ -1101,8 +1115,8 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				};
 				request.body = {
 					"q": text,
-					"from": database.Baidu[source],
-					"to": database.Baidu[target],
+					"from": source,
+					"to": target,
 					"appid": api?.Key,
 					"salt": uuidv4().toString(),
 					"sign": "",
@@ -1118,8 +1132,8 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 				};
 				request.body = {
 					"q": text,
-					"from": database.Youdao[source],
-					"to": database.Youdao[target],
+					"from": source,
+					"to": target,
 					"appKey": api?.Key,
 					"salt": uuidv4().toString(),
 					"signType": "v3",
@@ -1131,13 +1145,13 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 		return request
 	};
 	// Get Translate Data
-	async function GetData(type, request) {
+	async function GetData(vendor, request) {
 		$.log(`☑️ ${$.name}, Get Translate Data`, "");
 		let texts = [];
 		await Fetch(request)
 			.then(response => JSON.parse(response.body))
 			.then(_data => {
-				switch (type) {
+				switch (vendor) {
 					case "Google":
 					default:
 						if (Array.isArray(_data)) {
@@ -1145,21 +1159,21 @@ async function Translator(type = "Google", source = "", target = "", text = "", 
 								if (_data.length === 1) {
 									_data[0].pop();
 									texts = _data[0];
-								} else texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, 类型: ${type}`);
+								} else texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, vendor: ${vendor}`);
 							} else texts = _data;
-						} else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, 类型: ${type}`);
+						} else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, vendor: ${vendor}`);
 						texts = texts?.join("")?.split(/\r/);
 						break;
 					case "GoogleCloud":
-						texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, 类型: ${type}`);
+						texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, vendor: ${vendor}`);
 						break;
 					case "Bing":
 					case "Microsoft":
 					case "Azure":
-						texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, 类型: ${type}`);
+						texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, vendor: ${vendor}`);
 						break;
 					case "DeepL":
-						texts = _data?.translations?.map(item => item?.text ?? `翻译失败, 类型: ${type}`);
+						texts = _data?.translations?.map(item => item?.text ?? `翻译失败, vendor: ${vendor}`);
 						break;
 					case "DeepLX":
 						texts = _data?.data?.split("||") ?? _data?.data;

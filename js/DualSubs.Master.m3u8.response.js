@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.5(5) Master.m3u8.response");
+const $ = new Env("🍿️ DualSubs: 🎦 Universal v0.9.5(6) Master.m3u8.response");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 const DataBase = {
@@ -80,7 +80,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.split?.(/[-_]/)?.[0]?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang?.split?.(/[-_]/)?.[0] ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 兼容性判断
 			const { standard: STANDARD, device: DEVICE } = isStandard(URL, $request.headers, PLATFORM);

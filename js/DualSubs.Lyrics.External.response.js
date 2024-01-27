@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.5.0(6) Lyrics.External.response");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.5.0(7) Lyrics.External.response");
 const URI = new URIs();
 const LRC = new LRCs();
 const DataBase = {
@@ -80,7 +80,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.split?.(/[-_]/)?.[0]?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang?.split?.(/[-_]/)?.[0] ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
 			// 查询缓存
 			const trackId = PATHs?.[3];

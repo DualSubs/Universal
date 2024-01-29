@@ -1,0 +1,28 @@
+{
+    "Settings": {
+        "GoogleCloud": {
+            "Version": "v2",
+            "Mode": "Key",
+            "Auth": ""
+        },
+        "Microsoft": {
+            "Version": "Azure",
+            "Mode": "Token",
+            "Region": "",
+            "Auth": ""
+        },
+        "DeepL": {
+            "Version": "Free",
+            "Auth": ""
+        },
+        "DeepLX": {
+            "Endpoint": "",
+            "Auth": ""
+        },
+        "URL": "",
+        "NeteaseMusic": {
+            "PhoneNumber": "",
+            "Password": ""
+        }
+    }
+}

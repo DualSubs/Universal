@@ -2,7 +2,7 @@
 README: https://github.com/DualSubs
 */
 
-const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.4(10) Translator.response.beta");
+const $ = new Env("🍿️ DualSubs: 🔣 Universal v1.2.5(2) Translator.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -44,7 +44,7 @@ const DataBase = {
 			"Languages":{
 				"Google":{"AUTO":"auto","AF":"af","AM":"am","AR":"ar","AS":"as","AY":"ay","AZ":"az","BG":"bg","BE":"be","BM":"bm","BN":"bn","BHO":"bho","CS":"cs","DA":"da","DE":"de","EL":"el","EU":"eu","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","FR-CA":"fr","HU":"hu","IS":"is","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt","PT-BR":"pt","PA":"pa","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SQ":"sq","ST":"st","SV":"sv","TH":"th","TR":"tr","UK":"uk","UR":"ur","VI":"vi","ZH":"zh","ZH-HANS":"zh-CN","ZH-HK":"zh-TW","ZH-HANT":"zh-TW"},
 				"Microsoft":{"AUTO":"","AF":"af","AM":"am","AR":"ar","AS":"as","AY":"ay","AZ":"az","BG":"bg","BE":"be","BM":"bm","BN":"bn","BHO":"bho","CS":"cs","DA":"da","DE":"de","EL":"el","EU":"eu","EN":"en","EN-GB":"en","EN-US":"en","EN-US SDH":"en","ES":"es","ES-419":"es","ES-ES":"es","ET":"et","FI":"fi","FR":"fr","FR-CA":"fr-ca","HU":"hu","IS":"is","IT":"it","JA":"ja","KO":"ko","LT":"lt","LV":"lv","NL":"nl","NO":"no","PL":"pl","PT":"pt","PT-PT":"pt-pt","PT-BR":"pt","PA":"pa","RO":"ro","RU":"ru","SK":"sk","SL":"sl","SQ":"sq","ST":"st","SV":"sv","TH":"th","TR":"tr","UK":"uk","UR":"ur","VI":"vi","ZH":"zh-Hans","ZH-HANS":"zh-Hans","ZH-HK":"yue","ZH-HANT":"zh-Hant"},
-				"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN-US","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT-PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","TR":"TR","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}
+				"DeepL":{"AUTO":"","BG":"BG","CS":"CS","DA":"DA","DE":"de","EL":"el","EN":"EN","EN-GB":"EN-GB","EN-US":"EN-US","EN-US SDH":"EN-US","ES":"ES","ES-419":"ES","ES-ES":"ES","ET":"ET","FI":"FI","FR":"FR","HU":"HU","IT":"IT","JA":"JA","KO":"ko","LT":"LT","LV":"LV","NL":"NL","PL":"PL","PT":"PT","PT-PT":"PT-PT","PT-BR":"PT-BR","RO":"RO","RU":"RU","SK":"SK","SL":"SL","SV":"SV","TR":"TR","ZH":"ZH","ZH-HANS":"ZH","ZH-HK":"ZH","ZH-HANT":"ZH"}
 			}
 		}
 	},
@@ -1226,14 +1226,23 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 				};
 				request.url = `${BaseURL}/v2/translate`;
 				request.headers = {
-					"Accept": "*/*",
+					//"Accept": "*/*",
 					"User-Agent": "DualSubs",
-					"Content-Type": "application/x-www-form-urlencoded"
+					"Content-Type": "application/json",
+					"Authorization": `DeepL-Auth-Key ${api?.Token ?? api?.Auth}`
 				};
-				const BaseBody = `auth_key=${api?.Key ?? api?.Auth}&source_lang=${source}&target_lang=${target}&tag_handling=html`;
-				text = (Array.isArray(text)) ? text : [text];
-				texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
-				request.body = BaseBody + texts.join("");
+				//const BaseBody = `auth_key=${api?.Key ?? api?.Auth}&source_lang=${source}&target_lang=${target}&tag_handling=html`;
+				//text = (Array.isArray(text)) ? text : [text];
+				//texts = await Promise.all(text?.map(async item => `&text=${encodeURIComponent(item)}`))
+				//request.body = BaseBody + texts.join("");
+				let body = {
+					"text": (Array.isArray(text)) ? text : [text],
+					//"source_lang": source,
+					"target_lang": target,
+					"tag_handling": "html"
+				};
+				if (source) body.source_lang = source;
+				request.body = JSON.stringify(body);
 				break;
 			}
 			case "DeepLX": {

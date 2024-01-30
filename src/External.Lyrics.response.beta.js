@@ -12,7 +12,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(5) External.Lyrics.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(6) External.Lyrics.response.beta");
 const URI = new URIs();
 const LRC = new LRCs();
 
@@ -32,7 +32,7 @@ if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = d
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "External", "API"], Database);
+	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "External", "API"], Database);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

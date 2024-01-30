@@ -13,7 +13,7 @@ import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(3) Composite.Subtitles.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(4) Composite.Subtitles.response");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -34,7 +34,7 @@ if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = d
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database);
+	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

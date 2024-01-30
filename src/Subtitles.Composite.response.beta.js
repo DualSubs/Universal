@@ -11,31 +11,12 @@ import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
 
-import * as Default from "./database/Default.json";
-import * as Universal from "./database/Universal.json";
-import * as YouTube from "./database/YouTube.json";
-import * as Netflix from "./database/Netflix.json";
-import * as Spotify from "./database/Spotify.json";
-import * as Composite from "./database/Composite.json";
-import * as Translate from "./database/Translate.json";
-import * as External from "./database/External.json";
-import * as API from "./database/API.json";
+import * as Database from "./database/Database.json";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(1) Subtitles.Composite.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(2) Subtitles.Composite.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
-const DataBase = {
-	"Default": Default,
-	"Universal": Universal,
-	"YouTube": YouTube,
-	"Netflix": Netflix,
-	"Spotify": Spotify,
-	"Composite": Composite,
-	"Translate": Translate,
-	"External": External,
-	"External": API,
-};
 
 /***************** Processing *****************/
 // 解构URL
@@ -53,7 +34,7 @@ if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = d
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], DataBase);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

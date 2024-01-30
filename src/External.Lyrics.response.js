@@ -12,7 +12,7 @@ import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 
 import * as Database from "./database/Database.json";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(3) Lyrics.External.response");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(3) External.Lyrics.response");
 const URI = new URIs();
 const LRC = new LRCs();
 

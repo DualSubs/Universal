@@ -104,7 +104,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI;
 							else return item;
 						}).filter(e => e);
-						$.log(`🚧 ${$.name}`, "body.map", JSON.stringify(body), "");
+						//$.log(`🚧 ${$.name}`, "body.map", JSON.stringify(body), "");
 					}
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);

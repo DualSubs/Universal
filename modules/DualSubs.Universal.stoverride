@@ -98,7 +98,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -119,7 +119,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/vod-(.+)-(aoc|svod)\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -136,7 +136,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -153,7 +153,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -194,15 +194,15 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
     - match: ^https?:\/\/(d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
     - match: ^https?:\/\/cf-timedtext\.aux\.pv-cdn\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.(vtt|ttml2)\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -219,7 +219,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/(.+)\.vtt
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -236,7 +236,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.hbomaxcdn\.com\/videos\/(.+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -261,7 +261,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(assets\.huluim\.com|assetshuluimcom-a\.akamaihd\.net)\/captions_webvtt\/(.+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -282,11 +282,11 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
     - match: ^https?:\/\/cc\.cbs\.com\/closedcaption\/(.+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -307,7 +307,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -324,7 +324,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/[^\/]*subtitles[^\/]*\.webvtt
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -341,7 +341,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\.vtt
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -358,7 +358,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/hls\.ted\.com\/(.+)\/subtitles\/(.+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -375,7 +375,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/(hls-webvtt|vtt)\/(.+)\.vtt
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -383,6 +383,15 @@ http:
       name: DualSubs.Master.m3u8.response
       type: response
       require-body: true
+    - match: ^https?:\/\/vod-sub-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.+)(\.cc)?\.xml\?(.*)subtype=(Official|External)
+      name: DualSubs.Subtitles.Composite.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/vod-sub-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/iplayer\/subtitles\/(.+)(\.cc)?\.xml
+      name: DualSubs.Translator.response
+      type: response
+      require-body: true
+
     - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/\.m3u8
       name: DualSubs.Master.m3u8.response
       type: response
@@ -400,11 +409,11 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.webvtt
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\/Subtitles\/(.+)\.vtt
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -413,7 +422,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/api\.britbox\.com\/v1\/subtitles
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -426,11 +435,11 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.vtt\?(.*)subtype=(Official|External)
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.vtt
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -451,11 +460,11 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/amcplus-(.+)\.akamaized\.net\/composite-media\/v1\/hls\/(.+)\/segment(\d+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
     - match: ^https?:\/\/redirector\.playback\.(.+)\.prod\.deploys\.brightcove\.com\/v1\/(.+)\.vtt
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -481,7 +490,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/(.+)\/(.+)\.subtitles\.\d+\.split\.\d+\.webvtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -498,7 +507,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/api\.viki\.io\/(.+)\/auth_subtitles\/(\w+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -523,11 +532,11 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/captions_\d+\/(.+)\/fileSequence\d+\.webvtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
     - match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -544,7 +553,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -561,7 +570,7 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/media-production\.nebula\.app\/(.+)\/subtitles\/(.+)\/main\.(\w+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
@@ -578,20 +587,20 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.plutotv\.net\/(.+)\/hls\/(.+)\/(\w+\.m3u8_)?(\d+)\.vtt\?(.*)subtype=Translate
-      name: DualSubs.Subtitles.Translate.response
+      name: DualSubs.Translator.response
       type: response
       require-body: true
 
 script-providers:
   DualSubs.Master.m3u8.response:
-    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Master.m3u8.response.js
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Master.m3u8.response.js
     interval: 86400
   DualSubs.Subtitles.m3u8.response:
-    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.m3u8.response.js
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Subtitles.m3u8.response.js
     interval: 86400
   DualSubs.Subtitles.Composite.response:
-    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Composite.response.js
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Subtitles.Composite.response.js
     interval: 86400
-  DualSubs.Subtitles.Translate.response:
-    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/DualSubs.Subtitles.Translate.response.js
+  DualSubs.Translator.response:
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Translator.response.js
     interval: 86400

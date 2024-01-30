@@ -12,7 +12,7 @@ import detectFormat from "./function/detectFormat.mjs";
 
 import * as Database from "./database/Database.json";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(2) Master.m3u8.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(2) M3U8.Master.response.beta");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -86,6 +86,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
+				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
 				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
@@ -181,9 +182,14 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  * @return {Object} m3u8
  */
 function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], platform = "", standard = true, device = "iPhone") {
+	//types = (standard == true) ? types : ["Translate"];
 	types = (standard == true) ? types : [types.at(-1)];
 	const playlists1 = playlists?.[languages?.[0]];
 	const playlists2 = playlists?.[languages?.[1]];
+	//if (playlists1?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有主字幕语言（源语言）字幕`, "");
+	//else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
+	//if (playlists2?.length !== 0) $.log(`🚧 ${$.name}, Set Attribute List, 有副字幕语言（目标语言）字幕`, "");
+	//else types = types.filter(e => e !== "Official"); // 无目标语言字幕时删除官方字幕选项
 	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
 	playlists1?.forEach(playlist1 => {
 		const index1 = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
@@ -193,6 +199,7 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 			switch (type) {
 				case "Official":
 					playlists2?.forEach(playlist2 => {
+						//const index2 = m3u8.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 副语言（源语言）字幕位置
 						if (playlist1?.OPTION?.["GROUP-ID"] === playlist2?.OPTION?.["GROUP-ID"]) {
 							switch (platform) { // 兼容性修正
 								case "Apple":
@@ -212,8 +219,10 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 					const playlist2 = {
 						"OPTION": {
 							"TYPE": "SUBTITLES",
+							//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
 							"NAME": playlists2?.[0]?.OPTION?.NAME ?? languages[1].toLowerCase(),
 							"LANGUAGE": playlists2?.[0]?.OPTION?.LANGUAGE ?? languages[1].toLowerCase(),
+							//"URI": playlist?.URI,
 						}
 					};
 					option = setOption(playlist1, playlist2, type, platform, standard, device);
@@ -270,6 +279,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 					newOption.OPTION.LANGUAGE = LANGUAGE1;
 					break;
 				default:
+					//newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
 					newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
 					break;
 			};
@@ -283,22 +293,29 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 		case "Max": // AppleCoreMedia
 		case "HBOMax": // AppleCoreMedia
 		case "Viki":
+			//if (!standard) newOption.OPTION.NAME = NAME1;
 			newOption.OPTION.LANGUAGE = LANGUAGE1;
+			//if (!standard) delete newOption.OPTION["ASSOC-LANGUAGE"];
 			break;
 		case "Paramount+":
 		case "Discovery+Ph":
+			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
 			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
+			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
 		default:
 			newOption.OPTION.LANGUAGE = LANGUAGE1;
 			break;
 	};
 	// 增加/修改类型参数
+	//const separator = (newOption?.OPTION?.CHARACTERISTICS) ? "," : "";
+	//newOption.OPTION.CHARACTERISTICS += `${separator ?? ""}DualSubs.${type}`;
 	// 增加副语言
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接
 	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
 	newOption.OPTION.URI += `${symbol}subtype=${type}`;
+	//if (!standard) newOption.OPTION.URI += `&lang=${LANGUAGE1}`;
 	// 自动选择
 	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正
@@ -318,7 +335,9 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
  */
 function isStandard(_url, headers, platform) {
 	$.log(`☑️ ${$.name}, is Standard`, "");
+	//let _url = URI.parse(url);
 	const UA = (headers?.["user-agent"] ?? headers?.["User-Agent"]);
+	$.log(`🚧 ${$.name}, is Standard, UA: ${UA}`, "");
 	let standard = true;
 	let device = "iPhone";
 	if (UA?.includes("Mozilla/5.0")) device = "Web";

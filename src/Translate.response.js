@@ -14,7 +14,7 @@ import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 
 import * as Database from "./database/Database.json";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.6(3) Translator.response");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.6(3) Translate.response");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"

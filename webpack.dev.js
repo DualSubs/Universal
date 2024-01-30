@@ -7,7 +7,7 @@ module.exports = {
 		"M3U8.Master.response": './src/M3U8.Master.response.beta.js',
 		"M3U8.Subtitles.response": './src/M3U8.Subtitles.response.beta.js',
 		"Composite.Subtitles.response": './src/Composite.Subtitles.response.beta.js',
-		"Translator.response": './src/Translator.response.beta.js',
+		"Translate.response": './src/Translate.response.beta.js',
 		"External.Lyrics.response": './src/External.Lyrics.response.beta.js',
 	},
 	output: {

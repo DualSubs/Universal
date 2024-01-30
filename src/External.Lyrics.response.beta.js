@@ -8,11 +8,12 @@ import URIs from "./URI/URI.mjs";
 import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
+import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 
 import * as Database from "./database/Database.json";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(4) External.Lyrics.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(5) External.Lyrics.response.beta");
 const URI = new URIs();
 const LRC = new LRCs();
 
@@ -314,21 +315,6 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 	})
 
 /***************** Function *****************/
-/**
- * Set Cache
- * @author VirgilClyne
- * @param {Map} cache - Playlists Cache / Subtitles Cache
- * @param {Number} cacheSize - Cache Size
- * @return {Boolean} isSaved
- */
-function setCache(cache, cacheSize = 100) {
-	$.log(`☑️ ${$.name}, Set Cache, cacheSize: ${cacheSize}`, "");
-	cache = Array.from(cache || []); // Map转Array
-	cache = cache.slice(-cacheSize); // 限制缓存大小
-	$.log(`✅ ${$.name}, Set Cache`, "");
-	return cache;
-};
-
 /**
  * Fetch Ruled Reqeust
  * @author VirgilClyne

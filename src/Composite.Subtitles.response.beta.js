@@ -7,12 +7,11 @@ import URIs from "./URI/URI.mjs";
 import XMLs from "./XML/XML.mjs";
 import WebVTT from "./WebVTT/WebVTT.mjs";
 
+import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
-
-import * as Database from "./database/Database.json";
 
 const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(3) Composite.Subtitles.response.beta");
 const URI = new URIs();

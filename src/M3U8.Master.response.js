@@ -6,13 +6,13 @@ import ENVs from "./ENV/ENV.mjs";
 import URIs from "./URI/URI.mjs";
 import EXTM3U from "./EXTM3U/EXTM3U.mjs";
 
+import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
+import setCache from "./function/setCache.mjs";
 
-import * as Database from "./database/Database.json";
-
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(2) M3U8.Master.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(3) M3U8.Master.response");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -121,21 +121,6 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 	})
 
 /***************** Function *****************/
-/**
- * Set Cache
- * @author VirgilClyne
- * @param {Map} cache - Playlists Cache / Subtitles Cache
- * @param {Number} cacheSize - Cache Size
- * @return {Boolean} isSaved
- */
-function setCache(cache, cacheSize = 100) {
-	$.log(`☑️ ${$.name}, Set Cache, cacheSize: ${cacheSize}`, "");
-	cache = Array.from(cache || []); // Map转Array
-	cache = cache.slice(-cacheSize); // 限制缓存大小
-	$.log(`✅ ${$.name}, Set Cache`, "");
-	return cache;
-};
-
 /**
  * Get Attribute List
  * @author VirgilClyne

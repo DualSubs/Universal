@@ -7,13 +7,13 @@ import URIs from "./URI/URI.mjs";
 import XMLs from "./XML/XML.mjs";
 import WebVTT from "./WebVTT/WebVTT.mjs";
 
+import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
+import setCache from "./function/setCache.mjs";
 
-import * as Database from "./database/Database.json";
-
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(2) Composite.Subtitles.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(3) Composite.Subtitles.response");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -312,21 +312,6 @@ function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages
 	//$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
 	$.log(`✅ ${$.name}, getSubtitlesArray`, "");
 	return { subtitlesURIArray0, subtitlesURIArray1 };
-};
-
-/**
- * Set Cache
- * @author VirgilClyne
- * @param {Map} cache - Playlists Cache / Subtitles Cache
- * @param {Number} cacheSize - Cache Size
- * @return {Boolean} isSaved
- */
-function setCache(cache, cacheSize = 100) {
-	$.log(`☑️ ${$.name}, Set Cache, cacheSize: ${cacheSize}`, "");
-	cache = Array.from(cache || []); // Map转Array
-	cache = cache.slice(-cacheSize); // 限制缓存大小
-	$.log(`✅ ${$.name}, Set Cache`, "");
-	return cache;
 };
 
 /**

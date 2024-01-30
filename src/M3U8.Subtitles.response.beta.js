@@ -6,12 +6,11 @@ import ENVs from "./ENV/ENV.mjs";
 import URIs from "./URI/URI.mjs";
 import EXTM3U from "./EXTM3U/EXTM3U.mjs";
 
+import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
-
-import * as Database from "./database/Database.json";
 
 const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(3) M3U8.Subtitles.response.beta");
 const URI = new URIs();

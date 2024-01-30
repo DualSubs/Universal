@@ -12,7 +12,7 @@ import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 
 import * as Database from "./database/Database.json";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(3) External.Lyrics.response");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(4) External.Lyrics.response");
 const URI = new URIs();
 const LRC = new LRCs();
 
@@ -542,7 +542,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			searchRequest.headers.Referer = "https://music.163.com";
 			const searchResult = await $.http.get(searchRequest).then(response => {
 				//$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
-				body = JSON.parse(response.body);
+				let body = JSON.parse(response.body);
 				trackInfo.id = body?.result?.songs?.[0]?.id;
 				trackInfo.track = body?.result?.songs?.[0]?.name;
 				trackInfo.album = body?.result?.songs?.[0]?.ar?.name;
@@ -566,7 +566,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			searchRequest.headers.Referer = "https://music.163.com";
 			const searchResult = await $.http.get(searchRequest).then(response => {
 				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
-				body = JSON.parse(response.body);
+				let body = JSON.parse(response.body);
 				trackInfo.id = body?.result?.songs?.[0]?.id;
 				trackInfo.track = body?.result?.songs?.[0]?.name;
 				trackInfo.album = body?.result?.songs?.[0]?.ar?.name;
@@ -596,7 +596,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 				}
 			});
 			const searchResult = await $.http.post(searchRequest).then(response => {
-				body = JSON.parse(response.body);
+				let body = JSON.parse(response.body);
 				body = body["music.search.SearchCgiService"].data.body;
 				trackInfo.mid = body?.song?.list?.[0]?.mid;
 				trackInfo.track = body?.song?.list?.[0]?.name;

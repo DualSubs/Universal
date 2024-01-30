@@ -3908,12 +3908,7 @@ var Configs = {
 			DE: "de",
 			EL: "el",
 			EN: "EN",
-			"EN-GB": "EN-GB",
-			"EN-US": "EN-US",
-			"EN-US SDH": "EN-US",
 			ES: "ES",
-			"ES-419": "ES",
-			"ES-ES": "ES",
 			ET: "ET",
 			FI: "FI",
 			FR: "FR",
@@ -3926,18 +3921,13 @@ var Configs = {
 			NL: "NL",
 			PL: "PL",
 			PT: "PT",
-			"PT-PT": "PT-PT",
-			"PT-BR": "PT-BR",
 			RO: "RO",
 			RU: "RU",
 			SK: "SK",
 			SL: "SL",
 			SV: "SV",
 			TR: "TR",
-			ZH: "ZH",
-			"ZH-HANS": "ZH",
-			"ZH-HK": "ZH",
-			"ZH-HANT": "ZH"
+			ZH: "ZH"
 		}
 	}
 };

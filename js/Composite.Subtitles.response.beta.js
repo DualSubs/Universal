@@ -4020,22 +4020,21 @@ var Database$1 = Database = {
 README: https://github.com/DualSubs
 */
 
-const $$1 = new ENV("🍿️ DualSubs: Set Environment Variables");
-
 /**
  * Set Environment Variables
  * @author VirgilClyne
+ * @param {Object} $ - ENV
  * @param {String} name - Persistent Store Key
  * @param {Array} platforms - Platform Names
  * @param {Object} database - Default DataBase
  * @return {Object} { Settings, Caches, Configs }
  */
-function setENV(name, platforms, database) {
-	$$1.log(`☑️ ${$$1.name}`, "");
-	let { Settings, Caches, Configs } = $$1.getENV(name, platforms, database);
+function setENV($, name, platforms, database) {
+	console.log(`☑️ Set Environment Variables`, "");
+	let { Settings, Caches, Configs } = $.getENV(name, platforms, database);
 	/***************** Settings *****************/
 	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
-	if ($$1.isLoon() && platforms.includes("YouTube")) {
+	if ($.isLoon() && platforms.includes("YouTube")) {
 		Settings.AutoCC = $persistentStore.read("自动显示翻译字幕") ?? Settings.AutoCC;
 		switch (Settings.AutoCC) {
 			case "是":
@@ -4060,9 +4059,9 @@ function setENV(name, platforms, database) {
 			case "译文位于外文之下":
 				Settings.Position = "Reverse";
 				break;
-		}	}	$$1.log(`✅ ${$$1.name}, Set Environment Variables`, `Settings: ${typeof Settings}`, `Settings内容: ${JSON.stringify(Settings)}`, "");
+		}	}	console.log(`✅ Set Environment Variables, Settings: ${typeof Settings}, Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
-	//$.log(`✅ ${$.name}, Set Environment Variables`, `Caches: ${typeof Caches}`, `Caches内容: ${JSON.stringify(Caches)}`, "");
+	//console.log(`✅ Set Environment Variables, Caches: ${typeof Caches}, Caches内容: ${JSON.stringify(Caches)}`, "");
 	if (typeof Caches?.Playlists !== "object" || Array.isArray(Caches?.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
 	Caches.Playlists.Master = new Map(JSON.parse(Caches?.Playlists?.Master || "[]")); // Strings转Array转Map
 	Caches.Playlists.Subtitle = new Map(JSON.parse(Caches?.Playlists?.Subtitle || "[]")); // Strings转Array转Map
@@ -4175,7 +4174,7 @@ README: https://github.com/DualSubs
 */
 
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.5(3) Composite.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.5(4) Composite.Subtitles.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -4196,7 +4195,7 @@ if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = d
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database$1);
+	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database$1);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

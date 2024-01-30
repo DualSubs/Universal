@@ -1,5 +1,6 @@
 import json from '@rollup/plugin-json';
 import commonjs from "@rollup/plugin-commonjs";
+import terser from '@rollup/plugin-terser';
 
 export default [
 	{
@@ -8,7 +9,7 @@ export default [
 			file: 'js/M3U8.Master.response.js',
 			format: 'es'
 		},
-		plugins: [json(), commonjs()]
+		plugins: [json(), commonjs(), terser()]
 	},
 	{
 		input: 'src/M3U8.Subtitles.response.js',
@@ -16,7 +17,7 @@ export default [
 			file: 'js/M3U8.Subtitles.response.js',
 			format: 'es'
 		},
-		plugins: [json(), commonjs()]
+		plugins: [json(), commonjs(), terser()]
 	},
 	{
 		input: 'src/Composite.Subtitles.response.js',
@@ -24,7 +25,7 @@ export default [
 			file: 'js/Composite.Subtitles.response.js',
 			format: 'es'
 		},
-		plugins: [json(), commonjs()]
+		plugins: [json(), commonjs(), terser()]
 	},
 	{
 		input: 'src/Translate.response.js',
@@ -32,7 +33,7 @@ export default [
 			file: 'js/Translate.response.js',
 			format: 'es'
 		},
-		plugins: [json(), commonjs()]
+		plugins: [json(), commonjs(), terser()]
 	},
 	{
 		input: 'src/External.Lyrics.response.js',
@@ -40,6 +41,6 @@ export default [
 			file: 'js/External.Lyrics.response.js',
 			format: 'es'
 		},
-		plugins: [json(), commonjs()]
+		plugins: [json(), commonjs(), terser()]
 	},
 ];

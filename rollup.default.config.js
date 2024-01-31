@@ -7,6 +7,7 @@ export default [
 		input: 'src/M3U8.Master.response.js',
 		output: {
 			file: 'js/M3U8.Master.response.js',
+			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},
 		plugins: [json(), commonjs(), terser()]
@@ -15,6 +16,7 @@ export default [
 		input: 'src/M3U8.Subtitles.response.js',
 		output: {
 			file: 'js/M3U8.Subtitles.response.js',
+			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},
 		plugins: [json(), commonjs(), terser()]
@@ -23,6 +25,7 @@ export default [
 		input: 'src/Composite.Subtitles.response.js',
 		output: {
 			file: 'js/Composite.Subtitles.response.js',
+			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},
 		plugins: [json(), commonjs(), terser()]
@@ -31,6 +34,7 @@ export default [
 		input: 'src/Translate.response.js',
 		output: {
 			file: 'js/Translate.response.js',
+			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},
 		plugins: [json(), commonjs(), terser()]
@@ -39,6 +43,7 @@ export default [
 		input: 'src/External.Lyrics.response.js',
 		output: {
 			file: 'js/External.Lyrics.response.js',
+			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},
 		plugins: [json(), commonjs(), terser()]

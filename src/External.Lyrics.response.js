@@ -1,7 +1,3 @@
-/*
-README: https://github.com/DualSubs
-*/
-
 import ENVs from "./ENV/ENV.mjs";
 import URIs from "./URI/URI.mjs";
 

@@ -1,3 +1,4 @@
+/* README: https://github.com/DualSubs */
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
@@ -3715,11 +3716,6 @@ function setCache(cache, cacheSize = 100) {
 	console.log(`✅ Set Cache`, "");
 	return cache;
 }
-
-/*
-README: https://github.com/DualSubs
-*/
-
 
 const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.5(4) M3U8.Subtitles.response.beta");
 const URI = new URI$1();

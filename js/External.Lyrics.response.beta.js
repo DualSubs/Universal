@@ -1,3 +1,4 @@
+/* README: https://github.com/DualSubs */
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
@@ -7033,11 +7034,6 @@ var textEncoding = {
   TextEncoder: encoding.TextEncoder,
   TextDecoder: encoding.TextDecoder,
 };
-
-/*
-README: https://github.com/DualSubs
-*/
-
 
 const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.1(6) External.Lyrics.response.beta");
 const URI = new URI$1();

@@ -1,3 +1,4 @@
+/* README: https://github.com/DualSubs */
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
@@ -4156,11 +4157,6 @@ function detectFormat(url, body) {
 	}	console.log(`✅ detectFormat, format: ${format}`, "");
 	return format;
 }
-
-/*
-README: https://github.com/DualSubs
-*/
-
 
 const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.5(4) Composite.Subtitles.response.beta");
 const URI = new URI$1();

@@ -755,14 +755,15 @@ let URI$1 = class URI {
 
 class LRCs {
 	constructor(opts) {
-		this.name = "LRC v0.4.0";
+		this.name = "LRC v0.5.2";
 		this.opts = opts;
 		this.newLine = "\n";
+		this.tolerance = 1000;
 	};
 
-	toSpotify(txt = new String) {
+	toSpotify(lrc = "") {
 		console.log(`☑️ LRC.toSpotify`, "");
-		let json = txt?.split?.(this.newLine)?.filter?.(Boolean)?.map?.(line => {
+		let lyric = lrc?.split?.(this.newLine)?.filter?.(Boolean)?.map?.(line => {
 			const Line = {
 				"startTimeMs": 0,
 				"words": "",
@@ -801,37 +802,33 @@ class LRCs {
 					break;
 			}			return Line;
 		});
-		//console.log(`✅ LRC.toSpotify, json: ${JSON.stringify(json)}`, "");
-		return json;
+		//console.log(`✅ LRC.toSpotify, lyric: ${JSON.stringify(lyric)}`, "");
+		return lyric;
 	};
 
-	fromSpotify(json = new Array) {
+	fromSpotify(lyric = []) {
 		console.log(`☑️ LRC.fromSpotify`, "");
 	};
 
-	combineSpotify(array1 = new Array, array2 = new Array) {
+	combineSpotify(lyric1 = [], lyric2 = [], tolerance = this.tolerance) {
 		console.log(`☑️ LRC.combineSpotify`, "");
-		let combineLyric = [];
-		for (let line1 of array1) {
-			let line = line1;
-			for (let line2 of array2) {
-				if (Math.abs(line1.startTimeMs - line2.startTimeMs) < 1000) {
-					line = {
-						"startTimeMs": line1.startTimeMs,
-						"words": line1?.words ?? "",
-						"twords": line2?.words ?? "",
-						"syllables": line1?.syllables ?? [],
-						"endTimeMs": 0
-					};
-					break;
-				}			}			combineLyric.push(line);
-		}		//console.log(`✅ LRC.combineSpotify, combineLyric: ${JSON.stringify(combineLyric)}`, "");
-		return combineLyric;
+		let index1 = 0, index2 = 0;
+		const length1 = lyric1.length, length2 = lyric2.length;
+		while (index1 < length1 && index2 < length2) {
+			//console.log(`🚧 调试信息, index1/length1: ${index1}/${length1}, index2/length2: ${index2}/${length2}`, "");
+			const timeStamp1 = lyric1[index1].startTimeMs, timeStamp2 = lyric2[index2].startTimeMs;
+			//console.log(`🚧 调试信息, timeStamp1: ${timeStamp1}, timeStamp2: ${timeStamp2}`, "");
+			if (timeStamp1 === timeStamp2) lyric1[index1].twords = lyric2[index2]?.words ?? "";
+			else if (Math.abs(timeStamp1 - timeStamp2) <= tolerance) lyric1[index1].twords = lyric2[index2]?.words ?? "";
+			if (timeStamp2 > timeStamp1) index1++;
+			else if (timeStamp2 < timeStamp1) index2++;
+			else { index1++; index2++; }		}		//console.log(`✅ LRC.combineSpotify, combineLyric: ${JSON.stringify(lyric1)}`, "");
+		return lyric1;
 	};
 
-	separateSpotify(array = new Array) {
+	separateSpotify(lyric = []) {
 		console.log(`☑️ LRC.separateSpotify`, "");
-		let separateLyric = array.map(line => {
+		let separateLyric = lyric.map(line => {
 			let line1 = {
 				"startTimeMs": line.startTimeMs,
 				"words": line?.words ?? "",

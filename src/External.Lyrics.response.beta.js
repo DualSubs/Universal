@@ -505,7 +505,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 		case "NeteaseMusicNodeJS": {
 			const HostPool = [
 				"api.music.areschang.top",
-				"mu-api.yuk0.com",
+				//"mu-api.yuk0.com",
 				"netease.happyking.top",
 				"music.lovethewind.cn",
 				"neteasecloudmusicapi.nanocat.cloud"
@@ -649,7 +649,7 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 		case "NeteaseMusicNodeJS": {
 			const HostPool = [
 				"api.music.areschang.top",
-				"mu-api.yuk0.com",
+				//"mu-api.yuk0.com",
 				"netease.happyking.top",
 				"music.lovethewind.cn",
 				"neteasecloudmusicapi.nanocat.cloud"

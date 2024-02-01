@@ -16,6 +16,9 @@
 [submodule "src/WebVTT"]
 	path = src/WebVTT
 	url = https://github.com/DualSubs/WebVTT.git
+[submodule "src/LRC"]
+	path = src/LRC
+	url = https://github.com/DualSubs/LRC.git
 [submodule "src/text-encoding"]
 	path = src/text-encoding
 	url = https://github.com/inexorabletash/text-encoding.git

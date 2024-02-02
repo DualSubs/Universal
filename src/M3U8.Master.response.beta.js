@@ -3,12 +3,13 @@ import URIs from "./URI/URI.mjs";
 import EXTM3U from "./EXTM3U/EXTM3U.mjs";
 
 import Database from "./database/index.mjs";
-import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
+import setENV from "./function/setENV.mjs";
+import isStandard from "./function/isStandard.mjs";
 import setCache from "./function/setCache.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(4) M3U8.Master.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(5) M3U8.Master.response.beta");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -303,57 +304,4 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	if (!standard) newOption.OPTION.DEFAULT = "YES";
 	$.log(`✅ ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
 	return newOption;
-};
-
-/**
- * is Standard?
- * Determine whether Standard Media Player
- * @author VirgilClyne
- * @param {String} _url - Parsed Request URL
- * @param {Object} headers - Request Headers
- * @param {String} platform - Steaming Media Platform
- * @return {Promise<*>}
- */
-function isStandard(_url, headers, platform) {
-	$.log(`☑️ ${$.name}, is Standard`, "");
-	//let _url = URI.parse(url);
-	const UA = (headers?.["user-agent"] ?? headers?.["User-Agent"]);
-	$.log(`🚧 ${$.name}, is Standard, UA: ${UA}`, "");
-	let standard = true;
-	let device = "iPhone";
-	if (UA?.includes("Mozilla/5.0")) device = "Web";
-	else if (UA?.includes("iPhone")) device = "iPhone";
-	else if (UA?.includes("iPad")) device = "iPad";
-	else if (UA?.includes("Macintosh")) device = "Macintosh";
-	else if (UA?.includes("AppleTV")) device = "AppleTV";
-	else if (UA?.includes("Apple TV")) device = "AppleTV";
-	switch (platform) {
-		case "Max":
-		case "HBOMax":
-		case "Viki":
-			if (UA?.includes("Mozilla/5.0")) standard = false;
-			else if (UA?.includes("iPhone")) standard = false;
-			else if (UA?.includes("iPad")) standard = false;
-			else if (UA?.includes("Macintosh")) standard = false;
-			else if (headers?.["x-hbo-device-name"]?.includes("ios")) standard = false, device = "iPhone";
-			else if (_url?.query?.["device-code"] === "iphone") standard = false, device = "iPhone";
-			break;
-		case "PeacockTV":
-			if (UA?.includes("Mozilla/5.0")) standard = false;
-			else if (UA?.includes("iPhone")) standard = false;
-			else if (UA?.includes("iPad")) standard = false;
-			else if (UA?.includes("Macintosh")) standard = false;
-			else if (UA?.includes("PeacockMobile")) standard = false;
-			break;
-		case "FuboTV":
-			if (UA?.includes("iPhone")) standard = false;
-			else if (UA?.includes("iPad")) standard = false;
-			else if (UA?.includes("Macintosh")) standard = false;
-			break;
-		case "TED":
-			if (UA?.includes("Mozilla/5.0")) standard = false;
-			break;
-	};
-	$.log(`✅ ${$.name}, is Standard, standard: ${standard}, device: ${device}`, "");
-	return {standard, device};
 };

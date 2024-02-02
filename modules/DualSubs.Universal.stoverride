@@ -84,6 +84,7 @@ http:
     - "media-production.nebula.app"
     - "*.prd.pluto.tv"
     - "*.plutotv.net"
+    - "*.mubicdn.net"
   script:
     - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8
       name: DualSubs.M3U8.Master.response
@@ -587,6 +588,23 @@ http:
       type: response
       require-body: true
     - match: ^https?:\/\/(.+)\.plutotv\.net\/(.+)\/hls\/(.+)\/(\w+\.m3u8_)?(\d+)\.vtt\?(.*)subtype=Translate
+      name: DualSubs.Translate.response
+      type: response
+      require-body: true
+
+    - match: ^https?:\/\/(.+)\.mubicdn\.net\/stream\/(.+)\/drm_playlist\.(\w+)\.ism\/default\/ver1\.(.+)\.m3u8
+      name: DualSubs.M3U8.Master.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.mubicdn\.net\/stream\/(.+)\/drm_playlist\.(\w+)\.ism\/default\/drm_playlist\.(\w+)-textstream_(.+)\.m3u8\?(.*)subtype=
+      name: DualSubs.M3U8.Subtitles.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.mubicdn\.net\/stream\/(.+)\/drm_playlist\.(\w+)\.ism\/default\/drm_playlist\.(\w+)-textstream_(.+)\.webvtt\?(.*)subtype=(Official|External)
+      name: DualSubs.Composite.Subtitles.response
+      type: response
+      require-body: true
+    - match: ^https?:\/\/(.+)\.mubicdn\.net\/stream\/(.+)\/drm_playlist\.(\w+)\.ism\/default\/drm_playlist\.(\w+)-textstream_(.+)\.webvtt\?(.*)subtype=Translate
       name: DualSubs.Translate.response
       type: response
       require-body: true

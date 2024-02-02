@@ -3,12 +3,14 @@ import URIs from "./URI/URI.mjs";
 import EXTM3U from "./EXTM3U/EXTM3U.mjs";
 
 import Database from "./database/index.mjs";
-import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
+import setENV from "./function/setENV.mjs";
+import isStandard from "./function/isStandard.mjs";
 import setCache from "./function/setCache.mjs";
+import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(4) M3U8.Master.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(6) M3U8.Master.response");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -210,131 +212,4 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 	//$.log(`✅ ${$.name}, Set Attribute List`, `m3u8: ${JSON.stringify(m3u8)}`, "");
 	$.log(`✅ ${$.name}, Set Attribute List`, "");
 	return m3u8;
-};
-
-/**
- * Set DualSubs Subtitle Options
- * @author VirgilClyne
- * @param {String} platform - platform
- * @param {Array} playlist1 - Subtitles Playlist (Languages 0)
- * @param {Array} playlist2 - Subtitles Playlist (Languages 1)
- * @param {Array} enabledTypes - Enabled Types
- * @param {Array} translateTypes - Translate Types
- * @param {String} Standard - Standard
- * @return {Promise<*>}
- */
-function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", standard = true, device = "iPhone") {
-	$.log(`☑️ ${$.name}, Set DualSubs Subtitle Option, type: ${type}, standard: ${standard}, device: ${device}`, "");
-	const NAME1 = playlist1?.OPTION?.NAME.trim(), NAME2 = playlist2?.OPTION?.NAME.trim();
-	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE.trim(), LANGUAGE2 = playlist2?.OPTION?.LANGUAGE.trim();
-	// 复制此语言选项
-	let newOption = JSON.parse(JSON.stringify(playlist1));
-	// 修改名称
-	switch (type) {
-		case "Official":
-			newOption.OPTION.NAME = `官方字幕 (${NAME1}/${NAME2})`;
-			break;
-		case "Translate":
-			newOption.OPTION.NAME = `翻译字幕 (${NAME1}/${NAME2})`;
-			break;
-		case "External":
-			newOption.OPTION.NAME = `外挂字幕 (${NAME1})`;
-			break;
-	};
-	// 修改语言代码
-	switch (platform) {
-		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
-		case "MGM+": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
-			switch (device) {
-				case "Web":
-				case "Macintosh":
-					newOption.OPTION.LANGUAGE = LANGUAGE1;
-					break;
-				default:
-					newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
-					break;
-			};
-			break;
-		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
-		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
-		case "Hulu": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 空格分割
-		case "Nebula":  // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
-			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
-			break;
-		case "Max": // AppleCoreMedia
-		case "HBOMax": // AppleCoreMedia
-		case "Viki":
-			newOption.OPTION.LANGUAGE = LANGUAGE1;
-			break;
-		case "Paramount+":
-		case "Discovery+Ph":
-			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
-			break;
-		default:
-			newOption.OPTION.LANGUAGE = LANGUAGE1;
-			break;
-	};
-	// 增加/修改类型参数
-	// 增加副语言
-	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
-	// 修改链接
-	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
-	newOption.OPTION.URI += `${symbol}subtype=${type}`;
-	// 自动选择
-	newOption.OPTION.AUTOSELECT = "YES";
-	// 兼容性修正
-	if (!standard) newOption.OPTION.DEFAULT = "YES";
-	$.log(`✅ ${$.name}, Set DualSubs Subtitle Option`, `newOption: ${JSON.stringify(newOption)}`, "");
-	return newOption;
-};
-
-/**
- * is Standard?
- * Determine whether Standard Media Player
- * @author VirgilClyne
- * @param {String} _url - Parsed Request URL
- * @param {Object} headers - Request Headers
- * @param {String} platform - Steaming Media Platform
- * @return {Promise<*>}
- */
-function isStandard(_url, headers, platform) {
-	$.log(`☑️ ${$.name}, is Standard`, "");
-	const UA = (headers?.["user-agent"] ?? headers?.["User-Agent"]);
-	let standard = true;
-	let device = "iPhone";
-	if (UA?.includes("Mozilla/5.0")) device = "Web";
-	else if (UA?.includes("iPhone")) device = "iPhone";
-	else if (UA?.includes("iPad")) device = "iPad";
-	else if (UA?.includes("Macintosh")) device = "Macintosh";
-	else if (UA?.includes("AppleTV")) device = "AppleTV";
-	else if (UA?.includes("Apple TV")) device = "AppleTV";
-	switch (platform) {
-		case "Max":
-		case "HBOMax":
-		case "Viki":
-			if (UA?.includes("Mozilla/5.0")) standard = false;
-			else if (UA?.includes("iPhone")) standard = false;
-			else if (UA?.includes("iPad")) standard = false;
-			else if (UA?.includes("Macintosh")) standard = false;
-			else if (headers?.["x-hbo-device-name"]?.includes("ios")) standard = false, device = "iPhone";
-			else if (_url?.query?.["device-code"] === "iphone") standard = false, device = "iPhone";
-			break;
-		case "PeacockTV":
-			if (UA?.includes("Mozilla/5.0")) standard = false;
-			else if (UA?.includes("iPhone")) standard = false;
-			else if (UA?.includes("iPad")) standard = false;
-			else if (UA?.includes("Macintosh")) standard = false;
-			else if (UA?.includes("PeacockMobile")) standard = false;
-			break;
-		case "FuboTV":
-			if (UA?.includes("iPhone")) standard = false;
-			else if (UA?.includes("iPad")) standard = false;
-			else if (UA?.includes("Macintosh")) standard = false;
-			break;
-		case "TED":
-			if (UA?.includes("Mozilla/5.0")) standard = false;
-			break;
-	};
-	$.log(`✅ ${$.name}, is Standard, standard: ${standard}, device: ${device}`, "");
-	return {standard, device};
 };

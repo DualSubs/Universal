@@ -5,8 +5,7 @@
  * @param {String} body - response body
  * @return {String} format - format
  */
-export default function detectFormat(url, body) {
-	let format = undefined;
+export default function detectFormat(url, body, format = undefined) {
 	console.log(`☑️ detectFormat, format: ${url.format ?? url.query?.fmt ?? url.query?.format}`, "");
 	switch (url.format ?? url.query?.fmt ?? url.query?.format) {
 		case "txt":

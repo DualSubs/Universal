@@ -10,7 +10,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
 import Composite from "./function/Composite.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(3) Composite.Subtitles.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(4) Composite.Subtitles.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -27,7 +27,7 @@ const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置

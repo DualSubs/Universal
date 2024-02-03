@@ -3447,8 +3447,7 @@ function detectPlatform(url) {
  * @param {String} body - response body
  * @return {String} format - format
  */
-function detectFormat(url, body) {
-	let format = undefined;
+function detectFormat(url, body, format = undefined) {
 	console.log(`☑️ detectFormat, format: ${url.format ?? url.query?.fmt ?? url.query?.format}`, "");
 	switch (url.format ?? url.query?.fmt ?? url.query?.format) {
 		case "txt":
@@ -3741,7 +3740,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	return newOption;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.6(6) M3U8.Master.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.7(2) M3U8.Master.response.beta");
 const URI = new URI$1();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -3757,7 +3756,7 @@ const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
@@ -3833,7 +3832,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 						case "application/vnd.google.protobuf":
 						case "application/grpc":
 						case "application/grpc+proto":
-						case "applecation/octet-stream":
+						case "application/octet-stream":
 							// 返回二进制数据
 							//$.log(`${$response.bodyBytes.byteLength}---${$response.bodyBytes.buffer.byteLength}`);
 							$.done({ status: $response.status, headers: $response.headers, bodyBytes: $response.bodyBytes.buffer.slice($response.bodyBytes.byteOffset, $response.bodyBytes.byteLength + $response.bodyBytes.byteOffset) });

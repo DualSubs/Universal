@@ -3959,8 +3959,7 @@ function detectPlatform(url) {
  * @param {String} body - response body
  * @return {String} format - format
  */
-function detectFormat(url, body) {
-	let format = undefined;
+function detectFormat(url, body, format = undefined) {
 	console.log(`☑️ detectFormat, format: ${url.format ?? url.query?.fmt ?? url.query?.format}`, "");
 	switch (url.format ?? url.query?.fmt ?? url.query?.format) {
 		case "txt":
@@ -10330,7 +10329,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.7(3) Translate.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.7(4) Translate.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -10347,7 +10346,7 @@ const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
@@ -10518,7 +10517,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/vnd.google.protobuf":
 				case "application/grpc":
 				case "application/grpc+proto":
-				case "applecation/octet-stream":
+				case "application/octet-stream":
 					//$.log(`🚧 ${$.name}`, `$response.body: ${JSON.stringify($response.body)}`, "");
 					let rawBody = $.isQuanX() ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
 					//$.log(`🚧 ${$.name}`, `isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
@@ -10992,9 +10991,10 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 						case "application/vnd.google.protobuf":
 						case "application/grpc":
 						case "application/grpc+proto":
-						case "applecation/octet-stream":
+						case "application/octet-stream":
 							// 返回二进制数据
-							$.done({ status: $response.status, headers: $response.headers, bodyBytes: $response.bodyBytes });
+							//$.log(`${$response.bodyBytes.byteLength}---${$response.bodyBytes.buffer.byteLength}`);
+							$.done({ status: $response.status, headers: $response.headers, bodyBytes: $response.bodyBytes.buffer.slice($response.bodyBytes.byteOffset, $response.bodyBytes.byteLength + $response.bodyBytes.byteOffset) });
 							break;
 					}				} else $.done($response);
 				break;

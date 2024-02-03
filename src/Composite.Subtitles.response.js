@@ -10,7 +10,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
 import Composite from "./function/Composite.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(5) Composite.Subtitles.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(4) Composite.Subtitles.response");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -27,7 +27,7 @@ const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置
@@ -141,8 +141,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/x-plist":
 					OriginSub = XML.parse($response.body);
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = XML.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => XML.parse(response.body));
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
 					$response.body = XML.stringify(OriginSub);
@@ -151,8 +150,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/vtt":
 					OriginSub = VTT.parse($response.body);
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = VTT.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => VTT.parse(response.body));
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
 					$response.body = VTT.stringify(OriginSub);
@@ -161,8 +159,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/json":
 					OriginSub = JSON.parse($response.body ?? "{}");
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = JSON.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => JSON.parse(response.body));
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
 					$response.body = JSON.stringify(OriginSub);

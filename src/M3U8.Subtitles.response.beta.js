@@ -8,7 +8,7 @@ import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(4) M3U8.Subtitles.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(1) M3U8.Subtitles.response.beta");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -227,7 +227,7 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
  */
 async function getSubtitles(url, headers, platform) {
 	$.log(`☑️ ${$.name}, Get Subtitle *.vtt *.ttml URLs`, "");
-	let response = await $.http.get({ url: url, headers: headers });
+	let response = await $.fetch({ url: url, headers: headers });
 	//$.log(`🚧 ${$.name}, Get Subtitle *.vtt *.ttml URLs`, `response: ${JSON.stringify(response)}`, "");
 	let subtitlePlayList = M3U8.parse(response.body);
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml)(\?.+)?$/.test(URI)));

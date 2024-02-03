@@ -11,7 +11,7 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.1(8) External.Lyrics.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.2(2) External.Lyrics.response.beta");
 const URI = new URIs();
 const LRC = new LRCs();
 
@@ -307,46 +307,6 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 	})
 
 /***************** Function *****************/
-/**
- * Fetch Ruled Reqeust
- * @author VirgilClyne
- * @link https://github.com/BiliUniverse/Global/blob/main/js/BiliBili.Global.request.js
- * @param {Object} request - Original Request Content
- * @return {Promise<*>}
- */
-async function Fetch(request = {}) {
-	$.log(`☑️ ${$.name}, Fetch Ruled Reqeust`, "");
-	//const FORMAT = (request?.headers?.["Content-Type"] ?? request?.headers?.["content-type"])?.split(";")?.[0];
-	$.log(`⚠ ${$.name}, Fetch Ruled Reqeust`, `FORMAT: ${FORMAT}`, "");
-	if ($.isQuanX()) {
-		switch (FORMAT) {
-			case undefined: // 视为无body
-				// 返回普通数据
-				break;
-			default:
-				// 返回普通数据
-				delete request.bodyBytes;
-				break;
-			case "application/protobuf":
-			case "application/x-protobuf":
-			case "application/vnd.google.protobuf":
-			case "application/grpc":
-			case "application/grpc+proto":
-			//case "applecation/octet-stream":
-				// 返回二进制数据
-				delete request.body;
-				if (ArrayBuffer.isView(request.bodyBytes)) request.bodyBytes = request.bodyBytes.buffer.slice(request.bodyBytes.byteOffset, request.bodyBytes.byteLength + request.bodyBytes.byteOffset);
-				break;
-		};
-	};
-	let response = (request?.body ?? request?.bodyBytes)
-		? await $.http.post(request)
-		: await $.http.get(request);
-	$.log(`✅ ${$.name}, Fetch Ruled Reqeust`, "");
-	$.log(`🚧 ${$.name}, Fetch Ruled Reqeust`, `Response:${JSON.stringify(response)}`, "");
-	return response;
-};
-
 async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $response.body) {
 	$.log(`☑️ ${$.name}, Injection Lyric`, `vendor: ${vendor}, trackInfo: ${JSON.stringify(trackInfo)}`, "");
 	const UAPool = [
@@ -527,7 +487,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			$.log(`🚧 ${$.name}, 调试信息`, `searchUrl: ${JSON.stringify(searchUrl)}`, "");
 			searchRequest.url = URI.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://music.163.com";
-			const searchResult = await $.http.get(searchRequest).then(response => {
+			const searchResult = await $.fetch(searchRequest).then(response => {
 				//$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
 				let body = JSON.parse(response.body);
 				trackInfo.id = body?.result?.songs?.[0]?.id;
@@ -552,7 +512,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			$.log(`🚧 ${$.name}, 调试信息`, `searchUrl: ${JSON.stringify(searchUrl)}`, "");
 			searchRequest.url = URI.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://music.163.com";
-			const searchResult = await $.http.get(searchRequest).then(response => {
+			const searchResult = await $.fetch(searchRequest).then(response => {
 				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
 				let body = JSON.parse(response.body);
 				trackInfo.id = body?.result?.songs?.[0]?.id;
@@ -584,7 +544,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 					}
 				}
 			});
-			const searchResult = await $.http.post(searchRequest).then(response => {
+			const searchResult = await $.fetch(searchRequest).then(response => {
 				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${response.body}`, "");
 				let body = JSON.parse(response.body);
 				body = body["music.search.SearchCgiService"].data.body;
@@ -622,7 +582,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			$.log(`🚧 ${$.name}, 调试信息`, `searchUrl: ${JSON.stringify(searchUrl)}`, "");
 			searchRequest.url = URI.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://c.y.qq.com";
-			const searchResult = await $.http.get(searchRequest).then(response => {
+			const searchResult = await $.fetch(searchRequest).then(response => {
 				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
 				let body = JSON.parse(response.body);
 				trackInfo.mid = body?.data?.song?.list?.[0]?.songmid;
@@ -666,7 +626,7 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 			$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
 			lyricRequest.url = URI.stringify(lyricUrl);
 			lyricRequest.headers.Referer = "https://music.163.com";
-			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));
+			lyricResult = await $.fetch(lyricRequest).then(response => JSON.parse(response.body));
 			break;
 		};
 		case "NeteaseMusic": {
@@ -681,7 +641,7 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 			$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
 			lyricRequest.url = URI.stringify(lyricUrl);
 			lyricRequest.headers.Referer = "https://music.163.com";
-			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));
+			lyricResult = await $.fetch(lyricRequest).then(response => JSON.parse(response.body));
 			break;
 		};
 		case "QQMusic":
@@ -700,7 +660,7 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 			$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
 			lyricRequest.url = URI.stringify(lyricUrl);
 			lyricRequest.headers.Referer = "https://lyric.music.qq.com";
-			lyricResult = await $.http.get(lyricRequest).then(response => JSON.parse(response.body));
+			lyricResult = await $.fetch(lyricRequest).then(response => JSON.parse(response.body));
 			break;
 		};
 	};

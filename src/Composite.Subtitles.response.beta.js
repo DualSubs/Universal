@@ -10,7 +10,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
 import Composite from "./function/Composite.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.5(5) Composite.Subtitles.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(2) Composite.Subtitles.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -145,8 +145,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					OriginSub = XML.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = XML.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => XML.parse(response.body));
 						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
@@ -158,8 +157,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					OriginSub = VTT.parse($response.body);
 					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = VTT.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => VTT.parse(response.body));
 						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
@@ -171,8 +169,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					OriginSub = JSON.parse($response.body ?? "{}");
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = JSON.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => JSON.parse(response.body));
 						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};

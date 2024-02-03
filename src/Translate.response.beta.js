@@ -12,7 +12,7 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.6(6) Translate.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.7(2) Translate.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -1076,7 +1076,7 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 	async function GetData(vendor, request) {
 		$.log(`☑️ ${$.name}, Get Translate Data`, "");
 		let texts = [];
-		await Fetch(request)
+		await $.fetch(request)
 			.then(response => JSON.parse(response.body))
 			.then(_data => {
 				switch (vendor) {
@@ -1126,46 +1126,6 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 		$.log(`✅ ${$.name}, Get Translate Data`, "");
 		return texts
 	};
-};
-
-/**
- * Fetch Ruled Reqeust
- * @author VirgilClyne
- * @link https://github.com/BiliUniverse/Global/blob/main/js/BiliBili.Global.request.js
- * @param {Object} request - Original Request Content
- * @return {Promise<*>}
- */
-async function Fetch(request = {}) {
-	$.log(`☑️ ${$.name}, Fetch Ruled Reqeust`, "");
-	//const FORMAT = (request?.headers?.["Content-Type"] ?? request?.headers?.["content-type"])?.split(";")?.[0];
-	$.log(`⚠ ${$.name}, Fetch Ruled Reqeust`, `FORMAT: ${FORMAT}`, "");
-	if ($.isQuanX()) {
-		switch (FORMAT) {
-			case undefined: // 视为无body
-				// 返回普通数据
-				break;
-			default:
-				// 返回普通数据
-				delete request.bodyBytes;
-				break;
-			case "application/protobuf":
-			case "application/x-protobuf":
-			case "application/vnd.google.protobuf":
-			case "application/grpc":
-			case "application/grpc+proto":
-			//case "applecation/octet-stream":
-				// 返回二进制数据
-				delete request.body;
-				if (ArrayBuffer.isView(request.bodyBytes)) request.bodyBytes = request.bodyBytes.buffer.slice(request.bodyBytes.byteOffset, request.bodyBytes.byteLength + request.bodyBytes.byteOffset);
-				break;
-		};
-	};
-	let response = (request?.body ?? request?.bodyBytes)
-		? await $.http.post(request)
-		: await $.http.get(request);
-	$.log(`✅ ${$.name}, Fetch Ruled Reqeust`, "");
-	$.log(`🚧 ${$.name}, Fetch Ruled Reqeust`, `Response:${JSON.stringify(response)}`, "");
-	return response;
 };
 
 /**

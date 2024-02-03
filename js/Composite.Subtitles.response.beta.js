@@ -2,13 +2,11 @@
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
-		this.version = '1.2.0';
-		this.http = new Http(this);
+		this.version = '1.3.1';
 		this.data = null;
 		this.dataFile = 'box.dat';
 		this.logs = [];
 		this.isMute = false;
-		this.isNeedRewrite = false;
 		this.logSeparator = '\n';
 		this.encoding = 'utf-8';
 		this.startTime = new Date().getTime();
@@ -169,7 +167,7 @@ class ENV {
 		// translate array case to dot case, then split with .
 		// a[0].b -> a.0.b -> ['a', '0', 'b']
 		if (!Array.isArray(path)) path = path.replace(/\[(\d+)\]/g, '.$1').split('.').filter(Boolean);
-		
+
 		const result = path.reduce((previousValue, currentValue) => {
 			return Object(previousValue)[currentValue]; // null undefined get attribute will throwError, Object() can return a object 
 		}, object);
@@ -281,185 +279,80 @@ class ENV {
 		}
 	}
 
-	get(request, callback = () => { }) {
-		delete request?.headers?.['Content-Length'];
-		delete request?.headers?.['content-length'];
-
+	async fetch(request = {} || "", option = {}) {
+		switch (request.constructor) {
+			case Object:
+				break;
+			case String:
+				request = {
+					"url": request,
+					...option
+				};
+				break;
+		}		if (!request.method) {
+			request.method = "GET";
+			if (request.body ?? request.bodyBytes) request.method = "POST";
+		}		delete request.headers?.['Content-Length'];
+		delete request.headers?.['content-length'];
+		const method = request.method.toLocaleLowerCase();
 		switch (this.platform()) {
 			case 'Surge':
 			case 'Loon':
 			case 'Stash':
 			case 'Shadowrocket':
 			default:
-				if (this.isSurge() && this.isNeedRewrite) {
-					this.lodash_set(request, 'headers.X-Surge-Skip-Scripting', false);
-				}
-				$httpClient.get(request, (error, response, body) => {
-					if (!error && response) {
-						response.body = body;
-						response.statusCode = response.status ? response.status : response.statusCode;
-						response.status = response.statusCode;
-					}
-					callback(error, response, body);
+				return await new Promise((resolve, reject) => {
+					$httpClient[method](request, (error, response, body) => {
+						if (error) reject(error);
+						else {
+							response.ok = /^2\d\d$/.test(response.status);
+							response.statusCode = response.status;
+							if (body) {
+								response.body = body;
+								if (request["binary-mode"] == true) response.bodyBytes = body;
+							}							resolve(response);
+						}
+					});
 				});
-				break
 			case 'Quantumult X':
-				if (this.isNeedRewrite) {
-					this.lodash_set(request, 'opts.hints', false);
-				}
-				$task.fetch(request).then(
-					(response) => {
-						const {
-							statusCode: status,
-							statusCode,
-							headers,
-							body,
-							bodyBytes
-						} = response;
-						callback(
-							null,
-							{ status, statusCode, headers, body, bodyBytes },
-							body,
-							bodyBytes
-						);
+				return await $task.fetch(request).then(
+					response => {
+						response.ok = /^2\d\d$/.test(response.statusCode);
+						response.status = response.statusCode;
+						return response;
 					},
-					(error) => callback((error && error.error) || 'UndefinedError')
-				);
-				break
+					reason => Promise.reject(reason.error));
 			case 'Node.js':
 				let iconv = require('iconv-lite');
 				this.initGotEnv(request);
-				this.got(request)
-					.on('redirect', (response, nextOpts) => {
-						try {
-							if (response.headers['set-cookie']) {
-								const ck = response.headers['set-cookie']
-									.map(this.cktough.Cookie.parse)
-									.toString();
-								if (ck) {
-									this.ckjar.setCookieSync(ck, null);
-								}
-								nextOpts.cookieJar = this.ckjar;
-							}
-						} catch (e) {
-							this.logErr(e);
-						}
-						// this.ckjar.setCookieSync(response.headers['set-cookie'].map(Cookie.parse).toString())
-					})
-					.then(
-						(response) => {
-							const {
-								statusCode: status,
-								statusCode,
-								headers,
-								rawBody
-							} = response;
-							const body = iconv.decode(rawBody, this.encoding);
-							callback(
-								null,
-								{ status, statusCode, headers, rawBody, body },
-								body
-							);
-						},
-						(err) => {
-							const { message: error, response: response } = err;
-							callback(
-								error,
-								response,
-								response && iconv.decode(response.rawBody, this.encoding)
-							);
-						}
-					);
-				break
-		}
-	}
+                const { url, ...option } = request;
+				return await this.got[method](url, option)
+                    .on('redirect', (response, nextOpts) => {
+                        try {
+                            if (response.headers['set-cookie']) {
+                                const ck = response.headers['set-cookie']
+                                    .map(this.cktough.Cookie.parse)
+                                    .toString();
+                                if (ck) {
+                                    this.ckjar.setCookieSync(ck, null);
+                                }
+                                nextOpts.cookieJar = this.ckjar;
+                            }
+                        } catch (e) {
+                            this.logErr(e);
+                        }
+                        // this.ckjar.setCookieSync(response.headers['set-cookie'].map(Cookie.parse).toString())
+                    })
+                    .then(
+                        response => {
+                            response.statusCode = response.status;
+                            response.body = iconv.decode(response.rawBody, this.encoding);
+                            response.bodyBytes = response.rawBody;
+                            return response;
+                        },
+                        error => Promise.reject(error.message));
+        }    };
 
-	post(request, callback = () => { }) {
-		const method = request.method
-			? request.method.toLocaleLowerCase()
-			: 'post';
-
-		// 如果指定了请求体, 但没指定 `Content-Type`、`content-type`, 则自动生成。
-		if (
-			request.body &&
-			request.headers &&
-			!request.headers['Content-Type'] &&
-			!request.headers['content-type']
-		) {
-			// HTTP/1、HTTP/2 都支持小写 headers
-			request.headers['content-type'] = 'application/x-www-form-urlencoded';
-		}
-		// 为避免指定错误 `content-length` 这里删除该属性，由工具端 (HttpClient) 负责重新计算并赋值
-		delete request?.headers?.['Content-Length'];
-		delete request?.headers?.['content-length'];
-		switch (this.platform()) {
-			case 'Surge':
-			case 'Loon':
-			case 'Stash':
-			case 'Shadowrocket':
-			default:
-				if (this.isSurge() && this.isNeedRewrite) {
-					this.lodash_set(request, 'headers.X-Surge-Skip-Scripting', false);
-				}
-				$httpClient[method](request, (error, response, body) => {
-					if (!error && response) {
-						response.body = body;
-						response.statusCode = response.status ? response.status : response.statusCode;
-						response.status = response.statusCode;
-					}
-					callback(error, response, body);
-				});
-				break
-			case 'Quantumult X':
-				request.method = method;
-				if (this.isNeedRewrite) {
-					this.lodash_set(request, 'opts.hints', false);
-				}
-				$task.fetch(request).then(
-					(response) => {
-						const {
-							statusCode: status,
-							statusCode,
-							headers,
-							body,
-							bodyBytes
-						} = response;
-						callback(
-							null,
-							{ status, statusCode, headers, body, bodyBytes },
-							body,
-							bodyBytes
-						);
-					},
-					(error) => callback((error && error.error) || 'UndefinedError')
-				);
-				break
-			case 'Node.js':
-				let iconv = require('iconv-lite');
-				this.initGotEnv(request);
-				const { url, ..._request } = request;
-				this.got[method](url, _request).then(
-					(response) => {
-						const { statusCode: status, statusCode, headers, rawBody } = response;
-						const body = iconv.decode(rawBody, this.encoding);
-						callback(
-							null,
-							{ status, statusCode, headers, rawBody, body },
-							body
-						);
-					},
-					(err) => {
-						const { message: error, response: response } = err;
-						callback(
-							error,
-							response,
-							response && iconv.decode(response.rawBody, this.encoding)
-						);
-					}
-				);
-				break
-		}
-	}
 	/**
 	 *
 	 * 示例:$.time('yyyy-MM-dd qq HH:mm:ss.S')
@@ -691,34 +584,6 @@ class ENV {
 	/***************** function *****************/
 	traverseObject(o, c) { for (var t in o) { var n = o[t]; o[t] = "object" == typeof n && null !== n ? this.traverseObject(n, c) : c(t, n); } return o }
 	string2number(string) { if (string && !isNaN(string)) string = parseInt(string, 10); return string }
-}
-
-class Http {
-	constructor(env) {
-		this.env = env;
-	}
-
-	send(opts, method = 'GET') {
-		opts = typeof opts === 'string' ? { url: opts } : opts;
-		let sender = this.get;
-		if (method === 'POST') {
-			sender = this.post;
-		}
-		return new Promise((resolve, reject) => {
-			sender.call(this, opts, (error, response, body) => {
-				if (error) reject(error);
-				else resolve(response);
-			});
-		})
-	}
-
-	get(opts) {
-		return this.send.call(this.env, opts)
-	}
-
-	post(opts) {
-		return this.send.call(this.env, opts, 'POST')
-	}
 }
 
 let URI$1 = class URI {
@@ -4306,7 +4171,7 @@ function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions",
 	return DualSub;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.5(5) Composite.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.6(2) Composite.Subtitles.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -4436,8 +4301,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					OriginSub = XML.parse($response.body);
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = XML.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => XML.parse(response.body));
 						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					}					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
@@ -4448,8 +4312,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					OriginSub = VTT.parse($response.body);
 					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = VTT.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => VTT.parse(response.body));
 						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					}					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
@@ -4460,8 +4323,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					OriginSub = JSON.parse($response.body ?? "{}");
 					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
-						SecondSub = await $.http.get(request).then(response => response.body);
-						SecondSub = JSON.parse(SecondSub);
+						SecondSub = await $.fetch(request).then(response => JSON.parse(response.body));
 						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					}					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");

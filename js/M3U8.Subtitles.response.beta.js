@@ -2,7 +2,7 @@
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
-		this.version = '1.3.1';
+		this.version = '1.3.4';
 		this.data = null;
 		this.dataFile = 'box.dat';
 		this.logs = [];
@@ -282,12 +282,10 @@ class ENV {
 	async fetch(request = {} || "", option = {}) {
 		switch (request.constructor) {
 			case Object:
+				request = { ...request, ...option };
 				break;
 			case String:
-				request = {
-					"url": request,
-					...option
-				};
+				request = { "url": request, ...option };
 				break;
 		}		if (!request.method) {
 			request.method = "GET";
@@ -296,11 +294,21 @@ class ENV {
 		delete request.headers?.['content-length'];
 		const method = request.method.toLocaleLowerCase();
 		switch (this.platform()) {
-			case 'Surge':
 			case 'Loon':
+			case 'Surge':
 			case 'Stash':
 			case 'Shadowrocket':
 			default:
+				// 移除不可写字段
+				delete request.id;
+				// 添加策略组
+				if (request.policy) {
+					if (this.isLoon()) request.node = request.policy;
+					if (this.isSurge()) this.lodash_set(request, "headers.X-Surge-Policy", request.policy);
+					if (this.isStash()) this.lodash_set(request, "headers.X-Stash-Selected-Proxy", encodeURI(request.policy));
+				}				// 判断请求数据类型
+				if (ArrayBuffer.isView(request.body)) request["binary-mode"] = true;
+				// 发送请求
 				return await new Promise((resolve, reject) => {
 					$httpClient[method](request, (error, response, body) => {
 						if (error) reject(error);
@@ -315,6 +323,32 @@ class ENV {
 					});
 				});
 			case 'Quantumult X':
+				// 移除不可写字段
+				delete request.scheme;
+				delete request.sessionIndex;
+				delete request.charset;
+				// 添加策略组
+				if (request.policy) this.lodash_set(request, "opts.policy", request.policy);
+				// 判断请求数据类型
+				switch ((request?.headers?.["Content-Type"] ?? request?.headers?.["content-type"])?.split(";")?.[0]) {
+					default:
+						// 返回普通数据
+						delete request.bodyBytes;
+						break;
+					case "application/protobuf":
+					case "application/x-protobuf":
+					case "application/vnd.google.protobuf":
+					case "application/grpc":
+					case "application/grpc+proto":
+					case "application/octet-stream":
+						// 返回二进制数据
+						delete request.body;
+						if (ArrayBuffer.isView(request.bodyBytes)) request.bodyBytes = request.bodyBytes.buffer.slice(request.bodyBytes.byteOffset, request.bodyBytes.byteLength + request.bodyBytes.byteOffset);
+						break;
+					case undefined: // 视为构造请求或无body
+						// 返回普通数据
+						break;
+				}				// 发送请求
 				return await $task.fetch(request).then(
 					response => {
 						response.ok = /^2\d\d$/.test(response.statusCode);
@@ -325,33 +359,33 @@ class ENV {
 			case 'Node.js':
 				let iconv = require('iconv-lite');
 				this.initGotEnv(request);
-                const { url, ...option } = request;
+				const { url, ...option } = request;
 				return await this.got[method](url, option)
-                    .on('redirect', (response, nextOpts) => {
-                        try {
-                            if (response.headers['set-cookie']) {
-                                const ck = response.headers['set-cookie']
-                                    .map(this.cktough.Cookie.parse)
-                                    .toString();
-                                if (ck) {
-                                    this.ckjar.setCookieSync(ck, null);
-                                }
-                                nextOpts.cookieJar = this.ckjar;
-                            }
-                        } catch (e) {
-                            this.logErr(e);
-                        }
-                        // this.ckjar.setCookieSync(response.headers['set-cookie'].map(Cookie.parse).toString())
-                    })
-                    .then(
-                        response => {
-                            response.statusCode = response.status;
-                            response.body = iconv.decode(response.rawBody, this.encoding);
-                            response.bodyBytes = response.rawBody;
-                            return response;
-                        },
-                        error => Promise.reject(error.message));
-        }    };
+					.on('redirect', (response, nextOpts) => {
+						try {
+							if (response.headers['set-cookie']) {
+								const ck = response.headers['set-cookie']
+									.map(this.cktough.Cookie.parse)
+									.toString();
+								if (ck) {
+									this.ckjar.setCookieSync(ck, null);
+								}
+								nextOpts.cookieJar = this.ckjar;
+							}
+						} catch (e) {
+							this.logErr(e);
+						}
+						// this.ckjar.setCookieSync(response.headers['set-cookie'].map(Cookie.parse).toString())
+					})
+					.then(
+						response => {
+							response.statusCode = response.status;
+							response.body = iconv.decode(response.rawBody, this.encoding);
+							response.bodyBytes = response.rawBody;
+							return response;
+						},
+						error => Promise.reject(error.message));
+		}	};
 
 	/**
 	 *

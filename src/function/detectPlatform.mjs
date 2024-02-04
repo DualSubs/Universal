@@ -18,8 +18,9 @@ export default function detectPlatform(url) {
 															: /\.viki\.io/i.test(url) ? "Viki"
 																: /epix(hls\.akamaized\.net|\.services\.io)/i.test(url) ? "MGM+"
 																	: /\.nebula\.app/i.test(url) ? "Nebula"
-																		: /\.mubicdn\.net/i.test(url) ? "MUBI"
-																			: "Universal";
+																		: /\.pluto(\.tv|tv\.net)/i.test(url) ? "PlutoTV"
+																			: /\.mubicdn\.net/i.test(url) ? "MUBI"
+																				: "Universal";
     console.log(`✅ Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };

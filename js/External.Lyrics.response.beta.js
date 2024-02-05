@@ -9917,7 +9917,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.2(4) External.Lyrics.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.2(5) External.Lyrics.response.beta");
 const URI = new URI$1();
 const LRC = new LRCs();
 
@@ -9991,7 +9991,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 						case "YouTube":
 							break;
 						case "Spotify":
-							body = await injectionLyric(Settings.LrcVendor, trackInfo, body);
+							body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
 							if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;								$response.headers["Content-Type"] = FORMAT;
 							$response.status = ($.isQuanX()) ? "HTTP/1.1 200 OK" : 200;
 							break;
@@ -10123,8 +10123,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 										});
 									};
 									*/
-									//body = await injectionLyric(Settings.LrcVendor, trackInfo, body);
-									body.lyrics = await injectionLyric(Settings.LrcVendor, trackInfo, body).then(body => body.lyrics);
+									//body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
+									body.lyrics = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM).then(body => body.lyrics);
 									switch (body?.lyrics?.syncType) {
 										case "UNSYNCED":
 											body.lyrics.syncType = 0;
@@ -10195,7 +10195,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			}		}	});
 
 /***************** Function *****************/
-async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $response.body) {
+async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $response.body, platform) {
 	$.log(`☑️ ${$.name}, Injection Lyric`, `vendor: ${vendor}, trackInfo: ${JSON.stringify(trackInfo)}`, "");
 	const UAPool = [
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
@@ -10217,7 +10217,7 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 	// 构建歌词结构
 	if (!body) body = {};
 	// 按平台填充必要歌词信息
-	switch (PLATFORM) {
+	switch (platform) {
 		case "Spotify":
 			body.lyrics = {
 				"syncType": "UNSYNCED",
@@ -10257,7 +10257,7 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 			if (!trackInfo?.NeteaseMusic?.id) trackInfo.NeteaseMusic = await searchTrack(vendor, `${trackInfo.track} ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.NeteaseMusic?.id) externalLyric = await searchLyric(vendor, trackInfo.NeteaseMusic.id, UAPool);
 			if (externalLyric?.tlyric?.lyric) transLyric = LRC.toSpotify(externalLyric?.tlyric?.lyric);
-			switch (PLATFORM) {
+			switch (platform) {
 				case "Spotify":
 					if (externalLyric?.yrc?.lyric) {
 						body.lyrics.syncType = "SYLLABLE_SYNCED";
@@ -10278,7 +10278,7 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 			if (!trackInfo?.QQMusic?.mid) trackInfo.QQMusic = await searchTrack(vendor, `${trackInfo.track} ${trackInfo.artist}`, UAPool);
 			if (trackInfo?.QQMusic?.mid) externalLyric = await searchLyric(vendor, trackInfo.QQMusic.mid, UAPool);
 			if (externalLyric?.trans) transLyric = LRC.toSpotify(externalLyric?.trans);
-			switch (PLATFORM) {
+			switch (platform) {
 				case "Spotify":
 					if (externalLyric?.lyric) {
 						body.lyrics.syncType = "LINE_SYNCED";
@@ -10293,7 +10293,7 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 	}	// 翻译歌词
 	if (transLyric) {
 		let duolyric = LRC.combineSpotify(body.lyrics.lines, transLyric);
-		switch (PLATFORM) {
+		switch (platform) {
 			case "Spotify":
 				switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
 					case "OSX": // macOS App 暂不支持翻译功能

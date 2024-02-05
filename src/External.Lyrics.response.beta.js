@@ -10,7 +10,7 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.2(5) External.Lyrics.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.2(6) External.Lyrics.response.beta");
 const URI = new URIs();
 const LRC = new LRCs();
 
@@ -85,7 +85,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							break;
 						case "Spotify":
 							body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
-							if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;								$response.headers["Content-Type"] = FORMAT;
+							if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;
 							$response.status = ($.isQuanX()) ? "HTTP/1.1 200 OK" : 200;
 							break;
 					};
@@ -218,8 +218,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 										});
 									};
 									*/
-									//body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
-									body.lyrics = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM).then(body => body.lyrics);
+									body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
+									//body.lyrics = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM).then(body => body.lyrics);
 									switch (body?.lyrics?.syncType) {
 										case "UNSYNCED":
 											body.lyrics.syncType = 0;

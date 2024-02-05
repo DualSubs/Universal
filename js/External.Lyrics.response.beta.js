@@ -9917,7 +9917,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.2(5) External.Lyrics.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.2(6) External.Lyrics.response.beta");
 const URI = new URI$1();
 const LRC = new LRCs();
 
@@ -9992,7 +9992,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							break;
 						case "Spotify":
 							body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
-							if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;								$response.headers["Content-Type"] = FORMAT;
+							if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;
 							$response.status = ($.isQuanX()) ? "HTTP/1.1 200 OK" : 200;
 							break;
 					}					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
@@ -10123,8 +10123,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 										});
 									};
 									*/
-									//body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
-									body.lyrics = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM).then(body => body.lyrics);
+									body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
+									//body.lyrics = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM).then(body => body.lyrics);
 									switch (body?.lyrics?.syncType) {
 										case "UNSYNCED":
 											body.lyrics.syncType = 0;

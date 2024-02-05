@@ -5,13 +5,12 @@ import LRCs from "./LRC/LRC.mjs";
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
-import detectFormat from "./function/detectFormat.mjs";
 import setCache from "./function/setCache.mjs";
 
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.2(3) External.Lyrics.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.2(4) External.Lyrics.response.beta");
 const URI = new URIs();
 const LRC = new LRCs();
 
@@ -26,8 +25,7 @@ $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
 const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
-let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
+const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置

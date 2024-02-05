@@ -3597,77 +3597,6 @@ function detectPlatform(url) {
 }
 
 /**
- * detect Format
- * @author VirgilClyne
- * @param {Object} url - Parsed URL
- * @param {String} body - response body
- * @return {String} format - format
- */
-function detectFormat(url, body, format = undefined) {
-	console.log(`☑️ detectFormat, format: ${url.format ?? url.query?.fmt ?? url.query?.format}`, "");
-	switch (url.format ?? url.query?.fmt ?? url.query?.format) {
-		case "txt":
-			format = "text/plain";
-			break;
-		case "xml":
-		case "srv3":
-		case "ttml":
-		case "ttml2":
-		case "imsc":
-			format = "text/xml";
-			break;
-		case "vtt":
-		case "webvtt":
-			format = "text/vtt";
-			break;
-		case "json":
-		case "json3":
-			format = "application/json";
-			break;
-		case "m3u":
-		case "m3u8":
-			format = "application/x-mpegurl";
-			break;
-		case "plist":
-			format = "application/plist";
-			break;
-		case undefined:
-			const HEADER = body?.substring?.(0, 6).trim?.();
-			//console.log(`🚧 detectFormat, HEADER: ${HEADER}`, "");
-			//console.log(`🚧 detectFormat, HEADER?.substring?.(0, 1): ${HEADER?.substring?.(0, 1)}`, "");
-			switch (HEADER) {
-				case "<?xml":
-					format = "text/xml";
-					break;
-				case "WEBVTT":
-					format = "text/vtt";
-					break;
-				default:
-					switch (HEADER?.substring?.(0, 1)) {
-						case "0":
-						case "1":
-						case "2":
-						case "3":
-						case "4":
-						case "5":
-						case "6":
-						case "7":
-						case "8":
-						case "9":
-							format = "text/vtt";
-							break;
-						case "{":
-							format = "application/json";
-							break;
-					}					break;
-				case undefined:
-					break;
-			}			break;
-	}	console.log(`✅ detectFormat, format: ${format}`, "");
-	return format;
-}
-
-/**
  * Set Cache
  * @author VirgilClyne
  * @param {Map} cache - Playlists Cache / Subtitles Cache
@@ -9988,7 +9917,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.2(3) External.Lyrics.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.2(4) External.Lyrics.response.beta");
 const URI = new URI$1();
 const LRC = new LRCs();
 
@@ -10003,8 +9932,7 @@ $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
 const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
-let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
+const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置

@@ -4,13 +4,12 @@ import EXTM3U from "./EXTM3U/EXTM3U.mjs";
 
 import Database from "./database/index.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
-import detectFormat from "./function/detectFormat.mjs";
 import setENV from "./function/setENV.mjs";
 import isStandard from "./function/isStandard.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.7(2) M3U8.Master.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.7(3) M3U8.Master.response.beta");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -25,8 +24,7 @@ $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
 const PLATFORM = detectPlatform(HOST);
 $.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
-let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
+const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 读取设置

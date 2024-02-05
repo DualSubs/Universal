@@ -10385,27 +10385,27 @@ const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "m
 /***************** Processing *****************/
 // 解构URL
 const URL = URI.parse($request.url);
-$.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
+$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
 const METHOD = $request.method; URL.host; URL.path; URL.paths;
-$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
+$.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
-$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
+$.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
+	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Translate", "API"], Database$1);
-	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
+	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建空数据
 			let body = {};
 			// 格式判断
@@ -10422,7 +10422,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -10431,7 +10431,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist": {
 					body = XML.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					const breakLine = (body?.tt) ? "<br/>" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
 					if (body?.timedtext?.head?.wp?.[1]?.["@rc"]) body.timedtext.head.wp[1]["@rc"] = "1";
 					let paragraph = body?.tt?.body?.div?.p ?? body?.timedtext?.body?.p;
@@ -10464,26 +10464,26 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 						else if (span?.["#"]) span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
 						return para;
 					});
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = XML.stringify(body);
 					break;
 				}				case "text/vtt":
 				case "application/vtt": {
 					body = VTT.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					let fullText = body?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
 					const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					body.body = body.body.map((item, i) => {
 						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
 					});
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = VTT.stringify(body);
 					break;
 				}				case "text/json":
 				case "application/json": {
 					body = JSON.parse($response.body ?? "{}");
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					switch (PLATFORM) {
 						case "YouTube": {
 							if (body?.events) {
@@ -10520,7 +10520,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									: "AUTO";
 							let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 							const translation = await Translate(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
-							$.log(`🚧 ${$.name}, 调试信息`, `$request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
+							$.log(`🚧 $request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
 							switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
 								case "OSX": // macOS App 暂不支持翻译功能
 								case "Win32_x86_64": // Windows App 暂不支持翻译功能
@@ -10557,7 +10557,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									});
 									break;
 							}							break;
-						}					}					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+						}					}					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				}				case "application/protobuf":
@@ -10566,9 +10566,9 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "application/octet-stream":
-					//$.log(`🚧 ${$.name}`, `$response.body: ${JSON.stringify($response.body)}`, "");
+					//$.log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
 					let rawBody = $.isQuanX() ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
-					//$.log(`🚧 ${$.name}`, `isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+					//$.log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					switch (FORMAT) {
 						case "application/protobuf":
 						case "application/x-protobuf":
@@ -10839,11 +10839,11 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									const MusicFormBooleanChoice = new MusicFormBooleanChoice$Type();
 									/******************  initialization finish  *******************/
 									body = Browse.fromBinary(rawBody);
-									//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-									$.log(`🚧 ${$.name}`, `contents: ${JSON.stringify(body?.contents)}`, "");
-									$.log(`🚧 ${$.name}`, `continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
+									//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+									$.log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
+									$.log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
 									let UF = UnknownFieldHandler.list(body);
-									//$.log(`🚧 ${$.name}`, `UF: ${JSON.stringify(UF)}`, "");
+									//$.log(`🚧 UF: ${JSON.stringify(UF)}`, "");
 									if (UF) {
 										UF = UF.map(uf => {
 											//uf.no; // 22
@@ -10851,7 +10851,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 											// use the binary reader to decode the raw data:
 											let reader = new BinaryReader(uf.data);
 											let addedNumber = reader.int32(); // 7777
-											$.log(`🚧 ${$.name}`, `no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+											$.log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
 										});
 									}									Languages[0] = "AUTO";
 									if (body?.contents?.n6F153515154?.n7F172660663?.n8F1?.n9F168777401?.n10F5?.n11F465160965?.n12F4?.n13F1) {
@@ -10875,9 +10875,9 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 												}));
 											}											return musicDescription;
 										}));
-									}									//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
-									$.log(`🚧 ${$.name}`, `contents: ${JSON.stringify(body?.contents)}`, "");
-									$.log(`🚧 ${$.name}`, `continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
+									}									//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+									$.log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
+									$.log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
 									rawBody = Browse.toBinary(body);
 									break;
 								}								case "Spotify": {
@@ -10972,10 +10972,10 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									const Alternative = new Alternative$Type();
 									/******************  initialization finish  *******************/
 									body = ColorLyricsResponse.fromBinary(rawBody);
-									$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+									$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 									/*
 									let UF = UnknownFieldHandler.list(body);
-									//$.log(`🚧 ${$.name}`, `UF: ${JSON.stringify(UF)}`, "");
+									//$.log(`🚧 UF: ${JSON.stringify(UF)}`, "");
 									if (UF) {
 										UF = UF.map(uf => {
 											//uf.no; // 22
@@ -10983,7 +10983,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 											// use the binary reader to decode the raw data:
 											let reader = new BinaryReader(uf.data);
 											let addedNumber = reader.int32(); // 7777
-											$.log(`🚧 ${$.name}`, `no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+											$.log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
 										});
 									};
 									*/
@@ -11003,7 +11003,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 										"language": Languages[1].toLowerCase(),
 										"lines": translation
 									});
-									$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+									$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 									rawBody = ColorLyricsResponse.toBinary(body);
 									break;
 								}							}							break;
@@ -11020,8 +11020,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
 				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
+				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
@@ -11068,7 +11068,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
  * @return {Promise<*>}
  */
 async function Translate(text = [], method = "Part", vendor = "Google", source = "EN", target = "ZH", API = {}, database = {}, times = 3, interval = 100, exponential = true) {
-	$.log(`☑️ ${$.name}, Translate, method: ${method}, vendor: ${vendor}, source: ${source}, target: ${target}`, "");
+	$.log(`☑️ Translate, method: ${method}, vendor: ${vendor}, source: ${source}, target: ${target}`, "");
 	// 翻译长度设置
 	let length = 127;
 	switch (vendor) {
@@ -11097,8 +11097,8 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
 		case "Row": // Row 逐行翻译
 			Translation = await Promise.all(text.map(async row => await retry(() => Translator(vendor, source, target, row, API, database), times, interval, exponential)));
 			break;
-	}	//$.log(`✅ ${$.name}, Translate, Translation: ${JSON.stringify(Translation)}`, "");
-	$.log(`✅ ${$.name}, Translate`, "");
+	}	//$.log(`✅ Translate, Translation: ${JSON.stringify(Translation)}`, "");
+	$.log(`✅ Translate`, "");
 	return Translation;
 }
 /**
@@ -11113,7 +11113,7 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
  * @return {Promise<*>}
  */
 async function Translator(vendor = "Google", source = "", target = "", text = "", api = {}, database = {}) {
-	$.log(`☑️ ${$.name}, Translator`, `orig: ${text}`, "");
+	$.log(`☑️ Translator`, `orig: ${text}`, "");
 	// 转换语言代码
 	switch (vendor) {
 		case "Google":
@@ -11143,12 +11143,12 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 	let request = await GetRequest(vendor, source, target, text);
 	// 发送请求
 	let trans = await GetData(vendor, request);
-	$.log(`🚧 ${$.name}, Translator`, `trans: ${trans}`, "");
+	$.log(`🚧 Translator`, `trans: ${trans}`, "");
 	return trans
 	/***************** Fuctions *****************/
 	// Get Translate Request
 	async function GetRequest(vendor = "", source = "", target = "", text = "") {
-		$.log(`☑️ ${$.name}, Get Translate Request`, "");
+		$.log(`☑️ Get Translate Request`, "");
 		const UAPool = [
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
@@ -11399,11 +11399,11 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 				};
 				break;
 		}
-		$.log(`✅ ${$.name}, Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
+		$.log(`✅ Get Translate Request`, `request: ${JSON.stringify(request)}`, "");
 		return request
 	}	// Get Translate Data
 	async function GetData(vendor, request) {
-		$.log(`☑️ ${$.name}, Get Translate Data`, "");
+		$.log(`☑️ Get Translate Data`, "");
 		let texts = [];
 		await $.fetch(request)
 			.then(response => JSON.parse(response.body))
@@ -11450,8 +11450,8 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 						break;
 				}			})
 			.catch(error => Promise.reject(error));
-		//$.log(`✅ ${$.name}, Get Translate Data, texts: ${JSON.stringify(texts)}`, "");
-		$.log(`✅ ${$.name}, Get Translate Data`, "");
+		//$.log(`✅ Get Translate Data, texts: ${JSON.stringify(texts)}`, "");
+		$.log(`✅ Get Translate Data`, "");
 		return texts
 	}}
 /**
@@ -11492,10 +11492,10 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  * @return {Array<*>} target
  */
 function chunk(source, length) {
-	$.log(`⚠ ${$.name}, Chunk Array`, "");
+	$.log(`⚠ Chunk Array`, "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
-	//$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	//$.log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
 }
 /**
@@ -11510,7 +11510,7 @@ function chunk(source, length) {
  * @return {Promise<*>}
  */
 async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) {
-	$.log(`☑️ ${$.name}, retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	$.log(`☑️ retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
 	try {
 		const val = await fn();
 		return val;
@@ -11518,6 +11518,6 @@ async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) 
 		if (retriesLeft) {
 			await new Promise(r => setTimeout(r, interval));
 			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
-		} else throw new Error(`❌ ${$.name}, retry, 最大重试次数`);
+		} else throw new Error(`❌ retry, 最大重试次数`);
 	}
 }

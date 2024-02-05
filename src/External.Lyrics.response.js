@@ -17,31 +17,31 @@ const LRC = new LRCs();
 /***************** Processing *****************/
 // 解构URL
 const URL = URI.parse($request.url);
-$.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
+$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
+$.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"] ?? $request.headers?.Accept ?? $request.headers?.accept)?.split(";")?.[0];
-$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
+$.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
+	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "External", "API"], Database);
-	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
+	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 查询缓存
 			const trackId = PATHs?.[3];
-			$.log(`🚧 ${$.name}, 调试信息`, `trackId: ${trackId}`, "");
+			$.log(`🚧 trackId: ${trackId}`, "");
 			const trackInfo = Caches.Metadatas.Tracks.get(trackId);
-			$.log(`🚧 ${$.name}, 调试信息`, `trackInfo: ${JSON.stringify(trackInfo)}`, "");
+			$.log(`🚧 trackInfo: ${JSON.stringify(trackInfo)}`, "");
 			// 创建空数据
 			let body = {};
 			// 格式判断
@@ -58,7 +58,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -67,19 +67,19 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist":
 					//body = XML.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = XML.stringify(body);
 					break;
 				case "text/vtt":
 				case "application/vtt":
 					//body = VTT.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = VTT.stringify(body);
 					break;
 				case "text/json":
 				case "application/json":
 					body = JSON.parse($response.body ?? "{}");
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					switch (PLATFORM) {
 						case "YouTube":
 							break;
@@ -89,7 +89,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							$response.status = ($.isQuanX()) ? "HTTP/1.1 200 OK" : 200;
 							break;
 					};
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
@@ -203,7 +203,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 									body = ColorLyricsResponse.fromBinary(rawBody);
 									/*
 									let UF = UnknownFieldHandler.list(body);
-									$.log(`🚧 ${$.name}`, `UF: ${JSON.stringify(UF)}`, "");
+									$.log(`🚧 UF: ${JSON.stringify(UF)}`, "");
 									if (UF) {
 										UF = UF.map(uf => {
 											//uf.no; // 22
@@ -211,7 +211,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 											// use the binary reader to decode the raw data:
 											let reader = new BinaryReader(uf.data);
 											let addedNumber = reader.int32(); // 7777
-											$.log(`🚧 ${$.name}`, `no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+											$.log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
 										});
 									};
 									*/
@@ -240,7 +240,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							break;
 					};
 					// 写入二进制数据
-					//$.log(`🚧 ${$.name}, 调试信息`, `rawBody: ${JSON.stringify(rawBody)}`, "");
+					//$.log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
 					if ($.isQuanX()) $response.bodyBytes = rawBody
 					else $response.body = rawBody;
 					break;
@@ -249,7 +249,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			if (trackInfo?.NeteaseMusic?.id ?? trackInfo?.QQMusic?.mid) {
 				Caches.Metadatas.Tracks.set(trackInfo.id, trackInfo);
 				// 格式化缓存
-				$.log(`🚧 ${$.name}`, `Caches.Metadatas.Tracks: ${JSON.stringify([...Caches.Metadatas.Tracks.entries()])}`, "");
+				$.log(`🚧 Caches.Metadatas.Tracks: ${JSON.stringify([...Caches.Metadatas.Tracks.entries()])}`, "");
 				Caches.Metadatas.Tracks = setCache(Caches.Metadatas.Tracks, Settings.CacheSize);
 				// 写入持久化储存
 				$.setjson(Caches.Metadatas.Tracks, `@DualSubs.${PLATFORM}.Caches.Metadatas.Tracks`);
@@ -264,8 +264,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
 				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
+				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
@@ -300,7 +300,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 
 /***************** Function *****************/
 async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $response.body, platform) {
-	$.log(`☑️ ${$.name}, Injection Lyric`, `vendor: ${vendor}, trackInfo: ${JSON.stringify(trackInfo)}`, "");
+	$.log(`☑️ Injection Lyric`, `vendor: ${vendor}, trackInfo: ${JSON.stringify(trackInfo)}`, "");
 	const UAPool = [
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
@@ -438,12 +438,12 @@ async function injectionLyric(vendor = "QQMusic", trackInfo = {}, body = $respon
 		};
 	};
 
-	$.log(`✅ ${$.name}, Injection Lyric`, "");
+	$.log(`✅ Injection Lyric`, "");
 	return body;
 };
 
 async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
-	$.log(`☑️ ${$.name}, Search Track`, `vendor: ${vendor}, keyword: ${keyword}`, "");
+	$.log(`☑️ Search Track`, `vendor: ${vendor}, keyword: ${keyword}`, "");
 	const searchRequest = {
 		"headers": {
 			"Accept": "application/json",
@@ -476,7 +476,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			searchRequest.url = URI.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://music.163.com";
 			const searchResult = await $.fetch(searchRequest).then(response => {
-				//$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
+				//$.log(`🚧 searchResult: ${JSON.stringify(response.body)}`, "");
 				let body = JSON.parse(response.body);
 				trackInfo.id = body?.result?.songs?.[0]?.id;
 				trackInfo.track = body?.result?.songs?.[0]?.name;
@@ -500,7 +500,7 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			searchRequest.url = URI.stringify(searchUrl);
 			searchRequest.headers.Referer = "https://music.163.com";
 			const searchResult = await $.fetch(searchRequest).then(response => {
-				$.log(`🚧 ${$.name}, 调试信息`, `searchResult: ${JSON.stringify(response.body)}`, "");
+				$.log(`🚧 searchResult: ${JSON.stringify(response.body)}`, "");
 				let body = JSON.parse(response.body);
 				trackInfo.id = body?.result?.songs?.[0]?.id;
 				trackInfo.track = body?.result?.songs?.[0]?.name;
@@ -541,12 +541,12 @@ async function searchTrack(vendor = "QQMusic", keyword = "", UAPool = []){
 			break;
 		};
 	};
-	$.log(`✅ ${$.name}, Search Track`, `trackInfo: ${JSON.stringify(trackInfo)}`, "");
+	$.log(`✅ Search Track`, `trackInfo: ${JSON.stringify(trackInfo)}`, "");
 	return trackInfo;
 };
 
 async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = []){
-	$.log(`☑️ ${$.name}, Search Lyric`, `vendor: ${vendor}, trackId: ${trackId}`, "");
+	$.log(`☑️ Search Lyric`, `vendor: ${vendor}, trackId: ${trackId}`, "");
 	const lyricRequest = {
 		"headers": {
 			"Accept": "application/json",
@@ -585,7 +585,7 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 					"id": trackId // trackInfo.NeteaseMusic.id
 				}
 			};
-			$.log(`🚧 ${$.name}, 调试信息`, `lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
+			$.log(`🚧 lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
 			lyricRequest.url = URI.stringify(lyricUrl);
 			lyricRequest.headers.Referer = "https://music.163.com";
 			lyricResult = await $.fetch(lyricRequest).then(response => JSON.parse(response.body));
@@ -610,7 +610,7 @@ async function searchLyric(vendor = "QQMusic", trackId = undefined, UAPool = [])
 			break;
 		};
 	};
-	$.log(`✅ ${$.name}, Search Lyric`, "");
+	$.log(`✅ Search Lyric`, "");
 	return lyricResult;
 };
 
@@ -653,10 +653,10 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  * @return {Array<*>} target
  */
 function chunk(source, length) {
-	$.log(`⚠ ${$.name}, Chunk Array`, "");
+	$.log(`⚠ Chunk Array`, "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
-	//$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	//$.log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
 };
 
@@ -672,7 +672,7 @@ function chunk(source, length) {
  * @return {Promise<*>}
  */
 async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) {
-	$.log(`☑️ ${$.name}, retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	$.log(`☑️ retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
 	try {
 		const val = await fn();
 		return val;
@@ -680,7 +680,7 @@ async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) 
 		if (retriesLeft) {
 			await new Promise(r => setTimeout(r, interval));
 			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
-		} else throw new Error(`❌ ${$.name}, retry, 最大重试次数`);
+		} else throw new Error(`❌ retry, 最大重试次数`);
 	}
 };
 

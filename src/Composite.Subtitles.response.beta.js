@@ -18,33 +18,33 @@ const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "m
 /***************** Processing *****************/
 // 解构URL
 const URL = URI.parse($request.url);
-$.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
+$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
+$.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
-$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
+$.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
+	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database);
-	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
+	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
 			switch (Type) {
 				case "Official":
-					$.log(`⚠ ${$.name}`, "官方字幕", "");
+					$.log(`⚠ 官方字幕`, "");
 					switch (PLATFORM) {
 						default:
 							// 获取字幕文件地址vtt缓存（map）
@@ -55,33 +55,33 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Languages);
 							// 获取官方字幕请求
 							if (subtitlesURIArray1.length) {
-								$.log(`🚧 ${$.name}, subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
+								$.log(`🚧 subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
 								// 获取字幕文件名
 								let fileName = PATHs?.[PATHs?.length - 1] ?? getSubtitlesFileName($request.url, PLATFORM);
-								$.log(`🚧 ${$.name}, fileName: ${fileName}`, "")
+								$.log(`🚧 fileName: ${fileName}`, "")
 								// 构造请求队列
 								requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
 							};
 							break;
 						case "YouTube":
-							$.log(`🚧 ${$.name}`, "YouTube", "");
+							$.log(`⚠ YouTube`, "");
 							switch (URL.query?.tlang) {
 								case undefined:
-									$.log(`⚠ ${$.name}, 未选择翻译语言，跳过`, "");
+									$.log(`⚠ 未选择翻译语言，跳过`, "");
 									break;
 								default:
-									$.log(`⚠ ${$.name}, 已选择翻译语言`, "");
+									$.log(`⚠ 已选择翻译语言`, "");
 									// 设置参数
 									Settings.Offset = 0;
 									Settings.Tolerance = 100;
 									Settings.Position = (Settings.Position === "Reverse") ? "Forward" : "Reverse"; // 链接主字幕为翻译字幕，副字幕为原字幕，所以需要翻转一下
 									switch (Settings.ShowOnly) {
 										case true:
-											$.log(`⚠ ${$.name}, 仅显示翻译后字幕，跳过`, "");
+											$.log(`⚠ 仅显示翻译后字幕，跳过`, "");
 											break;
 										case false:
 										default:
-											$.log(`⚠ ${$.name}, 生成双语字幕`, "");
+											$.log(`⚠ 生成双语字幕`, "");
 											// 获取字幕
 											URL.query.lang = Caches.Playlists.Subtitle.get(URL.query?.v) ?? URL.query.lang; // 主语言
 											delete URL.query?.tlang // 原字幕
@@ -95,19 +95,19 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							};
 							break;
 						case "Netflix":
-							$.log(`🚧 ${$.name}`, "Netflix", "");
+							$.log(`⚠ Netflix`, "");
 							break;
 						case "Bilibili":
-							$.log(`🚧 ${$.name}`, "Bilibili", "");
+							$.log(`⚠ Bilibili`, "");
 							break;
 					};
 					break;
 				case "Translate":
 				default:
-					$.log(`🚧 ${$.name}, 翻译字幕`, "");
+					$.log(`⚠ 翻译字幕`, "");
 					break;
 				case "External":
-					$.log(`🚧 ${$.name}, 外挂字幕`, "");
+					$.log(`⚠ 外挂字幕`, "");
 					let request = {
 						"url": Settings.URL,
 						"headers": {
@@ -134,7 +134,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -143,37 +143,37 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist":
 					OriginSub = XML.parse($response.body);
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					//$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.fetch(request).then(response => XML.parse(response.body));
-						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						//$.log(`🚧 SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					//$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = XML.stringify(OriginSub);
 					break;
 				case "text/vtt":
 				case "application/vtt":
 					OriginSub = VTT.parse($response.body);
-					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.fetch(request).then(response => VTT.parse(response.body));
-						$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						$.log(`🚧 SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
-					$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = VTT.stringify(OriginSub);
 					break;
 				case "text/json":
 				case "application/json":
 					OriginSub = JSON.parse($response.body ?? "{}");
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					//$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					for await (let request of requests) {
 						SecondSub = await $.fetch(request).then(response => JSON.parse(response.body));
-						//$.log(`🚧 ${$.name}`, `SecondSub: ${JSON.stringify(SecondSub)}`, "");
+						//$.log(`🚧 SecondSub: ${JSON.stringify(SecondSub)}`, "");
 						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
 					};
-					//$.log(`🚧 ${$.name}`, `OriginSub: ${JSON.stringify(OriginSub)}`, "");
+					//$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
 					$response.body = JSON.stringify(OriginSub);
 					break;
 				case "application/protobuf":
@@ -182,11 +182,11 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "application/octet-stream":
-					//$.log(`🚧 ${$.name}`, `$response.body: ${JSON.stringify($response.body)}`, "");
+					//$.log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
 					//let rawBody = $.isQuanX() ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
-					//$.log(`🚧 ${$.name}`, `isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+					//$.log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					// 写入二进制数据
-					//$.log(`🚧 ${$.name}, 调试信息`, `rawBody: ${JSON.stringify(rawBody)}`, "");
+					//$.log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
 					//if ($.isQuanX()) $response.bodyBytes = rawBody
 					//else $response.body = rawBody;
 					break;
@@ -201,8 +201,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
 				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
+				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
@@ -245,7 +245,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
 function getPlaylistCache(url, cache, languages) {
-	$.log(`☑️ ${$.name}, getPlaylistCache`, "");
+	$.log(`☑️ getPlaylistCache`, "");
 	let masterPlaylistURL = "";
 	let subtitlesPlaylist = {};
 	let subtitlesPlaylistIndex = 0;
@@ -256,18 +256,18 @@ function getPlaylistCache(url, cache, languages) {
 				if (Array?.some((Object, Index) => {
 					if (url.includes(Object?.URI || Object?.OPTION?.URI || null)) {
 						subtitlesPlaylistIndex = Index;
-						$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+						$.log(`🚧 getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
 						return true;
 					} else return false;
 				})) {
 					masterPlaylistURL = Key;
 					subtitlesPlaylist = Value;
-					//$.log(`🚧 ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+					//$.log(`🚧 getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
 				};
 			};
 		});
 	});
-	$.log(`✅ ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
+	$.log(`✅ getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
 	return { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex };
 };
 
@@ -280,7 +280,7 @@ function getPlaylistCache(url, cache, languages) {
  * @return {Promise<Object>} { subtitlesPlaylistURL, subtitles, subtitlesIndex }
  */
 function getSubtitlesCache(url, cache, languages) {
-	$.log(`☑️ ${$.name}, getSubtitlesCache`, "");
+	$.log(`☑️ getSubtitlesCache`, "");
 	let subtitlesPlaylistURL = "";
 	let subtitles = [];
 	let subtitlesIndex = 0;
@@ -290,17 +290,17 @@ function getSubtitlesCache(url, cache, languages) {
 			if (Array?.some((String, Index) => {
 				if (url.includes(String || null)) {
 					subtitlesIndex = Index;
-					$.log(`🚧 ${$.name}, getSubtitlesCache`, `subtitlesIndex: ${subtitlesIndex}`, "");
+					$.log(`🚧 getSubtitlesCache`, `subtitlesIndex: ${subtitlesIndex}`, "");
 					return true;
 				} else return false;
 			})) {
 				subtitlesPlaylistURL = Key;
 				subtitles = Value;
-				//$.log(`🚧 ${$.name}, getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
+				//$.log(`🚧 getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
 			};
 		};
 	});
-	$.log(`✅ ${$.name}, getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
+	$.log(`✅ getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
 	return { subtitlesPlaylistURL, subtitles, subtitlesIndex };
 };
 
@@ -315,16 +315,16 @@ function getSubtitlesCache(url, cache, languages) {
  * @return {Promise<Object>} { subtitlesURIArray0, subtitlesURIArray1 }
  */
 function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages) {
-	$.log(`☑️ ${$.name}, getSubtitlesArray`, "");
+	$.log(`☑️ getSubtitlesArray`, "");
 	const subtitlesPlaylistValue = playlistsCache?.get(url) || {};
 	let subtitlesPlaylistURL0 = subtitlesPlaylistValue?.[languages[0]]?.[index]?.URL || subtitlesPlaylistValue?.[languages[0]]?.[0]?.URL;
 	let subtitlesPlaylistURL1 = subtitlesPlaylistValue?.[languages[1]]?.[index]?.URL || subtitlesPlaylistValue?.[languages[1]]?.[0]?.URL;
-	$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesPlaylistURL0: ${subtitlesPlaylistURL0}, subtitlesPlaylistURL1: ${subtitlesPlaylistURL1}`, "");
+	$.log(`🚧 getSubtitlesArray`, `subtitlesPlaylistURL0: ${subtitlesPlaylistURL0}, subtitlesPlaylistURL1: ${subtitlesPlaylistURL1}`, "");
 	// 查找字幕文件地址vtt缓存（map）
 	let subtitlesURIArray0 = subtitlesCache.get(subtitlesPlaylistURL0) || [];
 	let subtitlesURIArray1 = subtitlesCache.get(subtitlesPlaylistURL1) || [];
-	//$.log(`🚧 ${$.name}, getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
-	$.log(`✅ ${$.name}, getSubtitlesArray`, "");
+	//$.log(`🚧 getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
+	$.log(`✅ getSubtitlesArray`, "");
 	return { subtitlesURIArray0, subtitlesURIArray1 };
 };
 
@@ -336,7 +336,7 @@ function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages
  * @return {String<*>} fileName
  */
 function getSubtitlesFileName(url, platform) {
-	$.log(`☑️ ${$.name}, Get Subtitles FileName`, `url: ${url}`, "");
+	$.log(`☑️ Get Subtitles FileName`, `url: ${url}`, "");
 	let fileName = undefined;
 	switch (platform) {
 		case "Apple":
@@ -354,7 +354,7 @@ function getSubtitlesFileName(url, platform) {
 			fileName = null; // Amazon Prime Video HBO_Max不拆分字幕片段
 			break;
 	};
-	$.log(`✅ ${$.name}, Get Subtitles FileName`, `fileName: ${fileName}`, "");
+	$.log(`✅ Get Subtitles FileName`, `fileName: ${fileName}`, "");
 	return fileName;
 };
 
@@ -367,19 +367,19 @@ function getSubtitlesFileName(url, platform) {
  * @return {Array<*>} Subtitles Requests Queue
  */
 function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
-	$.log(`☑️ ${$.name}`, `Construct Subtitles Queue, fileName: ${fileName}`, "");
+	$.log(`☑️ Construct Subtitles Queue, fileName: ${fileName}`, "");
 	let requests = [];
-	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, VTTs1.length: ${VTTs1.length}, VTTs2.length: ${VTTs2.length}`, "")
-	//$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, VTTs1: ${JSON.stringify(VTTs1)}, VTTs2.length: ${JSON.stringify(VTTs2)}`, "")
+	$.log(`🚧 Construct Subtitles Queue, VTTs1.length: ${VTTs1.length}, VTTs2.length: ${VTTs2.length}`, "")
+	//$.log(`🚧 Construct Subtitles Queue, VTTs1: ${JSON.stringify(VTTs1)}, VTTs2.length: ${JSON.stringify(VTTs2)}`, "")
 	// 查询当前字幕在原字幕队列中的位置
 	const Index1 = VTTs1.findIndex(item => item?.includes(fileName));
-	$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Index1: ${Index1}`, "");
+	$.log(`🚧 Construct Subtitles Queue, Index1: ${Index1}`, "");
 	switch (VTTs2.length) {
 		case 0: // 长度为0，无须计算
-			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 0`, "")
+			$.log(`⚠ Construct Subtitles Queue, 长度为 0`, "")
 			break;
 		case 1: { // 长度为1，无须计算
-			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度为 1`, "")
+			$.log(`⚠ Construct Subtitles Queue, 长度为 1`, "")
 			let request2 = {
 				"url": VTTs2[0],
 				"headers": request.headers
@@ -388,7 +388,7 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 			break;
 		};
 		case VTTs1.length: { // 长度相等，一一对应，无须计算
-			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度相等`, "")
+			$.log(`⚠ Construct Subtitles Queue, 长度相等`, "")
 			let request2 = {
 				"url": VTTs2[Index1],
 				"headers": request.headers
@@ -397,24 +397,24 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 			break;
 		};
 		default: { // 长度不等，需要计算
-			$.log(`⚠ ${$.name}`, `Construct Subtitles Queue, 长度不等，需要计算`, "")
+			$.log(`⚠ Construct Subtitles Queue, 长度不等，需要计算`, "")
 			// 计算当前字幕在原字幕队列中的百分比
 			const Position1 = (Index1 + 1) / VTTs1.length; // 从 0 开始计数，所以要加 1
-			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Position1: ${Position1}, Index2: ${Index1}/${VTTs1.length}`, "");
+			$.log(`🚧 Construct Subtitles Queue, Position1: ${Position1}, Index2: ${Index1}/${VTTs1.length}`, "");
 			// 根据百分比计算当前字幕在新字幕队列中的位置
 			//let Index2 = VTTs2.findIndex(item => item.includes(fileName));
 			const Index2 = Math.round(Position1 * VTTs2.length - 1); // 从 0 开始计数，所以要减 1
-			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, Position2: ${Position1}, Index2: ${Index2}/${VTTs2.length}`, "");
+			$.log(`🚧 Construct Subtitles Queue, Position2: ${Position1}, Index2: ${Index2}/${VTTs2.length}`, "");
 			// 获取两字幕队列长度差值
 			const diffLength = VTTs2.length - VTTs1.length;
 			// 获取当前字幕在新字幕队列中的前后1个字幕
 			//const BeginIndex = (Index2 - 1 < 0) ? 0 : Index2 - 1, EndIndex = Index2 + 1;
 			const BeginIndex = (Index2 > Index1) ? Index1 : Index2;
 			const EndIndex = (Index2 > Index1) ? Index2 : Index1;
-			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, diffLength: ${diffLength}, BeginIndex: ${BeginIndex}, EndIndex: ${EndIndex}`, "");
+			$.log(`🚧 Construct Subtitles Queue, diffLength: ${diffLength}, BeginIndex: ${BeginIndex}, EndIndex: ${EndIndex}`, "");
 			const nearlyVTTs = (diffLength < 0) ? VTTs2.slice((BeginIndex < diffLength) ? 0 : BeginIndex - diffLength, EndIndex + 1)
 				: VTTs2.slice(BeginIndex, EndIndex + diffLength + 1); // slice 不取 EndIndex 本身
-			$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, nearlyVTTs: ${JSON.stringify(nearlyVTTs)}`, "");
+			$.log(`🚧 Construct Subtitles Queue, nearlyVTTs: ${JSON.stringify(nearlyVTTs)}`, "");
 			nearlyVTTs.forEach(url => {
 				let request2 = {
 					"url": url,
@@ -434,7 +434,7 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 			break;
 		};
 	};
-	//$.log(`🚧 ${$.name}`, `Construct Subtitles Queue, requests: ${JSON.stringify(requests)}`, "");
-	$.log(`✅ ${$.name}`, `Construct Subtitles Queue`, "");
+	//$.log(`🚧 Construct Subtitles Queue, requests: ${JSON.stringify(requests)}`, "");
+	$.log(`✅ Construct Subtitles Queue`, "");
 	return requests;
 };

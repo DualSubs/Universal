@@ -14,32 +14,32 @@ const M3U8 = new EXTM3U(["\n"]);
 /***************** Processing *****************/
 // 解构URL
 const URL = URI.parse($request.url);
-$.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
+$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
+$.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
+$.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
+	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite"], Database);
-	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
+	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建空数据
 			let body = {};
 			// 处理类型
 			switch (Type) {
 				case "Official":
-					$.log(`🚧 ${$.name}`, "官方字幕", "");
+					$.log(`⚠ 官方字幕`, "");
 					// 获取字幕播放列表m3u8缓存（map）
 					const { subtitlesPlaylist, subtitlesPlaylistIndex } = getPlaylistCache($request.url, Caches.Playlists.Master, Languages[0]) ?? getPlaylistCache($request.url, Caches.Playlists.Master, Languages[1]);
 					// 写入字幕文件地址vtt缓存（map）
@@ -52,10 +52,10 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 					break;
 				case "Translate":
 				default:
-					$.log(`🚧 ${$.name}, 翻译字幕`, "");
+					$.log(`⚠ 翻译字幕`, "");
 					break;
 				case "External":
-					$.log(`🚧 ${$.name}, 外挂字幕`, "");
+					$.log(`⚠ 外挂字幕`, "");
 					break;
 			};
 			// 格式判断
@@ -94,7 +94,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 							if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI;
 							else return item;
 						}).filter(e => e);
-						//$.log(`🚧 ${$.name}`, "body.map", JSON.stringify(body), "");
+						//$.log(`🚧 body.map: ${JSON.stringify(body)}`, "");
 					}
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
@@ -109,8 +109,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
+				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
@@ -153,7 +153,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
 function getPlaylistCache(url, cache, language) {
-	$.log(`☑️ ${$.name}, getPlaylistCache, language: ${language}`, "");
+	$.log(`☑️ getPlaylistCache, language: ${language}`, "");
 	let masterPlaylistURL = "";
 	let subtitlesPlaylist = {};
 	let subtitlesPlaylistIndex = 0;
@@ -163,7 +163,7 @@ function getPlaylistCache(url, cache, language) {
 			if (Array?.some((Object, Index) => {
 				if (url.includes(Object?.URI ?? Object?.OPTION?.URI ?? null)) {
 					subtitlesPlaylistIndex = Index;
-					$.log(`🚧 ${$.name}, getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+					$.log(`🚧 getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
 					return true;
 				} else return false;
 			})) {
@@ -172,7 +172,7 @@ function getPlaylistCache(url, cache, language) {
 			};
 		};
 	});
-	$.log(`✅ ${$.name}, getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
+	$.log(`✅ getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
 	return { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex };
 };
 
@@ -187,7 +187,7 @@ function getPlaylistCache(url, cache, language) {
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
 async function setSubtitlesCache(cache, playlist, language, index = 0, platform = "Universal") {
-	$.log(`☑️ ${$.name}, setSubtitlesCache, language: ${language}, index: ${index}`, "");
+	$.log(`☑️ setSubtitlesCache, language: ${language}, index: ${index}`, "");
 	await Promise.all(playlist?.[language]?.map(async (val, ind, arr) => {
 		if ((arr[index] && (ind === index)) || (!arr[index])) {
 			// 查找字幕文件地址vtt缓存（map）
@@ -196,7 +196,7 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
 			subtitlesURLarray = await getSubtitles(val?.URL, $request.headers, platform);
 			// 写入字幕文件地址vtt/ttml缓存到map
 			cache = cache.set(val.URL, subtitlesURLarray);
-			$.log(`✅ ${$.name}, setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
+			$.log(`✅ setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
 		};
 	}));
 	return cache;
@@ -211,7 +211,7 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
  * @return {Promise<*>}
  */
 async function getSubtitles(url, headers, platform) {
-	$.log(`☑️ ${$.name}, Get Subtitle *.vtt *.ttml URLs`, "");
+	$.log(`☑️ Get Subtitle *.vtt *.ttml URLs`, "");
 	let response = await $.fetch({ url: url, headers: headers });
 	let subtitlePlayList = M3U8.parse(response.body);
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml)(\?.+)?$/.test(URI)));
@@ -233,7 +233,7 @@ async function getSubtitles(url, headers, platform) {
 		default:
 			break;
 	};
-	$.log(`✅ ${$.name}, Get Subtitle *.vtt *.ttml URLs, subtitles: ${subtitles}`, "");
+	$.log(`✅ Get Subtitle *.vtt *.ttml URLs, subtitles: ${subtitles}`, "");
 	return subtitles;
 	/***************** Fuctions *****************/
 	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };

@@ -20,27 +20,27 @@ const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "m
 /***************** Processing *****************/
 // 解构URL
 const URL = URI.parse($request.url);
-$.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
+$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
+$.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
-$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
+$.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
+	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Translate", "API"], Database);
-	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
+	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建空数据
 			let body = {};
 			// 格式判断
@@ -530,8 +530,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
+				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
@@ -582,7 +582,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
  * @return {Promise<*>}
  */
 async function Translate(text = [], method = "Part", vendor = "Google", source = "EN", target = "ZH", API = {}, database = {}, times = 3, interval = 100, exponential = true) {
-	$.log(`☑️ ${$.name}, Translate, method: ${method}, vendor: ${vendor}, source: ${source}, target: ${target}`, "");
+	$.log(`☑️ Translate, method: ${method}, vendor: ${vendor}, source: ${source}, target: ${target}`, "");
 	// 翻译长度设置
 	let length = 127;
 	switch (vendor) {
@@ -613,8 +613,8 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
 			Translation = await Promise.all(text.map(async row => await retry(() => Translator(vendor, source, target, row, API, database), times, interval, exponential)));
 			break;
 	};
-	//$.log(`✅ ${$.name}, Translate, Translation: ${JSON.stringify(Translation)}`, "");
-	$.log(`✅ ${$.name}, Translate`, "");
+	//$.log(`✅ Translate, Translation: ${JSON.stringify(Translation)}`, "");
+	$.log(`✅ Translate`, "");
 	return Translation;
 };
 
@@ -630,7 +630,7 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
  * @return {Promise<*>}
  */
 async function Translator(vendor = "Google", source = "", target = "", text = "", api = {}, database = {}) {
-	$.log(`☑️ ${$.name}, Translator`, `orig: ${text}`, "");
+	$.log(`☑️ Translator`, `orig: ${text}`, "");
 	// 转换语言代码
 	switch (vendor) {
 		case "Google":
@@ -661,12 +661,12 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 	let request = await GetRequest(vendor, source, target, text);
 	// 发送请求
 	let trans = await GetData(vendor, request);
-	$.log(`🚧 ${$.name}, Translator`, `trans: ${trans}`, "");
+	$.log(`🚧 Translator`, `trans: ${trans}`, "");
 	return trans
 	/***************** Fuctions *****************/
 	// Get Translate Request
 	async function GetRequest(vendor = "", source = "", target = "", text = "") {
-		$.log(`☑️ ${$.name}, Get Translate Request`, "");
+		$.log(`☑️ Get Translate Request`, "");
 		const UAPool = [
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
@@ -921,7 +921,7 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 	};
 	// Get Translate Data
 	async function GetData(vendor, request) {
-		$.log(`☑️ ${$.name}, Get Translate Data`, "");
+		$.log(`☑️ Get Translate Data`, "");
 		let texts = [];
 		await $.fetch(request)
 			.then(response => JSON.parse(response.body))
@@ -960,8 +960,8 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 				};
 			})
 			.catch(error => Promise.reject(error));
-		//$.log(`✅ ${$.name}, Get Translate Data, texts: ${JSON.stringify(texts)}`, "");
-		$.log(`✅ ${$.name}, Get Translate Data`, "");
+		//$.log(`✅ Get Translate Data, texts: ${JSON.stringify(texts)}`, "");
+		$.log(`✅ Get Translate Data`, "");
 		return texts
 	};
 };
@@ -1005,10 +1005,10 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  * @return {Array<*>} target
  */
 function chunk(source, length) {
-	$.log(`⚠ ${$.name}, Chunk Array`, "");
+	$.log(`⚠ Chunk Array`, "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
-	//$.log(`🎉 ${$.name}, Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	//$.log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
 };
 
@@ -1024,7 +1024,7 @@ function chunk(source, length) {
  * @return {Promise<*>}
  */
 async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) {
-	$.log(`☑️ ${$.name}, retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	$.log(`☑️ retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
 	try {
 		const val = await fn();
 		return val;
@@ -1032,6 +1032,6 @@ async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) 
 		if (retriesLeft) {
 			await new Promise(r => setTimeout(r, interval));
 			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
-		} else throw new Error(`❌ ${$.name}, retry, 最大重试次数`);
+		} else throw new Error(`❌ retry, 最大重试次数`);
 	}
 };

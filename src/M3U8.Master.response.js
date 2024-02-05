@@ -16,26 +16,26 @@ const M3U8 = new EXTM3U(["\n"]);
 /***************** Processing *****************/
 // 解构URL
 const URL = URI.parse($request.url);
-$.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
+$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
+$.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-$.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
+$.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
+	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal"], Database);
-	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");
+	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			$.log(`⚠ ${$.name}, Type: ${Type}, Languages: ${Languages}`, "");
+			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 兼容性判断
 			const { standard: STANDARD, device: DEVICE } = isStandard(URL, $request.headers, PLATFORM);
 			// 创建空数据
@@ -55,7 +55,7 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 				case "audio/mpegurl":
 					// 序列化M3U8
 					body = M3U8.parse($response.body);
-					//$.log(`🚧 ${$.name}`, "M3U8.parse($response.body)", JSON.stringify(body), "");
+					//$.log(`🚧 M3U8.parse($response.body): ${JSON.stringify(body)}`, "");
 					// 读取已存数据
 					let playlistCache = Caches.Playlists.Master.get($request.url) || {};
 					// 获取特定语言的字幕
@@ -82,8 +82,8 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				$.log(`🎉 ${$.name}, finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 ${$.name}, finally`, `$response: ${JSON.stringify($response)}`, "");
+				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
 				if ($.isQuanX()) {
@@ -127,13 +127,13 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
  * @return {Array} datas
  */
 function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
-	$.log(`☑️ $${$.name}, Get Attribute List`, `langCodes: ${langCodes}`, "");
+	$.log(`☑️ Get Attribute List`, `langCodes: ${langCodes}`, "");
 	let attrList = m3u8.filter(item => item?.OPTION?.TYPE === type && item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
-	//$.log(`🚧 ${$.name}`, "attrList", JSON.stringify(attrList), "");
+	//$.log(`🚧 attrList: ${JSON.stringify(attrList)}`, "");
 	let matchList = [];
 	//查询是否有符合语言的内容
 	for (let langcode of langCodes) {
-		$.log(`🚧 ${$.name}, Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
+		$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
 		matchList = attrList.filter(item => item?.OPTION?.LANGUAGE?.toLowerCase() === langcode?.toLowerCase());
 		if (matchList.length !== 0) break;
 	};
@@ -141,7 +141,7 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
 		data.URL = aPath(url, data?.OPTION?.URI ?? null);
 		return data;
 	})
-	$.log(`✅ $${$.name}, Get Attribute List`, `matchList: ${JSON.stringify(matchList)}`, "");
+	$.log(`✅ Get Attribute List`, `matchList: ${JSON.stringify(matchList)}`, "");
 	return matchList;
 
 	/***************** Fuctions *****************/
@@ -165,11 +165,11 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 	types = (standard == true) ? types : [types.at(-1)];
 	const playlists1 = playlists?.[languages?.[0]];
 	const playlists2 = playlists?.[languages?.[1]];
-	$.log(`☑️ ${$.name}, Set Attribute List`, `types: ${types}`, "");
+	$.log(`☑️ Set Attribute List`, `types: ${types}`, "");
 	playlists1?.forEach(playlist1 => {
 		const index1 = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
 		types.forEach(type => {
-			$.log(`🚧 ${$.name}, Set Attribute List, type: ${type}`, "");
+			$.log(`🚧 Set Attribute List, type: ${type}`, "");
 			let option = {};
 			switch (type) {
 				case "Official":
@@ -207,7 +207,7 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 			};
 		});
 	});
-	//$.log(`✅ ${$.name}, Set Attribute List`, `m3u8: ${JSON.stringify(m3u8)}`, "");
-	$.log(`✅ ${$.name}, Set Attribute List`, "");
+	//$.log(`✅ Set Attribute List`, `m3u8: ${JSON.stringify(m3u8)}`, "");
+	$.log(`✅ Set Attribute List`, "");
 	return m3u8;
 };

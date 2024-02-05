@@ -3973,33 +3973,6 @@ function setENV($, name, platforms, database) {
 	return { Settings, Caches, Configs };
 }
 
-function detectPlatform(url) {
-	console.log(`☑️ Detect Platform`, "");
-	/***************** Platform *****************/
-	let Platform = /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
-		: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
-			: /\.spotify(cdn)?\.com/i.test(url) ? "Spotify"
-				: /\.apple\.com/i.test(url) ? "Apple"
-					: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
-						: /(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
-							: /prd\.media\.h264\.io/i.test(url) ? "Max"
-								: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
-									: /\.hulu(stream|im)?\.com/i.test(url) ? "Hulu"
-										: /\.cbs(aavideo|cbsivideo)?\.com/i.test(url) ? "Paramount+"
-											: /\.uplynk\.com/i.test(url) ? "Discovery+"
-												: /dplus-ph-/i.test(url) ? "Discovery+Ph"
-													: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
-														: /\.fubo\.tv/i.test(url) ? "FuboTV"
-															: /\.viki\.io/i.test(url) ? "Viki"
-																: /epix(hls\.akamaized\.net|\.services\.io)/i.test(url) ? "MGM+"
-																	: /\.nebula\.app/i.test(url) ? "Nebula"
-																		: /\.pluto(\.tv|tv\.net)/i.test(url) ? "PlutoTV"
-																			: /\.mubicdn\.net/i.test(url) ? "MUBI"
-																				: "Universal";
-    console.log(`✅ Detect Platform, Platform: ${Platform}`, "");
-	return Platform;
-}
-
 /**
  * detect Format
  * @author VirgilClyne
@@ -4069,6 +4042,33 @@ function detectFormat(url, body, format = undefined) {
 			}			break;
 	}	console.log(`✅ detectFormat, format: ${format}`, "");
 	return format;
+}
+
+function detectPlatform(url) {
+	console.log(`☑️ Detect Platform`, "");
+	/***************** Platform *****************/
+	let Platform = /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+		: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
+			: /\.spotify(cdn)?\.com/i.test(url) ? "Spotify"
+				: /\.apple\.com/i.test(url) ? "Apple"
+					: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
+						: /(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
+							: /prd\.media\.h264\.io/i.test(url) ? "Max"
+								: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
+									: /\.hulu(stream|im)?\.com/i.test(url) ? "Hulu"
+										: /\.cbs(aavideo|cbsivideo)?\.com/i.test(url) ? "Paramount+"
+											: /\.uplynk\.com/i.test(url) ? "Discovery+"
+												: /dplus-ph-/i.test(url) ? "Discovery+Ph"
+													: /\.peacocktv\.com/i.test(url) ? "PeacockTV"
+														: /\.fubo\.tv/i.test(url) ? "FuboTV"
+															: /\.viki\.io/i.test(url) ? "Viki"
+																: /epix(hls\.akamaized\.net|\.services\.io)/i.test(url) ? "MGM+"
+																	: /\.nebula\.app/i.test(url) ? "Nebula"
+																		: /\.pluto(\.tv|tv\.net)/i.test(url) ? "PlutoTV"
+																			: /\.mubicdn\.net/i.test(url) ? "MUBI"
+																				: "Universal";
+    console.log(`✅ Detect Platform, Platform: ${Platform}`, "");
+	return Platform;
 }
 
 /** 
@@ -4228,16 +4228,16 @@ const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "m
 const URL = URI.parse($request.url);
 $.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host; URL.path; const PATHs = URL.paths;
+const METHOD = $request.method; URL.host; URL.path; const PATHs = URL.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
-// 获取平台
-const PLATFORM = detectPlatform(HOST);
-$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
+	// 获取平台
+	const PLATFORM = detectPlatform($request.url);
+	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database$1);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");

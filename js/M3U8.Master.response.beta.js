@@ -3727,15 +3727,15 @@ const M3U8 = new EXTM3U(["\n"]);
 const URL = URI.parse($request.url);
 $.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host; URL.path; URL.paths;
+const METHOD = $request.method; URL.host; URL.path; URL.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
-// 获取平台
-const PLATFORM = detectPlatform(HOST);
-$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
+	// 获取平台
+	const PLATFORM = detectPlatform($request.url);
+	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal"], Database$1);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");

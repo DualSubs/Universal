@@ -5,8 +5,8 @@ import WebVTT from "./WebVTT/WebVTT.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
-import detectPlatform from "./function/detectPlatform.mjs";
 import detectFormat from "./function/detectFormat.mjs";
+import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
@@ -24,14 +24,14 @@ $.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
-// 获取平台
-const PLATFORM = detectPlatform(HOST);
-$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
+	// 获取平台
+	const PLATFORM = detectPlatform($request.url);
+	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Translate", "API"], Database);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");

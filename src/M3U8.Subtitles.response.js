@@ -18,13 +18,13 @@ $.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
-// 获取平台
-const PLATFORM = detectPlatform(HOST);
-$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
+	// 获取平台
+	const PLATFORM = detectPlatform($request.url);
+	$.log(`⚠ ${$.name}, PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite"], Database);
 	$.log(`⚠ ${$.name}`, `Settings.Switch: ${Settings?.Switch}`, "");

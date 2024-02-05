@@ -9929,7 +9929,7 @@ $.log(`⚠ ${$.name}`, `URL: ${JSON.stringify(URL)}`, "");
 const METHOD = $request.method; URL.host; URL.path; const PATHs = URL.paths;
 $.log(`⚠ ${$.name}`, `METHOD: ${METHOD}`, "");
 // 解析格式
-const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
+const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"] ?? $request.headers?.Accept ?? $request.headers?.accept)?.split(";")?.[0];
 $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
@@ -9949,7 +9949,6 @@ $.log(`⚠ ${$.name}, FORMAT: ${FORMAT}`, "");
 			$.log(`🚧 ${$.name}, 调试信息`, `trackId: ${trackId}`, "");
 			const trackInfo = Caches.Metadatas.Tracks.get(trackId);
 			$.log(`🚧 ${$.name}, 调试信息`, `trackInfo: ${JSON.stringify(trackInfo)}`, "");
-			if (trackInfo && !FORMAT) FORMAT = $request?.headers?.Accept ?? $request?.headers?.accept;
 			// 创建空数据
 			let body = {};
 			// 格式判断

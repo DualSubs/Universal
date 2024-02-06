@@ -3914,7 +3914,7 @@ var Database$1 = Database = {
 	"Composite": Composite$2,
 	"Translate": Translate$1,
 	"External": External$1,
-	"External": API$1,
+	"API": API$1,
 };
 
 /*

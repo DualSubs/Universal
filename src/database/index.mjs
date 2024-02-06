@@ -17,5 +17,5 @@ export default Database = {
 	"Composite": Composite,
 	"Translate": Translate,
 	"External": External,
-	"External": API,
+	"API": API,
 };

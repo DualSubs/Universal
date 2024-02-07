@@ -53,6 +53,7 @@ export default function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kin
 						//console.log(`🚧 Composite Subtitles, index1/length1: ${index1}/${length1}, index2/length2: ${index2}/${length2}`, "");
 						const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
 						//console.log(`🚧 Composite Subtitles, timeStamp1: ${timeStamp1}, timeStamp2: ${timeStamp2}`, "");
+						const timeStamp1Next = Sub1.events[index1 + 1]?.tStartMs ?? timeStamp1, timeStamp2Next = Sub2.events[index2 + 1]?.tStartMs ?? timeStamp2;
 						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 							//index0 = (Position === "Reverse") ? index2 : index1;
 							index0 = index1;
@@ -64,9 +65,12 @@ export default function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kin
 							//DualSub.body[index0].tStartMs = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 							//DualSub.body[index0].index = (Position === "Reverse") ? index2 : index1;
 						};
-						if (timeStamp2 > timeStamp1) index1++
-						else if (timeStamp2 < timeStamp1) index2++
-						else { index1++; index2++ };
+						if (Math.abs(timeStamp1Next - timeStamp2Next) <= Tolerance) { index1++; index2++ }
+						else {
+							if (timeStamp2 > timeStamp1) index1++
+							else if (timeStamp1 > timeStamp2) index2++
+							else { index1++; index2++ };
+						};
 					};
 					break;
 			};
@@ -104,6 +108,7 @@ export default function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kin
 						//console.log(`🚧 Composite Subtitles, index1/length1: ${index1}/${length1}, index2/length2: ${index2}/${length2}`, "");
 						const timeStamp1 = parseInt(Sub1.timedtext.body.p[index1]["@t"], 10), timeStamp2 = parseInt(Sub2.timedtext.body.p[index2]["@t"], 10);
 						//console.log(`🚧 Composite Subtitles, timeStamp1: ${timeStamp1}, timeStamp2: ${timeStamp2}`, "");
+						const timeStamp1Next = parseInt(Sub1.timedtext.body.p[index1 + 1]?.["@t"] ?? timeStamp1, 10), timeStamp2Next = parseInt(Sub2.timedtext.body.p[index2 + 1]?.["@t"] ?? timeStamp2, 10);
 						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 							//index0 = (Position === "Reverse") ? index2 : index1;
 							index0 = index1;
@@ -115,9 +120,12 @@ export default function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kin
 							//DualSub.timedtext.body.p[index0]["@t"] = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 							//DualSub.timedtext.body.p[index0].index = (Position === "Reverse") ? index2 : index1;
 						};
-						if (timeStamp2 > timeStamp1) index1++
-						else if (timeStamp2 < timeStamp1) index2++
-						else { index1++; index2++ };
+						if (Math.abs(timeStamp1Next - timeStamp2Next) <= Tolerance) { index1++; index2++ }
+						else {
+							if (timeStamp2 > timeStamp1) index1++
+							else if (timeStamp1 > timeStamp2) index2++
+							else { index1++; index2++ };
+						};
 					};
 					break;
 			};
@@ -139,6 +147,7 @@ export default function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kin
 						//console.log(`🚧 Composite Subtitles, index1/length1: ${index1}/${length1}, index2/length2: ${index2}/${length2}`, "");
 						const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp;
 						//console.log(`🚧 Composite Subtitles, timeStamp1: ${timeStamp1}, timeStamp2: ${timeStamp2}`, "");
+						const timeStamp1Next = Sub1.body[index1 + 1]?.timeStamp ?? timeStamp1, timeStamp2Next = Sub2.body[index2 + 1]?.timeStamp ?? timeStamp2;
 						// 处理普通字幕
 						const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
 						//console.log(`🚧 Composite Subtitles, text1: ${text1}, text2: ${text2}`, "");
@@ -150,10 +159,13 @@ export default function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kin
 							//console.log(`🚧 Composite Subtitles, index0: ${index0}, text: ${DualSub.body[index0].text}`, "");
 							//DualSub.body[index0].timeStamp = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 							//DualSub.body[index0].index = (Position === "Reverse") ? index2 : index1;
+						}
+						if (Math.abs(timeStamp1Next - timeStamp2Next) <= Tolerance) { index1++; index2++ }
+						else {
+							if (timeStamp2 > timeStamp1) index1++
+							else if (timeStamp1 > timeStamp2) index2++
+							else { index1++; index2++ };
 						};
-						if (timeStamp2 > timeStamp1) index1++
-						else if (timeStamp2 < timeStamp1) index2++
-						else { index1++; index2++ }
 					};
 					break;
 			};

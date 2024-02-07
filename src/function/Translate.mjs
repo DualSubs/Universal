@@ -1,3 +1,5 @@
+import MD5 from '../../node_modules/crypto-js/md5.js';
+
 export default class Translate {
 	constructor($) {
 		this.name = "Translate";
@@ -9,7 +11,8 @@ export default class Translate {
 	#LanguagesCode = {
 		Google: { AUTO: "auto", AF: "af", AM: "am", AR: "ar", AS: "as", AY: "ay", AZ: "az", BG: "bg", BE: "be", BM: "bm", BN: "bn", BHO: "bho", CS: "cs", DA: "da", DE: "de", EL: "el", EU: "eu", EN: "en", "EN-GB": "en", "EN-US": "en", "EN-US SDH": "en", ES: "es", "ES-419": "es", "ES-ES": "es", ET: "et", FI: "fi", FR: "fr", "FR-CA": "fr", HU: "hu", IS: "is", IT: "it", JA: "ja", KO: "ko", LT: "lt", LV: "lv", NL: "nl", NO: "no", PL: "pl", PT: "pt", "PT-PT": "pt", "PT-BR": "pt", PA: "pa", RO: "ro", RU: "ru", SK: "sk", SL: "sl", SQ: "sq", ST: "st", SV: "sv", TH: "th", TR: "tr", UK: "uk", UR: "ur", VI: "vi", ZH: "zh", "ZH-HANS": "zh-CN", "ZH-HK": "zh-TW", "ZH-HANT": "zh-TW", },
 		Microsoft: { AUTO: "", AF: "af", AM: "am", AR: "ar", AS: "as", AY: "ay", AZ: "az", BG: "bg", BE: "be", BM: "bm", BN: "bn", BHO: "bho", CS: "cs", DA: "da", DE: "de", EL: "el", EU: "eu", EN: "en", "EN-GB": "en", "EN-US": "en", "EN-US SDH": "en", ES: "es", "ES-419": "es", "ES-ES": "es", ET: "et", FI: "fi", FR: "fr", "FR-CA": "fr-ca", HU: "hu", IS: "is", IT: "it", JA: "ja", KO: "ko", LT: "lt", LV: "lv", NL: "nl", NO: "no", PL: "pl", PT: "pt", "PT-PT": "pt-pt", "PT-BR": "pt", PA: "pa", RO: "ro", RU: "ru", SK: "sk", SL: "sl", SQ: "sq", ST: "st", SV: "sv", TH: "th", TR: "tr", UK: "uk", UR: "ur", VI: "vi", ZH: "zh-Hans", "ZH-HANS": "zh-Hans", "ZH-HK": "yue", "ZH-HANT": "zh-Hant", },
-		DeepL: { AUTO: "", BG: "BG", CS: "CS", DA: "DA", DE: "de", EL: "el", EN: "EN", ES: "ES", ET: "ET", FI: "FI", FR: "FR", HU: "HU", IT: "IT", JA: "JA", KO: "ko", LT: "LT", LV: "LV", NL: "NL", PL: "PL", PT: "PT", RO: "RO", RU: "RU", SK: "SK", SL: "SL", SV: "SV", TR: "TR", ZH: "ZH", }
+		DeepL: { AUTO: "", BG: "BG", CS: "CS", DA: "DA", DE: "de", EL: "el", EN: "EN", ES: "ES", ET: "ET", FI: "FI", FR: "FR", HU: "HU", IT: "IT", JA: "JA", KO: "ko", LT: "LT", LV: "LV", NL: "NL", PL: "PL", PT: "PT", RO: "RO", RU: "RU", SK: "SK", SL: "SL", SV: "SV", TR: "TR", ZH: "ZH", },
+		Baidu: { AUTO: "auto", AR: "ara", CS: "cs", DA: "dan", DE: "de", EL: "el", EN: "en", ES: "spa", ET: "est", FI: "fin", FR: "fra", HU: "hu", IT: "it", JA: "jp", KO: "kor", NL: "nl", PL: "pl", PT: "pt", RO: "RO", RU: "rom", SL: "slo", SV: "swe", TH: "th", VI: "vie", ZH: "zh", "ZH-HANS": "zh", "ZH-HK": "cht", "ZH-HANT": "cht", },
 	};
 
 	#UAPool = [
@@ -235,20 +238,15 @@ export default class Translate {
 			"User-Agent": "DualSubs",
 			"Content-Type": "application/x-www-form-urlencoded"
 		};
-		request.body = {
-			"q": text,
-			"from": source,
-			"to": target,
-			"appid": api?.Key,
-			"salt": uuidv4().toString(),
-			"sign": "",
-		};
+		text = Array.isArray(text) ? text.join("\n") : text;
+		const salt = (new Date).getTime();
+		request.body = `q=${encodeURIComponent(text)}&from=${source}&to=${target}&appid=${api.id}&salt=${salt}&sign=${MD5(api.id + text + salt + api.key)}`;
 		return await this.$.fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
-				return body?.data ?? `翻译失败, vendor: ${"DeepL"}`;
+				return body?.trans_result?.map(item => item?.dst ?? `翻译失败, vendor: ${"BaiduFanyi"}`);
 			})
-			.catch(error => Promise.reject(error));
+			.catch(error => Promise.reject(console.log(error)));
 	};
 
 	async YoudaoAI(text = [], source = "AUTO", target = "ZH", api = {}) {
@@ -268,7 +266,7 @@ export default class Translate {
 			"from": source,
 			"to": target,
 			"appKey": api?.Key,
-			"salt": uuidv4().toString(),
+			"salt": (new Date).getTime(),
 			"signType": "v3",
 			"sign": "",
 			"curtime": Math.floor(+new Date() / 1000)

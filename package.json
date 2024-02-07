@@ -25,6 +25,7 @@
 		"@rollup/plugin-commonjs": "^25.0.7",
 		"@rollup/plugin-json": "^6.1.0",
 		"@rollup/plugin-terser": "^0.4.4",
+		"crypto-js": "^4.2.0",
 		"rollup": "^4.9.6"
 	}
 }

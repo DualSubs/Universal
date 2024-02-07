@@ -1177,7 +1177,7 @@ var Settings$8 = {
 	],
 	CacheSize: 50
 };
-var Configs$4 = {
+var Configs$3 = {
 	breakLine: {
 		"text/xml": "&#x000A;",
 		"application/xml": "&#x000A;",
@@ -1189,12 +1189,12 @@ var Configs$4 = {
 };
 var Default = {
 	Settings: Settings$8,
-	Configs: Configs$4
+	Configs: Configs$3
 };
 
 var Default$1 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
-	Configs: Configs$4,
+	Configs: Configs$3,
 	Settings: Settings$8,
 	default: Default
 });
@@ -1210,7 +1210,7 @@ var Settings$7 = {
 		"ZH"
 	]
 };
-var Configs$3 = {
+var Configs$2 = {
 	Languages: {
 		AUTO: "",
 		AR: [
@@ -1475,12 +1475,12 @@ var Configs$3 = {
 };
 var Universal = {
 	Settings: Settings$7,
-	Configs: Configs$3
+	Configs: Configs$2
 };
 
 var Universal$1 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
-	Configs: Configs$3,
+	Configs: Configs$2,
 	Settings: Settings$7,
 	default: Universal
 });
@@ -1499,7 +1499,7 @@ var Settings$6 = {
 	AutoCC: true,
 	ShowOnly: false
 };
-var Configs$2 = {
+var Configs$1 = {
 	Languages: {
 		BG: "bg-BG",
 		CS: "cs",
@@ -3568,12 +3568,12 @@ var Configs$2 = {
 };
 var YouTube = {
 	Settings: Settings$6,
-	Configs: Configs$2
+	Configs: Configs$1
 };
 
 var YouTube$1 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
-	Configs: Configs$2,
+	Configs: Configs$1,
 	Settings: Settings$6,
 	default: YouTube
 });
@@ -3586,7 +3586,7 @@ var Settings$5 = {
 		"ZH"
 	]
 };
-var Configs$1 = {
+var Configs = {
 	Languages: {
 		AR: "ar",
 		CS: "cs",
@@ -3631,12 +3631,12 @@ var Configs$1 = {
 };
 var Netflix = {
 	Settings: Settings$5,
-	Configs: Configs$1
+	Configs: Configs
 };
 
 var Netflix$1 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
-	Configs: Configs$1,
+	Configs: Configs,
 	Settings: Settings$5,
 	default: Netflix
 });
@@ -3689,167 +3689,12 @@ var Settings$2 = {
 	Interval: 500,
 	Exponential: true
 };
-var Configs = {
-	Languages: {
-		Google: {
-			AUTO: "auto",
-			AF: "af",
-			AM: "am",
-			AR: "ar",
-			AS: "as",
-			AY: "ay",
-			AZ: "az",
-			BG: "bg",
-			BE: "be",
-			BM: "bm",
-			BN: "bn",
-			BHO: "bho",
-			CS: "cs",
-			DA: "da",
-			DE: "de",
-			EL: "el",
-			EU: "eu",
-			EN: "en",
-			"EN-GB": "en",
-			"EN-US": "en",
-			"EN-US SDH": "en",
-			ES: "es",
-			"ES-419": "es",
-			"ES-ES": "es",
-			ET: "et",
-			FI: "fi",
-			FR: "fr",
-			"FR-CA": "fr",
-			HU: "hu",
-			IS: "is",
-			IT: "it",
-			JA: "ja",
-			KO: "ko",
-			LT: "lt",
-			LV: "lv",
-			NL: "nl",
-			NO: "no",
-			PL: "pl",
-			PT: "pt",
-			"PT-PT": "pt",
-			"PT-BR": "pt",
-			PA: "pa",
-			RO: "ro",
-			RU: "ru",
-			SK: "sk",
-			SL: "sl",
-			SQ: "sq",
-			ST: "st",
-			SV: "sv",
-			TH: "th",
-			TR: "tr",
-			UK: "uk",
-			UR: "ur",
-			VI: "vi",
-			ZH: "zh",
-			"ZH-HANS": "zh-CN",
-			"ZH-HK": "zh-TW",
-			"ZH-HANT": "zh-TW"
-		},
-		Microsoft: {
-			AUTO: "",
-			AF: "af",
-			AM: "am",
-			AR: "ar",
-			AS: "as",
-			AY: "ay",
-			AZ: "az",
-			BG: "bg",
-			BE: "be",
-			BM: "bm",
-			BN: "bn",
-			BHO: "bho",
-			CS: "cs",
-			DA: "da",
-			DE: "de",
-			EL: "el",
-			EU: "eu",
-			EN: "en",
-			"EN-GB": "en",
-			"EN-US": "en",
-			"EN-US SDH": "en",
-			ES: "es",
-			"ES-419": "es",
-			"ES-ES": "es",
-			ET: "et",
-			FI: "fi",
-			FR: "fr",
-			"FR-CA": "fr-ca",
-			HU: "hu",
-			IS: "is",
-			IT: "it",
-			JA: "ja",
-			KO: "ko",
-			LT: "lt",
-			LV: "lv",
-			NL: "nl",
-			NO: "no",
-			PL: "pl",
-			PT: "pt",
-			"PT-PT": "pt-pt",
-			"PT-BR": "pt",
-			PA: "pa",
-			RO: "ro",
-			RU: "ru",
-			SK: "sk",
-			SL: "sl",
-			SQ: "sq",
-			ST: "st",
-			SV: "sv",
-			TH: "th",
-			TR: "tr",
-			UK: "uk",
-			UR: "ur",
-			VI: "vi",
-			ZH: "zh-Hans",
-			"ZH-HANS": "zh-Hans",
-			"ZH-HK": "yue",
-			"ZH-HANT": "zh-Hant"
-		},
-		DeepL: {
-			AUTO: "",
-			BG: "BG",
-			CS: "CS",
-			DA: "DA",
-			DE: "de",
-			EL: "el",
-			EN: "EN",
-			ES: "ES",
-			ET: "ET",
-			FI: "FI",
-			FR: "FR",
-			HU: "HU",
-			IT: "IT",
-			JA: "JA",
-			KO: "ko",
-			LT: "LT",
-			LV: "LV",
-			NL: "NL",
-			PL: "PL",
-			PT: "PT",
-			RO: "RO",
-			RU: "RU",
-			SK: "SK",
-			SL: "SL",
-			SV: "SV",
-			TR: "TR",
-			ZH: "ZH"
-		}
-	}
-};
 var Translate$2 = {
-	Settings: Settings$2,
-	Configs: Configs
+	Settings: Settings$2
 };
 
 var Translate$3 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
-	Configs: Configs,
 	Settings: Settings$2,
 	default: Translate$2
 });
@@ -4100,7 +3945,7 @@ let Translate$1 = class Translate {
 		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0",
 	];
 
-	async google(text = [], source = "AUTO", target = "ZH") {
+	async Google(text = [], source = "AUTO", target = "ZH") {
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		const BaseRequest = [
@@ -4148,11 +3993,11 @@ let Translate$1 = class Translate {
 					if (Array.isArray(body?.[0])) {
 						if (body.length === 1) {
 							body[0].pop();
-							return body[0] ?? `翻译失败, vendor: ${"google"}`;
-						} else return body?.[0]?.map(item => item?.[0] ?? `翻译失败, vendor: ${"google"}`);
-					} else return body ?? `翻译失败, vendor: ${"google"}`;
-				} else if (body?.sentences) return body?.sentences?.map(item => item?.trans ?? `翻译失败, vendor: ${"google"}`);
-				returntexts?.join("")?.split(/\r/);
+							text = body[0] ?? `翻译失败, vendor: ${"google"}`;
+						} else text = body?.[0]?.map(item => item?.[0] ?? `翻译失败, vendor: ${"google"}`);
+					} else text = body ?? `翻译失败, vendor: ${"google"}`;
+				} else if (body?.sentences) text = body?.sentences?.map(item => item?.trans ?? `翻译失败, vendor: ${"google"}`);
+				return text?.join("")?.split(/\r/);
 			})
 			.catch(error => Promise.reject(error));
 	};
@@ -4287,7 +4132,7 @@ let Translate$1 = class Translate {
 		return await this.$.fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
-				return body?.data ?? `翻译失败, vendor: ${"DeepL"}`;
+				return body?.translations?.map(item => item?.text ?? `翻译失败, vendor: ${"DeepL"}`);
 			})
 			.catch(error => Promise.reject(error));
 	};

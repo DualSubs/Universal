@@ -4071,6 +4071,83 @@ function detectPlatform(url) {
 	return Platform;
 }
 
+/**
+ * Construct Subtitles Queue
+ * @author VirgilClyne
+ * @param {String} fileName - Request URL
+ * @param {Array} VTTs1 - Primary (Source) Language Subtitles Array
+ * @param {Array} VTTs2 - Second (Target) Language Subtitles Array
+ * @return {Array<*>} Subtitles Requests Queue
+ */
+function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
+	console.log(`☑️ Construct Subtitles Queue, fileName: ${fileName}`, "");
+	let requests = [];
+	console.log(`🚧 Construct Subtitles Queue, VTTs1.length: ${VTTs1.length}, VTTs2.length: ${VTTs2.length}`, "");
+	//console.log(`🚧 Construct Subtitles Queue, VTTs1: ${JSON.stringify(VTTs1)}, VTTs2.length: ${JSON.stringify(VTTs2)}`, "")
+	// 查询当前字幕在原字幕队列中的位置
+	const Index1 = VTTs1.findIndex(item => item?.includes(fileName));
+	console.log(`🚧 Construct Subtitles Queue, Index1: ${Index1}`, "");
+	switch (VTTs2.length) {
+		case 0: // 长度为0，无须计算
+            console.log(`⚠ Construct Subtitles Queue, 长度为 0`, "");
+			break;
+		case 1: { // 长度为1，无须计算
+			console.log(`⚠ Construct Subtitles Queue, 长度为 1`, "");
+			let request2 = {
+				"url": VTTs2[0],
+				"headers": request.headers
+			};
+			requests.push(request2);
+			break;
+		}		case VTTs1.length: { // 长度相等，一一对应，无须计算
+			console.log(`⚠ Construct Subtitles Queue, 长度相等`, "");
+			let request2 = {
+				"url": VTTs2[Index1],
+				"headers": request.headers
+			};
+			requests.push(request2);
+			break;
+		}		default: { // 长度不等，需要计算
+			console.log(`⚠ Construct Subtitles Queue, 长度不等，需要计算`, "");
+			// 计算当前字幕在原字幕队列中的百分比
+			const Position1 = (Index1 + 1) / VTTs1.length; // 从 0 开始计数，所以要加 1
+			console.log(`🚧 Construct Subtitles Queue, Position1: ${Position1}, Index2: ${Index1}/${VTTs1.length}`, "");
+			// 根据百分比计算当前字幕在新字幕队列中的位置
+			//let Index2 = VTTs2.findIndex(item => item.includes(fileName));
+			const Index2 = Math.round(Position1 * VTTs2.length - 1); // 从 0 开始计数，所以要减 1
+			console.log(`🚧 Construct Subtitles Queue, Position2: ${Position1}, Index2: ${Index2}/${VTTs2.length}`, "");
+			// 获取两字幕队列长度差值
+			const diffLength = Math.abs(VTTs2.length - VTTs1.length);
+			// 获取当前字幕在新字幕队列中的前后1个字幕
+			//const BeginIndex = (Index2 - 1 < 0) ? 0 : Index2 - 1, EndIndex = Index2 + 1;
+			const BeginIndex = Math.min(Index1, Index2);
+			const EndIndex = Math.max(Index1, Index2);
+			console.log(`🚧 Construct Subtitles Queue, diffLength: ${diffLength}, BeginIndex: ${BeginIndex}, EndIndex: ${EndIndex}`, "");
+			const nearlyVTTs = VTTs2.slice(Math.max(0, BeginIndex - diffLength), Math.max(EndIndex, EndIndex + diffLength) + 1); // slice 不取 EndIndex 本身
+			//const nearlyVTTs = VTTs2.slice(BeginIndex, EndIndex + 1); // slice 不取 EndIndex 本身
+			console.log(`🚧 Construct Subtitles Queue, nearlyVTTs: ${JSON.stringify(nearlyVTTs)}`, "");
+			nearlyVTTs.forEach(url => {
+				let request2 = {
+					"url": url,
+					"headers": request.headers
+				};
+				requests.push(request2);
+			});
+			/*
+			requests = nearlyVTTs.map(url => {
+				let _request = {
+					"url": url,
+					"headers": request.headers
+				};
+				return _request;
+			});
+			*/
+			break;
+		}	}	//console.log(`🚧 Construct Subtitles Queue, requests: ${JSON.stringify(requests)}`, "");
+	console.log(`✅ Construct Subtitles Queue`, "");
+	return requests;
+}
+
 /** 
  * Composite Subtitles
  * @param {Object} Sub1 - Sub1
@@ -4123,6 +4200,7 @@ function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions",
 						//console.log(`🚧 Composite Subtitles, index1/length1: ${index1}/${length1}, index2/length2: ${index2}/${length2}`, "");
 						const timeStamp1 = Sub1.events[index1].tStartMs, timeStamp2 = Sub2.events[index2].tStartMs;
 						//console.log(`🚧 Composite Subtitles, timeStamp1: ${timeStamp1}, timeStamp2: ${timeStamp2}`, "");
+						const timeStamp1Next = Sub1.events[index1 + 1]?.tStartMs ?? timeStamp1, timeStamp2Next = Sub2.events[index2 + 1]?.tStartMs ?? timeStamp2;
 						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 							//index0 = (Position === "Reverse") ? index2 : index1;
 							index0 = index1;
@@ -4133,9 +4211,11 @@ function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions",
 							//console.log(`🚧 Composite Subtitles, DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
 							//DualSub.body[index0].tStartMs = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 							//DualSub.body[index0].index = (Position === "Reverse") ? index2 : index1;
-						}						if (timeStamp2 > timeStamp1) index1++;
-						else if (timeStamp2 < timeStamp1) index2++;
-						else { index1++; index2++; }					}					break;
+						}						if (Math.abs(timeStamp1Next - timeStamp2Next) <= Tolerance) { index1++; index2++; }
+						else {
+							if (timeStamp2 > timeStamp1) index1++;
+							else if (timeStamp1 > timeStamp2) index2++;
+							else { index1++; index2++; }						}					}					break;
 			}			break;
 		}		case "text/xml":
 		case "application/xml": {
@@ -4167,6 +4247,7 @@ function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions",
 						//console.log(`🚧 Composite Subtitles, index1/length1: ${index1}/${length1}, index2/length2: ${index2}/${length2}`, "");
 						const timeStamp1 = parseInt(Sub1.timedtext.body.p[index1]["@t"], 10), timeStamp2 = parseInt(Sub2.timedtext.body.p[index2]["@t"], 10);
 						//console.log(`🚧 Composite Subtitles, timeStamp1: ${timeStamp1}, timeStamp2: ${timeStamp2}`, "");
+						const timeStamp1Next = parseInt(Sub1.timedtext.body.p[index1 + 1]?.["@t"] ?? timeStamp1, 10), timeStamp2Next = parseInt(Sub2.timedtext.body.p[index2 + 1]?.["@t"] ?? timeStamp2, 10);
 						if (Math.abs(timeStamp1 - timeStamp2) <= Tolerance) {
 							//index0 = (Position === "Reverse") ? index2 : index1;
 							index0 = index1;
@@ -4177,9 +4258,11 @@ function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions",
 							//console.log(`🚧 Composite Subtitles, DualSub.timedtext.body.p[index0]["#"]: ${DualSub.timedtext.body.p[index0]["#"]}`, "");
 							//DualSub.timedtext.body.p[index0]["@t"] = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 							//DualSub.timedtext.body.p[index0].index = (Position === "Reverse") ? index2 : index1;
-						}						if (timeStamp2 > timeStamp1) index1++;
-						else if (timeStamp2 < timeStamp1) index2++;
-						else { index1++; index2++; }					}					break;
+						}						if (Math.abs(timeStamp1Next - timeStamp2Next) <= Tolerance) { index1++; index2++; }
+						else {
+							if (timeStamp2 > timeStamp1) index1++;
+							else if (timeStamp1 > timeStamp2) index2++;
+							else { index1++; index2++; }						}					}					break;
 			}			break;
 		}		case "text/vtt":
 		case "application/vtt": {
@@ -4197,6 +4280,7 @@ function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions",
 						//console.log(`🚧 Composite Subtitles, index1/length1: ${index1}/${length1}, index2/length2: ${index2}/${length2}`, "");
 						const timeStamp1 = Sub1.body[index1].timeStamp, timeStamp2 = Sub2.body[index2].timeStamp;
 						//console.log(`🚧 Composite Subtitles, timeStamp1: ${timeStamp1}, timeStamp2: ${timeStamp2}`, "");
+						const timeStamp1Next = Sub1.body[index1 + 1]?.timeStamp ?? timeStamp1, timeStamp2Next = Sub2.body[index2 + 1]?.timeStamp ?? timeStamp2;
 						// 处理普通字幕
 						const text1 = Sub1.body[index1]?.text ?? "", text2 = Sub2.body[index2]?.text ?? "";
 						//console.log(`🚧 Composite Subtitles, text1: ${text1}, text2: ${text2}`, "");
@@ -4208,17 +4292,19 @@ function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions",
 							//console.log(`🚧 Composite Subtitles, index0: ${index0}, text: ${DualSub.body[index0].text}`, "");
 							//DualSub.body[index0].timeStamp = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 							//DualSub.body[index0].index = (Position === "Reverse") ? index2 : index1;
-						}						if (timeStamp2 > timeStamp1) index1++;
-						else if (timeStamp2 < timeStamp1) index2++;
-						else { index1++; index2++; }
-					}					break;
+						}
+						if (Math.abs(timeStamp1Next - timeStamp2Next) <= Tolerance) { index1++; index2++; }
+						else {
+							if (timeStamp2 > timeStamp1) index1++;
+							else if (timeStamp1 > timeStamp2) index2++;
+							else { index1++; index2++; }						}					}					break;
 			}			break;
 		}	}	//console.log(`✅ Composite Subtitles, return DualSub内容: ${JSON.stringify(DualSub)}`, "");
 	console.log(`✅ Composite Subtitles`, "");
 	return DualSub;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.6(4) Composite.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.6(7) Composite.Subtitles.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -4542,80 +4628,4 @@ function getSubtitlesFileName(url, platform) {
 			break;
 	}	$.log(`✅ Get Subtitles FileName`, `fileName: ${fileName}`, "");
 	return fileName;
-}
-/**
- * Construct Subtitles Queue
- * @author VirgilClyne
- * @param {String} fileName - Request URL
- * @param {Array} VTTs1 - Primary (Source) Language Subtitles Array
- * @param {Array} VTTs2 - Second (Target) Language Subtitles Array
- * @return {Array<*>} Subtitles Requests Queue
- */
-function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
-	$.log(`☑️ Construct Subtitles Queue, fileName: ${fileName}`, "");
-	let requests = [];
-	$.log(`🚧 Construct Subtitles Queue, VTTs1.length: ${VTTs1.length}, VTTs2.length: ${VTTs2.length}`, "");
-	//$.log(`🚧 Construct Subtitles Queue, VTTs1: ${JSON.stringify(VTTs1)}, VTTs2.length: ${JSON.stringify(VTTs2)}`, "")
-	// 查询当前字幕在原字幕队列中的位置
-	const Index1 = VTTs1.findIndex(item => item?.includes(fileName));
-	$.log(`🚧 Construct Subtitles Queue, Index1: ${Index1}`, "");
-	switch (VTTs2.length) {
-		case 0: // 长度为0，无须计算
-			$.log(`⚠ Construct Subtitles Queue, 长度为 0`, "");
-			break;
-		case 1: { // 长度为1，无须计算
-			$.log(`⚠ Construct Subtitles Queue, 长度为 1`, "");
-			let request2 = {
-				"url": VTTs2[0],
-				"headers": request.headers
-			};
-			requests.push(request2);
-			break;
-		}		case VTTs1.length: { // 长度相等，一一对应，无须计算
-			$.log(`⚠ Construct Subtitles Queue, 长度相等`, "");
-			let request2 = {
-				"url": VTTs2[Index1],
-				"headers": request.headers
-			};
-			requests.push(request2);
-			break;
-		}		default: { // 长度不等，需要计算
-			$.log(`⚠ Construct Subtitles Queue, 长度不等，需要计算`, "");
-			// 计算当前字幕在原字幕队列中的百分比
-			const Position1 = (Index1 + 1) / VTTs1.length; // 从 0 开始计数，所以要加 1
-			$.log(`🚧 Construct Subtitles Queue, Position1: ${Position1}, Index2: ${Index1}/${VTTs1.length}`, "");
-			// 根据百分比计算当前字幕在新字幕队列中的位置
-			//let Index2 = VTTs2.findIndex(item => item.includes(fileName));
-			const Index2 = Math.round(Position1 * VTTs2.length - 1); // 从 0 开始计数，所以要减 1
-			$.log(`🚧 Construct Subtitles Queue, Position2: ${Position1}, Index2: ${Index2}/${VTTs2.length}`, "");
-			// 获取两字幕队列长度差值
-			const diffLength = VTTs2.length - VTTs1.length;
-			// 获取当前字幕在新字幕队列中的前后1个字幕
-			//const BeginIndex = (Index2 - 1 < 0) ? 0 : Index2 - 1, EndIndex = Index2 + 1;
-			const BeginIndex = (Index2 > Index1) ? Index1 : Index2;
-			const EndIndex = (Index2 > Index1) ? Index2 : Index1;
-			$.log(`🚧 Construct Subtitles Queue, diffLength: ${diffLength}, BeginIndex: ${BeginIndex}, EndIndex: ${EndIndex}`, "");
-			const nearlyVTTs = (diffLength < 0) ? VTTs2.slice((BeginIndex < diffLength) ? 0 : BeginIndex - diffLength, EndIndex + 1)
-				: VTTs2.slice(BeginIndex, EndIndex + diffLength + 1); // slice 不取 EndIndex 本身
-			$.log(`🚧 Construct Subtitles Queue, nearlyVTTs: ${JSON.stringify(nearlyVTTs)}`, "");
-			nearlyVTTs.forEach(url => {
-				let request2 = {
-					"url": url,
-					"headers": request.headers
-				};
-				requests.push(request2);
-			});
-			/*
-			requests = nearlyVTTs.map(url => {
-				let _request = {
-					"url": url,
-					"headers": request.headers
-				};
-				return _request;
-			});
-			*/
-			break;
-		}	}	//$.log(`🚧 Construct Subtitles Queue, requests: ${JSON.stringify(requests)}`, "");
-	$.log(`✅ Construct Subtitles Queue`, "");
-	return requests;
 }

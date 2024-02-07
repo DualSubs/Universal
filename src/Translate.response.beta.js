@@ -12,7 +12,7 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.7(5) Translate.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.7(6) Translate.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -26,7 +26,7 @@ const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.pa
 $.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, $.isQuanX() ? FORMAT : undefined);
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台

@@ -10377,7 +10377,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.7(5) Translate.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.7(6) Translate.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -10391,7 +10391,7 @@ const METHOD = $request.method; URL.host; URL.path; URL.paths;
 $.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, $.isQuanX() ? FORMAT : undefined);
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台

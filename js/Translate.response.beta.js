@@ -10377,7 +10377,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.7(6) Translate.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.8(1) Translate.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -11406,43 +11406,43 @@ async function Translator(vendor = "Google", source = "", target = "", text = ""
 		$.log(`☑️ Get Translate Data`, "");
 		let texts = [];
 		await $.fetch(request)
-			.then(response => JSON.parse(response.body))
-			.then(_data => {
+			.then(response => {
+				let body = JSON.parse(response.body);
 				switch (vendor) {
 					case "Google":
 					default:
-						if (Array.isArray(_data)) {
-							if (Array.isArray(_data?.[0])) {
-								if (_data.length === 1) {
-									_data[0].pop();
-									texts = _data[0];
-								} else texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, vendor: ${vendor}`);
-							} else texts = _data;
+						if (Array.isArray(body)) {
+							if (Array.isArray(body?.[0])) {
+								if (body.length === 1) {
+									body[0].pop();
+									texts = body[0];
+								} else texts = body?.[0]?.map(item => item?.[0] ?? `翻译失败, vendor: ${vendor}`);
+							} else texts = body;
 							/*
-							if (_data.length === 1) {
-								if (Array.isArray(_data?.[0])) {
-									_data[0].pop();
-									texts = _data[0];
-								} else texts = _data;
-							} else if (Array.isArray(_data?.[0])) texts = _data?.[0]?.map(item => item?.[0] ?? `翻译失败, vendor: ${vendor}`);
-							else texts = _data;
+							if (body.length === 1) {
+								if (Array.isArray(body?.[0])) {
+									body[0].pop();
+									texts = body[0];
+								} else texts = body;
+							} else if (Array.isArray(body?.[0])) texts = body?.[0]?.map(item => item?.[0] ?? `翻译失败, vendor: ${vendor}`);
+							else texts = body;
 							*/
-						} else if (_data?.sentences) texts = _data?.sentences?.map(item => item?.trans ?? `翻译失败, vendor: ${vendor}`);
+						} else if (body?.sentences) texts = body?.sentences?.map(item => item?.trans ?? `翻译失败, vendor: ${vendor}`);
 						texts = texts?.join("")?.split(/\r/);
 						break;
 					case "GoogleCloud":
-						texts = _data?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, vendor: ${vendor}`);
+						texts = body?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, vendor: ${vendor}`);
 						break;
 					case "Bing":
 					case "Microsoft":
 					case "Azure":
-						texts = _data?.map(item => item?.translations?.[0]?.text ?? `翻译失败, vendor: ${vendor}`);
+						texts = body?.map(item => item?.translations?.[0]?.text ?? `翻译失败, vendor: ${vendor}`);
 						break;
 					case "DeepL":
-						texts = _data?.translations?.map(item => item?.text ?? `翻译失败, vendor: ${vendor}`);
+						texts = body?.translations?.map(item => item?.text ?? `翻译失败, vendor: ${vendor}`);
 						break;
 					case "DeepLX":
-						texts = _data?.data?.split("||") ?? _data?.data;
+						texts = body?.data?.split("||") ?? body?.data;
 						break;
 					case "BaiduFanyi":
 						break;

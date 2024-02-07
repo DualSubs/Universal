@@ -13,7 +13,7 @@ import Translates from "./function/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.8(3) Translate.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.8(4) Translate.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -92,7 +92,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 						*/
 						return para;
 					});
-					const translation = await Translator(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					paragraph = paragraph.map((para, i) => {
 						const span = para?.span ?? para;
 						if (Array.isArray(span)) translation?.[i]?.split(breakLine).forEach((text, j) => {
@@ -111,7 +111,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					body = VTT.parse($response.body);
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					let fullText = body?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
-					const translation = await Translator(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+					const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					body.body = body.body.map((item, i) => {
 						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
@@ -134,7 +134,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									delete event.wWinId;
 									return event;
 								});
-								const translation = await Translator(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+								const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 								body.events = body.events.map((event, i) => {
 									if (event?.segs?.[0]?.utf8) event.segs[0].utf8 = combineText(event.segs[0].utf8, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 									return event;
@@ -146,7 +146,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										let lyrics = musicDescription.musicDescriptionShelfRenderer.description.runs;
 										lyrics = await Promise.all(lyrics.map(async run => {
 											let fullText = run?.text?.split?.("\n")?.map(text => text?.trim() ?? "\u200b");
-											const translation = await Translator(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+											const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 											fullText = fullText.map((line, i) => { if (line) return combineText(line, translation?.[i], Settings?.ShowOnly, Settings?.Position, "\n  └ ") });
 											run.text = fullText.join("\n");
 											return run;
@@ -162,7 +162,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 								: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
 									: "AUTO";
 							let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
-							const translation = await Translator(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+							const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 							$.log(`🚧 $request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
 							switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
 								case "OSX": // macOS App 暂不支持翻译功能
@@ -504,7 +504,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									Languages[0] = "AUTO";
 									if (body?.contents?.n6F153515154?.n7F172660663?.n8F1?.n9F168777401?.n10F5?.n11F465160965?.n12F4?.n13F1) {
 										let fullText = body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map(line => line?.f1 ?? "\u200b");
-										const translation = await Translator(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+										const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 										body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1 = body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map((line, i) => {
 											if (line?.f1) line.f1 = combineText(line.f1, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 											return line;
@@ -516,7 +516,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 												let lyrics = musicDescription.musicDescriptionShelfRenderer.description.runs;
 												lyrics = await Promise.all(lyrics.map(async run => {
 													let fullText = run?.text?.split?.("\n")?.map(text => text?.trim() ?? "\u200b");
-													const translation = await Translator(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+													const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 													fullText = fullText.map((line, i) => { if (line) return combineText(line, translation?.[i], Settings?.ShowOnly, Settings?.Position, "\n  └ ") });
 													run.text = fullText.join("\n");
 													return run;
@@ -642,7 +642,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
 											: "AUTO";
 									let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
-									const translation = await Translator(fullText, Settings?.Method, Settings?.Vendor, Languages[0], Languages[1], Settings?.[Settings?.Vendor], Configs?.Languages, Settings?.Times, Settings?.Interval, Settings?.Exponential);
+									const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 									/*
 									body.lyrics.alternatives = [{
 										"language": Languages[1].toLowerCase(),
@@ -730,8 +730,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
  * 
  * @return {Promise<*>}
  */
-async function Translator(text = [], method = "Part", vendor = "Google", source = "EN", target = "ZH", API = {}, database = {}, times = 3, interval = 100, exponential = true) {
-	$.log(`☑️ Translator, method: ${method}, vendor: ${vendor}, source: ${source}, target: ${target}`, "");
+async function Translator(vendor = "Google", method = "Part", text = [], [source = "AUTO", target = "ZH"], API = {}, times = 3, interval = 100, exponential = true) {
+	$.log(`☑️ Translator, vendor: ${vendor}, method: ${method}, [source, target]: ${[source, target]}`, "");
 	// 翻译长度设置
 	let length = 127;
 	switch (vendor) {

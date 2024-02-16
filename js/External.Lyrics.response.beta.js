@@ -667,7 +667,7 @@ let URI$1 = class URI {
 
 class LRCs {
 	constructor(opts) {
-		this.name = "LRC v0.5.2";
+		this.name = "LRC v0.5.3";
 		this.opts = opts;
 		this.newLine = "\n";
 		this.tolerance = 1000;
@@ -742,16 +742,16 @@ class LRCs {
 		console.log(`☑️ LRC.separateSpotify`, "");
 		let separateLyric = lyric.map(line => {
 			let line1 = {
-				"startTimeMs": line.startTimeMs,
+				"startTimeMs": line.startTimeMs.toString(),
 				"words": line?.words ?? "",
 				"syllables": line?.syllables ?? [],
-				"endTimeMs": 0
+				"endTimeMs": "0"
 			};
 			let line2 = {
-				"startTimeMs": line.startTimeMs + 100,
+				"startTimeMs": line.startTimeMs.toString(),
 				"words": line?.twords ?? "",
 				"syllables": [],
-				"endTimeMs": 0
+				"endTimeMs": "0"
 			};
 			return [line1, line2];
 		}).flat(Infinity);

@@ -13,7 +13,7 @@ import Translates from "./function/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.8(4) Translate.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.8(5) Translate.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -180,11 +180,11 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										let line1 = {
 											"startTimeMs": line.startTimeMs.toString(),
 											"words": line?.words ?? "",
-											"syllables": [],
+											"syllables": line?.syllables ?? [],
 											"endTimeMs": "0"
 										};
 										let line2 = {
-											"startTimeMs": (line.startTimeMs + 100).toString(),
+											"startTimeMs": line.startTimeMs.toString(),
 											"words": translation?.[i] ?? "",
 											"syllables": [],
 											"endTimeMs": "0"

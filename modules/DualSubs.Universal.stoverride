@@ -613,10 +613,10 @@ http:
 
 script-providers:
   DualSubs.M3U8.Master.response:
-    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.Master.response.js
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
     interval: 86400
   DualSubs.M3U8.Subtitles.response:
-    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.Subtitles.response.js
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
     interval: 86400
   DualSubs.Composite.Subtitles.response:
     url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Composite.Subtitles.response.js

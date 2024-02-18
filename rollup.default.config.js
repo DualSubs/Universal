@@ -4,18 +4,9 @@ import terser from '@rollup/plugin-terser';
 
 export default [
 	{
-		input: 'src/M3U8.Master.response.js',
+		input: 'src/M3U8.response.js',
 		output: {
-			file: 'js/M3U8.Master.response.js',
-			banner: '/* README: https://github.com/DualSubs */',
-			format: 'es'
-		},
-		plugins: [json(), commonjs(), terser()]
-	},
-	{
-		input: 'src/M3U8.Subtitles.response.js',
-		output: {
-			file: 'js/M3U8.Subtitles.response.js',
+			file: 'js/M3U8.response.js',
 			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},

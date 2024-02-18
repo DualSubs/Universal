@@ -10,7 +10,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(5) M3U8.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(6) M3U8.response");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -98,28 +98,17 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									break;
 							};
 							// WebVTT.m3u8加参数
-							body = body.map(item => {
+							body = body.map((item, i) => {
 								if (item?.URI) {
-									const symbol = (item.URI.includes("?")) ? "&" : "?";
-									if (item?.URI?.includes("empty")) { }
-									else if (item?.URI?.includes("blank")) { }
-									else if (item?.URI?.includes("default")) { }
-									else {
+									if (!/empty|blank|default/.test(item.URI)) {
+										const symbol = (item.URI.includes("?")) ? "&" : "?";
 										item.URI += `${symbol}subtype=${Type}`;
 										if (URL.query?.lang) item.URI += `&lang=${URL.query.lang}`;
 									};
 								};
-								return item;
-							})
-							if (PLATFORM === "PrimeVideo") {
-								// 删除BYTERANGE
-								//body = body.filter(({ TAG }) => TAG !== "#EXT-X-BYTERANGE");
-								body = body.map((item, i) => {
-									if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI;
-									else return item;
-								}).filter(e => e);
-								//$.log(`🚧 body.map: ${JSON.stringify(body)}`, "");
-							}
+								if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
+								else return item;
+							});
 							break;
 					};
 					// 字符串M3U8
@@ -335,7 +324,7 @@ async function getSubtitles(url, headers, platform) {
 	let subtitles = await $.fetch(url, { headers: headers }).then((response, error) => {
 		let subtitlePlayList = M3U8.parse(response.body);
 		return subtitlePlayList
-			.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml)(\?.+)?$/.test(URI)))
+			.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml|smi)(\?.+)?$/.test(URI)))
 			.filter(({ URI }) => !URI.includes("empty"))
 			.filter(({ URI }) => !URI.includes("blank"))
 			.filter(({ URI }) => !URI.includes("default"))

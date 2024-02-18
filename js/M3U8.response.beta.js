@@ -3588,7 +3588,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	return newOption;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(5) M3U8.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(6) M3U8.response.beta");
 const URI = new URI$1();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -3675,29 +3675,17 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									$.log(`⚠ 外挂字幕`, "");
 									break;
 							}							// WebVTT.m3u8加参数
-							body = body.map(item => {
+							body = body.map((item, i) => {
 								if (item?.URI) {
-									//if (item?.URI?.includes("vtt") || item?.URI?.includes("ttml")) {
-									const symbol = (item.URI.includes("?")) ? "&" : "?";
-									if (item?.URI?.includes("empty")) ;
-									else if (item?.URI?.includes("blank")) ;
-									else if (item?.URI?.includes("default")) ;
-									else {
+									if (!/empty|blank|default/.test(item.URI)) {
+										const symbol = (item.URI.includes("?")) ? "&" : "?";
 										//if (URL.query?.sublang) item.URI += `${symbol}subtype=${Type}&sublang=${URL.query.sublang}`;
 										//else item.URI += `${symbol}subtype=${Type}`;
 										item.URI += `${symbol}subtype=${Type}`;
 										if (URL.query?.lang) item.URI += `&lang=${URL.query.lang}`;
-									}								}								return item;
+									}								}								if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
+								else return item;
 							});
-							if (PLATFORM === "PrimeVideo") {
-								// 删除BYTERANGE
-								//body = body.filter(({ TAG }) => TAG !== "#EXT-X-BYTERANGE");
-								body = body.map((item, i) => {
-									if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI;
-									else return item;
-								}).filter(e => e);
-								//$.log(`🚧 body.map: ${JSON.stringify(body)}`, "");
-							}
 							break;
 					}					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
@@ -3911,7 +3899,7 @@ async function getSubtitles(url, headers, platform) {
 		//$.log(`🚧 Get Subtitle *.vtt *.ttml URLs`, `response: ${JSON.stringify(response)}`, "");
 		let subtitlePlayList = M3U8.parse(response.body);
 		return subtitlePlayList
-			.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml)(\?.+)?$/.test(URI)))
+			.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml|smi)(\?.+)?$/.test(URI)))
 			.filter(({ URI }) => !URI.includes("empty"))
 			.filter(({ URI }) => !URI.includes("blank"))
 			.filter(({ URI }) => !URI.includes("default"))

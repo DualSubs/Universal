@@ -3,23 +3,14 @@ import commonjs from "@rollup/plugin-commonjs";
 
 export default [
 	{
-		input: 'src/M3U8.Master.response.beta.js',
+		input: 'src/M3U8.response.beta.js',
 		output: {
-			file: 'js/M3U8.Master.response.beta.js',
+			file: 'js/M3U8.response.beta.js',
 			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},
 		plugins: [json(), commonjs()],
 		
-	},
-	{
-		input: 'src/M3U8.Subtitles.response.beta.js',
-		output: {
-			file: 'js/M3U8.Subtitles.response.beta.js',
-			banner: '/* README: https://github.com/DualSubs */',
-			format: 'es'
-		},
-		plugins: [json(), commonjs()],
 	},
 	{
 		input: 'src/Composite.Subtitles.response.beta.js',

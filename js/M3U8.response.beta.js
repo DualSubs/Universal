@@ -3588,7 +3588,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	return newOption;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(2) M3U8.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(4) M3U8.response.beta");
 const URI = new URI$1();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -3753,7 +3753,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
  */
 function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
 	$.log(`☑️ Get Attribute List`, `langCodes: ${langCodes}`, "");
-	let attrList = m3u8.filter(item => item?.OPTION?.TYPE === type && item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
+	let attrList = m3u8
+		.filter(item => item?.TAG === "#EXT-X-MEDIA") // 过滤标签
+		.filter(item => item?.OPTION?.TYPE === type) // 过滤类型
+		.filter(item => item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
 	//$.log(`🚧 attrList: ${JSON.stringify(attrList)}`, "");
 	let matchList = [];
 	//查询是否有符合语言的内容
@@ -3767,10 +3770,7 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
 	});
 	$.log(`✅ Get Attribute List`, `matchList: ${JSON.stringify(matchList)}`, "");
 	return matchList;
-
-	/***************** Fuctions *****************/
-	// Get Absolute Path
-	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL }}
+}
 /**
  * Set Attribute List
  * @author VirgilClyne
@@ -3888,10 +3888,10 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
 			//$.log(`🚧 setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(subtitlesURLarray)}`, "");
 			//$.log(`🚧 setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
 			// 获取字幕文件地址vtt/ttml缓存（按语言）
-			subtitlesURLarray = await getSubtitles(val?.URL, $request.headers, platform);
+			if (subtitlesURLarray.length === 0) subtitlesURLarray = await getSubtitles(val?.URL, $request.headers, platform);
 			//$.log(`🚧 setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(subtitlesURLarray)}`, "");
 			// 写入字幕文件地址vtt/ttml缓存到map
-			cache = cache.set(val.URL, subtitlesURLarray);
+			if (subtitlesURLarray.length !== 0) cache = cache.set(val.URL, subtitlesURLarray);
 			//$.log(`✅ setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(cache.get(val?.URL))}`, "");
 			$.log(`✅ setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
 		}	}));
@@ -3929,5 +3929,6 @@ async function getSubtitles(url, headers, platform) {
 			break;
 	}	$.log(`✅ Get Subtitle *.vtt *.ttml URLs, subtitles: ${subtitles}`, "");
 	return subtitles;
-	/***************** Fuctions *****************/
-	function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL }}
+}
+// Get Absolute Path
+function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL }

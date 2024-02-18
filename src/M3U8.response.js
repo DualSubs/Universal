@@ -10,7 +10,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(4) M3U8.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(5) M3U8.response");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -332,13 +332,15 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
  */
 async function getSubtitles(url, headers, platform) {
 	$.log(`☑️ Get Subtitle *.vtt *.ttml URLs`, "");
-	let response = await $.fetch({ url: url, headers: headers });
-	let subtitlePlayList = M3U8.parse(response.body);
-	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml)(\?.+)?$/.test(URI)));
-	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/empty/.test(URI));
-	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/blank/.test(URI));
-	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/default/.test(URI));
-	let subtitles = subtitlePlayList.map(({ URI }) => aPath(url, URI));
+	let subtitles = await $.fetch(url, { headers: headers }).then((response, error) => {
+		let subtitlePlayList = M3U8.parse(response.body);
+		return subtitlePlayList
+			.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml)(\?.+)?$/.test(URI)))
+			.filter(({ URI }) => !URI.includes("empty"))
+			.filter(({ URI }) => !URI.includes("blank"))
+			.filter(({ URI }) => !URI.includes("default"))
+			.map(({ URI }) => aPath(url, URI));
+	});
 	switch (platform) {
 		case "Disney+":
 			if (subtitles.some(item => /\/.+-MAIN\//.test(item))) subtitles = subtitles.filter(item => /\/.+-MAIN\//.test(item))

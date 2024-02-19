@@ -10,7 +10,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(6) M3U8.response");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(7) M3U8.response");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -99,11 +99,11 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							};
 							// WebVTT.m3u8加参数
 							body = body.map((item, i) => {
-								if (item?.URI) {
+								if (/^.+\.((web)?vtt|ttml2?|xml|smi)(\?.+)?$/.test(item?.URI)) {
+									const symbol = (item.URI.includes("?")) ? "&" : "?";
 									if (!/empty|blank|default/.test(item.URI)) {
-										const symbol = (item.URI.includes("?")) ? "&" : "?";
-										item.URI += `${symbol}subtype=${Type}`;
-										if (URL.query?.lang) item.URI += `&lang=${URL.query.lang}`;
+										if (URL.query?.lang) item.URI += `${symbol}subtype=${Type}&lang=${URL.query.lang}`;
+										else item.URI += `${symbol}subtype=${Type}`;
 									};
 								};
 								if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE

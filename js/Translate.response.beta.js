@@ -3701,7 +3701,7 @@ var Translate$3 = /*#__PURE__*/Object.freeze({
 
 var Settings$1 = {
 	SubVendor: "URL",
-	LrcVendor: "QQMusic",
+	LrcVendor: "NeteaseMusic",
 	CacheSize: 50
 };
 var External = {

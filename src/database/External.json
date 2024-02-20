@@ -1,7 +1,7 @@
 {
 	"Settings": {
 		"SubVendor": "URL",
-		"LrcVendor": "QQMusic",
+		"LrcVendor": "NeteaseMusic",
 		"CacheSize": 50
 	}
 }

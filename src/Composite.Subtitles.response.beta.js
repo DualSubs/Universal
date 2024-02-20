@@ -73,7 +73,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 								default:
 									$.log(`⚠ 已选择翻译语言`, "");
 									// 设置参数
-									Settings.Offset = 0;
+									// Settings.Offset = 0;
 									Settings.Tolerance = 100;
 									Settings.Position = (Settings.Position === "Reverse") ? "Forward" : "Reverse"; // 链接主字幕为翻译字幕，副字幕为原字幕，所以需要翻转一下
 									switch (Settings.ShowOnly) {

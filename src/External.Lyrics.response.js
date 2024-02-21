@@ -10,7 +10,7 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.4(3) External.Lyrics.response");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.4(4) External.Lyrics.response");
 const URI = new URIs();
 const LRC = new LRCs();
 
@@ -374,46 +374,48 @@ async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $r
 				case "NeteaseMusic":
 					body.lyrics.provider = "NeteaseMusic";
 					body.lyrics.providerLyricsId = trackInfo?.NeteaseMusic?.id?.toString?.();
-					body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric.lyricUser ?? "未知"}`;
+					body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric?.lyricUser ?? "未知"}`;
 					body.colors.background = -8249806; // 网易红 8527410 #821E32 rgb(130,30,50)
 					break
 				case "QQMusic":
 				default:
 					body.lyrics.provider = "QQMusic";
 					body.lyrics.providerLyricsId = trackInfo?.QQMusic?.mid?.toString?.();
-					body.lyrics.providerDisplayName = `QQ音乐 - ${externalLyric.lyricUser ?? "未知"}`;
+					body.lyrics.providerDisplayName = `QQ音乐 - ${externalLyric?.lyricUser ?? "未知"}`;
 					body.colors.background = -11038189; // QQ音乐绿 5739027 #579213 rgb(87,146,19)
 					break
 			};
 			// 填充逐字或逐句歌词
-			if (externalLyric.klyric) {
+			if (externalLyric?.klyric) {
 				body.lyrics.syncType = "SYLLABLE_SYNCED";
 				body.lyrics.lines = LRC.toSpotify(externalLyric.klyric);
-			} else if (externalLyric.lyric) {
+			} else if (externalLyric?.lyric) {
 				body.lyrics.syncType = "LINE_SYNCED";
 				body.lyrics.lines = LRC.toSpotify(externalLyric.lyric);
 			};
 			// 填充翻译歌词
-			if (externalLyric.tlyric) transLyric = LRC.toSpotify(externalLyric.tlyric);
-			if (transLyric) duolyric = LRC.combineSpotify(body.lyrics.lines, transLyric);
-			switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
-				case "OSX": // macOS App 暂不支持翻译功能
-				case "Win32_x86_64": // Windows App 暂不支持翻译功能
-				case "WebPlayer": // Web App
-				case undefined:
-				default:
-					if (duolyric) body.lyrics.lines = LRC.separateSpotify(duolyric).map(line => {
-						line.startTimeMs = line.startTimeMs.toString();
-						line.endTimeMs = line.endTimeMs.toString();
-						return line;
-					});
-				//break; 不中断，继续处理
-				case "iOS":
-					if (duolyric) body.lyrics.alternatives.unshift({
-						"language": "zh",
-						"lines": duolyric.map(line => line?.twords ?? "♪")
-					});
-					break;
+			if (externalLyric?.tlyric) {
+				transLyric = LRC.toSpotify(externalLyric.tlyric);
+				duolyric = LRC.combineSpotify(body.lyrics.lines, transLyric);
+				switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
+					case "OSX": // macOS App 暂不支持翻译功能
+					case "Win32_x86_64": // Windows App 暂不支持翻译功能
+					case "WebPlayer": // Web App
+					case undefined:
+					default:
+						if (duolyric) body.lyrics.lines = LRC.separateSpotify(duolyric).map(line => {
+							line.startTimeMs = line.startTimeMs.toString();
+							line.endTimeMs = line.endTimeMs.toString();
+							return line;
+						});
+					//break; 不中断，继续处理
+					case "iOS":
+						if (duolyric) body.lyrics.alternatives.unshift({
+							"language": "zh",
+							"lines": duolyric.map(line => line?.twords ?? "")
+						});
+						break;
+				};
 			};
 			break;
 		case "YouTube":

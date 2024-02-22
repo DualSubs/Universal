@@ -27,7 +27,7 @@ scriptings:
     body_required: true
 - http_response:
     name: 'DualSubs.TV.Translate.Subtitles.response '
-    match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
+    match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Translate.response.js
     body_required: true
 - http_response:

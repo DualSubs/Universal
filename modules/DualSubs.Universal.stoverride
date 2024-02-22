@@ -100,7 +100,7 @@ http:
       name: DualSubs.Composite.Subtitles.response
       type: response
       require-body: true
-    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate
+    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)
       name: DualSubs.Translate.response
       type: response
       require-body: true

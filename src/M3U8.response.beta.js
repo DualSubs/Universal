@@ -10,7 +10,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(7) M3U8.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(8) M3U8.response.beta");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -105,9 +105,9 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										if (URL.query?.lang) item.URI += `${symbol}subtype=${Type}&lang=${URL.query.lang}`;
 										else item.URI += `${symbol}subtype=${Type}`;
 									};
-								};
-								if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
-								else return item;
+									if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
+									else return item;
+								} else return item;
 							});
 							break;
 					};

@@ -3601,7 +3601,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	return newOption;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(7) M3U8.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(8) M3U8.response.beta");
 const URI = new URI$1();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -3694,8 +3694,9 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									if (!/empty|blank|default/.test(item.URI)) {
 										if (URL.query?.lang) item.URI += `${symbol}subtype=${Type}&lang=${URL.query.lang}`;
 										else item.URI += `${symbol}subtype=${Type}`;
-									}								}								if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
-								else return item;
+									}									if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
+									else return item;
+								} else return item;
 							});
 							break;
 					}					// 字符串M3U8

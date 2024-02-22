@@ -9775,7 +9775,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.4(4) External.Lyrics.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.4(5) External.Lyrics.response.beta");
 const URI = new URI$1();
 const LRC = new LRCs();
 
@@ -10265,10 +10265,10 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 				}
 			});
 			const Result = await $.fetch(Request).then(response => JSON.parse(response.body));
-			trackInfo.mid = Result?.["music.search.SearchCgiService"]?.data?.body?.data?.song?.list?.[0]?.songmid;
-			trackInfo.track = Result?.["music.search.SearchCgiService"]?.data?.body?.data?.song?.list?.[0]?.songname;
-			trackInfo.album = Result?.["music.search.SearchCgiService"]?.data?.body?.data?.song?.list?.[0]?.albumname;
-			trackInfo.artist = Result?.["music.search.SearchCgiService"]?.data?.body?.data?.song?.list?.[0]?.singer?.[0]?.name;
+			trackInfo.mid = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.songmid;
+			trackInfo.track = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.songname;
+			trackInfo.album = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.albumname;
+			trackInfo.artist = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.singer?.[0]?.name;
 			break;
 		}		case "QQMusicOld": {
 			const searchUrl = {

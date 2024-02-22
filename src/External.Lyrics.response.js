@@ -10,7 +10,7 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.4(4) External.Lyrics.response");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.4(5) External.Lyrics.response");
 const URI = new URIs();
 const LRC = new LRCs();
 
@@ -509,10 +509,10 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 				}
 			});
 			const Result = await $.fetch(Request).then(response => JSON.parse(response.body));
-			trackInfo.mid = Result?.["music.search.SearchCgiService"]?.data?.body?.data?.song?.list?.[0]?.songmid;
-			trackInfo.track = Result?.["music.search.SearchCgiService"]?.data?.body?.data?.song?.list?.[0]?.songname;
-			trackInfo.album = Result?.["music.search.SearchCgiService"]?.data?.body?.data?.song?.list?.[0]?.albumname;
-			trackInfo.artist = Result?.["music.search.SearchCgiService"]?.data?.body?.data?.song?.list?.[0]?.singer?.[0]?.name;
+			trackInfo.mid = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.songmid;
+			trackInfo.track = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.songname;
+			trackInfo.album = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.albumname;
+			trackInfo.artist = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.singer?.[0]?.name;
 			break;
 		};
 	};

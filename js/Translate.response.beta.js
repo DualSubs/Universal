@@ -40,7 +40,7 @@ class Lodash {
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
-		this.version = '1.4.0';
+		this.version = '1.4.1';
 		this.data = null;
 		this.dataFile = 'box.dat';
 		this.logs = [];
@@ -63,6 +63,7 @@ class ENV {
 		if ('undefined' !== typeof $task) return 'Quantumult X'
 		if ('undefined' !== typeof $loon) return 'Loon'
 		if ('undefined' !== typeof $rocket) return 'Shadowrocket'
+		if ('undefined' !== typeof Egern) return 'Egern'
 	}
 
 	isNode() {
@@ -87,6 +88,10 @@ class ENV {
 
 	isStash() {
 		return 'Stash' === this.platform()
+	}
+
+	isEgern() {
+		return 'Egern' === this.platform()
 	}
 
 	toObj(str, defaultValue = null) {
@@ -250,6 +255,7 @@ class ENV {
 			case 'Surge':
 			case 'Loon':
 			case 'Stash':
+			case 'Egern':
 			case 'Shadowrocket':
 				return $persistentStore.read(key)
 			case 'Quantumult X':
@@ -267,6 +273,7 @@ class ENV {
 			case 'Surge':
 			case 'Loon':
 			case 'Stash':
+			case 'Egern':
 			case 'Shadowrocket':
 				return $persistentStore.write(val, key)
 			case 'Quantumult X':
@@ -311,6 +318,7 @@ class ENV {
 			case 'Loon':
 			case 'Surge':
 			case 'Stash':
+			case 'Egern':
 			case 'Shadowrocket':
 			default:
 				// 移除不可写字段
@@ -462,6 +470,7 @@ class ENV {
 					switch (this.platform()) {
 						case 'Surge':
 						case 'Stash':
+						case 'Egern':
 						default:
 							return { url: rawopts }
 						case 'Loon':
@@ -476,6 +485,7 @@ class ENV {
 					switch (this.platform()) {
 						case 'Surge':
 						case 'Stash':
+						case 'Egern':
 						case 'Shadowrocket':
 						default: {
 							let openUrl =
@@ -512,6 +522,7 @@ class ENV {
 				case 'Surge':
 				case 'Loon':
 				case 'Stash':
+				case 'Egern':
 				case 'Shadowrocket':
 				default:
 					$notification.post(title, subt, desc, toEnvOpts(opts));
@@ -545,6 +556,7 @@ class ENV {
 			case 'Surge':
 			case 'Loon':
 			case 'Stash':
+			case 'Egern':
 			case 'Shadowrocket':
 			case 'Quantumult X':
 			default:
@@ -569,6 +581,7 @@ class ENV {
 			case 'Surge':
 			case 'Loon':
 			case 'Stash':
+			case 'Egern':
 			case 'Shadowrocket':
 			case 'Quantumult X':
 			default:

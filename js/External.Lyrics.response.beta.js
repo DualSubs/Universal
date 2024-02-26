@@ -9775,7 +9775,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.4(5) External.Lyrics.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.4(6) External.Lyrics.response.beta");
 const URI = new URI$1();
 const LRC = new LRCs();
 
@@ -10265,9 +10265,9 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 				}
 			});
 			const Result = await $.fetch(Request).then(response => JSON.parse(response.body));
-			trackInfo.mid = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.songmid;
-			trackInfo.track = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.songname;
-			trackInfo.album = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.albumname;
+			trackInfo.mid = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.mid;
+			trackInfo.track = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.name;
+			trackInfo.album = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.album?.name;
 			trackInfo.artist = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.singer?.[0]?.name;
 			break;
 		}		case "QQMusicOld": {

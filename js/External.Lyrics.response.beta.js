@@ -10399,5 +10399,15 @@ String.prototype.decodeHTML = function () {
 		.replace(/&quot;/g, '"')
 		.replace(/&gt;/g, '>')
 		.replace(/&lt;/g, '<')
-		.replace(/&amp;/g, '&');
+		.replace(/&amp;/g, '&')
+		.replace(/&nbsp;/g, ' ')
+		.replace(/&#39;/g, "'")
+		.replace(/&ldquo;/g, '“')
+		.replace(/&rdquo;/g, '”')
+		.replace(/&#x2f;/g, '/')
+		.replace(/&mdash;/g, '—')
+		.replace(/&hellip;/g, '…')
+		.replace(/&bull;/g, '•')
+		.replace(/&copy;/g, '©')
+		.replace(/%23x2f;/g, '/')
 };

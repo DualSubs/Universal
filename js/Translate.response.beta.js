@@ -3702,14 +3702,14 @@ var Settings$2 = {
 	Interval: 500,
 	Exponential: true
 };
-var Translate$2 = {
+var Translate$1 = {
 	Settings: Settings$2
 };
 
-var Translate$3 = /*#__PURE__*/Object.freeze({
+var Translate$2 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
 	Settings: Settings$2,
-	default: Translate$2
+	default: Translate$1
 });
 
 var Settings$1 = {
@@ -3770,7 +3770,7 @@ var Database$1 = Database = {
 	"Netflix": Netflix$1,
 	"Spotify": Spotify$1,
 	"Composite": Composite$1,
-	"Translate": Translate$3,
+	"Translate": Translate$2,
 	"External": External$1,
 	"API": API$1,
 };
@@ -5018,11 +5018,15 @@ function requireCore () {
 var md5Exports = md5.exports;
 var MD5 = /*@__PURE__*/getDefaultExportFromCjs(md5Exports);
 
-let Translate$1 = class Translate {
-	constructor($) {
-		this.name = "Translate";
-		this.version = "1.0.1";
-		console.log(`\n${this.name} v${this.version}\n`);
+class Translate {
+	constructor($, options = {}) {
+		this.Name = "Translate";
+		this.Version = "1.0.2";
+		console.log(`\n🟧 ${this.Name} v${this.Version}\n`);
+		this.Source = "AUTO";
+		this.Target = "ZH";
+		this.API = {};
+		Object.assign(this, options);
 		this.$ = $;
 	}
 
@@ -5056,7 +5060,7 @@ let Translate$1 = class Translate {
 		DeepL: 49,
 	};
 
-	async Google(text = [], source = "AUTO", target = "ZH") {
+	async Google(text = [], source = this.Source, target = this.Target) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
@@ -5113,7 +5117,7 @@ let Translate$1 = class Translate {
 			.catch(error => Promise.reject(error));
 	};
 
-	async GoogleCloud(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async GoogleCloud(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
@@ -5167,7 +5171,7 @@ let Translate$1 = class Translate {
 			.catch(error => Promise.reject(error));
 	};
 
-	async Microsoft(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async Microsoft(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Microsoft[source] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Microsoft[target] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]];
@@ -5213,7 +5217,7 @@ let Translate$1 = class Translate {
 			.catch(error => Promise.reject(error));
 	};
 
-	async DeepL(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async DeepL(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.DeepL[source] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.DeepL[target] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]];
@@ -5250,7 +5254,7 @@ let Translate$1 = class Translate {
 			.catch(error => Promise.reject(error));
 	};
 
-	async BaiduFanyi(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async BaiduFanyi(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Baidu[source] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Baidu[target] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]];
@@ -5272,7 +5276,7 @@ let Translate$1 = class Translate {
 			.catch(error => Promise.reject(console.log(error)));
 	};
 
-	async YoudaoAI(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async YoudaoAI(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Youdao[source] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Youdao[target] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];
@@ -5302,7 +5306,7 @@ let Translate$1 = class Translate {
 			})
 			.catch(error => Promise.reject(error));
 	};
-};
+}
 
 var encoding$1 = {exports: {}};
 
@@ -11608,11 +11612,10 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.8(6) Translate.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.9(1) Translate.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
-const Translate = new Translate$1($);
 
 /***************** Processing *****************/
 // 解构URL
@@ -12324,10 +12327,10 @@ async function Translator(vendor = "Google", method = "Part", text = [], [source
 		default:
 		case "Part": // Part 逐段翻译
 			let parts = chunk(text, length);
-			Translation = await Promise.all(parts.map(async part => await retry(() => Translate[vendor](part, source, target, API), times, interval, exponential))).then(part => part.flat(Infinity));
+			Translation = await Promise.all(parts.map(async part => await retry(() => new Translate($, { Source: source, Target: target, API: API })[vendor](part), times, interval, exponential))).then(part => part.flat(Infinity));
 			break;
 		case "Row": // Row 逐行翻译
-			Translation = await Promise.all(text.map(async row => await retry(() => Translate[vendor](row, source, target, API), times, interval, exponential)));
+			Translation = await Promise.all(text.map(async row => await retry(() => new Translate($, { Source: source, Target: target, API: API })[vendor](row), times, interval, exponential)));
 			break;
 	}	//$.log(`✅ Translator, Translation: ${JSON.stringify(Translation)}`, "");
 	$.log(`✅ Translator`, "");

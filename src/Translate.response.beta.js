@@ -1,23 +1,22 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
-import XMLs from "./XML/XML.mjs";
-import WebVTT from "./WebVTT/WebVTT.mjs";
+import ENVclass from "./ENV/ENV.mjs";
+import URIclass from "./URI/URI.mjs";
+import XMLclass from "./XML/XML.mjs";
+import WebVTTclass from "./WebVTT/WebVTT.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 import detectFormat from "./function/detectFormat.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
-import Translates from "./function/Translate.mjs";
+import Translate from "./class/Translate.mjs";
 
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.2.8(6) Translate.response.beta");
-const URI = new URIs();
-const XML = new XMLs();
-const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
-const Translate = new Translates($);
+const $ = new ENVclass("🍿️ DualSubs: 🔣 Universal v1.2.9(1) Translate.response.beta");
+const URI = new URIclass();
+const XML = new XMLclass();
+const VTT = new WebVTTclass(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 
 /***************** Processing *****************/
 // 解构URL
@@ -756,10 +755,10 @@ async function Translator(vendor = "Google", method = "Part", text = [], [source
 		default:
 		case "Part": // Part 逐段翻译
 			let parts = chunk(text, length);
-			Translation = await Promise.all(parts.map(async part => await retry(() => Translate[vendor](part, source, target, API), times, interval, exponential))).then(part => part.flat(Infinity));
+			Translation = await Promise.all(parts.map(async part => await retry(() => new Translate($, { Source: source, Target: target, API: API })[vendor](part), times, interval, exponential))).then(part => part.flat(Infinity));
 			break;
 		case "Row": // Row 逐行翻译
-			Translation = await Promise.all(text.map(async row => await retry(() => Translate[vendor](row, source, target, API), times, interval, exponential)));
+			Translation = await Promise.all(text.map(async row => await retry(() => new Translate($, { Source: source, Target: target, API: API })[vendor](row), times, interval, exponential)));
 			break;
 	};
 	//$.log(`✅ Translator, Translation: ${JSON.stringify(Translation)}`, "");

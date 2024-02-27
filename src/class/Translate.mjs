@@ -1,10 +1,14 @@
 import MD5 from '../../node_modules/crypto-js/md5.js';
 
 export default class Translate {
-	constructor($) {
-		this.name = "Translate";
-		this.version = "1.0.1";
-		console.log(`\n${this.name} v${this.version}\n`)
+	constructor($, options = {}) {
+		this.Name = "Translate";
+		this.Version = "1.0.2";
+		console.log(`\n🟧 ${this.Name} v${this.Version}\n`);
+		this.Source = "AUTO";
+		this.Target = "ZH";
+		this.API = {};
+		Object.assign(this, options);
 		this.$ = $;
 	}
 
@@ -38,7 +42,7 @@ export default class Translate {
 		DeepL: 49,
 	};
 
-	async Google(text = [], source = "AUTO", target = "ZH") {
+	async Google(text = [], source = this.Source, target = this.Target) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
@@ -95,7 +99,7 @@ export default class Translate {
 			.catch(error => Promise.reject(error));
 	};
 
-	async GoogleCloud(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async GoogleCloud(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
@@ -151,7 +155,7 @@ export default class Translate {
 			.catch(error => Promise.reject(error));
 	};
 
-	async Microsoft(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async Microsoft(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Microsoft[source] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Microsoft[target] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]];
@@ -199,7 +203,7 @@ export default class Translate {
 			.catch(error => Promise.reject(error));
 	};
 
-	async DeepL(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async DeepL(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.DeepL[source] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.DeepL[target] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]];
@@ -237,7 +241,7 @@ export default class Translate {
 			.catch(error => Promise.reject(error));
 	};
 
-	async BaiduFanyi(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async BaiduFanyi(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Baidu[source] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Baidu[target] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]];
@@ -259,7 +263,7 @@ export default class Translate {
 			.catch(error => Promise.reject(console.log(error)));
 	};
 
-	async YoudaoAI(text = [], source = "AUTO", target = "ZH", api = {}) {
+	async YoudaoAI(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Youdao[source] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Youdao[target] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];

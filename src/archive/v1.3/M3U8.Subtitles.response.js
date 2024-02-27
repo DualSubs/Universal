@@ -1,13 +1,13 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
-import EXTM3U from "./EXTM3U/EXTM3U.mjs";
+import ENVs from "../../ENV/ENV.mjs";
+import URIs from "../../URI/URI.mjs";
+import EXTM3U from "../../EXTM3U/EXTM3U.mjs";
 
-import Database from "./database/index.mjs";
-import setENV from "./function/setENV.mjs";
-import detectPlatform from "./function/detectPlatform.mjs";
-import setCache from "./function/setCache.mjs";
+import Database from "../../database/index.mjs";
+import setENV from "../../function/setENV.mjs";
+import detectPlatform from "../../function/detectPlatform.mjs";
+import setCache from "../../function/setCache.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(4) M3U8.Subtitles.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(4) M3U8.Subtitles.response");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -73,18 +73,14 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "audio/mpegurl":
 					// 序列化M3U8
 					body = M3U8.parse($response.body);
-					$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					// WebVTT.m3u8加参数
 					body = body.map(item => {
 						if (item?.URI) {
-						//if (item?.URI?.includes("vtt") || item?.URI?.includes("ttml")) {
 							const symbol = (item.URI.includes("?")) ? "&" : "?";
 							if (item?.URI?.includes("empty")) {}
 							else if (item?.URI?.includes("blank")) {}
 							else if (item?.URI?.includes("default")) {}
 							else {
-								//if (URL.query?.sublang) item.URI += `${symbol}subtype=${Type}&sublang=${URL.query.sublang}`;
-								//else item.URI += `${symbol}subtype=${Type}`;
 								item.URI += `${symbol}subtype=${Type}`;
 								if (URL.query?.lang) item.URI += `&lang=${URL.query.lang}`;
 							};
@@ -113,7 +109,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
 				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
@@ -163,10 +158,8 @@ function getPlaylistCache(url, cache, language) {
 	let subtitlesPlaylist = {};
 	let subtitlesPlaylistIndex = 0;
 	cache?.forEach((Value, Key) => {
-		//$.log(`🚧 getPlaylistCache, Key: ${Key}, Value: ${JSON.stringify(Value)}`, "");
 		if (Array.isArray(Value?.[language])) {
 			let Array = Value?.[language];
-			//$.log(`🚧 getPlaylistCache`, `Array: ${JSON.stringify(Array)}`, "");
 			if (Array?.some((Object, Index) => {
 				if (url.includes(Object?.URI ?? Object?.OPTION?.URI ?? null)) {
 					subtitlesPlaylistIndex = Index;
@@ -176,7 +169,6 @@ function getPlaylistCache(url, cache, language) {
 			})) {
 				masterPlaylistURL = Key;
 				subtitlesPlaylist = Value;
-				//$.log(`🚧 getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
 			};
 		};
 	});
@@ -197,18 +189,13 @@ function getPlaylistCache(url, cache, language) {
 async function setSubtitlesCache(cache, playlist, language, index = 0, platform = "Universal") {
 	$.log(`☑️ setSubtitlesCache, language: ${language}, index: ${index}`, "");
 	await Promise.all(playlist?.[language]?.map(async (val, ind, arr) => {
-		//$.log(`🚧 setSubtitlesCache, ind: ${ind}, val: ${JSON.stringify(val)}`, "");
 		if ((arr[index] && (ind === index)) || (!arr[index])) {
 			// 查找字幕文件地址vtt缓存（map）
 			let subtitlesURLarray = cache.get(val.URL) ?? [];
-			//$.log(`🚧 setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(subtitlesURLarray)}`, "");
-			//$.log(`🚧 setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
 			// 获取字幕文件地址vtt/ttml缓存（按语言）
 			subtitlesURLarray = await getSubtitles(val?.URL, $request.headers, platform);
-			//$.log(`🚧 setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(subtitlesURLarray)}`, "");
 			// 写入字幕文件地址vtt/ttml缓存到map
 			cache = cache.set(val.URL, subtitlesURLarray);
-			//$.log(`✅ setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(cache.get(val?.URL))}`, "");
 			$.log(`✅ setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
 		};
 	}));
@@ -226,7 +213,6 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
 async function getSubtitles(url, headers, platform) {
 	$.log(`☑️ Get Subtitle *.vtt *.ttml URLs`, "");
 	let response = await $.fetch({ url: url, headers: headers });
-	//$.log(`🚧 Get Subtitle *.vtt *.ttml URLs`, `response: ${JSON.stringify(response)}`, "");
 	let subtitlePlayList = M3U8.parse(response.body);
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml)(\?.+)?$/.test(URI)));
 	subtitlePlayList = subtitlePlayList.filter(({ URI }) => !/empty/.test(URI));
@@ -239,7 +225,6 @@ async function getSubtitles(url, headers, platform) {
 			break;
 		case "PrimeVideo":
 			if (subtitles.some(item => /\/aiv-prod-timedtext\//.test(item))) subtitles = subtitles.filter(item => /\/aiv-prod-timedtext\//.test(item));
-			//Array.from(new Set(subtitles));
 			subtitles = subtitles.filter((item, index, array) => {
 				// 当前元素，在原始数组中的第一个索引==当前索引值，否则返回当前元素
 				return array.indexOf(item, 0) === index;

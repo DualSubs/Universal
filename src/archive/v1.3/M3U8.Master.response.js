@@ -1,15 +1,15 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
-import EXTM3U from "./EXTM3U/EXTM3U.mjs";
+import ENVs from "../../ENV/ENV.mjs";
+import URIs from "../../URI/URI.mjs";
+import EXTM3U from "../../EXTM3U/EXTM3U.mjs";
 
-import Database from "./database/index.mjs";
-import detectPlatform from "./function/detectPlatform.mjs";
-import setENV from "./function/setENV.mjs";
-import isStandard from "./function/isStandard.mjs";
-import setCache from "./function/setCache.mjs";
-import setOption from "./function/setOption.mjs";
+import Database from "../../database/index.mjs";
+import detectPlatform from "../../function/detectPlatform.mjs";
+import setENV from "../../function/setENV.mjs";
+import isStandard from "../../function/isStandard.mjs";
+import setCache from "../../function/setCache.mjs";
+import setOption from "../../function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.7(3) M3U8.Master.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.7(3) M3U8.Master.response");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -82,7 +82,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
 				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
 				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
@@ -163,14 +162,9 @@ function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
  * @return {Object} m3u8
  */
 function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], platform = "", standard = true, device = "iPhone") {
-	//types = (standard == true) ? types : ["Translate"];
 	types = (standard == true) ? types : [types.at(-1)];
 	const playlists1 = playlists?.[languages?.[0]];
 	const playlists2 = playlists?.[languages?.[1]];
-	//if (playlists1?.length !== 0) $.log(`🚧 Set Attribute List, 有主字幕语言（源语言）字幕`, "");
-	//else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
-	//if (playlists2?.length !== 0) $.log(`🚧 Set Attribute List, 有副字幕语言（目标语言）字幕`, "");
-	//else types = types.filter(e => e !== "Official"); // 无目标语言字幕时删除官方字幕选项
 	$.log(`☑️ Set Attribute List`, `types: ${types}`, "");
 	playlists1?.forEach(playlist1 => {
 		const index1 = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
@@ -180,7 +174,6 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 			switch (type) {
 				case "Official":
 					playlists2?.forEach(playlist2 => {
-						//const index2 = m3u8.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 副语言（源语言）字幕位置
 						if (playlist1?.OPTION?.["GROUP-ID"] === playlist2?.OPTION?.["GROUP-ID"]) {
 							switch (platform) { // 兼容性修正
 								case "Apple":
@@ -200,10 +193,8 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 					const playlist2 = {
 						"OPTION": {
 							"TYPE": "SUBTITLES",
-							//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
 							"NAME": playlists2?.[0]?.OPTION?.NAME ?? languages[1].toLowerCase(),
 							"LANGUAGE": playlists2?.[0]?.OPTION?.LANGUAGE ?? languages[1].toLowerCase(),
-							//"URI": playlist?.URI,
 						}
 					};
 					option = setOption(playlist1, playlist2, type, platform, standard, device);

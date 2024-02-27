@@ -4162,7 +4162,7 @@ function Composite(Sub1 = {}, Sub2 = {}, Format = "text/vtt", Kind = "captions",
 	return DualSub;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.6(7) Composite.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.6(8) Composite.Subtitles.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -4256,18 +4256,19 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					break;
 				case "External":
 					$.log(`⚠ 外挂字幕`, "");
-					let request = {
-						"url": Settings.URL,
-						"headers": {
-							"Accept": "*/*",
-							"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
-						}
-					};
-					requests.push(request);
-					break;
-			}			// 创建字幕Object
-			let OriginSub = {}, SecondSub = {};
-			// 格式判断
+					switch (Settings.SubVendor) {
+						case "URL":
+							let request = {
+								"url": Settings.URL,
+								"headers": {
+									"Accept": "*/*",
+									"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
+								}
+							};
+							requests.push(request);
+							break;
+					}					break;
+			}			// 格式判断
 			switch (FORMAT) {
 				case undefined: // 视为无body
 					break;
@@ -4289,36 +4290,39 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/xml":
 				case "application/plist":
 				case "application/x-plist":
-					OriginSub = XML.parse($response.body);
-					//$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					for await (let request of requests) {
-						SecondSub = await $.fetch(request).then(response => XML.parse(response.body));
-						//$.log(`🚧 SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
-					}					//$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					$response.body = XML.stringify(OriginSub);
+					body = XML.parse($response.body);
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					await Promise.all(requests.map(async request => {
+						let officialSubtitle = await $.fetch(request).then(response => XML.parse(response.body));
+						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
+						body = Composite(body, officialSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
+					}));
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					$response.body = XML.stringify(body);
 					break;
 				case "text/vtt":
 				case "application/vtt":
-					OriginSub = VTT.parse($response.body);
-					$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					for await (let request of requests) {
-						SecondSub = await $.fetch(request).then(response => VTT.parse(response.body));
-						$.log(`🚧 SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
-					}					$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					$response.body = VTT.stringify(OriginSub);
+					body = VTT.parse($response.body);
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					await Promise.all(requests.map(async request => {
+						let officialSubtitle = await $.fetch(request).then(response => VTT.parse(response.body));
+						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
+						body = Composite(body, officialSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
+					}));
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					$response.body = VTT.stringify(body);
 					break;
 				case "text/json":
 				case "application/json":
-					OriginSub = JSON.parse($response.body ?? "{}");
-					//$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					for await (let request of requests) {
-						SecondSub = await $.fetch(request).then(response => JSON.parse(response.body));
-						//$.log(`🚧 SecondSub: ${JSON.stringify(SecondSub)}`, "");
-						OriginSub = Composite(OriginSub, SecondSub, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
-					}					//$.log(`🚧 OriginSub: ${JSON.stringify(OriginSub)}`, "");
-					$response.body = JSON.stringify(OriginSub);
+					body = JSON.parse($response.body ?? "{}");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					await Promise.all(requests.map(async request => {
+						let officialSubtitle = await $.fetch(request).then(response => JSON.parse(response.body));
+						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
+						body = Composite(body, officialSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
+					}));
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
 				case "application/x-protobuf":

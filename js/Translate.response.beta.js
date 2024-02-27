@@ -5021,7 +5021,7 @@ var MD5 = /*@__PURE__*/getDefaultExportFromCjs(md5Exports);
 let Translate$1 = class Translate {
 	constructor($) {
 		this.name = "Translate";
-		this.version = "1.0.0";
+		this.version = "1.0.1";
 		console.log(`\n${this.name} v${this.version}\n`);
 		this.$ = $;
 	}
@@ -5048,7 +5048,16 @@ let Translate$1 = class Translate {
 		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0",
 	];
 
+	#Length = {
+		Google: 120,
+		GoogleCloud: 120,
+		Microsoft: 99,
+		Azure: 99,
+		DeepL: 49,
+	};
+
 	async Google(text = [], source = "AUTO", target = "ZH") {
+		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		const BaseRequest = [
@@ -5087,8 +5096,7 @@ let Translate$1 = class Translate {
 			},
 		];
 		const request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))]; // 随机Request, 排除最后两项
-		text = Array.isArray(text) ? text.join("\r") : text;
-		request.url = request.url + `&sl=${source}&tl=${target}&q=${encodeURIComponent(text)}`;
+		request.url = request.url + `&sl=${source}&tl=${target}&q=${encodeURIComponent(text.join("\r"))}`;
 		return await this.$.fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
@@ -5106,6 +5114,7 @@ let Translate$1 = class Translate {
 	};
 
 	async GoogleCloud(text = [], source = "AUTO", target = "ZH", api = {}) {
+		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
 		const request = {};
@@ -5159,6 +5168,7 @@ let Translate$1 = class Translate {
 	};
 
 	async Microsoft(text = [], source = "AUTO", target = "ZH", api = {}) {
+		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Microsoft[source] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Microsoft[target] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]];
 		const request = {};
@@ -5193,8 +5203,7 @@ let Translate$1 = class Translate {
 				request.headers["Ocp-Apim-Subscription-Key"] = api?.Key ?? api?.Auth;
 				request.headers["Ocp-Apim-Subscription-Region"] = api?.Region;
 				break;
-		}		text = (Array.isArray(text)) ? text : [text];
-		text = text.map(item => { return { "text": item } });
+		}		text = text.map(item => { return { "text": item } });
 		request.body = JSON.stringify(text);
 		return await this.$.fetch(request)
 			.then(response => {
@@ -5205,6 +5214,7 @@ let Translate$1 = class Translate {
 	};
 
 	async DeepL(text = [], source = "AUTO", target = "ZH", api = {}) {
+		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.DeepL[source] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.DeepL[target] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]];
 		const request = {};
@@ -5225,7 +5235,7 @@ let Translate$1 = class Translate {
 			"Authorization": `DeepL-Auth-Key ${api?.Token ?? api?.Auth}`
 		};
 		let body = {
-			"text": (Array.isArray(text)) ? text : [text],
+			"text": text,
 			//"source_lang": source,
 			"target_lang": target,
 			"tag_handling": "html"
@@ -5241,6 +5251,7 @@ let Translate$1 = class Translate {
 	};
 
 	async BaiduFanyi(text = [], source = "AUTO", target = "ZH", api = {}) {
+		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Baidu[source] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Baidu[target] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]];
 		const request = {};
@@ -5251,9 +5262,8 @@ let Translate$1 = class Translate {
 			"User-Agent": "DualSubs",
 			"Content-Type": "application/x-www-form-urlencoded"
 		};
-		text = Array.isArray(text) ? text.join("\n") : text;
 		const salt = (new Date).getTime();
-		request.body = `q=${encodeURIComponent(text)}&from=${source}&to=${target}&appid=${api.id}&salt=${salt}&sign=${MD5(api.id + text + salt + api.key)}`;
+		request.body = `q=${encodeURIComponent(text.join("\n"))}&from=${source}&to=${target}&appid=${api.id}&salt=${salt}&sign=${MD5(api.id + text + salt + api.key)}`;
 		return await this.$.fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
@@ -5263,6 +5273,7 @@ let Translate$1 = class Translate {
 	};
 
 	async YoudaoAI(text = [], source = "AUTO", target = "ZH", api = {}) {
+		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Youdao[source] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Youdao[target] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];
 		const request = {};

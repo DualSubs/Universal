@@ -1,7 +1,7 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
-import XMLs from "./XML/XML.mjs";
-import WebVTT from "./WebVTT/WebVTT.mjs";
+import ENVclass from "./ENV/ENV.mjs";
+import URIclass from "./URI/URI.mjs";
+import XMLclass from "./XML/XML.mjs";
+import WebVTTclass from "./WebVTT/WebVTT.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -9,12 +9,12 @@ import detectFormat from "./function/detectFormat.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
-import Composite from "./function/Composite.mjs";
+import Composite from "./class/Composite.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v0.9.6(8) Composite.Subtitles.response.beta");
-const URI = new URIs();
-const XML = new XMLs();
-const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
+const $ = new ENVclass("🍿️ DualSubs: 🎦 Universal v0.9.7(3) Composite.Subtitles.response.beta");
+const URI = new URIclass();
+const XML = new XMLclass();
+const VTT = new WebVTTclass(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
 
 /***************** Processing *****************/
 // 解构URL
@@ -150,7 +150,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await $.fetch(request).then(response => XML.parse(response.body));
 						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
-						body = Composite(body, officialSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
+						body = new Composite(Settings).timedText(body, officialSubtitle, URL.query?.kind);
 					}));
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = XML.stringify(body);
@@ -162,7 +162,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await $.fetch(request).then(response => VTT.parse(response.body));
 						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
-						body = Composite(body, officialSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
+						body = new Composite(Settings).webVTT(body, officialSubtitle);
 					}));
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = VTT.stringify(body);
@@ -174,7 +174,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await $.fetch(request).then(response => JSON.parse(response.body));
 						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
-						body = Composite(body, officialSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
+						body = new Composite(Settings).JSON(body, officialSubtitle, URL.query?.kind);
 					}));
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);

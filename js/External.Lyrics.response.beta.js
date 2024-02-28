@@ -815,13 +815,31 @@ var Settings$7 = {
 		"Translate"
 	],
 	Languages: [
-		"EN",
+		"AUTO",
 		"ZH"
 	]
 };
 var Configs$2 = {
 	Languages: {
-		AUTO: "",
+		AUTO: [
+			"en",
+			"en-US",
+			"eng",
+			"en-GB",
+			"en-UK",
+			"en-CA",
+			"en-US SDH",
+			"ja",
+			"ja-JP",
+			"jpn",
+			"ko",
+			"ko-KR",
+			"kor",
+			"pt",
+			"pt-PT",
+			"pt-BR",
+			"por"
+		],
 		AR: [
 			"ar",
 			"ar-001"

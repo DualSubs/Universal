@@ -1219,13 +1219,31 @@ var Settings$7 = {
 		"Translate"
 	],
 	Languages: [
-		"EN",
+		"AUTO",
 		"ZH"
 	]
 };
 var Configs$2 = {
 	Languages: {
-		AUTO: "",
+		AUTO: [
+			"en",
+			"en-US",
+			"eng",
+			"en-GB",
+			"en-UK",
+			"en-CA",
+			"en-US SDH",
+			"ja",
+			"ja-JP",
+			"jpn",
+			"ko",
+			"ko-KR",
+			"kor",
+			"pt",
+			"pt-PT",
+			"pt-BR",
+			"por"
+		],
 		AR: [
 			"ar",
 			"ar-001"
@@ -3894,8 +3912,12 @@ function detectFormat(url, body, format = undefined) {
 						case "{":
 							format = "application/json";
 							break;
+						default:
+							format = format;
+							break;
 					}					break;
 				case undefined:
+					format = undefined;
 					break;
 			}			break;
 	}	console.log(`✅ detectFormat, format: ${format}`, "");

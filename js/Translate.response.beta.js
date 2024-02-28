@@ -1219,13 +1219,31 @@ var Settings$7 = {
 		"Translate"
 	],
 	Languages: [
-		"EN",
+		"AUTO",
 		"ZH"
 	]
 };
 var Configs$2 = {
 	Languages: {
-		AUTO: "",
+		AUTO: [
+			"en",
+			"en-US",
+			"eng",
+			"en-GB",
+			"en-UK",
+			"en-CA",
+			"en-US SDH",
+			"ja",
+			"ja-JP",
+			"jpn",
+			"ko",
+			"ko-KR",
+			"kor",
+			"pt",
+			"pt-PT",
+			"pt-BR",
+			"por"
+		],
 		AR: [
 			"ar",
 			"ar-001"
@@ -3894,8 +3912,12 @@ function detectFormat(url, body, format = undefined) {
 						case "{":
 							format = "application/json";
 							break;
+						default:
+							format = format;
+							break;
 					}					break;
 				case undefined:
+					format = undefined;
 					break;
 			}			break;
 	}	console.log(`✅ detectFormat, format: ${format}`, "");
@@ -11612,7 +11634,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.9(1) Translate.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.9(2) Translate.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -11626,7 +11648,7 @@ const METHOD = $request.method; URL.host; URL.path; URL.paths;
 $.log(`⚠ METHOD: ${METHOD}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, $.isQuanX() ? FORMAT : undefined);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
@@ -11639,7 +11661,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? "AUTO", (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建空数据
 			let body = {};

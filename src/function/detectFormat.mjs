@@ -61,12 +61,13 @@ export default function detectFormat(url, body, format = undefined) {
 						case "{":
 							format = "application/json";
 							break;
-						case undefined:
 						default:
+							format = format;
 							break;
 					};
 					break;
 				case undefined:
+					format = undefined;
 					break;
 			};
 			break;

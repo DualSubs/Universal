@@ -763,13 +763,31 @@ var Settings$7 = {
 		"Translate"
 	],
 	Languages: [
-		"EN",
+		"AUTO",
 		"ZH"
 	]
 };
 var Configs$2 = {
 	Languages: {
-		AUTO: "",
+		AUTO: [
+			"en",
+			"en-US",
+			"eng",
+			"en-GB",
+			"en-UK",
+			"en-CA",
+			"en-US SDH",
+			"ja",
+			"ja-JP",
+			"jpn",
+			"ko",
+			"ko-KR",
+			"kor",
+			"pt",
+			"pt-PT",
+			"pt-BR",
+			"por"
+		],
 		AR: [
 			"ar",
 			"ar-001"
@@ -3591,7 +3609,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接
 	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
-	newOption.OPTION.URI += `${symbol}subtype=${type}`;
+	newOption.OPTION.URI += `${symbol}subtype=${type}&lang=${LANGUAGE1.toUpperCase().split(/[-_]/)[0]}`;
 	//if (!standard) newOption.OPTION.URI += `&lang=${LANGUAGE1}`;
 	// 自动选择
 	newOption.OPTION.AUTOSELECT = "YES";

@@ -13,7 +13,7 @@ import Translate from "./class/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVclass("🍿️ DualSubs: 🔣 Universal v1.2.9(3) Translate.response.beta");
+const $ = new ENVclass("🍿️ DualSubs: 🔣 Universal v1.2.9(4) Translate.response.beta");
 const URI = new URIclass();
 const XML = new XMLclass();
 const VTT = new WebVTTclass(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -673,20 +673,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	};
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => {
-		switch ($response) {
-			default: { // 有回复数据，返回回复数据
-				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response, null, 2)}`, "");
-				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
-				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				$.done($response);
-				break;
-			};
-			case undefined: { // 无回复数据
-				break;
-			};
-		};
-	})
+	.finally(() => $.done($response))
 
 /***************** Function *****************/
 /**

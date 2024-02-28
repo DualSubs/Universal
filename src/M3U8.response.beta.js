@@ -10,7 +10,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(9) M3U8.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(10) M3U8.response.beta");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -121,20 +121,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	};
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => {
-		switch ($response) {
-			default: { // 有回复数据，返回回复数据
-				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response, null, 2)}`, "");
-				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
-				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				$.done($response);
-				break;
-			};
-			case undefined: { // 无回复数据
-				break;
-			};
-		};
-	})
+	.finally(() => $.done($response))
 
 /***************** Function *****************/
 /**

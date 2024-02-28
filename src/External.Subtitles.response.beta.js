@@ -9,7 +9,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import Composite from "./function/Composite.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.0.0(2) External.Subtitles.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.0.0(3) External.Subtitles.response.beta");
 const URI = new URIs();
 const XML = new XMLs();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -136,19 +136,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	};
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => {
-		switch ($response) {
-			default: { // 有回复数据，返回回复数据
-				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response, null, 2)}`, "");
-				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
-				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				$.done($response);
-				break;
-			};
-			case undefined: { // 无回复数据
-				break;
-			};
-		};
-	})
+	.finally(() => $.done($response))
 
 /***************** Function *****************/

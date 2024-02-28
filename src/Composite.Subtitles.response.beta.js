@@ -11,7 +11,7 @@ import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
 
-const $ = new ENVclass("🍿️ DualSubs: 🎦 Universal v0.9.7(4) Composite.Subtitles.response.beta");
+const $ = new ENVclass("🍿️ DualSubs: 🎦 Universal v0.9.7(5) Composite.Subtitles.response.beta");
 const URI = new URIclass();
 const XML = new XMLclass();
 const VTT = new WebVTTclass(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -199,20 +199,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	};
 })()
 	.catch((e) => $.logErr(e))
-	.finally(() => {
-		switch ($response) {
-			default: { // 有回复数据，返回回复数据
-				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response, null, 2)}`, "");
-				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
-				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				$.done($response);
-				break;
-			};
-			case undefined: { // 无回复数据
-				break;
-			};
-		};
-	})
+	.finally(() => $.done($response))
 
 /***************** Function *****************/
 /**

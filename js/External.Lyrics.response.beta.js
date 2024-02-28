@@ -40,7 +40,7 @@ class Lodash {
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
-		this.version = '1.5.3';
+		this.version = '1.5.4';
 		this.data = null;
 		this.dataFile = 'box.dat';
 		this.logs = [];
@@ -576,6 +576,8 @@ class ENV {
 		const endTime = new Date().getTime();
 		const costTime = (endTime - this.startTime) / 1000;
 		this.log("", `🚩 ${this.name}, 结束! 🕛 ${costTime} 秒`, "");
+		if (object.headers?.["Content-Encoding"]) object.headers["Content-Encoding"] = "identity";
+		if (object.headers?.["content-encoding"]) object.headers["content-encoding"] = "identity";
 		switch (this.platform()) {
 			case 'Surge':
 			case 'Loon':
@@ -9805,7 +9807,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.4(7) External.Lyrics.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.4(8) External.Lyrics.response.beta");
 const URI = new URI$1();
 const LRC = new LRCs();
 
@@ -10047,17 +10049,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 			break;
 	}})()
 	.catch((e) => $.logErr(e))
-	.finally(() => {
-		switch ($response) {
-			default: { // 有回复数据，返回回复数据
-				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response, null, 2)}`, "");
-				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
-				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				$.done($response);
-				break;
-			}			case undefined: { // 无回复数据
-				break;
-			}		}	});
+	.finally(() => $.done($response));
 
 /***************** Function *****************/
 async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $response.body, platform) {

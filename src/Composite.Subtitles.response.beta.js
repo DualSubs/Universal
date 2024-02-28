@@ -11,7 +11,7 @@ import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
 
-const $ = new ENVclass("🍿️ DualSubs: 🎦 Universal v0.9.7(3) Composite.Subtitles.response.beta");
+const $ = new ENVclass("🍿️ DualSubs: 🎦 Universal v0.9.7(4) Composite.Subtitles.response.beta");
 const URI = new URIclass();
 const XML = new XMLclass();
 const VTT = new WebVTTclass(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -190,8 +190,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					//$.log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					// 写入二进制数据
 					//$.log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
-					//if ($.isQuanX()) $response.bodyBytes = rawBody
-					//else $response.body = rawBody;
+					//$response.body = rawBody;
 					break;
 			};
 			break;
@@ -203,33 +202,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response, null, 2)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				if ($.isQuanX()) {
-					switch (FORMAT) {
-						case undefined: // 视为无body
-							// 返回普通数据
-							$.done({ status: $response.status, headers: $response.headers });
-							break;
-						default:
-							// 返回普通数据
-							$.done({ status: $response.status, headers: $response.headers, body: $response.body });
-							break;
-						case "application/protobuf":
-						case "application/x-protobuf":
-						case "application/vnd.google.protobuf":
-						case "application/grpc":
-						case "application/grpc+proto":
-						case "application/octet-stream":
-							// 返回二进制数据
-							//$.log(`${$response.bodyBytes.byteLength}---${$response.bodyBytes.buffer.byteLength}`);
-							$.done({ status: $response.status, headers: $response.headers, bodyBytes: $response.bodyBytes.buffer.slice($response.bodyBytes.byteOffset, $response.bodyBytes.byteLength + $response.bodyBytes.byteOffset) });
-							break;
-					};
-				} else $.done($response);
+				$.done($response);
 				break;
 			};
 			case undefined: { // 无回复数据

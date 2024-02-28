@@ -40,7 +40,7 @@ class Lodash {
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
-		this.version = '1.4.1';
+		this.version = '1.5.3';
 		this.data = null;
 		this.dataFile = 'box.dat';
 		this.logs = [];
@@ -572,24 +572,36 @@ class ENV {
 		return new Promise((resolve) => setTimeout(resolve, time))
 	}
 
-	done(val = {}) {
+	done(object = {}) {
 		const endTime = new Date().getTime();
 		const costTime = (endTime - this.startTime) / 1000;
-		this.log('', `🚩 ${this.name}, 结束! 🕛 ${costTime} 秒`);
-		this.log();
+		this.log("", `🚩 ${this.name}, 结束! 🕛 ${costTime} 秒`, "");
 		switch (this.platform()) {
 			case 'Surge':
 			case 'Loon':
 			case 'Stash':
 			case 'Egern':
 			case 'Shadowrocket':
-			case 'Quantumult X':
 			default:
-				$done(val);
-				break
+				$done(object);
+				break;
+			case 'Quantumult X':
+				delete object.statusCode;
+				delete object.scheme;
+				delete object.sessionIndex;
+				delete object.charset;
+				if (object.body instanceof ArrayBuffer) {
+					object.bodyBytes = object.body;
+					delete object.body;
+				} else if (ArrayBuffer.isView(object.body)) {
+					object.bodyBytes = object.body.buffer.slice(object.body.byteOffset, object.body.byteLength + object.body.byteOffset);
+					delete object.body;
+				} else if (object.body) delete object.bodyBytes;
+				$done(object);
+				break;
 			case 'Node.js':
 				process.exit(1);
-				break
+				break;
 		}
 	}
 
@@ -4242,7 +4254,7 @@ class Composite {
 	};
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.7(3) Composite.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.7(4) Composite.Subtitles.response.beta");
 const URI = new URI$1();
 const XML = new XML$1();
 const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
@@ -4415,8 +4427,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					//$.log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					// 写入二进制数据
 					//$.log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
-					//if ($.isQuanX()) $response.bodyBytes = rawBody
-					//else $response.body = rawBody;
+					//$response.body = rawBody;
 					break;
 			}			break;
 		case false:
@@ -4426,32 +4437,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response, null, 2)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				if ($.isQuanX()) {
-					switch (FORMAT) {
-						case undefined: // 视为无body
-							// 返回普通数据
-							$.done({ status: $response.status, headers: $response.headers });
-							break;
-						default:
-							// 返回普通数据
-							$.done({ status: $response.status, headers: $response.headers, body: $response.body });
-							break;
-						case "application/protobuf":
-						case "application/x-protobuf":
-						case "application/vnd.google.protobuf":
-						case "application/grpc":
-						case "application/grpc+proto":
-						case "application/octet-stream":
-							// 返回二进制数据
-							//$.log(`${$response.bodyBytes.byteLength}---${$response.bodyBytes.buffer.byteLength}`);
-							$.done({ status: $response.status, headers: $response.headers, bodyBytes: $response.bodyBytes.buffer.slice($response.bodyBytes.byteOffset, $response.bodyBytes.byteLength + $response.bodyBytes.byteOffset) });
-							break;
-					}				} else $.done($response);
+				$.done($response);
 				break;
 			}			case undefined: { // 无回复数据
 				break;

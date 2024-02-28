@@ -10,7 +10,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(8) M3U8.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(9) M3U8.response.beta");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -124,33 +124,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	.finally(() => {
 		switch ($response) {
 			default: { // 有回复数据，返回回复数据
-				//const FORMAT = ($response?.headers?.["Content-Type"] ?? $response?.headers?.["content-type"])?.split(";")?.[0];
-				$.log(`🎉 finally`, `$response`, `FORMAT: ${FORMAT}`, "");
-				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response)}`, "");
+				//$.log(`🚧 finally`, `$response: ${JSON.stringify($response, null, 2)}`, "");
 				if ($response?.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response?.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				if ($.isQuanX()) {
-					switch (FORMAT) {
-						case undefined: // 视为无body
-							// 返回普通数据
-							$.done({ status: $response.status, headers: $response.headers });
-							break;
-						default:
-							// 返回普通数据
-							$.done({ status: $response.status, headers: $response.headers, body: $response.body });
-							break;
-						case "application/protobuf":
-						case "application/x-protobuf":
-						case "application/vnd.google.protobuf":
-						case "application/grpc":
-						case "application/grpc+proto":
-						case "application/octet-stream":
-							// 返回二进制数据
-							//$.log(`${$response.bodyBytes.byteLength}---${$response.bodyBytes.buffer.byteLength}`);
-							$.done({ status: $response.status, headers: $response.headers, bodyBytes: $response.bodyBytes.buffer.slice($response.bodyBytes.byteOffset, $response.bodyBytes.byteLength + $response.bodyBytes.byteOffset) });
-							break;
-					};
-				} else $.done($response);
+				$.done($response);
 				break;
 			};
 			case undefined: { // 无回复数据

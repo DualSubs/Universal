@@ -74,7 +74,7 @@ class Lodash {
 class ENV {
 	constructor(name, opts) {
 		this.name = name;
-		this.version = '1.5.9';
+		this.version = '1.5.10';
 		this.data = null;
 		this.dataFile = 'box.dat';
 		this.logs = [];
@@ -614,8 +614,6 @@ class ENV {
 		this.log("", `🚩 ${this.name}, 结束! 🕛 ${costTime} 秒`, "");
 		if (object.headers?.["Content-Encoding"]) object.headers["Content-Encoding"] = "identity";
 		if (object.headers?.["content-encoding"]) object.headers["content-encoding"] = "identity";
-		delete object.headers?.["Content-Length"];
-		delete object.headers?.["content-length"];
 		switch (this.platform()) {
 			case 'Surge':
 			case 'Loon':

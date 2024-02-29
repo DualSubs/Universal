@@ -3598,6 +3598,7 @@ function setCache(cache, cacheSize = 100) {
  * @param {Array} enabledTypes - Enabled Types
  * @param {Array} translateTypes - Translate Types
  * @param {String} Standard - Standard
+ * @param {String} device - Device
  * @return {Promise<*>}
  */
 function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", standard = true, device = "iPhone") {
@@ -3665,7 +3666,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接
 	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
-	newOption.OPTION.URI += `${symbol}subtype=${type}&lang=${LANGUAGE1.toUpperCase().split(/[-_]/)[0]}`;
+	newOption.OPTION.URI += `${symbol}subtype=${type}`;
 	//if (!standard) newOption.OPTION.URI += `&lang=${LANGUAGE1}`;
 	// 自动选择
 	newOption.OPTION.AUTOSELECT = "YES";
@@ -3675,7 +3676,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	return newOption;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(10) M3U8.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(11) M3U8.response.beta");
 const URI = new URI$1();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -3849,9 +3850,11 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 								case "Apple":
 									if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
 										option = setOption(playlist1, playlist2, type, platform, standard, device);
+										option.OPTION.URI += `&lang=${languages[0]}`;
 									}									break;
 								default:
 									option = setOption(playlist1, playlist2, type, platform, standard, device);
+									option.OPTION.URI += `&lang=${languages[0]}`;
 									break;
 							}						}					});
 					break;

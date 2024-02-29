@@ -10,7 +10,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(10) M3U8.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(11) M3U8.response.beta");
 const URI = new URIs();
 const M3U8 = new EXTM3U(["\n"]);
 
@@ -191,10 +191,12 @@ function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], plat
 								case "Apple":
 									if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
 										option = setOption(playlist1, playlist2, type, platform, standard, device);
+										option.OPTION.URI += `&lang=${languages[0]}`;
 									};
 									break;
 								default:
 									option = setOption(playlist1, playlist2, type, platform, standard, device);
+									option.OPTION.URI += `&lang=${languages[0]}`;
 									break;
 							};
 						};

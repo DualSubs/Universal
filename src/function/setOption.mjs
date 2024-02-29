@@ -7,6 +7,7 @@
  * @param {Array} enabledTypes - Enabled Types
  * @param {Array} translateTypes - Translate Types
  * @param {String} Standard - Standard
+ * @param {String} device - Device
  * @return {Promise<*>}
  */
 export default function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", standard = true, device = "iPhone") {
@@ -77,7 +78,7 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接
 	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
-	newOption.OPTION.URI += `${symbol}subtype=${type}&lang=${LANGUAGE1.toUpperCase().split(/[-_]/)[0]}`;
+	newOption.OPTION.URI += `${symbol}subtype=${type}`;
 	//if (!standard) newOption.OPTION.URI += `&lang=${LANGUAGE1}`;
 	// 自动选择
 	newOption.OPTION.AUTOSELECT = "YES";

@@ -28,7 +28,7 @@ export default function setENV($, name, platforms, database) {
 			default:
 				break;
 		};
-		Settings.ShowOnly = $persistentStore.read("仅输出译文") ?? Settings.ShowOnly;
+		Settings.ShowOnly = $persistentStore.read("仅输出字幕译文") ?? Settings.ShowOnly;
 		switch (Settings.ShowOnly) {
 			case "是":
 				Settings.ShowOnly = true;
@@ -39,12 +39,12 @@ export default function setENV($, name, platforms, database) {
 			default:
 				break;
 		};
-		Settings.Position = $persistentStore.read("字幕译文位置") ?? Settings.Position;
+		Settings.Position = $persistentStore.read("字幕译文的位置") ?? Settings.Position;
 		switch (Settings.Position) {
-			case "译文位于外文之上":
+			case "译文位于原文之上":
 				Settings.Position = "Forward";
 				break;
-			case "译文位于外文之下":
+			case "译文位于原文之下":
 				Settings.Position = "Reverse";
 				break;
 			default:

@@ -1,7 +1,9 @@
-import ENVclass from "./ENV/ENV.mjs";
-import URIclass from "./URI/URI.mjs";
-import XMLclass from "./XML/XML.mjs";
-import WebVTTclass from "./WebVTT/WebVTT.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
+import URI from "./URI/URI.mjs";
+import XML from "./XML/XML.mjs";
+import VTT from "./WebVTT/WebVTT.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -13,10 +15,7 @@ import Translate from "./class/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVclass("🍿️ DualSubs: 🔣 Universal v1.2.9(4) Translate.response");
-const URI = new URIclass();
-const XML = new XMLclass();
-const VTT = new WebVTTclass(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.10(1) Translate.response");
 
 /***************** Processing *****************/
 // 解构URL
@@ -50,7 +49,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					break;
 				case "application/x-www-form-urlencoded":
 				case "text/plain":
-				case "text/html":
 				default:
 					break;
 				case "application/x-mpegURL":
@@ -59,6 +57,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "audio/mpegurl":
 					break;
 				case "text/xml":
+				case "text/html":
 				case "text/plist":
 				case "application/xml":
 				case "application/plist":

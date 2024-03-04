@@ -1,6 +1,8 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
-import LRCs from "./LRC/LRC.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
+import URI from "./URI/URI.mjs";
+import LRC from "./LRC/LRC.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -10,9 +12,7 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.5.4(8) External.Lyrics.response.beta");
-const URI = new URIs();
-const LRC = new LRCs();
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.5(1) External.Lyrics.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -50,7 +50,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					break;
 				case "application/x-www-form-urlencoded":
 				case "text/plain":
-				case "text/html":
 				default:
 					break;
 				case "application/x-mpegURL":
@@ -62,6 +61,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
+				case "text/html":
 				case "text/plist":
 				case "application/xml":
 				case "application/plist":
@@ -256,7 +256,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				$.log(`🚧 Caches.Metadatas.Tracks: ${JSON.stringify([...Caches.Metadatas.Tracks.entries()])}`, "");
 				Caches.Metadatas.Tracks = setCache(Caches.Metadatas.Tracks, Settings.CacheSize);
 				// 写入持久化储存
-				$.setjson(Caches.Metadatas.Tracks, `@DualSubs.${PLATFORM}.Caches.Metadatas.Tracks`);
+				$Storage.setItem(`@DualSubs.${PLATFORM}.Caches.Metadatas.Tracks`, Caches.Metadatas.Tracks);
 			};
 			break;
 		case false:

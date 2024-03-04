@@ -1,7 +1,9 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
-import XMLs from "./XML/XML.mjs";
-import WebVTT from "./WebVTT/WebVTT.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
+import URI from "./URI/URI.mjs";
+import XML from "./XML/XML.mjs";
+import VTT from "./WebVTT/WebVTT.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -9,10 +11,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import Composite from "./function/Composite.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.0.0(3) External.Subtitles.response.beta");
-const URI = new URIs();
-const XML = new XMLs();
-const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.0.1(1) External.Subtitles.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -72,7 +71,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					break;
 				case "application/x-www-form-urlencoded":
 				case "text/plain":
-				case "text/html":
 				default:
 					break;
 				case "application/x-mpegURL":
@@ -84,6 +82,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
+				case "text/html":
 				case "text/plist":
 				case "application/xml":
 				case "application/plist":

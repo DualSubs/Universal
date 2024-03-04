@@ -1,6 +1,8 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
-import EXTM3U from "./EXTM3U/EXTM3U.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
+import URI from "./URI/URI.mjs";
+import M3U8 from "./EXTM3U/EXTM3U.mjs";
 
 import Database from "./database/index.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
@@ -10,9 +12,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🎦 Universal v1.0.0(11) M3U8.response");
-const URI = new URIs();
-const M3U8 = new EXTM3U(["\n"]);
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.1(1) M3U8.response");
 
 /***************** Processing *****************/
 // 解构URL
@@ -47,7 +47,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					break;
 				case "application/x-www-form-urlencoded":
 				case "text/plain":
-				case "text/html":
 				default:
 					break;
 				case "application/x-mpegURL":
@@ -70,7 +69,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							// 格式化缓存
 							Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.CacheSize);
 							// 写入持久化储存
-							$.setjson(Caches.Playlists.Master, `@DualSubs.${"Composite"}.Caches.Playlists.Master`);
+							$Storage.setItem(`@DualSubs.${"Composite"}.Caches.Playlists.Master`, Caches.Playlists.Master);
 							// 写入选项
 							body = setAttrList(body, playlistCache, Settings.Types, Languages, PLATFORM, STANDARD, DEVICE);
 							break;
@@ -87,7 +86,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									// 格式化缓存
 									Caches.Playlists.Subtitle = setCache(Caches?.Playlists.Subtitle, Settings.CacheSize);
 									// 写入缓存
-									$.setjson(Caches.Playlists.Subtitle, `@DualSubs.${"Composite"}.Caches.Playlists.Subtitle`);
+									$Storage.setItem(`@DualSubs.${"Composite"}.Caches.Playlists.Subtitle`, Caches.Playlists.Subtitle);
 									break;
 								case "Translate":
 								default:

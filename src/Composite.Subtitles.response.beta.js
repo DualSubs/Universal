@@ -13,7 +13,7 @@ import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.8(1) Composite.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.8(2) Composite.Subtitles.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -31,7 +31,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	const PLATFORM = detectPlatform($request.url);
 	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

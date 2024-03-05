@@ -12,7 +12,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.1(1) M3U8.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.1(2) M3U8.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -29,7 +29,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	const PLATFORM = detectPlatform($request.url);
 	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite"], Database);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite"], Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
@@ -112,6 +112,35 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					};
 					// 字符串M3U8
 					$response.body = M3U8.stringify(body);
+					break;
+				case "text/xml":
+				case "text/html":
+				case "text/plist":
+				case "application/xml":
+				case "application/plist":
+				case "application/x-plist":
+					//body = XML.parse($response.body);
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//$response.body = XML.stringify(body);
+					break;
+				case "text/vtt":
+				case "application/vtt":
+					//body = VTT.parse($response.body);
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//$response.body = VTT.stringify(body);
+					break;
+				case "text/json":
+				case "application/json":
+					//body = JSON.parse($response.body ?? "{}");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//$response.body = JSON.stringify(body);
+					break;
+				case "application/protobuf":
+				case "application/x-protobuf":
+				case "application/vnd.google.protobuf":
+				case "application/grpc":
+				case "application/grpc+proto":
+				case "application/octet-stream":
 					break;
 			};
 			break;

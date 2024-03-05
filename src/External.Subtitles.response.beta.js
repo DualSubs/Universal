@@ -11,7 +11,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import Composite from "./function/Composite.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.0.1(1) External.Subtitles.response.beta");
+const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.0.1(2) External.Subtitles.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -29,7 +29,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	const PLATFORM = detectPlatform($request.url);
 	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "External", "API"], Database);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "External", "API"], Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

@@ -1,8 +1,10 @@
-import ENVs from "./ENV/ENV.mjs";
-import URIs from "./URI/URI.mjs";
-import XMLs from "./XML/XML.mjs";
-import WebVTT from "./WebVTT/WebVTT.mjs";
-import LRCs from "./LRC/LRC.mjs";
+import _ from './ENV/Lodash.mjs'
+import $Storage from './ENV/$Storage.mjs'
+import ENV from "./ENV/ENV.mjs";
+import URI from "./URI/URI.mjs";
+import XML from "./XML/XML.mjs";
+import VTT from "./WebVTT/WebVTT.mjs";
+import LRC from "./LRC/LRC.mjs";
 
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -16,11 +18,7 @@ import Translates from "./function/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.0.0(4) response.beta");
-const URI = new URIs();
-const XML = new XMLs();
-const VTT = new WebVTT(["milliseconds", "timeStamp", "singleLine", "\n"]); // "multiLine"
-const LRC = new LRCs();
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.0.0(5) response.beta");
 const Translate = new Translates($);
 
 /***************** Processing *****************/
@@ -42,7 +40,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	const TYPE = URL.query?.subtype ?? "Translate"
 	$.log(`⚠ TYPE: ${TYPE}`, "");
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", TYPE, "API"], Database);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", TYPE, "API"], Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

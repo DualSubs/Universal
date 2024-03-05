@@ -1,6 +1,5 @@
-/*
-README: https://github.com/DualSubs
-*/
+import getStorage from '../ENV/getStorage.mjs'
+import _ from '../ENV/Lodash.mjs'
 
 /**
  * Set Environment Variables
@@ -11,12 +10,12 @@ README: https://github.com/DualSubs
  * @param {Object} database - Default DataBase
  * @return {Object} { Settings, Caches, Configs }
  */
-export default function setENV($, name, platforms, database) {
+export default function setENV(name, platforms, database) {
 	console.log(`☑️ Set Environment Variables`, "");
-	let { Settings, Caches, Configs } = $.getENV(name, platforms, database);
+	let { Settings, Caches, Configs } = getStorage(name, platforms, database);
 	/***************** Settings *****************/
 	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
-	if ($.isLoon() && platforms.includes("YouTube")) {
+	if (platforms.includes("YouTube")) {
 		Settings.AutoCC = $persistentStore.read("自动显示翻译字幕") ?? Settings.AutoCC;
 		switch (Settings.AutoCC) {
 			case "是":

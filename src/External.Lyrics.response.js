@@ -12,7 +12,7 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.5(1) External.Lyrics.response");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.5(2) External.Lyrics.response");
 
 /***************** Processing *****************/
 // 解构URL
@@ -29,7 +29,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	const PLATFORM = detectPlatform($request.url);
 	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
-	const { Settings, Caches, Configs } = setENV($, "DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "External", "API"], Database);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "External", "API"], Database);
 	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:

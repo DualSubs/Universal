@@ -3911,32 +3911,7 @@ function setENV(name, platforms, database) {
 	let { Settings, Caches, Configs } = getStorage(name, platforms, database);
 	/***************** Settings *****************/
 	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
-	if (platforms.includes("YouTube")) {
-		Settings.AutoCC = $persistentStore.read("自动显示翻译字幕") ?? Settings.AutoCC;
-		switch (Settings.AutoCC) {
-			case "是":
-				Settings.AutoCC = true;
-				break;
-			case "否":
-				Settings.AutoCC = false;
-				break;
-		}		Settings.ShowOnly = $persistentStore.read("仅输出字幕译文") ?? Settings.ShowOnly;
-		switch (Settings.ShowOnly) {
-			case "是":
-				Settings.ShowOnly = true;
-				break;
-			case "否":
-				Settings.ShowOnly = false;
-				break;
-		}		Settings.Position = $persistentStore.read("字幕译文的位置") ?? Settings.Position;
-		switch (Settings.Position) {
-			case "译文位于原文之上":
-				Settings.Position = "Forward";
-				break;
-			case "译文位于原文之下":
-				Settings.Position = "Reverse";
-				break;
-		}	}	console.log(`✅ Set Environment Variables, Settings: ${typeof Settings}, Settings内容: ${JSON.stringify(Settings)}`, "");
+	console.log(`✅ Set Environment Variables, Settings: ${typeof Settings}, Settings内容: ${JSON.stringify(Settings)}`, "");
 	/***************** Caches *****************/
 	//console.log(`✅ Set Environment Variables, Caches: ${typeof Caches}, Caches内容: ${JSON.stringify(Caches)}`, "");
 	if (typeof Caches?.Playlists !== "object" || Array.isArray(Caches?.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存

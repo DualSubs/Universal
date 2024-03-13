@@ -3704,7 +3704,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	return newOption;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.1.0(1) Manifest.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.1.0(3) Manifest.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -3825,22 +3825,28 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					// 判断平台
 					switch (PLATFORM) {
 						case "PrimeVideo":
-							let matchList = [];
-							//查询是否有符合语言的内容
-							for (let langcode of Configs.Languages[Languages[0]]) {
-								$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
-								matchList = body?.subtitleUrls.filter(subtitleUrl => subtitleUrl?.languageCode?.toLowerCase() === langcode?.toLowerCase());
-								if (matchList.length !== 0) break;
-							}							if (matchList.length !== 0) {
-								matchList = matchList.map(subtitleUrl => {
-									subtitleUrl.displayName = `翻译字幕 (${subtitleUrl.displayName}/${Languages[1]})`;
-									const symbol = (subtitleUrl.url.includes("?")) ? "&" : "?";
-									subtitleUrl.url += `${symbol}subtype=${type}`;
-									subtitleUrl.url += `&lang=${Languages[0]}`;
-								});
-								body?.subtitleUrls.unshift(...matchList);
-							}							break;
-					}					$response.body = JSON.stringify(body);
+							if (body?.subtitleUrls) {
+								let matchList = [];
+								//查询是否有符合语言的内容
+								for (let langcode of Configs.Languages[Languages[0]]) {
+									$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
+									matchList = body?.subtitleUrls.filter(subtitleUrl => subtitleUrl?.languageCode?.toLowerCase() === langcode?.toLowerCase());
+									if (matchList.length !== 0) break;
+								}								$.log(`🚧 matchList: ${JSON.stringify(matchList)}`, "");
+								if (matchList.length !== 0) {
+									matchList = matchList.map(subtitleUrl => {
+										subtitleUrl.displayName = `翻译字幕 (${subtitleUrl.displayName}/${Languages[1]})`;
+										const symbol = (subtitleUrl.url.includes("?")) ? "&" : "?";
+										subtitleUrl.url += `${symbol}subtype=${"Tranlsate"}`;
+										subtitleUrl.url += `&lang=${subtitleUrl.languageCode.toUpperCase()}`;
+										$.log(`🚧 subtitleUrl: ${JSON.stringify(subtitleUrl)}`, "");
+										return subtitleUrl;
+									});
+									$.log(`🚧 matchList: ${JSON.stringify(matchList)}`, "");
+									body.subtitleUrls.unshift(...matchList);
+								}							}							break;
+					}					$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
 				case "application/x-protobuf":

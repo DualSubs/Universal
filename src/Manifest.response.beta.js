@@ -3,6 +3,7 @@ import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
 import URI from "./URI/URI.mjs";
 import M3U8 from "./EXTM3U/EXTM3U.mjs";
+import AttrList from "./class/AttrList.mjs";
 
 import Database from "./database/index.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
@@ -10,9 +11,9 @@ import setENV from "./function/setENV.mjs";
 import isStandard from "./function/isStandard.mjs";
 import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
-import setOption from "./function/setOption.mjs";
+import aPath from "./function/aPath.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.1.1(5) Manifest.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.2.0(3) Manifest.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -62,8 +63,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							// 读取已存数据
 							let playlistCache = Caches.Playlists.Master.get($request.url) || {};
 							// 获取特定语言的字幕
-							playlistCache[Languages[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]], FORMAT, PLATFORM);
-							playlistCache[Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]], FORMAT, PLATFORM);
+							playlistCache[Languages[0]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]]);
+							playlistCache[Languages[1]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]]);
 							// 写入数据
 							Caches.Playlists.Master.set($request.url, playlistCache);
 							// 格式化缓存
@@ -71,7 +72,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							// 写入持久化储存
 							$Storage.setItem(`@DualSubs.${"Composite"}.Caches.Playlists.Master`, Caches.Playlists.Master);
 							// 写入选项
-							body = setAttrList(body, playlistCache, Settings.Types, Languages, PLATFORM, STANDARD, DEVICE);
+							body = new AttrList(FORMAT, PLATFORM).set(body, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
 							break;
 						case "Media Playlist":
 							// 处理类型
@@ -132,7 +133,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "text/json":
 				case "application/json":
 					body = JSON.parse($response.body ?? "{}");
-					$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					// 判断平台
 					switch (PLATFORM) {
 						case "PrimeVideo":
@@ -140,27 +141,13 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 								// 读取已存数据
 								let playlistCache = Caches.Playlists.Master.get($request.url) || {};
 								// 获取特定语言的字幕
-								playlistCache[Languages[0]] = getAttrList($request.url, body, "subtitleUrls", Configs.Languages[Languages[0]], FORMAT, PLATFORM);
-								$.log(`🚧 playlistCache[Languages[0]]: ${JSON.stringify(playlistCache[Languages[0]])}`, "");
-								if (playlistCache[Languages[0]].length !== 0) {
-									playlistCache[Languages[0]] = playlistCache[Languages[0]].map(subtitleUrl => {
-										subtitleUrl = JSON.parse(JSON.stringify(subtitleUrl));
-										subtitleUrl.displayName = `翻译字幕 (${subtitleUrl.displayName}/${Languages[1]})`;
-										const symbol = (subtitleUrl.url.includes("?")) ? "&" : "?";
-										subtitleUrl.url += `${symbol}subtype=${"Translate"}`;
-										subtitleUrl.url += `&lang=${subtitleUrl.languageCode.toUpperCase()}`;
-										//subtitleUrl.languageCode = `Translate (${subtitleUrl.languageCode}/${Languages[1]})`;
-										subtitleUrl.languageCode = `Translate-${Languages[0]}/${Languages[1]}`
-										$.log(`🚧 subtitleUrl: ${JSON.stringify(subtitleUrl)}`, "");
-										return subtitleUrl;
-									});
-									$.log(`🚧 playlistCache[Languages[0]]: ${JSON.stringify(playlistCache[Languages[0]])}`, "");
-									body.subtitleUrls.unshift(...playlistCache[Languages[0]]);
-								};
+								playlistCache[Languages[0]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "subtitleUrls", Configs.Languages[Languages[0]]);
+								//$.log(`🚧 playlistCache[Languages[0]]: ${JSON.stringify(playlistCache[Languages[0]])}`, "");
+								body.subtitleUrls = new AttrList(FORMAT, PLATFORM).set(body.subtitleUrls, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
 							};
 							break;
 					};
-					$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
@@ -180,142 +167,6 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 	.finally(() => $.done($response))
 
 /***************** Function *****************/
-/**
- * Get Attribute List
- * @author VirgilClyne
- * @param {String} url - Request URL
- * @param {Array} file - Parsed M3U8/JSON
- * @param {String} type - Content Type
- * @param {Array} langCodes - Language Codes Array
- * @param {String} platform - Platform
- * @return {Array} datas
- */
-function getAttrList(url = "", file = [], type = "", langCodes = [], format = "application/x-mpegURL", platform = "Universal") {
-	$.log(`☑️ Get Attribute List`, `langCodes: ${langCodes}`, "");
-	let matchList = [];
-	// 格式判断
-	switch (format) {
-		case "application/x-mpegURL":
-		case "application/x-mpegurl":
-		case "application/vnd.apple.mpegurl":
-		case "audio/mpegurl": {
-			let attrList = file
-				.filter(item => item?.TAG === "#EXT-X-MEDIA") // 过滤标签
-				.filter(item => item?.OPTION?.TYPE === type) // 过滤类型
-				.filter(item => item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
-			//$.log(`🚧 attrList: ${JSON.stringify(attrList)}`, "");
-			//查询是否有符合语言的内容
-			for (let langcode of langCodes) {
-				$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
-				matchList = attrList.filter(item => item?.OPTION?.LANGUAGE?.toLowerCase() === langcode?.toLowerCase());
-				if (matchList.length !== 0) break;
-			};
-			matchList = matchList.map(data => {
-				data.URL = aPath(url, data?.OPTION?.URI ?? null);
-				return data;
-			});
-			break;
-		};
-		case "text/json":
-		case "application/json": {
-			switch (platform) {
-				case "PrimeVideo": {
-					let attrList = file?.[type] ?? [];
-					//查询是否有符合语言的内容
-					for (let langcode of langCodes) {
-						$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
-						matchList = attrList.filter(item => item?.languageCode?.toLowerCase() === langcode?.toLowerCase());
-						if (matchList.length !== 0) break;
-					};
-					/*
-					matchList = matchList.map(data => {
-						data.URL = data.url;
-						return data;
-					});
-					*/
-					break;
-				};
-			};
-			break;
-		};
-	};
-	$.log(`✅ Get Attribute List`, `matchList: ${JSON.stringify(matchList)}`, "");
-	return matchList;
-};
-
-/**
- * Set Attribute List
- * @author VirgilClyne
- * @param {String} platform - Platform
- * @param {Object} m3u8 - Parsed m3u8
- * @param {Array} playlists1 - Primary (Source) Languages Playlists
- * @param {Array} playlists2 - Second (Target) Languages Playlists
- * @param {Array} types - Types
- * @param {Array} languages - Languages
- * @param {Boolean} Standard - Standard
- * @return {Object} m3u8
- */
-function setAttrList(m3u8 = {}, playlists = {}, types = [], languages = [], platform = "", standard = true, device = "iPhone") {
-	//types = (standard == true) ? types : ["Translate"];
-	types = (standard == true) ? types : [types.at(-1)];
-	const playlists1 = playlists?.[languages?.[0]];
-	const playlists2 = playlists?.[languages?.[1]];
-	//if (playlists1?.length !== 0) $.log(`🚧 Set Attribute List, 有主字幕语言（源语言）字幕`, "");
-	//else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
-	//if (playlists2?.length !== 0) $.log(`🚧 Set Attribute List, 有副字幕语言（目标语言）字幕`, "");
-	//else types = types.filter(e => e !== "Official"); // 无目标语言字幕时删除官方字幕选项
-	$.log(`☑️ Set Attribute List`, `types: ${types}`, "");
-	playlists1?.forEach(playlist1 => {
-		const index1 = m3u8.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
-		types.forEach(type => {
-			$.log(`🚧 Set Attribute List, type: ${type}`, "");
-			let option = {};
-			switch (type) {
-				case "Official":
-					playlists2?.forEach(playlist2 => {
-						//const index2 = m3u8.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 副语言（源语言）字幕位置
-						if (playlist1?.OPTION?.["GROUP-ID"] === playlist2?.OPTION?.["GROUP-ID"]) {
-							switch (platform) { // 兼容性修正
-								case "Apple":
-									if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-										option = setOption(playlist1, playlist2, type, platform, standard, device);
-										option.OPTION.URI += `&lang=${languages[0]}`;
-									};
-									break;
-								default:
-									option = setOption(playlist1, playlist2, type, platform, standard, device);
-									option.OPTION.URI += `&lang=${languages[0]}`;
-									break;
-							};
-						};
-					});
-					break;
-				case "Translate":
-				case "External":
-					const playlist2 = {
-						"OPTION": {
-							"TYPE": "SUBTITLES",
-							//"GROUP-ID": playlist?.OPTION?.["GROUP-ID"],
-							"NAME": playlists2?.[0]?.OPTION?.NAME ?? languages[1].toLowerCase(),
-							"LANGUAGE": playlists2?.[0]?.OPTION?.LANGUAGE ?? languages[1].toLowerCase(),
-							//"URI": playlist?.URI,
-						}
-					};
-					option = setOption(playlist1, playlist2, type, platform, standard, device);
-					option.OPTION.URI += `&lang=${playlist1?.OPTION?.LANGUAGE?.toUpperCase()}`;
-					break;
-			};
-			if (Object.keys(option).length !== 0) {
-				if (standard) m3u8.splice(index1 + 1, 0, option)
-				else m3u8.splice(index1, 1, option);
-			};
-		});
-	});
-	//$.log(`✅ Set Attribute List`, `m3u8: ${JSON.stringify(m3u8)}`, "");
-	$.log(`✅ Set Attribute List`, "");
-	return m3u8;
-};
-
 /**
  * Get Playlist Cache
  * @author VirgilClyne
@@ -420,6 +271,3 @@ async function getSubtitles(url, headers, platform) {
 	$.log(`✅ Get Subtitle *.vtt *.ttml URLs, subtitles: ${subtitles}`, "");
 	return subtitles;
 };
-
-// Get Absolute Path
-function aPath(aURL = "", URL = "") { return (/^https?:\/\//i.test(URL)) ? URL : aURL.match(/^(https?:\/\/(?:[^?]+)\/)/i)?.[0] + URL };

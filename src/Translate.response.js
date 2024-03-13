@@ -15,7 +15,7 @@ import Translate from "./class/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.10(3) Translate.response");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.10(7) Translate.response");
 
 /***************** Processing *****************/
 // 解构URL
@@ -63,7 +63,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist": {
 					body = XML.parse($response.body);
-					const breakLine = (body?.tt) ? "<br/>" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
+					const breakLine = (body?.tt) ? "<br />" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
 					if (body?.timedtext?.head?.wp?.[1]?.["@rc"]) body.timedtext.head.wp[1]["@rc"] = "1";
 					let paragraph = body?.tt?.body?.div?.p ?? body?.timedtext?.body?.p;
 					let fullText = [];
@@ -74,7 +74,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							delete para.s;
 						};
 						const span = para?.span ?? para;
-						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"]).join(breakLine);
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? "\u200b").join(breakLine);
 						else sentences = span?.["#"];
 						if (Array.isArray(sentences)) sentences = sentences.join(" ");
 						fullText.push(sentences ?? "\u200b");
@@ -148,7 +148,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 							switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
 								case "OSX": // macOS App 暂不支持翻译功能
-								case "Win32_x86_64": // Windows App 暂不支持翻译功能	
+								case "Win32_x86_64": // Windows App 暂不支持翻译功能
 								case "WebPlayer": // Web App
 								case undefined:
 								default:
@@ -500,7 +500,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									body = ColorLyricsResponse.fromBinary(rawBody);
 									Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
 										: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
-										: "AUTO";
+											: "AUTO";
 									let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 									const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 									if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];

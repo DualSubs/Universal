@@ -11720,7 +11720,7 @@ class MessageType {
     }
 }
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.10(3) Translate.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.10(7) Translate.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -11772,7 +11772,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/x-plist": {
 					body = XML.parse($response.body);
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
-					const breakLine = (body?.tt) ? "<br/>" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
+					const breakLine = (body?.tt) ? "<br />" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
 					if (body?.timedtext?.head?.wp?.[1]?.["@rc"]) body.timedtext.head.wp[1]["@rc"] = "1";
 					let paragraph = body?.tt?.body?.div?.p ?? body?.timedtext?.body?.p;
 					let fullText = [];
@@ -11782,7 +11782,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							else para["#"] = para.s?.["#"] ?? "";
 							delete para.s;
 						}						const span = para?.span ?? para;
-						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"]).join(breakLine);
+						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? "\u200b").join(breakLine);
 						else sentences = span?.["#"];
 						if (Array.isArray(sentences)) sentences = sentences.join(" ");
 						fullText.push(sentences ?? "\u200b");

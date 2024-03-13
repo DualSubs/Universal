@@ -3704,7 +3704,7 @@ function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", sta
 	return newOption;
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.1.0(3) Manifest.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.1.0(4) Manifest.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -3835,9 +3835,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 								}								$.log(`🚧 matchList: ${JSON.stringify(matchList)}`, "");
 								if (matchList.length !== 0) {
 									matchList = matchList.map(subtitleUrl => {
+										subtitleUrl = JSON.parse(JSON.stringify(subtitleUrl));
 										subtitleUrl.displayName = `翻译字幕 (${subtitleUrl.displayName}/${Languages[1]})`;
 										const symbol = (subtitleUrl.url.includes("?")) ? "&" : "?";
-										subtitleUrl.url += `${symbol}subtype=${"Tranlsate"}`;
+										subtitleUrl.url += `${symbol}subtype=${"Translate"}`;
 										subtitleUrl.url += `&lang=${subtitleUrl.languageCode.toUpperCase()}`;
 										$.log(`🚧 subtitleUrl: ${JSON.stringify(subtitleUrl)}`, "");
 										return subtitleUrl;

@@ -4,9 +4,9 @@ import terser from '@rollup/plugin-terser';
 
 export default [
 	{
-		input: 'src/M3U8.response.js',
+		input: 'src/Manifest.response.js',
 		output: {
-			file: 'js/M3U8.response.js',
+			file: 'js/Manifest.response.js',
 			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},

@@ -13,12 +13,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.TV.M3U8.Master.response'
     match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.TV.M3U8.Subtitles.response'
     match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.TV.Composite.Subtitles.response'
@@ -33,17 +33,17 @@ scriptings:
 - http_response:
     name: 'DualSubs.TV+.M3U8.Master.response'
     match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/playlist\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.TV+.M3U8.Subtitles.response'
     match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/subscription\/stream\/playlist\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.TV+.M3U8.Subtitles.response'
     match: ^https?:\/\/vod-(.+)-svod\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles_V\d\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.TV+.Composite.Subtitles.response'
@@ -58,12 +58,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.Fitness.M3U8.Master.response'
     match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/workout\/playlist\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Fitness.M3U8.Subtitles.response'
     match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles_V\d\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Fitness.Composite.Subtitles.response'
@@ -78,12 +78,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.Disney+.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(cbcs|ctr)-all-(.+)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Disney+.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)(composite_(.+)|subtitles)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Disney+.Composite.Subtitles.response'
@@ -96,34 +96,39 @@ scriptings:
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Translate.response.js
     body_required: true
 - http_response:
+    name: 'DualSubs.PrimeVideo.JSON.GetPlaybackResources.response'
+    match: ^https?:\/\/atv-ps-fe\.primevideo\.com\/cdp\/catalog\/GetPlaybackResources
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
+    body_required: true
+- http_response:
     name: 'DualSubs.PrimeVideo.M3U8.Master.response'
     match: ^https?:\/\/(.+)(\.(hls)\.(pv-cdn|row\.aiv-cdn)|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PrimeVideo.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)(\.(hls|dash)\.(pv-cdn|row\.aiv-cdn)|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})_subtitles\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PrimeVideo.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)(\.(hls|dash)\.(pv-cdn|row\.aiv-cdn)|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PrimeVideo.M3U8.Subtitles.response'
     match: ^https?:\/\/s3\.amazonaws\.com\/aiv-prod-timedtext\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PrimeVideo.M3U8.Subtitles.response'
     match: ^https?:\/\/(d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PrimeVideo.M3U8.Subtitles.response'
     match: ^https?:\/\/cf-timedtext\.aux\.pv-cdn\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PrimeVideo.Composite.Subtitles.response'
@@ -158,12 +163,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.Max.M3U8.Master.response'
     match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/r\/hls\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Max.M3U8.Subtitles.response'
     match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/r\/hlsMedia\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Max.Composite.Subtitles.response'
@@ -178,12 +183,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.HBOMax.M3U8.Master.response'
     match: ^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/hls\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.HBOMax.M3U8.Subtitles.response'
     match: ^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/hlsMedia\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.HBOMax.Composite.Subtitles.response'
@@ -198,22 +203,22 @@ scriptings:
 - http_response:
     name: 'DualSubs.Hulu.M3U8.Master.response'
     match: ^https?:\/\/vodmanifest\.hulustream\.com\/hulu\/v1\/hls\/multivariant\/(\d+)\/playlist\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Hulu.M3U8.Master.response'
     match: ^https?:\/\/manifest-dp\.hulustream\.com\/hls\/(\d+)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Hulu.M3U8.Subtitles.response'
     match: ^https?:\/\/vodmanifest\.hulustream\.com\/hulu\/v1\/hls\/vtt\/(\d+)\/playlist\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Hulu.M3U8.Subtitles.response'
     match: ^https?:\/\/manifest-dp\.hulustream\.com\/webvtt\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Hulu.Composite.Subtitles.response'
@@ -228,12 +233,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.Paramount+.M3U8.Master.response'
     match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(master|manifest)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Paramount+.M3U8.Subtitles.response'
     match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(stream_vtt|manifest_.*)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Paramount+.Composite.Subtitles.response'
@@ -258,17 +263,17 @@ scriptings:
 - http_response:
     name: 'DualSubs.Discovery+.M3U8.Master.response'
     match: ^https?:\/\/content-discovery\.uplynk\.com\/(.+)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Discovery+Ph.M3U8.Master.response'
     match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\/master\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Discovery+Ph.M3U8.Subtitles.response'
     match: ^https?:\/\/dplus-ph-(prod-vod\.akamaized\.net|google-v2\.prod-vod\.h264\.io)\/(.+)\/captions\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Discovery+Ph.Composite.Subtitles.response'
@@ -283,12 +288,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.PeacockTV.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/master_cmaf\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PeacockTV.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.cdn\.peacocktv\.com\/pub\/global\/(.+)\/cmaf\/(.+)\/[^\/]*subtitles[^\/]*\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PeacockTV.Composite.Subtitles.response'
@@ -303,12 +308,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.FuboTV.M3U8.Master.response'
     match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/master\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.FuboTV.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)-vod\.fubo\.tv\/(.+)\/manifests\/subtitles\/(.+)\/media\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.FuboTV.Composite.Subtitles.response'
@@ -323,12 +328,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.TED.M3U8.Master.response'
     match: ^https?:\/\/hls\.ted\.com\/(.+)\/manifest\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.TED.M3U8.Subtitles.response'
     match: ^https?:\/\/hls\.ted\.com\/(.+)\/subtitles\/(.+)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.TED.Composite.Subtitles.response'
@@ -343,12 +348,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.GoogleDisplayNetwork.M3U8.Master.response'
     match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/master\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.GoogleDisplayNetwork.M3U8.Subtitles.response'
     match: ^https?:\/\/pubads\.g\.doubleclick\.net\/ondemand\/hls\/content\/(.+)\/media\/tt-(.+)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.GoogleDisplayNetwork.Composite.Subtitles.response'
@@ -363,7 +368,7 @@ scriptings:
 - http_response:
     name: 'DualSubs.BBC.M3U8.Master.response'
     match: ^https?:\/\/vod-hls-(.+)(\.live\.cf\.md\.bbci\.co\.uk|-live\.akamaized\.net)\/(.+)_hls_master\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.BBC.Composite.Subtitles.response'
@@ -378,12 +383,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.BritboxUK.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.BritboxUK.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.content\.britbox\.co\.uk\/(.+)\.ism\/(.+)-textstream(.+)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.BritboxUK.Composite.Subtitles.response'
@@ -418,12 +423,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.STARZ.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/(.+)_HLS_(.+)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.STARZ.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.starz\.com\/(.+)\/captions\/(.+)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.STARZ.Composite.Subtitles.response'
@@ -438,12 +443,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.AMC+.M3U8.Master.response'
     match: ^https?:\/\/ssaimanifest\.prod\.boltdns\.net\/(.+)\/playback\/once\/v1\/hls\/(.+)\/content\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.AMC+.M3U8.Subtitles.response'
     match: ^https?:\/\/ssaimanifest\.prod\.boltdns\.net\/(.+)\/playback\/once\/v1\/hls\/(.+)\/subtitle_(.+)\/media\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.AMC+.Composite.Subtitles.response'
@@ -468,22 +473,22 @@ scriptings:
 - http_response:
     name: 'DualSubs.Showtime.M3U8.Master.response'
     match: ^https?:\/\/ap-hls-vod\.dynamic\.showtime\.com/(.+)\/(tv|mobile)_master\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Showtime.M3U8.Master.response'
     match: ^https?:\/\/ap-hls-vod\.cdn\d\.showtime.com\/live\/sho(e|w)ast\/showtime.isml\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.SkyShowtime.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/master_manifest_(.+)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.SkyShowtime.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.cssott\.com\/(.+)\/mpeg_cbcs\/(.+)\/(.+)\.subtitles\.\d+\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.SkyShowtime.Composite.Subtitles.response'
@@ -498,12 +503,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.Viki.M3U8.Master.response'
     match: ^https?:\/\/manifest-viki\.viki\.io\/(.+)\/manifest\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Viki.M3U8.Subtitles.response'
     match: ^https?:\/\/manifest-viki\.viki\.io\/(.+)\/streams\/(.+)\/subtitles\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Viki.Composite.Subtitles.response'
@@ -518,17 +523,17 @@ scriptings:
 - http_response:
     name: 'DualSubs.EpixNow.M3U8.Master.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(master|prog_index|playlist_\d+)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.EpixNow.M3U8.Subtitles.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/media\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.EpixNow.M3U8.Subtitles.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.EpixNow.Composite.Subtitles.response'
@@ -553,12 +558,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.EpixNowLive.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.EpixNowLive.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.EpixNowLive.Composite.Subtitles.response'
@@ -573,12 +578,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.Nebula.M3U8.Master.response'
     match: ^https?:\/\/media-production\.nebula\.app\/(.+)\/(all|avc_hevc|avc)\.(\w+)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Nebula.M3U8.Subtitles.response'
     match: ^https?:\/\/media-production\.nebula\.app\/(.+)\/subtitles\/(.+)\/media\.(\w+)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.Nebula.Composite.Subtitles.response'
@@ -593,12 +598,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.PlutoTV.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.prd\.pluto\.tv\/v2\/stitch\/hls\/(channel|episode)\/(\w+)\/master\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PlutoTV.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.prd\.pluto\.tv\/v2\/stitch\/hls\/(channel|episode)\/(\w+)\/subtitle\/(\w+)\/playlist\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.PlutoTV.Composite.Subtitles.response'
@@ -613,12 +618,12 @@ scriptings:
 - http_response:
     name: 'DualSubs.MUBI.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.mubicdn\.net\/stream\/(.+)\/drm_playlist\.(\w+)\.ism\/default\/ver1\.(.+)\.m3u8
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.MUBI.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.mubicdn\.net\/stream\/(.+)\/drm_playlist\.(\w+)\.ism\/default\/drm_playlist\.(\w+)-textstream_(.+)\.m3u8\?(.*)subtype=
-    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
     name: 'DualSubs.MUBI.Composite.Subtitles.response'

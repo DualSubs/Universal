@@ -745,7 +745,7 @@ class URI {
 // refer: https://goessner.net/download/prj/jsonxml/
 class XML {
 	static name = "XML";
-	static version = "0.4.1";
+	static version = "0.4.2";
 	static about = () => console.log(`\n🟧 ${this.name} v${this.version}\n`);
 	
 	static #ATTRIBUTE_KEY = "@";
@@ -824,8 +824,12 @@ class XML {
 							// CDATA section
 							child.name = "!CDATA";
 							//child.raw = tag.slice(9, -2);
-							child.raw = tag.match(/!\[CDATA\[(.+)\]\]/);
+							child.raw = tag.match(/!\[CDATA\[(?<raw>.+)\]\]/)?.groups?.raw;
 							//appendText(tag.slice(9, -2));
+						} else if (/!--(.+)--/.test(tag)) {
+							// Comment section
+							child.name = "!--";
+							child.raw = tag.match(/!--(?<raw>.+)--/)?.groups?.raw;
 						} else {
 							// Comment section
 							child.name = name;
@@ -1112,7 +1116,7 @@ class XML {
 						case "?":
 							xml += `${Ind}<${Name}${Elem.toString()}${Name}>`;
 							break;
-						case "!":
+						case "!--":
 							xml += `${Ind}<!--${Elem.toString()}-->`;
 							break;
 						case "!DOCTYPE":

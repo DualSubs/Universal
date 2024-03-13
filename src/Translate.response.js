@@ -15,7 +15,7 @@ import Translate from "./class/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.10(2) Translate.response");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.10(3) Translate.response");
 
 /***************** Processing *****************/
 // 解构URL
@@ -76,6 +76,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 						const span = para?.span ?? para;
 						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"]).join(breakLine);
 						else sentences = span?.["#"];
+						if (Array.isArray(sentences)) sentences = sentences.join(" ");
 						fullText.push(sentences ?? "\u200b");
 						return para;
 					});

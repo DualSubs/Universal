@@ -3536,7 +3536,7 @@ function detectPlatform(url) {
 			: /\.spotify(cdn)?\.com/i.test(url) ? "Spotify"
 				: /\.apple\.com/i.test(url) ? "Apple"
 					: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
-						: /(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
+						: /primevideo\.com|(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
 							: /prd\.media\.h264\.io/i.test(url) ? "Max"
 								: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
 									: /\.hulu(stream|im)?\.com/i.test(url) ? "Hulu"

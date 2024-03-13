@@ -1,16 +1,16 @@
-import _ from './ENV/Lodash.mjs'
-import $Storage from './ENV/$Storage.mjs'
-import ENV from "./ENV/ENV.mjs";
-import URI from "./URI/URI.mjs";
-import M3U8 from "./EXTM3U/EXTM3U.mjs";
+import _ from '../../ENV/Lodash.mjs'
+import $Storage from '../../ENV/$Storage.mjs'
+import ENV from "../../ENV/ENV.mjs";
+import URI from "../../URI/URI.mjs";
+import M3U8 from "../../EXTM3U/EXTM3U.mjs";
 
-import Database from "./database/index.mjs";
-import detectPlatform from "./function/detectPlatform.mjs";
-import setENV from "./function/setENV.mjs";
-import isStandard from "./function/isStandard.mjs";
-import detectPlaylist from "./function/detectPlaylist.mjs";
-import setCache from "./function/setCache.mjs";
-import setOption from "./function/setOption.mjs";
+import Database from "../../database/index.mjs";
+import detectPlatform from "../../function/detectPlatform.mjs";
+import setENV from "../../function/setENV.mjs";
+import isStandard from "../../function/isStandard.mjs";
+import detectPlaylist from "../../function/detectPlaylist.mjs";
+import setCache from "../../function/setCache.mjs";
+import setOption from "../../function/setOption.mjs";
 
 const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.1.0(4) Manifest.response.beta");
 

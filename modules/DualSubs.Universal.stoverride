@@ -160,6 +160,10 @@ http:
       type: response
       require-body: true
 
+    - match: ^https?:\/\/atv-ps-fe\.primevideo\.com\/cdp\/catalog\/GetPlaybackResources
+      name: DualSubs.PrimeVideo.JSON.GetPlaybackResources.response
+      type: response
+      require-body: true
     - match: ^https?:\/\/(.+)(\.(hls)\.(pv-cdn|row\.aiv-cdn)|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8
       name: DualSubs.M3U8.Master.response
       type: response
@@ -613,10 +617,13 @@ http:
 
 script-providers:
   DualSubs.M3U8.Master.response:
-    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     interval: 86400
   DualSubs.M3U8.Subtitles.response:
-    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/M3U8.response.js
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
+    interval: 86400
+  DualSubs.PrimeVideo.JSON.GetPlaybackResources.response
+    url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     interval: 86400
   DualSubs.Composite.Subtitles.response:
     url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Composite.Subtitles.response.js

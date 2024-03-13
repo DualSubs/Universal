@@ -12,7 +12,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import setOption from "./function/setOption.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.1.0(1) Manifest.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.1.1(5) Manifest.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -62,8 +62,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							// 读取已存数据
 							let playlistCache = Caches.Playlists.Master.get($request.url) || {};
 							// 获取特定语言的字幕
-							playlistCache[Languages[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]]);
-							playlistCache[Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]]);
+							playlistCache[Languages[0]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]], FORMAT, PLATFORM);
+							playlistCache[Languages[1]] = getAttrList($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]], FORMAT, PLATFORM);
 							// 写入数据
 							Caches.Playlists.Master.set($request.url, playlistCache);
 							// 格式化缓存
@@ -136,24 +136,31 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					// 判断平台
 					switch (PLATFORM) {
 						case "PrimeVideo":
-							let matchList = [];
-							//查询是否有符合语言的内容
-							for (let langcode of Configs.Languages[Languages[0]]) {
-								$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
-								matchList = body?.subtitleUrls.filter(subtitleUrl => subtitleUrl?.languageCode?.toLowerCase() === langcode?.toLowerCase());
-								if (matchList.length !== 0) break;
-							};
-							if (matchList.length !== 0) {
-								matchList = matchList.map(subtitleUrl => {
-									subtitleUrl.displayName = `翻译字幕 (${subtitleUrl.displayName}/${Languages[1]})`;
-									const symbol = (subtitleUrl.url.includes("?")) ? "&" : "?";
-									subtitleUrl.url += `${symbol}subtype=${type}`;
-									subtitleUrl.url += `&lang=${Languages[0]}`;
-								});
-								body?.subtitleUrls.unshift(...matchList);
+							if (body?.subtitleUrls) {
+								// 读取已存数据
+								let playlistCache = Caches.Playlists.Master.get($request.url) || {};
+								// 获取特定语言的字幕
+								playlistCache[Languages[0]] = getAttrList($request.url, body, "subtitleUrls", Configs.Languages[Languages[0]], FORMAT, PLATFORM);
+								$.log(`🚧 playlistCache[Languages[0]]: ${JSON.stringify(playlistCache[Languages[0]])}`, "");
+								if (playlistCache[Languages[0]].length !== 0) {
+									playlistCache[Languages[0]] = playlistCache[Languages[0]].map(subtitleUrl => {
+										subtitleUrl = JSON.parse(JSON.stringify(subtitleUrl));
+										subtitleUrl.displayName = `翻译字幕 (${subtitleUrl.displayName}/${Languages[1]})`;
+										const symbol = (subtitleUrl.url.includes("?")) ? "&" : "?";
+										subtitleUrl.url += `${symbol}subtype=${"Translate"}`;
+										subtitleUrl.url += `&lang=${subtitleUrl.languageCode.toUpperCase()}`;
+										//subtitleUrl.languageCode = `Translate (${subtitleUrl.languageCode}/${Languages[1]})`;
+										subtitleUrl.languageCode = `Translate-${Languages[0]}/${Languages[1]}`
+										$.log(`🚧 subtitleUrl: ${JSON.stringify(subtitleUrl)}`, "");
+										return subtitleUrl;
+									});
+									$.log(`🚧 playlistCache[Languages[0]]: ${JSON.stringify(playlistCache[Languages[0]])}`, "");
+									body.subtitleUrls.unshift(...playlistCache[Languages[0]]);
+								};
 							};
 							break;
 					};
+					$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
@@ -183,11 +190,11 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
  * @param {String} platform - Platform
  * @return {Array} datas
  */
-function getAttrList(url = "", file = [], type = "", langCodes = [], platform = "") {
+function getAttrList(url = "", file = [], type = "", langCodes = [], format = "application/x-mpegURL", platform = "Universal") {
 	$.log(`☑️ Get Attribute List`, `langCodes: ${langCodes}`, "");
 	let matchList = [];
 	// 格式判断
-	switch (FORMAT) {
+	switch (format) {
 		case "application/x-mpegURL":
 		case "application/x-mpegurl":
 		case "application/vnd.apple.mpegurl":
@@ -210,23 +217,27 @@ function getAttrList(url = "", file = [], type = "", langCodes = [], platform = 
 			break;
 		};
 		case "text/json":
-		case "application/json":
+		case "application/json": {
 			switch (platform) {
-				case "PrimeVideo":
-					let attrList = file?.subtitleUrls ?? [];
+				case "PrimeVideo": {
+					let attrList = file?.[type] ?? [];
 					//查询是否有符合语言的内容
 					for (let langcode of langCodes) {
 						$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
 						matchList = attrList.filter(item => item?.languageCode?.toLowerCase() === langcode?.toLowerCase());
 						if (matchList.length !== 0) break;
 					};
+					/*
 					matchList = matchList.map(data => {
 						data.URL = data.url;
 						return data;
 					});
+					*/
 					break;
+				};
 			};
 			break;
+		};
 	};
 	$.log(`✅ Get Attribute List`, `matchList: ${JSON.stringify(matchList)}`, "");
 	return matchList;

@@ -3,9 +3,9 @@ import commonjs from "@rollup/plugin-commonjs";
 
 export default [
 	{
-		input: 'src/M3U8.response.beta.js',
+		input: 'src/Manifest.response.beta.js',
 		output: {
-			file: 'js/M3U8.response.beta.js',
+			file: 'js/Manifest.response.beta.js',
 			banner: '/* README: https://github.com/DualSubs */',
 			format: 'es'
 		},

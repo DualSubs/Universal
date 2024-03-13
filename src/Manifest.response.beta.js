@@ -177,29 +177,57 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
  * Get Attribute List
  * @author VirgilClyne
  * @param {String} url - Request URL
- * @param {Object} m3u8 - Parsed M3U8
+ * @param {Array} file - Parsed M3U8/JSON
  * @param {String} type - Content Type
  * @param {Array} langCodes - Language Codes Array
+ * @param {String} platform - Platform
  * @return {Array} datas
  */
-function getAttrList(url = "", m3u8 = {}, type = "", langCodes = []) {
+function getAttrList(url = "", file = [], type = "", langCodes = [], platform = "") {
 	$.log(`☑️ Get Attribute List`, `langCodes: ${langCodes}`, "");
-	let attrList = m3u8
-		.filter(item => item?.TAG === "#EXT-X-MEDIA") // 过滤标签
-		.filter(item => item?.OPTION?.TYPE === type) // 过滤类型
-		.filter(item => item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
-	//$.log(`🚧 attrList: ${JSON.stringify(attrList)}`, "");
 	let matchList = [];
-	//查询是否有符合语言的内容
-	for (let langcode of langCodes) {
-		$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
-		matchList = attrList.filter(item => item?.OPTION?.LANGUAGE?.toLowerCase() === langcode?.toLowerCase());
-		if (matchList.length !== 0) break;
+	// 格式判断
+	switch (FORMAT) {
+		case "application/x-mpegURL":
+		case "application/x-mpegurl":
+		case "application/vnd.apple.mpegurl":
+		case "audio/mpegurl": {
+			let attrList = file
+				.filter(item => item?.TAG === "#EXT-X-MEDIA") // 过滤标签
+				.filter(item => item?.OPTION?.TYPE === type) // 过滤类型
+				.filter(item => item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
+			//$.log(`🚧 attrList: ${JSON.stringify(attrList)}`, "");
+			//查询是否有符合语言的内容
+			for (let langcode of langCodes) {
+				$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
+				matchList = attrList.filter(item => item?.OPTION?.LANGUAGE?.toLowerCase() === langcode?.toLowerCase());
+				if (matchList.length !== 0) break;
+			};
+			matchList = matchList.map(data => {
+				data.URL = aPath(url, data?.OPTION?.URI ?? null);
+				return data;
+			});
+			break;
+		};
+		case "text/json":
+		case "application/json":
+			switch (platform) {
+				case "PrimeVideo":
+					let attrList = file?.subtitleUrls ?? [];
+					//查询是否有符合语言的内容
+					for (let langcode of langCodes) {
+						$.log(`🚧 Get Attribute List`, "for (let langcode of langcodes)", `langcode: ${langcode}`, "");
+						matchList = attrList.filter(item => item?.languageCode?.toLowerCase() === langcode?.toLowerCase());
+						if (matchList.length !== 0) break;
+					};
+					matchList = matchList.map(data => {
+						data.URL = data.url;
+						return data;
+					});
+					break;
+			};
+			break;
 	};
-	matchList = matchList.map(data => {
-		data.URL = aPath(url, data?.OPTION?.URI ?? null);
-		return data;
-	})
 	$.log(`✅ Get Attribute List`, `matchList: ${JSON.stringify(matchList)}`, "");
 	return matchList;
 };

@@ -13,7 +13,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import aPath from "./function/aPath.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.2.0(3) Manifest.response");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.2.1(1) Manifest.response");
 
 /***************** Processing *****************/
 // 解构URL
@@ -65,14 +65,14 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							// 获取特定语言的字幕
 							playlistCache[Languages[0]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]]);
 							playlistCache[Languages[1]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]]);
+							// 写入选项
+							body = new AttrList(FORMAT, PLATFORM).set(body, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
 							// 写入数据
 							Caches.Playlists.Master.set($request.url, playlistCache);
 							// 格式化缓存
 							Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.CacheSize);
 							// 写入持久化储存
 							$Storage.setItem(`@DualSubs.${"Composite"}.Caches.Playlists.Master`, Caches.Playlists.Master);
-							// 写入选项
-							body = new AttrList(FORMAT, PLATFORM).set(body, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
 							break;
 						case "Media Playlist":
 							// 处理类型
@@ -134,19 +134,26 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/json":
 					body = JSON.parse($response.body ?? "{}");
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					// 读取已存数据
+					let playlistCache = Caches.Playlists.Master.get($request.url) || {};
 					// 判断平台
 					switch (PLATFORM) {
 						case "PrimeVideo":
 							if (body?.subtitleUrls) {
-								// 读取已存数据
-								let playlistCache = Caches.Playlists.Master.get($request.url) || {};
 								// 获取特定语言的字幕
 								playlistCache[Languages[0]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "subtitleUrls", Configs.Languages[Languages[0]]);
+								playlistCache[Languages[1]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "subtitleUrls", Configs.Languages[Languages[1]]);
 								//$.log(`🚧 playlistCache[Languages[0]]: ${JSON.stringify(playlistCache[Languages[0]])}`, "");
 								body.subtitleUrls = new AttrList(FORMAT, PLATFORM).set(body.subtitleUrls, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
 							};
 							break;
 					};
+					// 写入数据
+					Caches.Playlists.Master.set($request.url, playlistCache);
+					// 格式化缓存
+					Caches.Playlists.Master = setCache(Caches.Playlists.Master, Settings.CacheSize);
+					// 写入持久化储存
+					$Storage.setItem(`@DualSubs.${"Composite"}.Caches.Playlists.Master`, Caches.Playlists.Master);
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;

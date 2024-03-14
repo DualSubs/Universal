@@ -4,7 +4,7 @@ import aPath from "../function/aPath.mjs";
 export default class AttrList {
     constructor(format = "application/x-mpegURL", platform = "Universal") {
 		this.Name = "AttrList";
-		this.Version = "1.0.1";
+		this.Version = "1.0.5";
         this.format = format;
         this.platform = platform;
 		//Object.assign(this, options)
@@ -156,15 +156,28 @@ export default class AttrList {
                                 let option = {};
                                 switch (type) {
                                     case "Official":
+                                        playlists2?.forEach(playlist2 => {
+                                            if (playlist1.trackGroupId === playlist2.trackGroupId) {
+                                                option = JSON.parse(JSON.stringify(playlist1));
+                                                option.displayName = `${type} (${playlist1.displayName}/${playlist2.displayName})`;
+                                                option.languageCode = `${playlist1.languageCode}/${playlist2.languageCode}_${type}`
+                                                option.timedTextTrackId = `${playlist1.timedTextTrackId}_${type}`;
+                                                const symbol = (option.url.includes("?")) ? "&" : "?";
+                                                option.url += `${symbol}subtype=${type}`;
+                                                option.url += `&lang=${languages[0]}`;
+                                                //console.log(`🚧 option: ${JSON.stringify(option)}`, "");
+                                            };
+                                        });
                                         break;
                                     case "Translate":
                                     case "External":
                                         option = JSON.parse(JSON.stringify(playlist1));
-                                        option.displayName = `${type} (${option.displayName}/${languages[1]})`;
-                                        const symbol = (option.url.includes("?")) ? "&" : "?";
+                                        option.displayName = `${type} (${playlist1.displayName}/${languages[1]})`;
+                                        option.languageCode = `${playlist1.languageCode}/${languages[1].toLowerCase()}_${type}`
+                                        option.timedTextTrackId = `${playlist1.timedTextTrackId}_${type}`;
+                                        const symbol = (playlist1.url.includes("?")) ? "&" : "?";
                                         option.url += `${symbol}subtype=${type}`;
-                                        option.url += `&lang=${option.languageCode.toUpperCase()}`;
-                                        option.languageCode = `${type}-${languages[0]}/${languages[1]}`
+                                        option.url += `&lang=${playlist1.languageCode.toUpperCase()}`;
                                         //console.log(`🚧 option: ${JSON.stringify(option)}`, "");
                                         break;
                                 };

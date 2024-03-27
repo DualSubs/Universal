@@ -42,7 +42,7 @@ scriptings:
     body_required: true
 - http_response:
     name: 'DualSubs.TV+.M3U8.Subtitles.response'
-    match: ^https?:\/\/vod-(.+)-svod\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles_V\d\.m3u8\?(.*)subtype=
+    match: ^https?:\/\/vod-(.+)-(aoc|svod)\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles_V\d\.m3u8\?(.*)subtype=
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:

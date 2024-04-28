@@ -43,6 +43,7 @@ http:
     - "d25xi40x97liuc.cloudfront.net"
     - "d27xxe7juh1us6.cloudfront.net"
     - "dmqdd6hw24ucf.cloudfront.net"
+    - "*.prod.media.h264.io"
     - "*.prd.media.h264.io"
     - "manifests.api.hbo.com"
     - "manifests.v2.api.hbo.com"

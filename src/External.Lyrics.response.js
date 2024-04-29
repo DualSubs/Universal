@@ -1,6 +1,7 @@
 import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
+import URL from "./URL/URL.mjs";
 import URI from "./URL/URI.mjs";
 import LRC from "./LRC/LRC.mjs";
 
@@ -12,15 +13,15 @@ import setCache from "./function/setCache.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.5.5(2) External.Lyrics.response");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.6.0(1001) External.Lyrics.response");
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"] ?? $request.headers?.Accept ?? $request.headers?.accept)?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
@@ -35,7 +36,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams.get("subtype") ?? Settings.Type, Languages = [url.searchParams.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 查询缓存
 			const trackId = PATHs?.[3];

@@ -1,7 +1,7 @@
 import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
-import URI from "./URL/URI.mjs";
+import URL from "./URL/URL.mjs";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 
@@ -13,18 +13,18 @@ import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.8(2) Composite.Subtitles.response");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(1002) Composite.Subtitles.response");
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body, FORMAT);
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
@@ -37,7 +37,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams.get("subtype") ?? Settings.Type, Languages = [url.searchParams.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建字幕请求队列
 			let requests = [];
@@ -65,7 +65,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						case "YouTube":
 							$.log(`⚠ YouTube`, "");
-							switch (URL.query?.tlang) {
+							switch (url.searchParams.get("tlang")) {
 								case undefined:
 									$.log(`⚠ 未选择翻译语言，跳过`, "");
 									break;
@@ -83,10 +83,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										default:
 											$.log(`⚠ 生成双语字幕`, "");
 											// 获取字幕
-											URL.query.lang = Caches.Playlists.Subtitle.get(URL.query?.v) ?? URL.query.lang; // 主语言
-											delete URL.query?.tlang // 原字幕
+											url.searchParams.set("lang", Caches.Playlists.Subtitle.get(url.searchParams.get("v")) || url.searchParams.get("lang")); // 主语言
+											url.searchParams.delete("tlang") // 原字幕
 											let request = {
-												"url": URI.stringify(URL),
+												"url": url.toString(),
 												"headers": $request.headers
 											};
 											requests.push(request);
@@ -144,7 +144,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					body = XML.parse($response.body);
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await $.fetch(request).then(response => XML.parse(response.body));
-						body = new Composite(Settings).timedText(body, officialSubtitle, URL.query?.kind);
+						body = new Composite(Settings).timedText(body, officialSubtitle, url.searchParams.get("kind"));
 					}));
 					$response.body = XML.stringify(body);
 					break;
@@ -162,7 +162,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					body = JSON.parse($response.body ?? "{}");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await $.fetch(request).then(response => JSON.parse(response.body));
-						body = new Composite(Settings).JSON(body, officialSubtitle, URL.query?.kind);
+						body = new Composite(Settings).JSON(body, officialSubtitle, url.searchParams.get("kind"));
 					}));
 					$response.body = JSON.stringify(body);
 					break;

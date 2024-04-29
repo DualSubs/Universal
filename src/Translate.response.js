@@ -1,7 +1,7 @@
 import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
-import URI from "./URL/URI.mjs";
+import URL from "./URL/URL.mjs";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 
@@ -15,18 +15,18 @@ import Translate from "./class/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.2.10(7) Translate.response");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.3.0(1001) Translate.response");
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body, FORMAT);
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
@@ -39,7 +39,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams.get("subtype") ?? Settings.Type, Languages = [url.searchParams.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建空数据
 			let body = {};

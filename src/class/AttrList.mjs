@@ -100,26 +100,32 @@ export default class AttrList {
                 playlists1?.forEach(playlist1 => {
                     const index1 = file.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
                     types.forEach(type => {
+                        let option1, option2;
                         console.log(`🚧 Set Attribute List, type: ${type}`, "");
-                        let option = {};
                         switch (type) {
                             case "Official":
                                 playlists2?.forEach(playlist2 => {
-                                    //const index2 = file.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 副语言（源语言）字幕位置
+                                    const index2 = file.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 副语言（源语言）字幕位置
                                     if (playlist1?.OPTION?.["GROUP-ID"] === playlist2?.OPTION?.["GROUP-ID"]) {
                                         switch (this.platform) { // 兼容性修正
                                             case "Apple":
                                                 if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
-                                                    option = setOption(playlist1, playlist2, type, this.platform, standard, device);
-                                                    option.OPTION.URI += `&lang=${languages[0]}`;
+                                                    option1 = setOption(playlist1, playlist2, type, this.platform, standard, device);
+                                                    // option1.OPTION.URI += `&lang=${languages[0]}`;
+                                                    option2 = setOption(playlist2, playlist1, type, this.platform, standard, device);
+                                                    // option2.OPTION.URI += `&lang=${languages[0]}`;
                                                 };
                                                 break;
                                             default:
-                                                option = setOption(playlist1, playlist2, type, this.platform, standard, device);
-                                                option.OPTION.URI += `&lang=${languages[0]}`;
+                                                option1 = setOption(playlist1, playlist2, type, this.platform, standard, device);
+                                                // option1.OPTION.URI += `&lang=${languages[0]}`;
+                                                option2 = setOption(playlist2, playlist1, type, this.platform, standard, device);
+                                                // option2.OPTION.URI += `&lang=${languages[0]}`;
                                                 break;
                                         };
                                     };
+                                    if (option1) file.splice(index1 + (standard ? 1 : 0), 0, option1);
+                                    if (option2) file.splice(index2 + (standard ? 1 : 0), 0, option2);
                                 });
                                 break;
                             case "Translate":
@@ -133,14 +139,12 @@ export default class AttrList {
                                         //"URI": playlist?.URI,
                                     }
                                 };
-                                option = setOption(playlist1, playlist2, type, this.platform, standard, device);
-                                option.OPTION.URI += `&lang=${playlist1?.OPTION?.LANGUAGE?.toUpperCase()}`;
+                                option1 = setOption(playlist1, playlist2, type, this.platform, standard, device);
+                                option1.OPTION.URI += `&lang=${playlist1?.OPTION?.LANGUAGE?.toUpperCase()}`;
+                                if (option1) file.splice(index1 + (standard ? 1 : 0), 0, option1);
                                 break;
                         };
-                        if (Object.keys(option).length !== 0) {
-                            if (standard) file.splice(index1 + 1, 0, option)
-                            else file.splice(index1, 1, option);
-                        };
+                        
                     });
                 });
                 break;

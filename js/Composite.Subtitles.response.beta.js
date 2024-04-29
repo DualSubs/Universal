@@ -710,36 +710,67 @@ class ENV {
 	}
 }
 
-class URI {
-	static name = "URI";
-	static version = "1.2.7";
-	static about() { return console.log(`\n🟧 ${this.name} v${this.version}\n`) };
-	static #json = { scheme: "", host: "", path: "", query: {} };
-
-	static parse(url) {
-		const URLRegex = /(?:(?<scheme>.+):\/\/(?<host>[^/]+))?\/?(?<path>[^?]+)?\??(?<query>[^?]+)?/;
-		let json = url.match(URLRegex)?.groups ?? null;
-		if (json?.path) json.paths = json.path.split("/"); else json.path = "";
-		//if (json?.paths?.at(-1)?.includes(".")) json.format = json.paths.at(-1).split(".").at(-1);
-		if (json?.paths) {
-			const fileName = json.paths[json.paths.length - 1];
-			if (fileName?.includes(".")) {
-				const list = fileName.split(".");
-				json.format = list[list.length - 1];
-			}
-		}
-		if (json?.query) json.query = Object.fromEntries(json.query.split("&").map((param) => param.split("=")));
-		return json
+let URL$1 = class URL {
+	constructor(url, base = undefined) {
+		const name = "URL";
+		const version = "2.1.0";
+		console.log(`\n🟧 ${name} v${version}\n`);
+		url = this.#parse(url, base);
+		return this;
 	};
 
-	static stringify(json = this.#json) {
-		let url = "";
-		if (json?.scheme && json?.host) url += json.scheme + "://" + json.host;
-		if (json?.path) url += (json?.host) ? "/" + json.path : json.path;
-		if (json?.query) url += "?" + Object.entries(json.query).map(param => param.join("=")).join("&");
-		return url
+	#parse(url, base = undefined) {
+		const URLRegex = /(?:(?<protocol>\w+:)\/\/(?:(?<username>[^\s:"]+)(?::(?<password>[^\s:"]+))?@)?(?<host>[^\s@/]+))?(?<pathname>\/?[^\s@?]+)?(?<search>\?[^\s?]+)?/;
+		const PortRegex = /(?<hostname>.+):(?<port>\d+)$/;
+		url = url.match(URLRegex)?.groups || {};
+		if (base) {
+			base = base?.match(URLRegex)?.groups || {};
+			if (!base.protocol || !base.hostname) throw new Error(`🚨 ${name}, ${base} is not a valid URL`);
+		}		if (url.protocol || base?.protocol) this.protocol = url.protocol || base.protocol;
+		if (url.username || base?.username) this.username = url.username || base.username;
+		if (url.password || base?.password) this.password = url.password || base.password;
+		if (url.host || base?.host) {
+			this.host = url.host || base.host;
+			Object.freeze(this.host);
+			this.hostname = this.host.match(PortRegex)?.groups.hostname ?? this.host;
+			this.port = this.host.match(PortRegex)?.groups.port ?? "";
+		}		if (url.pathname || base?.pathname) {
+			this.pathname = url.pathname || base?.pathname;
+			if (!this.pathname.startsWith("/")) this.pathname = "/" + this.pathname;
+			this.paths = this.pathname.split("/").filter(Boolean);
+			Object.freeze(this.paths);
+			if (this.paths) {
+				const fileName = this.paths[this.paths.length - 1];
+				if (fileName?.includes(".")) {
+					const list = fileName.split(".");
+					this.format = list[list.length - 1];
+					Object.freeze(this.format);
+				}
+			}		} else this.pathname = "";
+		if (url.search || base?.search) {
+			this.search = url.search || base.search;
+			Object.freeze(this.search);
+			if (this.search) {
+				const array = this.search.slice(1).split("&").map((param) => param.split("="));
+				this.searchParams = new Map(array);
+			}		}		this.harf = this.toString();
+		Object.freeze(this.harf);
+		return this;
 	};
-}
+
+	toString() {
+		let string = "";
+		if (this.protocol) string += this.protocol + "//";
+		if (this.username) string += this.username + (this.password ? ":" + this.password : "") + "@";
+		if (this.hostname) string += this.hostname;
+		if (this.port) string += ":" + this.port;
+		if (this.pathname) string += this.pathname;
+		if (this.searchParams) string += "?" + Array.from(this.searchParams).map(param => param.join("=")).join("&");
+		return string;
+	};
+
+	toJSON() { return JSON.stringify({ ...this }) };
+};
 
 // refer: https://github.com/Peng-YM/QuanX/blob/master/Tools/XMLParser/xml-parser.js
 // refer: https://goessner.net/download/prj/jsonxml/
@@ -3942,9 +3973,9 @@ function setENV(name, platforms, database) {
  * @param {String} body - response body
  * @return {String} format - format
  */
-function detectFormat(url, body, format = undefined) {
-	console.log(`☑️ detectFormat, format: ${url.format ?? url.query?.fmt ?? url.query?.format}`, "");
-	switch (url.format ?? url.query?.fmt ?? url.query?.format) {
+function detectFormat(url = new URL(), body, format = undefined) {
+	console.log(`☑️ detectFormat, format: ${url.format || url.searchParams.get("fmt") || url.searchParams.get("format")}`, "");
+	switch (url.format || url.searchParams.get("fmt") || url.searchParams.get("format")) {
 		case "txt":
 			format = "text/plain";
 			break;
@@ -4328,18 +4359,18 @@ class Composite {
 	};
 }
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v0.9.8(2) Composite.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(1002) Composite.Subtitles.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL$1($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method; URL.host; URL.path; const PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
+if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body, FORMAT);
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
@@ -4352,7 +4383,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams.get("subtype") ?? Settings.Type, Languages = [url.searchParams.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建字幕请求队列
 			let requests = [];
@@ -4379,7 +4410,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							}							break;
 						case "YouTube":
 							$.log(`⚠ YouTube`, "");
-							switch (URL.query?.tlang) {
+							switch (url.searchParams.get("tlang")) {
 								case undefined:
 									$.log(`⚠ 未选择翻译语言，跳过`, "");
 									break;
@@ -4397,10 +4428,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										default:
 											$.log(`⚠ 生成双语字幕`, "");
 											// 获取字幕
-											URL.query.lang = Caches.Playlists.Subtitle.get(URL.query?.v) ?? URL.query.lang; // 主语言
-											delete URL.query?.tlang; // 原字幕
+											url.searchParams.set("lang", Caches.Playlists.Subtitle.get(url.searchParams.get("v")) || url.searchParams.get("lang")); // 主语言
+											url.searchParams.delete("tlang"); // 原字幕
 											let request = {
-												"url": URI.stringify(URL),
+												"url": url.toString(),
 												"headers": $request.headers
 											};
 											requests.push(request);
@@ -4458,7 +4489,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await $.fetch(request).then(response => XML.parse(response.body));
 						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
-						body = new Composite(Settings).timedText(body, officialSubtitle, URL.query?.kind);
+						body = new Composite(Settings).timedText(body, officialSubtitle, url.searchParams.get("kind"));
 					}));
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = XML.stringify(body);
@@ -4482,7 +4513,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await $.fetch(request).then(response => JSON.parse(response.body));
 						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
-						body = new Composite(Settings).JSON(body, officialSubtitle, URL.query?.kind);
+						body = new Composite(Settings).JSON(body, officialSubtitle, url.searchParams.get("kind"));
 					}));
 					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);

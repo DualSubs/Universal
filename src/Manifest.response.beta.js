@@ -1,7 +1,7 @@
 import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
-import URI from "./URI/URI.mjs";
+import URL from "./URL/URL.mjs";
 import M3U8 from "./EXTM3U/EXTM3U.mjs";
 import AttrList from "./class/AttrList.mjs";
 
@@ -13,15 +13,15 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import aPath from "./function/aPath.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.2.1(1) Manifest.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.3.0(1002) Manifest.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 $.log(`⚠ FORMAT: ${FORMAT}`, "");
@@ -36,10 +36,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = URL.query?.subtype ?? Settings.Type, Languages = [URL.query?.lang?.toUpperCase?.() ?? Settings.Languages[0], (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams.get("subtype") ?? Settings.Type, Languages = [url.searchParams.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 兼容性判断
-			const { standard: STANDARD, device: DEVICE } = isStandard(URL, $request.headers, PLATFORM);
+			const { standard: STANDARD, device: DEVICE } = isStandard(url, $request.headers, PLATFORM);
 			// 创建空数据
 			let body = {};
 			// 格式判断
@@ -102,8 +102,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 								if (/^.+\.((web)?vtt|ttml2?|xml|smi)(\?.+)?$/.test(item?.URI)) {
 									const symbol = (item.URI.includes("?")) ? "&" : "?";
 									if (!/empty|blank|default/.test(item.URI)) {
-										if (URL.query?.lang) item.URI += `${symbol}subtype=${Type}&lang=${URL.query.lang}`;
-										else item.URI += `${symbol}subtype=${Type}`;
+										item.URI += `${symbol}subtype=${Type}`;
+										if (url.searchParams.has("lang")) item.URI += `&lang=${url.searchParams.get("lang")}`;
 									};
 									if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
 									else return item;

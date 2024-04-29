@@ -3,12 +3,12 @@
  * is Standard?
  * Determine whether Standard Media Player
  * @author VirgilClyne
- * @param {String} _url - Parsed Request URL
+ * @param {String} url - Parsed Request URL
  * @param {Object} headers - Request Headers
  * @param {String} platform - Steaming Media Platform
  * @return {Promise<*>}
  */
-export default function isStandard(url = {}, headers = {}, platform = "Universal") {
+export default function isStandard(url = new URL(), headers = {}, platform = "Universal") {
 	console.log(`☑️ is Standard?`, "");
     // 判断设备类型
 	const UA = headers["user-agent"] ?? headers["User-Agent"];
@@ -24,7 +24,7 @@ export default function isStandard(url = {}, headers = {}, platform = "Universal
         case "Max":
         case "HBOMax":
             if (headers["x-hbo-device-name"]?.includes("ios")) device = "iPhone";
-            else if (url.query?.["device-code"] === "iphone") device = "iPhone";
+            else if (url.searchParams.get("device-code") === "iphone") device = "iPhone";
             break;
         case "PeacockTV":
             if (UA.includes("PeacockMobile")) device = "iPhone";

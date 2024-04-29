@@ -22,3 +22,6 @@
 [submodule "src/text-encoding"]
 	path = src/text-encoding
 	url = https://github.com/inexorabletash/text-encoding.git
+[submodule "src/URL"]
+	path = src/URL
+	url = https://github.com/NanoCat-Me/URL.git

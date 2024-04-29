@@ -1,7 +1,7 @@
 import _ from './ENV/Lodash.mjs'
 import $Storage from './ENV/$Storage.mjs'
 import ENV from "./ENV/ENV.mjs";
-import URI from "./URI/URI.mjs";
+import URI from "./URL/URI.mjs";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 
@@ -11,7 +11,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import Composite from "./function/Composite.mjs";
 
-const $ = new ENVs("🍿️ DualSubs: 🔣 Universal v1.0.1(2) External.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.0.1(2) External.Subtitles.response.beta");
 
 /***************** Processing *****************/
 // 解构URL

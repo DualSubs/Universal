@@ -101,7 +101,7 @@ export default class AttrList {
                     const index1 = file.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
                     types.forEach(type => {
                         console.log(`🚧 Set Attribute List, type: ${type}`, "");
-                        let option = {};
+                        let option;
                         switch (type) {
                             case "Official":
                                 playlists2?.forEach(playlist2 => {
@@ -111,12 +111,12 @@ export default class AttrList {
                                             case "Apple":
                                                 if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {  // 只生成属性相同
                                                     option = setOption(playlist1, playlist2, type, this.platform, standard, device);
-                                                    option.OPTION.URI += `&lang=${languages[0]}`;
+                                                    // option.OPTION.URI += `&lang=${languages[0]}`;
                                                 };
                                                 break;
                                             default:
                                                 option = setOption(playlist1, playlist2, type, this.platform, standard, device);
-                                                option.OPTION.URI += `&lang=${languages[0]}`;
+                                                // option.OPTION.URI += `&lang=${languages[0]}`;
                                                 break;
                                         };
                                     };
@@ -137,10 +137,7 @@ export default class AttrList {
                                 option.OPTION.URI += `&lang=${playlist1?.OPTION?.LANGUAGE?.toUpperCase()}`;
                                 break;
                         };
-                        if (Object.keys(option).length !== 0) {
-                            if (standard) file.splice(index1 + 1, 0, option)
-                            else file.splice(index1, 1, option);
-                        };
+                        if (option) file.splice(index1 + (standard ? 1 : 0), 0, option);
                     });
                 });
                 break;
@@ -153,7 +150,7 @@ export default class AttrList {
                             const index1 = file.findIndex(item => item?.timedTextTrackId === playlist1.timedTextTrackId); // 主语言（源语言）字幕位置
                             types.forEach(type => {
                                 console.log(`🚧 Set Attribute List, type: ${type}`);
-                                let option = {};
+                                let option;
                                 switch (type) {
                                     case "Official":
                                         playlists2?.forEach(playlist2 => {
@@ -181,10 +178,7 @@ export default class AttrList {
                                         //console.log(`🚧 option: ${JSON.stringify(option)}`, "");
                                         break;
                                 };
-                                if (Object.keys(option).length !== 0) {
-                                    if (standard) file.splice(index1 + 1, 0, option)
-                                    else file.splice(index1, 1, option);
-                                };
+                                if (option) file.splice(index1 + (standard ? 1 : 0), 0, option);
                             });
                         });
                         break;

@@ -13,7 +13,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import aPath from "./function/aPath.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.3.0(1002) Manifest.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.3.0(1003) Manifest.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -36,7 +36,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = url.searchParams.get("subtype") ?? Settings.Type, Languages = [url.searchParams.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams?.get("subtype") ?? Settings.Type, Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 兼容性判断
 			const { standard: STANDARD, device: DEVICE } = isStandard(url, $request.headers, PLATFORM);

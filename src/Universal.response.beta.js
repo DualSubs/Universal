@@ -18,16 +18,16 @@ import Translates from "./function/Translate.mjs";
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime/build/es2015/index.js";
 
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.0.0(5) response.beta");
+const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.0.0(1006) response.beta");
 const Translate = new Translates($);
 
 /***************** Processing *****************/
 // 解构URL
-const URL = URI.parse($request.url);
-$.log(`⚠ URL: ${JSON.stringify(URL)}`, "");
+const url = new URL($request.url);
+$.log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = URL.host, PATH = URL.path, PATHs = URL.paths;
-$.log(`⚠ METHOD: ${METHOD}`, "");
+const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"] ?? $request.headers?.Accept ?? $request.headers?.accept)?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, $.isQuanX() ? FORMAT : undefined);
@@ -46,7 +46,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕语言
-			const Languages = [URL.query?.lang?.toUpperCase?.() ?? "AUTO", (URL.query?.tlang ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams?.get("subtype") ?? Settings.Type, Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Languages: ${Languages}`, "");
 			// 创建空数据
 			let body = {};

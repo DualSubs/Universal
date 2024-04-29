@@ -13,7 +13,7 @@ import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(1002) Composite.Subtitles.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(1003) Composite.Subtitles.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -37,7 +37,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = url.searchParams.get("subtype") ?? Settings.Type, Languages = [url.searchParams.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams?.get("subtype") ?? Settings.Type, Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建字幕请求队列
 			let requests = [];

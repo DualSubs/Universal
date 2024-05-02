@@ -13,7 +13,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import aPath from "./function/aPath.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.3.0(1003) Manifest.response");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.3.0(1004) Manifest.response");
 
 /***************** Processing *****************/
 // 解构URL
@@ -103,7 +103,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									const symbol = (item.URI.includes("?")) ? "&" : "?";
 									if (!/empty|blank|default/.test(item.URI)) {
 										item.URI += `${symbol}subtype=${Type}`;
-										if (url.searchParams.has("lang")) item.URI += `&lang=${url.searchParams.get("lang")}`;
+										if (url.searchParams?.has("lang")) item.URI += `&lang=${url.searchParams.get("lang")}`;
 									};
 									if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
 									else return item;

@@ -521,57 +521,57 @@ scriptings:
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Translate.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNow.M3U8.Master.response'
+    name: 'DualSubs.MGM+.M3U8.Master.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(master|prog_index|playlist_\d+)\.m3u8
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNow.M3U8.Subtitles.response'
+    name: 'DualSubs.MGM+.M3U8.Subtitles.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/media\.m3u8\?(.*)subtype=
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNow.M3U8.Subtitles.response'
+    name: 'DualSubs.MGM+.M3U8.Subtitles.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\.m3u8\?(.*)subtype=
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNow.Composite.Subtitles.response'
+    name: 'DualSubs.MGM+.Composite.Subtitles.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/captions_\d+\/(.+)\/fileSequence\d+\.webvtt\?(.*)subtype=(Official|External)
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Composite.Subtitles.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNow.Composite.Subtitles.response'
+    name: 'DualSubs.MGM+.Composite.Subtitles.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\?(.*)subtype=(Official|External)
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Composite.Subtitles.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNow.Translate.Subtitles.response'
+    name: 'DualSubs.MGM+.Translate.Subtitles.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/captions_\d+\/(.+)\/fileSequence\d+\.webvtt\?(.*)subtype=Translate
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Translate.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNow.Translate.Subtitles.response'
+    name: 'DualSubs.MGM+.Translate.Subtitles.response'
     match: ^https?:\/\/epixhls\.akamaized\.net\/(vam|movies)\/(.+)\/subtitles\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\?(.*)subtype=Translate
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Translate.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNowLive.M3U8.Master.response'
+    name: 'DualSubs.MGM+Live.M3U8.Master.response'
     match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index\.m3u8
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNowLive.M3U8.Subtitles.response'
+    name: 'DualSubs.MGM+Live.M3U8.Subtitles.response'
     match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+\.m3u8\?(.*)subtype=
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNowLive.Composite.Subtitles.response'
+    name: 'DualSubs.MGM+Live.Composite.Subtitles.response'
     match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt\?(.*)subtype=(Official|External)
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Composite.Subtitles.response.js
     body_required: true
 - http_response:
-    name: 'DualSubs.EpixNowLive.Translate.Subtitles.response'
+    name: 'DualSubs.MGM+Live.Translate.Subtitles.response'
     match: ^https?:\/\/(.+)\.live\.epix\.services\/out\/(.+)\/index_5_\d+_\d+\.vtt\?(.*)subtype=Translate
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Translate.response.js
     body_required: true

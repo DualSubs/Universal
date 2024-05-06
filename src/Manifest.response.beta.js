@@ -13,7 +13,7 @@ import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import aPath from "./function/aPath.mjs";
 
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.3.0(1004) Manifest.response.beta");
+const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.3.1(1006) Manifest.response.beta");
 
 /***************** Processing *****************/
 // 解构URL
@@ -107,6 +107,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									};
 									if (item.TAG === "#EXT-X-BYTERANGE") body[i - 1].URI = item.URI; // 删除BYTERANGE
 									else return item;
+								} else if (item?.URI && PLATFORM === "MGM+") {
+									item.URI += `?subtype=${Type}`;
+									if (url.searchParams?.has("lang")) item.URI += `&lang=${url.searchParams.get("lang")}`;
+									return item;
 								} else return item;
 							});
 							break;

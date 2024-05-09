@@ -4193,7 +4193,7 @@ function constructSubtitlesQueue(request, fileName, VTTs1 = [], VTTs2 = []) {
 class Composite {
 	constructor(options = {}) {
 		this.Name = "Composite";
-		this.Version = "1.0.0";
+		this.Version = "1.0.1";
 		this.Offset = 0;
 		this.Tolerance = 0;
 		this.Position = "Forward";
@@ -4229,7 +4229,7 @@ class Composite {
 					}					delete event.wWinId;
 					return event;
 				});
-			//break; 不要break，连续处理
+				//break; 不要break，连续处理
 			case "captions":
 			default:
 				// 处理普通字幕
@@ -4244,7 +4244,7 @@ class Composite {
 						// 处理普通字幕
 						const text1 = Sub1.events[index1]?.segs?.[0].utf8 ?? "", text2 = Sub2.events[index2]?.segs?.[0].utf8 ?? "";
 						//console.log(`🚧 text1: ${text1}, text2: ${text2}`, "");
-						DualSub.events[index0].segs = [{ "utf8": (Position === "Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}` }];
+						DualSub.events[index0].segs = [{ "utf8": ((Position === "Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`).trim() }];
 						//console.log(`🚧  DualSub.events[index0].segs[0].utf8: ${DualSub.events[index0].segs[0].utf8}`, "");
 						//DualSub.body[index0].tStartMs = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 						//DualSub.body[index0].index = (Position === "Reverse") ? index2 : index1;
@@ -4287,7 +4287,7 @@ class Composite {
 						delete para.s;
 					}					return para;
 				});
-			//break; 不要break，连续处理
+				//break; 不要break，连续处理
 			case "captions":
 			default:
 				// 处理普通字幕
@@ -4302,7 +4302,7 @@ class Composite {
 						// 处理普通字幕
 						const text1 = Sub1.timedtext.body.p[index1]?.["#"] ?? "", text2 = Sub2.timedtext.body.p[index2]?.["#"] ?? "";
 						//console.log(`🚧 text1: ${text1}, text2: ${text2}`, "");
-						DualSub.timedtext.body.p[index0]["#"] = (Position === "Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`;
+						DualSub.timedtext.body.p[index0]["#"] = ((Position === "Reverse") ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`).trim();
 						//console.log(`🚧 DualSub.timedtext.body.p[index0]["#"]: ${DualSub.timedtext.body.p[index0]["#"]}`, "");
 						//DualSub.timedtext.body.p[index0]["@t"] = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 						//DualSub.timedtext.body.p[index0].index = (Position === "Reverse") ? index2 : index1;
@@ -4339,7 +4339,7 @@ class Composite {
 				//index0 = (Position === "Reverse") ? index2 : index1;
 				index0 = index1;
 				// 处理普通字幕
-				DualSub.body[index0].text = (Position === "Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
+				DualSub.body[index0].text = ((Position === "Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`).trim();
 				//console.log(`🚧 index0: ${index0}, text: ${DualSub.body[index0].text}`, "");
 				//DualSub.body[index0].timeStamp = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 				//DualSub.body[index0].index = (Position === "Reverse") ? index2 : index1;
@@ -4377,9 +4377,9 @@ class Composite {
 				//index0 = (Position === "Reverse") ? index2 : index1;
 				index0 = index1;
 				// 处理普通字幕
-				Lyric[index0].words = (Position === "Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`;
-				Lyric[index0].owords = text1;
-				Lyric[index0].twords = text2;
+				Lyric[index0].words = ((Position === "Reverse") ? `${text2}\n${text1}` : `${text1}\n${text2}`).trim();
+				Lyric[index0].owords = text1.trim();
+				Lyric[index0].twords = text2.trim();
 				//console.log(`🚧 index0: ${index0}, words: ${Lyric[index0].words}`, "");
 				//Lyric[index0].startTimeMs = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 				//Lyric[index0].index = (Position === "Reverse") ? index2 : index1;

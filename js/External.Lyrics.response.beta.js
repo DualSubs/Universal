@@ -3637,7 +3637,7 @@ function detectPlatform(url) {
 							: /prd\.media\.h264\.io/i.test(url) ? "Max"
 								: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"
 									: /\.hulu(stream|im)?\.com/i.test(url) ? "Hulu"
-										: /\.cbs(aavideo|cbsivideo)?\.com/i.test(url) ? "Paramount+"
+										: /\.(pplus\.paramount\.tech|cbs(aavideo|cbsivideo)?\.com)/i.test(url) ? "Paramount+"
 											: /\.uplynk\.com/i.test(url) ? "Discovery+"
 												: /dplus-ph-/i.test(url) ? "Discovery+Ph"
 													: /\.peacocktv\.com/i.test(url) ? "PeacockTV"

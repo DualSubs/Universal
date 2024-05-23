@@ -232,7 +232,7 @@ scriptings:
     body_required: true
 - http_response:
     name: 'DualSubs.Paramount+.M3U8.Master.response'
-    match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(master|manifest)\.m3u8
+    match: ^https?:\/\/(.+\.pplus\.paramount\.tech|(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com)\/(.+)\/(master|manifest)\.m3u8
     script_url: https://raw.githubusercontent.com/DualSubs/Universal/main/js/Manifest.response.js
     body_required: true
 - http_response:
@@ -667,6 +667,7 @@ mitm:
   - assets.huluim.com
   - assetshuluimcom-a.akamaihd.net
   - link.theplatform.com
+  - '*.pplus.paramount.tech'
   - '*-pplus.cbs.com'
   - vod-*.cbsaavideo.com
   - vod-*.cbsivideo.com

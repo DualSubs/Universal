@@ -54,6 +54,7 @@ http:
     - "live-sc.hulustream.com"
     - "assets.huluim.com"
     - "assetshuluimcom-a.akamaihd.net"
+    - "*.pplus.paramount.tech"
     - "*-pplus.cbs.com"
     - "vod-*.cbsaavideo.com"
     - "vod-*.cbsivideo.com"
@@ -273,7 +274,7 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com\/(.+)\/(master|manifest)\.m3u8
+    - match: ^https?:\/\/(.+\.pplus\.paramount\.tech|(vod-(.+)|(.+)\.airspace-(.+)|(.+)-pplus)\.(cbsaavideo|cbsivideo|cbs)\.com)\/(.+)\/(master|manifest)\.m3u8
       name: DualSubs.M3U8.Master.response
       type: response
       require-body: true

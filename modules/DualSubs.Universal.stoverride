@@ -149,7 +149,7 @@ http:
       name: DualSubs.M3U8.Master.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)(composite_(.+)|subtitles)\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)((composite|subtitles)_(.+)|subtitles)\.m3u8\?(.*)subtype=
       name: DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true

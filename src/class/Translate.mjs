@@ -3,7 +3,7 @@ import MD5 from '../../node_modules/crypto-js/md5.js';
 export default class Translate {
 	constructor($, options = {}) {
 		this.Name = "Translate";
-		this.Version = "1.0.2";
+		this.Version = "1.0.3";
 		console.log(`\n🟧 ${this.Name} v${this.Version}\n`);
 		this.Source = "AUTO";
 		this.Target = "ZH";
@@ -45,7 +45,7 @@ export default class Translate {
 	async Google(text = [], source = this.Source, target = this.Target) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
-		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
+		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[target?.split?.(/[-_]/)?.[0]];
 		const BaseRequest = [
 			{
 				// Google API
@@ -102,7 +102,7 @@ export default class Translate {
 	async GoogleCloud(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
-		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
+		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[target?.split?.(/[-_]/)?.[0]];
 		const request = {};
 		const BaseURL = "https://translation.googleapis.com";
 		switch (api?.Version) {
@@ -158,7 +158,7 @@ export default class Translate {
 	async Microsoft(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Microsoft[source] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]];
-		target = this.#LanguagesCode.Microsoft[target] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]];
+		target = this.#LanguagesCode.Microsoft[target] ?? this.#LanguagesCode.Microsoft[target?.split?.(/[-_]/)?.[0]];
 		const request = {};
 		let BaseURL = "https://api.cognitive.microsofttranslator.com";
 		switch (api?.Version) {
@@ -206,7 +206,7 @@ export default class Translate {
 	async DeepL(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.DeepL[source] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]];
-		target = this.#LanguagesCode.DeepL[target] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]];
+		target = this.#LanguagesCode.DeepL[target] ?? this.#LanguagesCode.DeepL[target?.split?.(/[-_]/)?.[0]];
 		const request = {};
 		let BaseURL = "https://api-free.deepl.com";
 		switch (api?.Version) {
@@ -244,7 +244,7 @@ export default class Translate {
 	async BaiduFanyi(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Baidu[source] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]];
-		target = this.#LanguagesCode.Baidu[target] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]];
+		target = this.#LanguagesCode.Baidu[target] ?? this.#LanguagesCode.Baidu[target?.split?.(/[-_]/)?.[0]];
 		const request = {};
 		// https://fanyi-api.baidu.com/doc/24
 		const BaseURL = "https://fanyi-api.baidu.com";
@@ -266,7 +266,7 @@ export default class Translate {
 	async YoudaoAI(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = (Array.isArray(text)) ? text : [text];
 		source = this.#LanguagesCode.Youdao[source] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];
-		target = this.#LanguagesCode.Youdao[target] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];
+		target = this.#LanguagesCode.Youdao[target] ?? this.#LanguagesCode.Youdao[target?.split?.(/[-_]/)?.[0]];
 		const request = {};
 		// https://ai.youdao.com/docs
 		// https://ai.youdao.com/DOCSIRMA/html/自然语言翻译/API文档/文本翻译服务/文本翻译服务-API文档.html

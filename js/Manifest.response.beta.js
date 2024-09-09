@@ -810,7 +810,7 @@ let URL$1 = class URL {
 // refer: https://datatracker.ietf.org/doc/html/draft-pantos-http-live-streaming-08
 class EXTM3U {
 	static name = "EXTM3U";
-	static version = "0.8.7";
+	static version = "0.8.8";
 	static about = () => console.log(`\n🟧 ${this.name} v${this.version}\n`);
 	static #EXTM3URegex = /^(?:(?<TAG>#(?:EXT|AIV)[^#:\s\r\n]+)(?::(?<OPTION>[^\r\n]+))?(?:(?:\r\n|\r|\n)(?<URI>[^#\s\r\n]+))?|(?<NOTE>#[^\r\n]+)?)(?:\r\n|\r|\n)?$/gm;
 	static #OPTIONValueRegex = /^((-?\d+[x.\d]+)|[0-9A-Z-]+)$/;
@@ -820,7 +820,7 @@ class EXTM3U {
 			item = item?.groups || item;
 			if (/=/.test(item?.OPTION)) item.OPTION = Object.fromEntries(`${item.OPTION}\,`.split(/,\s*(?![^"]*",)/).slice(0, -1).map(option => {
 				option = option.split(/=(.*)/);
-				option[1] = (isNaN(option[1])) ? option[1].replace(/^"(.*)"$/, "$1") : parseInt(option[1], 10);
+				option[1] = (isNaN(option[1])) ? option[1].replace(/^"(.*)"$/, "$1") : parseFloat(option[1]);
 				return option;
 			}));
 			return item

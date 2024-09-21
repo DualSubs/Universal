@@ -19,6 +19,3 @@
 [submodule "src/utils"]
 	path = src/utils
 	url = https://github.com/NanoCat-Me/utils.git
-[submodule "src/URL"]
-	path = src/URL
-	url = https://github.com/NanoCat-Me/URL.git

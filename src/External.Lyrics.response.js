@@ -1,5 +1,4 @@
 import { $platform, URL, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
-import URI from "./URL/URI.mjs";
 import LRC from "./LRC/LRC.mjs";
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -8,7 +7,7 @@ import setCache from "./function/setCache.mjs";
 
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
-log("v1.7.0(1003)");
+log("v1.7.2(1005)");
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
@@ -394,18 +393,12 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 	const trackInfo = {};
 	switch (vendor) {
 		case "NeteaseMusic": {
-			const searchUrl = {
-				"scheme": "https",
-				"host": "music.163.com",
-				"path": "api/cloudsearch/pc",
-				"query": {
-					"type": 1,
-					"limit": 1,
-					"offset": 0,
-					"s": encodeURIComponent(keyword),
-				}
-			};
-			Request.url = URI.stringify(searchUrl);
+			const searchUrl = new URL("https://music.163.com/api/cloudsearch/pc");
+			searchUrl.searchParams.set("type", "1");
+			searchUrl.searchParams.set("limit", "1");
+			searchUrl.searchParams.set("offset", "0");
+			searchUrl.searchParams.set("s", encodeURIComponent(keyword));
+			Request.url = searchUrl.toString();
 			Request.headers.Referer = "https://music.163.com";
 			Request.headers.Cookie = "os=ios; __remember_me=true; NMTID=xxx";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
@@ -424,19 +417,12 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 				"neteasecloudmusicapi.nanocat.cloud"
 			];
 			// 搜索歌曲
-			const searchUrl = {
-				"scheme": "https",
-				"host": HostPool[Math.floor(Math.random() * HostPool.length)],
-				//"path": "search",
-				"path": "cloudsearch",
-				"query": {
-					"type": 1,
-					"limit": 1,
-					"offset": 0,
-					"keywords": encodeURIComponent(keyword),
-				}
-			};
-			Request.url = URI.stringify(searchUrl);
+			const searchUrl = new URL(`https://${HostPool[Math.floor(Math.random() * HostPool.length)]}/cloudsearch`);
+			searchUrl.searchParams.set("type", "1");
+			searchUrl.searchParams.set("limit", "1");
+			searchUrl.searchParams.set("offset", "0");
+			searchUrl.searchParams.set("keywords", encodeURIComponent(keyword));
+			Request.url = searchUrl.toString();
 			Request.headers.Referer = "https://music.163.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
 			trackInfo.id = Result?.result?.songs?.[0]?.id;
@@ -447,12 +433,8 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 		};
 		case "QQMusic":
 		default: {
-			const searchUrl = {
-				"scheme": "https",
-				"host": "u.y.qq.com",
-				"path": "cgi-bin/musicu.fcg"
-			};
-			Request.url = URI.stringify(searchUrl);
+			const searchUrl = new URL("https://c.y.qq.com/cgi-bin/musicu.fcg");
+			Request.url = searchUrl.toString();
 			Request.headers.Referer = "https://c.y.qq.com";
 			Request.body = JSON.stringify({
 				"music.search.SearchCgiService": {
@@ -489,18 +471,12 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 	const Lyrics = {};
 	switch (vendor) {
 		case "NeteaseMusic": {
-			const lyricUrl = {
-				"scheme": "https",
-				"host": "music.163.com",
-				"path": "api/song/lyric",
-				"query": {
-					"id": trackId, // trackInfo.NeteaseMusic.id
-					"lv": 0,
-					"yv": 0,
-					"tv": 0,
-				}
-			};
-			Request.url = URI.stringify(lyricUrl);
+			const lyricUrl = new URL("https://music.163.com/api/song/lyric");
+			lyricUrl.searchParams.set("id", trackId); // trackInfo.NeteaseMusic.id
+			lyricUrl.searchParams.set("lv", "0");
+			lyricUrl.searchParams.set("tv", "0");
+			lyricUrl.searchParams.set("tv", "0");
+			Request.url = lyricUrl.toString();
 			Request.headers.Referer = "https://music.163.com";
 			Request.headers.Cookie = "os=ios; __remember_me=true; NMTID=xxx";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
@@ -519,15 +495,9 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 				"music.lovethewind.cn",
 				"neteasecloudmusicapi.nanocat.cloud"
 			];
-			const lyricUrl = {
-				"scheme": "https",
-				"host": HostPool[Math.floor(Math.random() * HostPool.length)],
-				"path": "lyric/new",
-				"query": {
-					"id": trackId // trackInfo.NeteaseMusic.id
-				}
-			};
-			Request.url = URI.stringify(lyricUrl);
+			const lyricUrl = new URL(`https://${HostPool[Math.floor(Math.random() * HostPool.length)]}/lyric/new`);
+			lyricUrl.searchParams.set("id", trackId); // trackInfo.NeteaseMusic.id
+			Request.url = lyricUrl.toString();
 			Request.headers.Referer = "https://music.163.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
 			Lyrics.lyric = Result?.lrc?.lyric;
@@ -539,18 +509,12 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 		};
 		case "QQMusic":
 		default: {
-			const lyricUrl = {
-				"scheme": "https",
-				"host": "c.y.qq.com",
-				"path": "lyric/fcgi-bin/fcg_query_lyric_new.fcg",
-				"query": {
-					"g_tk": "5381",
-					"format": "json",
-					"nobase64": "1",
-					"songmid": trackId // trackInfo.QQMusic.mid
-				}
-			};
-			Request.url = URI.stringify(lyricUrl);
+			const lyricUrl = new URL("https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg");
+			lyricUrl.searchParams.set("g_tk", "5381");
+			lyricUrl.searchParams.set("format", "json");
+			lyricUrl.searchParams.set("nobase64", "1");
+			lyricUrl.searchParams.set("songmid", trackId); // trackInfo.QQMusic.mid
+			Request.url = lyricUrl.toString();
 			Request.headers.Referer = "https://lyric.music.qq.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
 			Lyrics.lyric = Result?.lyric;

@@ -1,3 +1,5 @@
+import { log } from "../utils/utils.mjs";
+
 /**
  * Set DualSubs Subtitle Options
  * @author VirgilClyne
@@ -11,7 +13,7 @@
  * @return {Promise<*>}
  */
 export default function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", standard = true, device = "iPhone") {
-	console.log(`☑️ Set DualSubs Subtitle Option, type: ${type}`, "");
+	log(`☑️ Set DualSubs Subtitle Option, type: ${type}`, "");
 	const NAME1 = playlist1?.OPTION?.NAME.trim(), NAME2 = playlist2?.OPTION?.NAME.trim();
 	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE.trim(), LANGUAGE2 = playlist2?.OPTION?.LANGUAGE.trim();
 	// 复制此语言选项
@@ -84,6 +86,6 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 	newOption.OPTION.AUTOSELECT = "YES";
 	// 兼容性修正
 	if (!standard) newOption.OPTION.DEFAULT = "YES";
-	console.log(`✅ Set DualSubs Subtitle Option, newOption: ${JSON.stringify(newOption)}`, "");
+	log(`✅ Set DualSubs Subtitle Option, newOption: ${JSON.stringify(newOption)}`, "");
 	return newOption;
 };

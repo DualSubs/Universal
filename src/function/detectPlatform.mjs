@@ -1,5 +1,7 @@
+import { log } from "../utils/utils.mjs";
+
 export default function detectPlatform(url) {
-	console.log(`☑️ Detect Platform`, "");
+	log(`☑️ Detect Platform`, "");
 	/***************** Platform *****************/
 	let Platform = /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
 		: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
@@ -21,6 +23,6 @@ export default function detectPlatform(url) {
 																		: /\.pluto(\.tv|tv\.net)/i.test(url) ? "PlutoTV"
 																			: /\.mubicdn\.net/i.test(url) ? "MUBI"
 																				: "Universal";
-    console.log(`✅ Detect Platform, Platform: ${Platform}`, "");
+    log(`✅ Detect Platform, Platform: ${Platform}`, "");
 	return Platform;
 };

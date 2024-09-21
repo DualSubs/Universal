@@ -1,4 +1,6 @@
 
+import { log } from "../utils/utils.mjs";
+
 /**
  * is Standard?
  * Determine whether Standard Media Player
@@ -9,10 +11,10 @@
  * @return {Promise<*>}
  */
 export default function isStandard(url = new URL(), headers = {}, platform = "Universal") {
-	console.log(`☑️ is Standard?`, "");
+	log(`☑️ is Standard?`, "");
     // 判断设备类型
 	const UA = headers["user-agent"] ?? headers["User-Agent"];
-	console.log(`🚧 is Standard?, UA: ${UA}`, "");
+	log(`🚧 is Standard?, UA: ${UA}`, "");
     let device = UA.includes("Mozilla/5.0") ? "Web"
         : UA.includes("iPhone") ? "iPhone"
             : UA.includes("iPad") ? "iPad"
@@ -72,6 +74,6 @@ export default function isStandard(url = new URL(), headers = {}, platform = "Un
             standard = true;
             break;
     };
-	console.log(`✅ is Standard?, standard: ${standard}, device: ${device}`, "");
+	log(`✅ is Standard?, standard: ${standard}, device: ${device}`, "");
 	return {standard, device};
 };

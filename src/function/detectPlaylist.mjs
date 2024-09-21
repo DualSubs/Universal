@@ -1,3 +1,5 @@
+import { log } from "../utils/utils.mjs";
+
 /**
  * detect Format
  * @author VirgilClyne
@@ -5,7 +7,7 @@
  * @return {String} type - type
  */
 export default function detectPlaylist(m3u8 = {}) {
-	console.log(`☑️ detectPlaylist`, "");
+	log(`☑️ detectPlaylist`, "");
 	let type = undefined;
 	m3u8.forEach(item => {
 		switch (item.TAG) {
@@ -22,6 +24,6 @@ export default function detectPlaylist(m3u8 = {}) {
 				break;
 		};
 	});
-	console.log(`✅ detectPlaylist, type: ${type}`, "");
+	log(`✅ detectPlaylist, type: ${type}`, "");
 	return type;
 };

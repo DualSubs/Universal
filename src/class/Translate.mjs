@@ -1,15 +1,15 @@
-import MD5 from '../../node_modules/crypto-js/md5.js';
+import { fetch, log } from "../utils/utils.mjs";
+import MD5 from 'crypto-js/md5.js';
 
 export default class Translate {
-	constructor($, options = {}) {
+	constructor(options = {}) {
 		this.Name = "Translate";
-		this.Version = "1.0.3";
-		console.log(`\n🟧 ${this.Name} v${this.Version}\n`);
+		this.Version = "1.0.4";
+		log(`\n🟧 ${this.Name} v${this.Version}\n`);
 		this.Source = "AUTO";
 		this.Target = "ZH";
 		this.API = {};
 		Object.assign(this, options);
-		this.$ = $;
 	}
 
 	#LanguagesCode = {
@@ -83,7 +83,7 @@ export default class Translate {
 		];
 		const request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))]; // 随机Request, 排除最后两项
 		request.url = request.url + `&sl=${source}&tl=${target}&q=${encodeURIComponent(text.join("\r"))}`;
-		return await this.$.fetch(request)
+		return await fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
 				if (Array.isArray(body)) {
@@ -147,7 +147,7 @@ export default class Translate {
 				});
 				break;
 		};
-		return await this.$.fetch(request)
+		return await fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
 				return body?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, vendor: ${"GoogleCloud"}`);
@@ -195,7 +195,7 @@ export default class Translate {
 		};
 		text = text.map(item => { return { "text": item } });
 		request.body = JSON.stringify(text);
-		return await this.$.fetch(request)
+		return await fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
 				return body?.map(item => item?.translations?.[0]?.text ?? `翻译失败, vendor: ${"Microsoft"}`);
@@ -233,7 +233,7 @@ export default class Translate {
 		};
 		if (source) body.source_lang = source;
 		request.body = JSON.stringify(body);
-		return await this.$.fetch(request)
+		return await fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
 				return body?.translations?.map(item => item?.text ?? `翻译失败, vendor: ${"DeepL"}`);
@@ -255,12 +255,12 @@ export default class Translate {
 		};
 		const salt = (new Date).getTime();
 		request.body = `q=${encodeURIComponent(text.join("\n"))}&from=${source}&to=${target}&appid=${api.id}&salt=${salt}&sign=${MD5(api.id + text + salt + api.key)}`;
-		return await this.$.fetch(request)
+		return await fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
 				return body?.trans_result?.map(item => item?.dst ?? `翻译失败, vendor: ${"BaiduFanyi"}`);
 			})
-			.catch(error => Promise.reject(console.log(error)));
+			.catch(error => Promise.reject(log(error)));
 	};
 
 	async YoudaoAI(text = [], source = this.Source, target = this.Target, api = this.API) {
@@ -286,7 +286,7 @@ export default class Translate {
 			"sign": "",
 			"curtime": Math.floor(+new Date() / 1000)
 		};
-		return await this.$.fetch(request)
+		return await fetch(request)
 			.then(response => {
 				let body = JSON.parse(response.body);
 				return body?.data ?? `翻译失败, vendor: ${"DeepL"}`;

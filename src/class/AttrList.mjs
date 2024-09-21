@@ -1,14 +1,15 @@
+import { log } from "../utils/utils.mjs";
 import setOption from "../function/setOption.mjs";
 import aPath from "../function/aPath.mjs";
 
 export default class AttrList {
     constructor(format = "application/x-mpegURL", platform = "Universal") {
 		this.Name = "AttrList";
-		this.Version = "1.0.5";
+		this.Version = "1.0.6";
         this.format = format;
         this.platform = platform;
 		//Object.assign(this, options)
-		console.log(`\n🟧 ${this.Name} v${this.Version} format: ${this.format} platform: ${this.platform}\n`)
+		log(`\n🟧 ${this.Name} v${this.Version} format: ${this.format} platform: ${this.platform}\n`)
 	}
 
     /**
@@ -21,7 +22,7 @@ export default class AttrList {
      * @return {Array} datas
      */
     get(url = "", file = [], type = "", langCodes = []) {
-        console.log(`☑️ Get Attribute List, type: ${type}, langCodes: ${langCodes}`);
+        log(`☑️ Get Attribute List, type: ${type}, langCodes: ${langCodes}`);
         let matchList = [];
         // 格式判断
         switch (this.format) {
@@ -33,10 +34,10 @@ export default class AttrList {
                     .filter(item => item?.TAG === "#EXT-X-MEDIA") // 过滤标签
                     .filter(item => item?.OPTION?.TYPE === type) // 过滤类型
                     .filter(item => item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
-                //console.log(`🚧 attrList: ${JSON.stringify(attrList)}`, "");
+                //log(`🚧 attrList: ${JSON.stringify(attrList)}`, "");
                 //查询是否有符合语言的内容
                 for (let langcode of langCodes) {
-                    console.log(`🚧 Get Attribute List, for (let ${langcode} of langcodes)`, "");
+                    log(`🚧 Get Attribute List, for (let ${langcode} of langcodes)`, "");
                     matchList = attrList.filter(item => item?.OPTION?.LANGUAGE?.toLowerCase() === langcode?.toLowerCase());
                     if (matchList.length !== 0) break;
                 };
@@ -53,7 +54,7 @@ export default class AttrList {
                         let attrList = file?.[type] ?? [];
                         //查询是否有符合语言的内容
                         for (let langcode of langCodes) {
-                            console.log(`🚧 Get Attribute List, for (let ${langcode} of langcodes)`, "");
+                            log(`🚧 Get Attribute List, for (let ${langcode} of langcodes)`, "");
                             matchList = attrList.filter(item => item?.languageCode?.toLowerCase() === langcode?.toLowerCase());
                             if (matchList.length !== 0) break;
                         };
@@ -67,7 +68,7 @@ export default class AttrList {
                 break;
             };
         };
-        console.log(`✅ Get Attribute List, matchList: ${JSON.stringify(matchList)}`, "");
+        log(`✅ Get Attribute List, matchList: ${JSON.stringify(matchList)}`, "");
         return matchList;
     };
 
@@ -86,11 +87,11 @@ export default class AttrList {
         types = (standard == true) ? types : [types.at(-1)];
         const playlists1 = playlists?.[languages?.[0]];
         const playlists2 = playlists?.[languages?.[1]];
-        //if (playlists1?.length !== 0) console.log(`🚧 Set Attribute List, 有主字幕语言（源语言）字幕`);
+        //if (playlists1?.length !== 0) log(`🚧 Set Attribute List, 有主字幕语言（源语言）字幕`);
         //else types = types.filter(e => e !== "Translate"); // 无源语言字幕时删除翻译字幕选项
-        //if (playlists2?.length !== 0) console.log(`🚧 Set Attribute List, 有副字幕语言（目标语言）字幕`);
+        //if (playlists2?.length !== 0) log(`🚧 Set Attribute List, 有副字幕语言（目标语言）字幕`);
         //else types = types.filter(e => e !== "Official"); // 无目标语言字幕时删除官方字幕选项
-        console.log(`☑️ Set Attribute List, types: ${types}`, "");
+        log(`☑️ Set Attribute List, types: ${types}`, "");
         // 格式判断
         switch (this.format) {
             case "application/x-mpegURL":
@@ -100,7 +101,7 @@ export default class AttrList {
                 playlists1?.forEach(playlist1 => {
                     const index1 = file.findIndex(item => item?.OPTION?.URI === playlist1.OPTION.URI); // 主语言（源语言）字幕位置
                     types.forEach(type => {
-                        console.log(`🚧 Set Attribute List, type: ${type}`, "");
+                        log(`🚧 Set Attribute List, type: ${type}`, "");
                         let option;
                         switch (type) {
                             case "Official":
@@ -149,7 +150,7 @@ export default class AttrList {
                         playlists1?.forEach(playlist1 => {
                             const index1 = file.findIndex(item => item?.timedTextTrackId === playlist1.timedTextTrackId); // 主语言（源语言）字幕位置
                             types.forEach(type => {
-                                console.log(`🚧 Set Attribute List, type: ${type}`);
+                                log(`🚧 Set Attribute List, type: ${type}`);
                                 let option;
                                 switch (type) {
                                     case "Official":
@@ -162,7 +163,7 @@ export default class AttrList {
                                                 const symbol = (option.url.includes("?")) ? "&" : "?";
                                                 option.url += `${symbol}subtype=${type}`;
                                                 option.url += `&lang=${languages[0]}`;
-                                                //console.log(`🚧 option: ${JSON.stringify(option)}`, "");
+                                                //log(`🚧 option: ${JSON.stringify(option)}`, "");
                                             };
                                         });
                                         break;
@@ -175,7 +176,7 @@ export default class AttrList {
                                         const symbol = (playlist1.url.includes("?")) ? "&" : "?";
                                         option.url += `${symbol}subtype=${type}`;
                                         option.url += `&lang=${playlist1.languageCode.toUpperCase()}`;
-                                        //console.log(`🚧 option: ${JSON.stringify(option)}`, "");
+                                        //log(`🚧 option: ${JSON.stringify(option)}`, "");
                                         break;
                                 };
                                 if (option) file.splice(index1 + (standard ? 1 : 0), 0, option);
@@ -187,8 +188,8 @@ export default class AttrList {
                 break;
             };
         };
-        //console.log(`✅ Set Attribute List, file: ${JSON.stringify(file)}`);
-        console.log(`✅ Set Attribute List`);
+        //log(`✅ Set Attribute List, file: ${JSON.stringify(file)}`);
+        log(`✅ Set Attribute List`);
         return file;
     };
 }

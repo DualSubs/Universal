@@ -1,10 +1,6 @@
-import _ from './ENV/Lodash.mjs'
-import $Storage from './ENV/$Storage.mjs'
-import ENV from "./ENV/ENV.mjs";
-import URL from "./URL/URL.mjs";
+import { $platform, URL, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
-
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 import detectFormat from "./function/detectFormat.mjs";
@@ -14,33 +10,31 @@ import Translate from "./class/Translate.mjs";
 
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "../node_modules/@protobuf-ts/runtime/build/es2015/index.js";
-
-const $ = new ENV("🍿️ DualSubs: 🔣 Universal v1.3.0(1002) Translate.response.beta");
-
+log("v1.4.0(1003)");
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-$.log(`⚠ url: ${url.toJSON()}`, "");
+log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
-$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
+log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body, FORMAT);
-$.log(`⚠ FORMAT: ${FORMAT}`, "");
+log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
+	log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Translate", "API"], Database);
-	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
+	log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = url.searchParams?.get("subtype") ?? Settings.Type, Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
+			log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建空数据
 			let body = {};
 			// 格式判断
@@ -56,7 +50,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -66,7 +60,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist": {
 					body = XML.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					const breakLine = (body?.tt) ? "<br />" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
 					if (body?.timedtext?.head?.wp?.[1]?.["@rc"]) body.timedtext.head.wp[1]["@rc"] = "1";
 					let paragraph = body?.tt?.body?.div?.p ?? body?.timedtext?.body?.p;
@@ -101,28 +95,28 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 						else if (span?.["#"]) span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
 						return para;
 					});
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = XML.stringify(body);
 					break;
 				};
 				case "text/vtt":
 				case "application/vtt": {
 					body = VTT.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					let fullText = body?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
 					const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					body.body = body.body.map((item, i) => {
 						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
 					});
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = VTT.stringify(body);
 					break;
 				};
 				case "text/json":
 				case "application/json": {
 					body = JSON.parse($response.body ?? "{}");
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					switch (PLATFORM) {
 						case "YouTube": {
 							if (body?.events) {
@@ -162,7 +156,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									: "AUTO";
 							let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 							const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
-							$.log(`🚧 $request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
+							log(`🚧 $request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
 							switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
 								case "OSX": // macOS App 暂不支持翻译功能
 								case "Win32_x86_64": // Windows App 暂不支持翻译功能
@@ -202,7 +196,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						};
 					};
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				};
@@ -212,9 +206,9 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "application/octet-stream":
-					//$.log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
-					let rawBody = $.isQuanX() ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
-					//$.log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+					//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
+					let rawBody = ($platform === "Quantumult X") ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
+					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					switch (FORMAT) {
 						case "application/protobuf":
 						case "application/x-protobuf":
@@ -485,11 +479,11 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									const MusicFormBooleanChoice = new MusicFormBooleanChoice$Type();
 									/******************  initialization finish  *******************/
 									body = Browse.fromBinary(rawBody);
-									//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
-									$.log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
-									$.log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
+									//log(`🚧 body: ${JSON.stringify(body)}`, "");
+									log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
+									log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
 									let UF = UnknownFieldHandler.list(body);
-									//$.log(`🚧 UF: ${JSON.stringify(UF)}`, "");
+									//log(`🚧 UF: ${JSON.stringify(UF)}`, "");
 									if (UF) {
 										UF = UF.map(uf => {
 											//uf.no; // 22
@@ -497,7 +491,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 											// use the binary reader to decode the raw data:
 											let reader = new BinaryReader(uf.data);
 											let addedNumber = reader.int32(); // 7777
-											$.log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+											log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
 										});
 									};
 									Languages[0] = "AUTO";
@@ -524,9 +518,9 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 											return musicDescription;
 										}));
 									};
-									//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
-									$.log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
-									$.log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
+									//log(`🚧 body: ${JSON.stringify(body)}`, "");
+									log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
+									log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
 									rawBody = Browse.toBinary(body);
 									break;
 								};
@@ -622,10 +616,10 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 									const Alternative = new Alternative$Type();
 									/******************  initialization finish  *******************/
 									body = ColorLyricsResponse.fromBinary(rawBody);
-									$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+									log(`🚧 body: ${JSON.stringify(body)}`, "");
 									/*
 									let UF = UnknownFieldHandler.list(body);
-									//$.log(`🚧 UF: ${JSON.stringify(UF)}`, "");
+									//log(`🚧 UF: ${JSON.stringify(UF)}`, "");
 									if (UF) {
 										UF = UF.map(uf => {
 											//uf.no; // 22
@@ -633,7 +627,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 											// use the binary reader to decode the raw data:
 											let reader = new BinaryReader(uf.data);
 											let addedNumber = reader.int32(); // 7777
-											$.log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+											log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
 										});
 									};
 									*/
@@ -653,7 +647,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 										"language": Languages[1].toLowerCase(),
 										"lines": translation
 									});
-									$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+									log(`🚧 body: ${JSON.stringify(body)}`, "");
 									rawBody = ColorLyricsResponse.toBinary(body);
 									break;
 								};
@@ -672,8 +666,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 			break;
 	};
 })()
-	.catch((e) => $.logErr(e))
-	.finally(() => $.done($response))
+	.catch((e) => logError(e))
+	.finally(() => done($response))
 
 /***************** Function *****************/
 /**
@@ -693,7 +687,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
  * @return {Promise<*>}
  */
 async function Translator(vendor = "Google", method = "Part", text = [], [source = "AUTO", target = "ZH"], API = {}, times = 3, interval = 100, exponential = true) {
-	$.log(`☑️ Translator, vendor: ${vendor}, method: ${method}, [source, target]: ${[source, target]}`, "");
+	log(`☑️ Translator, vendor: ${vendor}, method: ${method}, [source, target]: ${[source, target]}`, "");
 	// 翻译长度设置
 	let length = 127;
 	switch (vendor) {
@@ -718,14 +712,14 @@ async function Translator(vendor = "Google", method = "Part", text = [], [source
 		default:
 		case "Part": // Part 逐段翻译
 			let parts = chunk(text, length);
-			Translation = await Promise.all(parts.map(async part => await retry(() => new Translate($, { Source: source, Target: target, API: API })[vendor](part), times, interval, exponential))).then(part => part.flat(Infinity));
+			Translation = await Promise.all(parts.map(async part => await retry(() => new Translate({ Source: source, Target: target, API: API })[vendor](part), times, interval, exponential))).then(part => part.flat(Infinity));
 			break;
 		case "Row": // Row 逐行翻译
-			Translation = await Promise.all(text.map(async row => await retry(() => new Translate($, { Source: source, Target: target, API: API })[vendor](row), times, interval, exponential)));
+			Translation = await Promise.all(text.map(async row => await retry(() => new Translate({ Source: source, Target: target, API: API })[vendor](row), times, interval, exponential)));
 			break;
 	};
-	//$.log(`✅ Translator, Translation: ${JSON.stringify(Translation)}`, "");
-	$.log(`✅ Translator`, "");
+	//log(`✅ Translator, Translation: ${JSON.stringify(Translation)}`, "");
+	log(`✅ Translator`, "");
 	return Translation;
 };
 
@@ -768,10 +762,10 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  * @return {Array<*>} target
  */
 function chunk(source, length) {
-	$.log(`⚠ Chunk Array`, "");
+	log(`⚠ Chunk Array`, "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
-	//$.log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	//log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
 };
 
@@ -787,7 +781,7 @@ function chunk(source, length) {
  * @return {Promise<*>}
  */
 async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) {
-	$.log(`☑️ retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	log(`☑️ retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
 	try {
 		const val = await fn();
 		return val;

@@ -1,10 +1,6 @@
-import _ from './ENV/Lodash.mjs'
-import $Storage from './ENV/$Storage.mjs'
-import ENV from "./ENV/ENV.mjs";
-import URL from "./URL/URL.mjs";
+import { $platform, URL, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
-
 import Database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
 import detectFormat from "./function/detectFormat.mjs";
@@ -12,39 +8,37 @@ import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
-
-const $ = new ENV("🍿️ DualSubs: 🎦 Universal v1.0.0(1003) Composite.Subtitles.response.beta");
-
+log("v1.1.0(1004)");
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-$.log(`⚠ url: ${url.toJSON()}`, "");
+log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
 const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
-$.log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
+log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body, FORMAT);
-$.log(`⚠ FORMAT: ${FORMAT}`, "");
+log(`⚠ FORMAT: ${FORMAT}`, "");
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	$.log(`⚠ PLATFORM: ${PLATFORM}`, "");
+	log(`⚠ PLATFORM: ${PLATFORM}`, "");
 	// 读取设置
 	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "Composite", "API"], Database);
-	$.log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
+	log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = url.searchParams?.get("subtype") ?? Settings.Type, Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			$.log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
+			log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型
 			switch (Type) {
 				case "Official":
-					$.log(`⚠ 官方字幕`, "");
+					log(`⚠ 官方字幕`, "");
 					switch (PLATFORM) {
 						default:
 							// 获取字幕文件地址vtt缓存（map）
@@ -55,33 +49,33 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							const { subtitlesURIArray0, subtitlesURIArray1 } = getSubtitlesArray(masterPlaylistURL, subtitlesPlaylistIndex, Caches.Playlists.Master, Caches.Playlists.Subtitle, Languages);
 							// 获取官方字幕请求
 							if (subtitlesURIArray1.length) {
-								$.log(`🚧 subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
+								log(`🚧 subtitlesURIArray1.length: ${subtitlesURIArray1.length}`, "");
 								// 获取字幕文件名
 								let fileName = PATHs?.[PATHs?.length - 1] ?? getSubtitlesFileName($request.url, PLATFORM);
-								$.log(`🚧 fileName: ${fileName}`, "")
+								log(`🚧 fileName: ${fileName}`, "")
 								// 构造请求队列
 								requests = constructSubtitlesQueue($request, fileName, subtitlesURIArray0, subtitlesURIArray1);
 							};
 							break;
 						case "YouTube":
-							$.log(`⚠ YouTube`, "");
+							log(`⚠ YouTube`, "");
 							switch (url.searchParams.get("tlang")) {
 								case undefined:
-									$.log(`⚠ 未选择翻译语言，跳过`, "");
+									log(`⚠ 未选择翻译语言，跳过`, "");
 									break;
 								default:
-									$.log(`⚠ 已选择翻译语言`, "");
+									log(`⚠ 已选择翻译语言`, "");
 									// 设置参数
 									// Settings.Offset = 0;
 									Settings.Tolerance = 100;
 									Settings.Position = (Settings.Position === "Reverse") ? "Forward" : "Reverse"; // 链接主字幕为翻译字幕，副字幕为原字幕，所以需要翻转一下
 									switch (Settings.ShowOnly) {
 										case true:
-											$.log(`⚠ 仅显示翻译后字幕，跳过`, "");
+											log(`⚠ 仅显示翻译后字幕，跳过`, "");
 											break;
 										case false:
 										default:
-											$.log(`⚠ 生成双语字幕`, "");
+											log(`⚠ 生成双语字幕`, "");
 											// 获取字幕
 											url.searchParams.set("lang", Caches.Playlists.Subtitle.get(url.searchParams.get("v")) || url.searchParams.get("lang")); // 主语言
 											url.searchParams.delete("tlang") // 原字幕
@@ -95,19 +89,19 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 							};
 							break;
 						case "Netflix":
-							$.log(`⚠ Netflix`, "");
+							log(`⚠ Netflix`, "");
 							break;
 						case "Bilibili":
-							$.log(`⚠ Bilibili`, "");
+							log(`⚠ Bilibili`, "");
 							break;
 					};
 					break;
 				case "Translate":
 				default:
-					$.log(`⚠ 翻译字幕`, "");
+					log(`⚠ 翻译字幕`, "");
 					break;
 				case "External":
-					$.log(`⚠ 外挂字幕`, "");
+					log(`⚠ 外挂字幕`, "");
 					switch (Settings.SubVendor) {
 						case "URL":
 							let request = {
@@ -135,7 +129,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -145,37 +139,37 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist":
 					body = XML.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					await Promise.all(requests.map(async request => {
-						let officialSubtitle = await $.fetch(request).then(response => XML.parse(response.body));
-						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
+						let officialSubtitle = await fetch(request).then(response => XML.parse(response.body));
+						//log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
 						body = new Composite(Settings).timedText(body, officialSubtitle, url.searchParams.get("kind"));
 					}));
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = XML.stringify(body);
 					break;
 				case "text/vtt":
 				case "application/vtt":
 					body = VTT.parse($response.body);
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					await Promise.all(requests.map(async request => {
-						let officialSubtitle = await $.fetch(request).then(response => VTT.parse(response.body));
-						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
+						let officialSubtitle = await fetch(request).then(response => VTT.parse(response.body));
+						//log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
 						body = new Composite(Settings).webVTT(body, officialSubtitle);
 					}));
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = VTT.stringify(body);
 					break;
 				case "text/json":
 				case "application/json":
 					body = JSON.parse($response.body ?? "{}");
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					await Promise.all(requests.map(async request => {
-						let officialSubtitle = await $.fetch(request).then(response => JSON.parse(response.body));
-						//$.log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
+						let officialSubtitle = await fetch(request).then(response => JSON.parse(response.body));
+						//log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
 						body = new Composite(Settings).JSON(body, officialSubtitle, url.searchParams.get("kind"));
 					}));
-					//$.log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
@@ -184,11 +178,11 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "application/octet-stream":
-					//$.log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
-					//let rawBody = $.isQuanX() ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
-					//$.log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+					//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
+					//let rawBody = ($platform === "Quantumult X") ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
+					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					// 写入二进制数据
-					//$.log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
+					//log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
 					//$response.body = rawBody;
 					break;
 			};
@@ -197,8 +191,8 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
 			break;
 	};
 })()
-	.catch((e) => $.logErr(e))
-	.finally(() => $.done($response))
+	.catch((e) => logError(e))
+	.finally(() => done($response))
 
 /***************** Function *****************/
 /**
@@ -210,7 +204,7 @@ $.log(`⚠ FORMAT: ${FORMAT}`, "");
  * @return {Promise<Object>} { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex }
  */
 function getPlaylistCache(url, cache, languages) {
-	$.log(`☑️ getPlaylistCache`, "");
+	log(`☑️ getPlaylistCache`, "");
 	let masterPlaylistURL = "";
 	let subtitlesPlaylist = {};
 	let subtitlesPlaylistIndex = 0;
@@ -221,18 +215,18 @@ function getPlaylistCache(url, cache, languages) {
 				if (Array?.some((Object, Index) => {
 					if (url.includes(Object?.URI || Object?.OPTION?.URI || null)) {
 						subtitlesPlaylistIndex = Index;
-						$.log(`🚧 getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+						log(`🚧 getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
 						return true;
 					} else return false;
 				})) {
 					masterPlaylistURL = Key;
 					subtitlesPlaylist = Value;
-					//$.log(`🚧 getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
+					//log(`🚧 getPlaylistCache`, `masterPlaylistURL: ${masterPlaylistURL}`, `subtitlesPlaylist: ${JSON.stringify(subtitlesPlaylist)}`, "");
 				};
 			};
 		});
 	});
-	$.log(`✅ getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
+	log(`✅ getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
 	return { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex };
 };
 
@@ -245,7 +239,7 @@ function getPlaylistCache(url, cache, languages) {
  * @return {Promise<Object>} { subtitlesPlaylistURL, subtitles, subtitlesIndex }
  */
 function getSubtitlesCache(url, cache, languages) {
-	$.log(`☑️ getSubtitlesCache`, "");
+	log(`☑️ getSubtitlesCache`, "");
 	let subtitlesPlaylistURL = "";
 	let subtitles = [];
 	let subtitlesIndex = 0;
@@ -255,17 +249,17 @@ function getSubtitlesCache(url, cache, languages) {
 			if (Array?.some((String, Index) => {
 				if (url.includes(String || null)) {
 					subtitlesIndex = Index;
-					$.log(`🚧 getSubtitlesCache`, `subtitlesIndex: ${subtitlesIndex}`, "");
+					log(`🚧 getSubtitlesCache`, `subtitlesIndex: ${subtitlesIndex}`, "");
 					return true;
 				} else return false;
 			})) {
 				subtitlesPlaylistURL = Key;
 				subtitles = Value;
-				//$.log(`🚧 getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
+				//log(`🚧 getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
 			};
 		};
 	});
-	$.log(`✅ getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
+	log(`✅ getSubtitlesCache, subtitlesPlaylistURL: ${subtitlesPlaylistURL}`, "");
 	return { subtitlesPlaylistURL, subtitles, subtitlesIndex };
 };
 
@@ -280,16 +274,16 @@ function getSubtitlesCache(url, cache, languages) {
  * @return {Promise<Object>} { subtitlesURIArray0, subtitlesURIArray1 }
  */
 function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages) {
-	$.log(`☑️ getSubtitlesArray`, "");
+	log(`☑️ getSubtitlesArray`, "");
 	const subtitlesPlaylistValue = playlistsCache?.get(url) || {};
 	let subtitlesPlaylistURL0 = subtitlesPlaylistValue?.[languages[0]]?.[index]?.URL || subtitlesPlaylistValue?.[languages[0]]?.[0]?.URL;
 	let subtitlesPlaylistURL1 = subtitlesPlaylistValue?.[languages[1]]?.[index]?.URL || subtitlesPlaylistValue?.[languages[1]]?.[0]?.URL;
-	$.log(`🚧 getSubtitlesArray`, `subtitlesPlaylistURL0: ${subtitlesPlaylistURL0}, subtitlesPlaylistURL1: ${subtitlesPlaylistURL1}`, "");
+	log(`🚧 getSubtitlesArray`, `subtitlesPlaylistURL0: ${subtitlesPlaylistURL0}, subtitlesPlaylistURL1: ${subtitlesPlaylistURL1}`, "");
 	// 查找字幕文件地址vtt缓存（map）
 	let subtitlesURIArray0 = subtitlesCache.get(subtitlesPlaylistURL0) || [];
 	let subtitlesURIArray1 = subtitlesCache.get(subtitlesPlaylistURL1) || [];
-	//$.log(`🚧 getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
-	$.log(`✅ getSubtitlesArray`, "");
+	//log(`🚧 getSubtitlesArray`, `subtitlesURIArray0: ${JSON.stringify(subtitlesURIArray0)}, subtitlesURIArray1: ${JSON.stringify(subtitlesURIArray1)}`, "");
+	log(`✅ getSubtitlesArray`, "");
 	return { subtitlesURIArray0, subtitlesURIArray1 };
 };
 
@@ -301,7 +295,7 @@ function getSubtitlesArray(url, index, playlistsCache, subtitlesCache, languages
  * @return {String<*>} fileName
  */
 function getSubtitlesFileName(url, platform) {
-	$.log(`☑️ Get Subtitles FileName`, `url: ${url}`, "");
+	log(`☑️ Get Subtitles FileName`, `url: ${url}`, "");
 	let fileName = undefined;
 	switch (platform) {
 		case "Apple":
@@ -319,6 +313,6 @@ function getSubtitlesFileName(url, platform) {
 			fileName = null; // Amazon Prime Video HBO_Max不拆分字幕片段
 			break;
 	};
-	$.log(`✅ Get Subtitles FileName`, `fileName: ${fileName}`, "");
+	log(`✅ Get Subtitles FileName`, `fileName: ${fileName}`, "");
 	return fileName;
 };

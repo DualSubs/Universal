@@ -1,7 +1,4 @@
 {
-	"name": "dualsubs",
-	"version": "1.0.0",
-	"description": "通用流媒体平台字幕增强及双语模块",
 	"type": "module",
 	"repository": {
 		"type": "git",
@@ -21,11 +18,15 @@
 	"author": "VirgilClyne",
 	"license": "Apache-2.0",
 	"devDependencies": {
-		"@protobuf-ts/runtime": "^2.9.3",
+		"@protobuf-ts/plugin": "^2.9.4",
 		"@rollup/plugin-commonjs": "^25.0.7",
 		"@rollup/plugin-json": "^6.1.0",
+		"@rollup/plugin-node-resolve": "^15.2.3",
 		"@rollup/plugin-terser": "^0.4.4",
 		"crypto-js": "^4.2.0",
 		"rollup": "^4.9.6"
+	},
+	"dependencies": {
+		"@protobuf-ts/runtime": "^2.9.3"
 	}
 }

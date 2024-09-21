@@ -1,3 +1,5 @@
+import { log } from "../utils/utils.mjs";
+
 /**
  * detect Format
  * @author VirgilClyne
@@ -6,7 +8,7 @@
  * @return {String} format - format
  */
 export default function detectFormat(url = new URL(), body, format = undefined) {
-	console.log(`☑️ detectFormat, format: ${url.format || url.searchParams.get("fmt") || url.searchParams.get("format")}`, "");
+	log(`☑️ detectFormat, format: ${url.format || url.searchParams.get("fmt") || url.searchParams.get("format")}`, "");
 	switch (url.format || url.searchParams.get("fmt") || url.searchParams.get("format")) {
 		case "txt":
 			format = "text/plain";
@@ -35,8 +37,8 @@ export default function detectFormat(url = new URL(), body, format = undefined) 
 			break;
 		case undefined:
 			const HEADER = body?.substring?.(0, 6).trim?.();
-			//console.log(`🚧 detectFormat, HEADER: ${HEADER}`, "");
-			//console.log(`🚧 detectFormat, HEADER?.substring?.(0, 1): ${HEADER?.substring?.(0, 1)}`, "");
+			//log(`🚧 detectFormat, HEADER: ${HEADER}`, "");
+			//log(`🚧 detectFormat, HEADER?.substring?.(0, 1): ${HEADER?.substring?.(0, 1)}`, "");
 			switch (HEADER) {
 				case "<?xml":
 					format = "text/xml";
@@ -72,6 +74,6 @@ export default function detectFormat(url = new URL(), body, format = undefined) 
 			};
 			break;
 	};
-	console.log(`✅ detectFormat, format: ${format}`, "");
+	log(`✅ detectFormat, format: ${format}`, "");
 	return format;
 };

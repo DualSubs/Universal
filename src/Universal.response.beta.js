@@ -13,7 +13,7 @@ import Composite from "./function/Composite.mjs";
 import Translate from "./function/Translate.mjs";
 
 import { TextEncoder , TextDecoder } from "./text-encoding/index.js";
-import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime/build/es2015/index.js";
+import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime";
 log("🍿️ DualSubs: 🔣 Universal v1.1.0(1007) response.beta");
 /***************** Processing *****************/
 // 解构URL

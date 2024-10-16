@@ -2118,7 +2118,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-(0,_utils_utils_mjs__WEBPACK_IMPORTED_MODULE_0__.log)("v1.1.0(1004)");
+(0,_utils_utils_mjs__WEBPACK_IMPORTED_MODULE_0__.log)("v1.1.0(1005)");
 /***************** Processing *****************/
 // 解构URL
 const url = new _utils_utils_mjs__WEBPACK_IMPORTED_MODULE_0__.URL($request.url);
@@ -2143,6 +2143,8 @@ if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = (
 			// 获取字幕类型与语言
 			const Type = url.searchParams?.get("subtype") ?? Settings.Type, Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			(0,_utils_utils_mjs__WEBPACK_IMPORTED_MODULE_0__.log)(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
+			// 创建空数据
+			let body = {};
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型

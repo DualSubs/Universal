@@ -8,7 +8,7 @@ import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
-log("v1.1.0(1004)");
+log("v1.1.0(1005)");
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
@@ -33,6 +33,8 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 			// 获取字幕类型与语言
 			const Type = url.searchParams?.get("subtype") ?? Settings.Type, Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
+			// 创建空数据
+			let body = {};
 			// 创建字幕请求队列
 			let requests = [];
 			// 处理类型

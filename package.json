@@ -1,4 +1,5 @@
 {
+	"name": "universal",
 	"type": "module",
 	"repository": {
 		"type": "git",
@@ -8,7 +9,9 @@
 		"example": "example"
 	},
 	"scripts": {
-		"build": "rollup -c",
+		"serve": "webpack serve",
+		"build": "rspack build",
+		"build:dev": "rspack build --mode=development",
 		"test": "rollup --config --configDebug"
 	},
 	"browserslist": [
@@ -19,14 +22,15 @@
 	"license": "Apache-2.0",
 	"devDependencies": {
 		"@protobuf-ts/plugin": "^2.9.4",
+		"@protobuf-ts/runtime": "^2.9.4",
 		"@rollup/plugin-commonjs": "^25.0.7",
 		"@rollup/plugin-json": "^6.1.0",
 		"@rollup/plugin-node-resolve": "^15.2.3",
 		"@rollup/plugin-terser": "^0.4.4",
+		"@rspack/cli": "^1.0.11",
+		"@rspack/core": "^1.0.11",
 		"crypto-js": "^4.2.0",
+		"node-polyfill-webpack-plugin": "^4.0.0",
 		"rollup": "^4.9.6"
-	},
-	"dependencies": {
-		"@protobuf-ts/runtime": "^2.9.3"
 	}
 }

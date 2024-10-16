@@ -5,10 +5,10 @@ import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig({
 	entry: {
-		"Composite.Subtitles.response": "./src/Composite.Subtitles.response.beta.js",
-		"External.Lyrics.response": "./src/External.Lyrics.response.beta.js",
-		"Manifest.response": "./src/Manifest.response.beta.js",
-		"Translate.response": "./src/Translate.response.beta.js",
+		"Composite.Subtitles.response.beta": "./src/Composite.Subtitles.response.beta.js",
+		"External.Lyrics.response.beta": "./src/External.Lyrics.response.beta.js",
+		"Manifest.response.beta": "./src/Manifest.response.beta.js",
+		"Translate.response.beta": "./src/Translate.response.beta.js",
 	},
 	output: {
 		filename: "[name].bundle.js",
@@ -22,7 +22,7 @@ export default defineConfig({
 			raw: true,
 		}),
 		new rspack.BannerPlugin({
-			banner: "console.log('[base]');",
+			banner: "console.log('[name]');",
 			raw: true,
 		}),
 		new rspack.BannerPlugin({

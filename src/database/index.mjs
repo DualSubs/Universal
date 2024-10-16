@@ -1,21 +1,21 @@
-import * as Default from "./Default.json";
-import * as Universal from "./Universal.json";
-import * as YouTube from "./YouTube.json";
-import * as Netflix from "./Netflix.json";
-import * as Spotify from "./Spotify.json";
-import * as Composite from "./Composite.json";
-import * as Translate from "./Translate.json";
-import * as External from "./External.json";
-import * as API from "./API.json";
+import Default from "./Default.json" with { type: "json" };
+import Universal from "./Universal.json" with { type: "json" };
+import YouTube from "./YouTube.json" with { type: "json" };
+import Netflix from "./Netflix.json" with { type: "json" };
+import Spotify from "./Spotify.json" with { type: "json" };
+import Composite from "./Composite.json" with { type: "json" };
+import Translate from "./Translate.json" with { type: "json" };
+import External from "./External.json" with { type: "json" };
+import API from "./API.json" with { type: "json" };
 
-export default Database = {
-	"Default": Default,
-	"Universal": Universal,
-	"YouTube": YouTube,
-	"Netflix": Netflix,
-	"Spotify": Spotify,
-	"Composite": Composite,
-	"Translate": Translate,
-	"External": External,
-	"API": API,
+export default {
+	Default,
+	Universal,
+	YouTube,
+	Netflix,
+	Spotify,
+	Composite,
+	Translate,
+	External,
+	API,
 };

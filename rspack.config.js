@@ -18,6 +18,18 @@ export default defineConfig({
 			//additionalAliases: ['console'],
 		}),
 		new rspack.BannerPlugin({
+			banner: `console.log('version: ${pkg.version}');`,
+			raw: true,
+		}),
+		new rspack.BannerPlugin({
+			banner: "console.log('[name]');",
+			raw: true,
+		}),
+		new rspack.BannerPlugin({
+			banner: "console.log('🍿️ DualSubs: 🔣 Universal');",
+			raw: true,
+		}),
+		new rspack.BannerPlugin({
 			banner: "https://DualSubs.github.io",
 		}),
 	],

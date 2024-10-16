@@ -11,7 +11,7 @@
 	"scripts": {
 		"serve": "webpack serve",
 		"build": "rspack build",
-		"build:dev": "rspack build --mode=development",
+		"build:dev": "rspack build -c rspack.debug.config.js --mode=development",
 		"test": "rollup --config --configDebug"
 	},
 	"browserslist": [

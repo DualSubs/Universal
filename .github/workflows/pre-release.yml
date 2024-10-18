@@ -1,0 +1,33 @@
+name: Pre-Release
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+  pre-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@master
+        with:
+          name: artifact
+      - name: Publish Pre-Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG.md
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            rulesets/*
+            dist/*
+          prerelease: true

@@ -50,6 +50,9 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
+					//body = M3U8.parse($response.body);
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
 				case "text/html":
@@ -58,6 +61,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist": {
 					body = XML.parse($response.body);
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					const breakLine = (body?.tt) ? "<br />" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
 					if (body?.timedtext?.head?.wp?.[1]?.["@rc"]) body.timedtext.head.wp[1]["@rc"] = "1";
 					let paragraph = body?.tt?.body?.div?.p ?? body?.timedtext?.body?.p;
@@ -73,6 +77,13 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 						else sentences = span?.["#"];
 						if (Array.isArray(sentences)) sentences = sentences.join(" ");
 						fullText.push(sentences ?? "\u200b");
+						/*
+						const spans = para?.span ?? para?.s ?? para;
+						if (Array.isArray(span)) spans["#"] = spans?.map(span => span?.["#"] ?? "").join(" ");
+						else spans["#"] = spans?.["#"] ?? "";
+						if (para?.s) para = spans;
+						if (spans?.["#"]) fullText.push(spans["#"]);
+						*/
 						return para;
 					});
 					const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
@@ -80,28 +91,33 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 						const span = para?.span ?? para;
 						if (Array.isArray(span)) translation?.[i]?.split(breakLine).forEach((text, j) => {
 							if (span[j]?.["#"]) span[j]["#"] = combineText(span[j]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
+							//else if (span[j + 1]?.["#"]) span[j + 1]["#"] = combineText(span[j + 1]["#"], text, Settings?.ShowOnly, Settings?.Position, ' ');
 						});
 						else if (span?.["#"]) span["#"] = combineText(span["#"], translation?.[i], Settings?.ShowOnly, Settings?.Position, breakLine);
 						return para;
 					});
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = XML.stringify(body);
 					break;
 				};
 				case "text/vtt":
 				case "application/vtt": {
 					body = VTT.parse($response.body);
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					let fullText = body?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
 					const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					body.body = body.body.map((item, i) => {
 						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
 						return item
 					});
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = VTT.stringify(body);
 					break;
 				};
 				case "text/json":
 				case "application/json": {
 					body = JSON.parse($response.body ?? "{}");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					switch (PLATFORM) {
 						case "YouTube": {
 							if (body?.events) {
@@ -141,12 +157,19 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									: "AUTO";
 							let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 							const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
+							log(`🚧 $request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
 							switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
 								case "OSX": // macOS App 暂不支持翻译功能
 								case "Win32_x86_64": // Windows App 暂不支持翻译功能
 								case "WebPlayer": // Web App
 								case undefined:
 								default:
+									/*
+									body.lyrics.lines = body.lyrics.lines.map((line, i) => {
+										if (line?.words) line.words = combineText(line.words, translation?.[i], Settings?.ShowOnly, Settings?.Position);
+										return line;
+									});
+									*/
 									body.lyrics.lines = body.lyrics.lines.map((line, i) => {
 										let line1 = {
 											"startTimeMs": line.startTimeMs.toString(),
@@ -174,6 +197,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						};
 					};
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				};
@@ -183,7 +207,9 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "application/octet-stream":
+					//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
 					let rawBody = ($platform === "Quantumult X") ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
+					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					switch (FORMAT) {
 						case "application/protobuf":
 						case "application/x-protobuf":
@@ -194,12 +220,22 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									class Browse$Type extends MessageType {
 										constructor() {
 											super("Browse", [
+												{ no: 1, name: "context", kind: "message", jsonName: "responseContext", T: () => Context },
 												{ no: 9, name: "contents", kind: "message", T: () => Contents },
-												{ no: 10, name: "continuationContents", kind: "message", T: () => Contents }
+												{ no: 10, name: "continuationContents", kind: "message", T: () => Contents },
+												{ no: 777, name: "frameworkUpdates", kind: "message", T: () => FrameworkUpdates }
 											]);
 										}
 									}
 									const Browse = new Browse$Type();
+									class Context$Type extends MessageType {
+										constructor() {
+											super("Context", [
+												{ no: 6, name: "serviceTrackingParams", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => ServiceTrackingParams }
+											]);
+										}
+									}
+									const Context = new Context$Type();
 									class Contents$Type extends MessageType {
 										constructor() {
 											super("Contents", [
@@ -214,6 +250,14 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										}
 									}
 									const Contents = new Contents$Type();
+									class ServiceTrackingParams$Type extends MessageType {
+										constructor() {
+											super("ServiceTrackingParams", [
+												{ no: 2, name: "params", kind: "map", K: 9 /*ScalarType.STRING*/, V: { kind: "scalar", T: 9 /*ScalarType.STRING*/ } }
+											]);
+										}
+									}
+									const ServiceTrackingParams = new ServiceTrackingParams$Type();
 									class SingleColumnBrowseResultsRenderer$Type extends MessageType {
 										constructor() {
 											super("SingleColumnBrowseResultsRenderer", [
@@ -364,6 +408,14 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										}
 									}
 									const n13F1 = new n13F1$Type();
+									class n11F172035250$Type extends MessageType {
+										constructor() {
+											super("n11F172035250", [
+												{ no: 1, name: "type", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+											]);
+										}
+									}
+									const n11F172035250 = new n11F172035250$Type();
 									class Runs$Type extends MessageType {
 										constructor() {
 											super("Runs", [
@@ -372,8 +424,77 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										}
 									}
 									const Runs = new Runs$Type();
+									class FrameworkUpdates$Type extends MessageType {
+										constructor() {
+											super("FrameworkUpdates", [
+												{ no: 1, name: "entityBatchUpdate", kind: "message", T: () => EntityBatchUpdate }
+											]);
+										}
+									}
+									const FrameworkUpdates = new FrameworkUpdates$Type();
+									class EntityBatchUpdate$Type extends MessageType {
+										constructor() {
+											super("EntityBatchUpdate", [
+												{ no: 1, name: "mutations", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Mutations }
+											]);
+										}
+									}
+									const EntityBatchUpdate = new EntityBatchUpdate$Type();
+									class Mutations$Type extends MessageType {
+										constructor() {
+											super("Mutations", [
+												{ no: 1, name: "entityKey", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 3, name: "payload", kind: "message", T: () => Payload }
+											]);
+										}
+									}
+									const Mutations = new Mutations$Type();
+									class Payload$Type extends MessageType {
+										constructor() {
+											super("Payload", [
+												{ no: 144, name: "musicForm", kind: "message", T: () => MusicForm },
+												{ no: 145, name: "musicFormBooleanChoice", kind: "message", T: () => MusicFormBooleanChoice }
+											]);
+										}
+									}
+									const Payload = new Payload$Type();
+									class MusicForm$Type extends MessageType {
+										constructor() {
+											super("MusicForm", [
+												{ no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 2, name: "booleanChoiceEntityKeys", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ }
+											]);
+										}
+									}
+									const MusicForm = new MusicForm$Type();
+									class MusicFormBooleanChoice$Type extends MessageType {
+										constructor() {
+											super("musicFormBooleanChoice", [
+												{ no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 2, name: "booleanChoiceEntityKey", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+												{ no: 3, name: "selected", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+												{ no: 4, name: "opaqueToken", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+											]);
+										}
+									}
+									const MusicFormBooleanChoice = new MusicFormBooleanChoice$Type();
 									/******************  initialization finish  *******************/
 									body = Browse.fromBinary(rawBody);
+									//log(`🚧 body: ${JSON.stringify(body)}`, "");
+									log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
+									log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
+									let UF = UnknownFieldHandler.list(body);
+									//log(`🚧 UF: ${JSON.stringify(UF)}`, "");
+									if (UF) {
+										UF = UF.map(uf => {
+											//uf.no; // 22
+											//uf.wireType; // WireType.Varint
+											// use the binary reader to decode the raw data:
+											let reader = new BinaryReader(uf.data);
+											let addedNumber = reader.int32(); // 7777
+											log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+										});
+									};
 									Languages[0] = "AUTO";
 									if (body?.contents?.n6F153515154?.n7F172660663?.n8F1?.n9F168777401?.n10F5?.n11F465160965?.n12F4?.n13F1) {
 										let fullText = body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map(line => line?.f1 ?? "\u200b");
@@ -398,6 +519,9 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 											return musicDescription;
 										}));
 									};
+									//log(`🚧 body: ${JSON.stringify(body)}`, "");
+									log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
+									log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
 									rawBody = Browse.toBinary(body);
 									break;
 								};
@@ -493,16 +617,38 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									const Alternative = new Alternative$Type();
 									/******************  initialization finish  *******************/
 									body = ColorLyricsResponse.fromBinary(rawBody);
+									log(`🚧 body: ${JSON.stringify(body)}`, "");
+									/*
+									let UF = UnknownFieldHandler.list(body);
+									//log(`🚧 UF: ${JSON.stringify(UF)}`, "");
+									if (UF) {
+										UF = UF.map(uf => {
+											//uf.no; // 22
+											//uf.wireType; // WireType.Varint
+											// use the binary reader to decode the raw data:
+											let reader = new BinaryReader(uf.data);
+											let addedNumber = reader.int32(); // 7777
+											log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+										});
+									};
+									*/
 									Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
 										: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
 											: "AUTO";
 									let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 									const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
+									/*
+									body.lyrics.alternatives = [{
+										"language": Languages[1].toLowerCase(),
+										"lines": translation
+									}];
+									*/
 									if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];
 									body.lyrics.alternatives.unshift({
 										"language": Languages[1].toLowerCase(),
 										"lines": translation
 									});
+									log(`🚧 body: ${JSON.stringify(body)}`, "");
 									rawBody = ColorLyricsResponse.toBinary(body);
 									break;
 								};

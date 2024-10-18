@@ -132,6 +132,9 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/x-mpegurl":
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
+					//body = M3U8.parse($response.body);
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
 				case "text/html":
@@ -140,28 +143,37 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist":
 					body = XML.parse($response.body);
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await fetch(request).then(response => XML.parse(response.body));
+						//log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
 						body = new Composite(Settings).timedText(body, officialSubtitle, url.searchParams.get("kind"));
 					}));
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = XML.stringify(body);
 					break;
 				case "text/vtt":
 				case "application/vtt":
 					body = VTT.parse($response.body);
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await fetch(request).then(response => VTT.parse(response.body));
+						//log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
 						body = new Composite(Settings).webVTT(body, officialSubtitle);
 					}));
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = VTT.stringify(body);
 					break;
 				case "text/json":
 				case "application/json":
 					body = JSON.parse($response.body ?? "{}");
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					await Promise.all(requests.map(async request => {
 						let officialSubtitle = await fetch(request).then(response => JSON.parse(response.body));
+						//log(`🚧 officialSubtitle: ${JSON.stringify(officialSubtitle)}`, "");
 						body = new Composite(Settings).JSON(body, officialSubtitle, url.searchParams.get("kind"));
 					}));
+					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
@@ -170,6 +182,12 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "application/octet-stream":
+					//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
+					//let rawBody = ($platform === "Quantumult X") ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
+					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+					// 写入二进制数据
+					//log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
+					//$response.body = rawBody;
 					break;
 			};
 			break;

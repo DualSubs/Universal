@@ -1,0 +1,34 @@
+name: "🍿️ DualSubs: TV & Fitness"
+desc: "(V0.7) TV 及 Fitness 字幕增强及双语模块，此模块为兼容模式版，始终强制启用字幕翻译功能"
+openUrl: "http://boxjs.com/#/app/DualSubs.TV.beta"
+author: "VirgilClyne"
+homepage: "https://github.com/DualSubs"
+manual: "https://github.com/DualSubs/DualSubs/wiki/🍿-DualSubs:-🎦-Streaming-Media"
+icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/TV.png"
+
+http:
+  mitm:
+    - "hls.itunes.apple.com"
+    - "hls-svod.itunes.apple.com"
+    - "vod-*.tv.apple.com"
+  script:
+    - match: ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
+      name: DualSubs..SUB.WebVTT
+      type: response
+      require-body: true
+      timeout: 30
+    - match: ^https?:\/\/vod-(.+)-aoc\.tv\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
+      name: DualSubs..SUB.WebVTT
+      type: response
+      require-body: true
+      timeout: 30
+    - match: ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\.webvtt(\?.+)?$
+      name: DualSubs..SUB.WebVTT
+      type: response
+      require-body: true
+      timeout: 30
+
+script-providers:
+  DualSubs..SUB.WebVTT:
+    url: https://raw.githubusercontent.com/DualSubs/DualSubs/main/js/archive/v0.7/DualSubs.SUB.WebVTT.js
+    interval: 86400

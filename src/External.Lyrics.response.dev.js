@@ -93,7 +93,9 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "application/octet-stream":
+					//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
 					let rawBody = ($platform === "Quantumult X") ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
+					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 					switch (FORMAT) {
 						case "application/protobuf":
 						case "application/x-protobuf":
@@ -196,6 +198,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									const Alternative = new Alternative$Type();
 									/******************  initialization finish  *******************/
 									body = ColorLyricsResponse.fromBinary(rawBody);
+									log(`🚧 body: ${JSON.stringify(body)}`, "");
 									/*
 									let UF = UnknownFieldHandler.list(body);
 									log(`🚧 UF: ${JSON.stringify(UF)}`, "");
@@ -211,6 +214,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									};
 									*/
 									body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
+									//body.lyrics = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM).then(body => body.lyrics);
 									switch (body?.lyrics?.syncType) {
 										case "UNSYNCED":
 											body.lyrics.syncType = 0;
@@ -225,6 +229,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									body.lyrics.fullscreenAction = 0;
 									if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;
 									$response.status = ($platform === "Quantumult X") ? "HTTP/1.1 200 OK" : 200;
+									log(`🚧 body: ${JSON.stringify(body)}`, "");
 									rawBody = ColorLyricsResponse.toBinary(body);
 									break;
 								};
@@ -334,6 +339,8 @@ async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $r
 					body.lyrics.providerLyricsId = trackInfo?.NeteaseMusic?.id?.toString?.();
 					body.lyrics.providerDisplayName = `网易云音乐 - ${externalLyric?.lyricUser ?? "未知"}`;
 					body.colors.background = -8249806; // 网易红 8527410 #821E32 rgb(130,30,50)
+					//body.colors.background = -55775; // 网易红 16721441 #FF2621 rgb(255,38,33)
+					log(`🚧 body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
 					break
 				case "QQMusic":
 				default:
@@ -341,6 +348,7 @@ async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $r
 					body.lyrics.providerLyricsId = trackInfo?.QQMusic?.mid?.toString?.();
 					body.lyrics.providerDisplayName = `QQ音乐 - ${externalLyric?.lyricUser ?? "未知"}`;
 					body.colors.background = -11038189; // QQ音乐绿 5739027 #579213 rgb(87,146,19)
+					log(`🚧 body.lyrics.lines: ${JSON.stringify(body.lyrics.lines)}`, "");
 					break
 			};
 			// 填充逐字或逐句歌词
@@ -361,6 +369,12 @@ async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $r
 					case "WebPlayer": // Web App
 					case undefined:
 					default:
+						/*
+						if (duolyric) body.lyrics.lines = body.lyrics.lines.map((line, i) => {
+							if (line?.words) line.words = combineText(line.words, duolyric?.[i]?.twords ?? "♪");
+							return line;
+						});
+						*/
 						if (duolyric) body.lyrics.lines = LRC.separateSpotify(duolyric).map(line => {
 							line.startTimeMs = line.startTimeMs.toString();
 							line.endTimeMs = line.endTimeMs.toString();
@@ -380,6 +394,7 @@ async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $r
 			break;
 	};
 	log(`✅ Injection Lyric`, "");
+	log(`🚧 Injection Lyric`, `body: ${JSON.stringify(body)}`, "");
 	return body;
 };
 
@@ -399,7 +414,23 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 			searchUrl.searchParams.set("limit", "1");
 			searchUrl.searchParams.set("offset", "0");
 			searchUrl.searchParams.set("s", encodeURIComponent(keyword));
+			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
+			/*
+			const searchUrl = {
+				"scheme": "https",
+				"host": "music.163.com",
+				"path": "api/cloudsearch/pc",
+				"query": {
+					"type": 1,
+					"limit": 1,
+					"offset": 0,
+					"s": encodeURIComponent(keyword),
+				}
+			};
+			log(`🚧 searchUrl: ${JSON.stringify(searchUrl)}`, "");
+			Request.url = URI.stringify(searchUrl);
+			*/
 			Request.headers.Referer = "https://music.163.com";
 			Request.headers.Cookie = "os=ios; __remember_me=true; NMTID=xxx";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
@@ -423,7 +454,24 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 			searchUrl.searchParams.set("limit", "1");
 			searchUrl.searchParams.set("offset", "0");
 			searchUrl.searchParams.set("keywords", encodeURIComponent(keyword));
+			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
+			/*
+			const searchUrl = {
+				"scheme": "https",
+				"host": HostPool[Math.floor(Math.random() * HostPool.length)],
+				//"path": "search",
+				"path": "cloudsearch",
+				"query": {
+					"type": 1,
+					"limit": 1,
+					"offset": 0,
+					"keywords": encodeURIComponent(keyword),
+				}
+			};
+			log(`🚧 searchUrl: ${JSON.stringify(searchUrl)}`, "");
+			Request.url = URI.stringify(searchUrl);
+			*/
 			Request.headers.Referer = "https://music.163.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
 			trackInfo.id = Result?.result?.songs?.[0]?.id;
@@ -435,7 +483,17 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 		case "QQMusic":
 		default: {
 			const searchUrl = new URL("https://c.y.qq.com/cgi-bin/musicu.fcg");
+			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
+			/*
+			const searchUrl = {
+				"scheme": "https",
+				"host": "u.y.qq.com",
+				"path": "cgi-bin/musicu.fcg"
+			};
+			log(`🚧 searchUrl: ${JSON.stringify(searchUrl)}`, "");
+			Request.url = URI.stringify(searchUrl);
+			*/
 			Request.headers.Referer = "https://c.y.qq.com";
 			Request.body = JSON.stringify({
 				"music.search.SearchCgiService": {
@@ -454,6 +512,50 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 			trackInfo.track = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.name;
 			trackInfo.album = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.album?.name;
 			trackInfo.artist = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.singer?.[0]?.name;
+			break;
+		};
+		case "QQMusicOld": {
+			const searchUrl = new URL("https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp");
+			searchUrl.searchParams.set("format", "json");
+			searchUrl.searchParams.set("p", "1");
+			searchUrl.searchParams.set("n", "1");
+			searchUrl.searchParams.set("w", encodeURIComponent(keyword));
+			searchUrl.searchParams.set("remoteplace", "txt.yqq.song");
+			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
+			Request.url = searchUrl.toString();
+			/*
+			const searchUrl = {
+				"scheme": "https",
+				"host": "c.y.qq.com",
+				"path": "soso/fcgi-bin/search_for_qq_cp",
+				//"path": "soso/fcgi-bin/client_search_cp",
+				"query": {
+					"format": "json",
+					//"outCharset": 'utf-8',
+					//"ct": 24,
+					//"qqmusic_ver": 1298,
+					"p": 1,
+					"n": 1,
+					"w": encodeURIComponent(keyword),
+					//"key": encodeURIComponent(keyword),
+					"remoteplace": 'txt.yqq.song',
+					//"t": 0,
+					//"aggr": 1,
+					//"cr": 1,
+					//"lossless": 0,
+					//"flag_qc": 0,
+					//"platform": 'yqq.json',
+				}
+			};
+			log(`🚧 searchUrl: ${JSON.stringify(searchUrl)}`, "");
+			Request.url = URI.stringify(searchUrl);
+			*/
+			Request.headers.Referer = "https://c.y.qq.com";
+			const Result = await fetch(Request).then(response => JSON.parse(response.body));
+			trackInfo.mid = Result?.data?.song?.list?.[0]?.songmid;
+			trackInfo.track = Result?.data?.song?.list?.[0]?.songname;
+			trackInfo.album = Result?.data?.song?.list?.[0]?.albumname;
+			trackInfo.artist = Result?.data?.song?.list?.[0]?.singer?.[0]?.name;
 			break;
 		};
 	};
@@ -477,10 +579,27 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			lyricUrl.searchParams.set("lv", "0");
 			lyricUrl.searchParams.set("tv", "0");
 			lyricUrl.searchParams.set("tv", "0");
+			log(`🚧 lyricUrl: ${lyricUrl.toJSON()}`, "");
 			Request.url = lyricUrl.toString();
+			/*
+			const lyricUrl = {
+				"scheme": "https",
+				"host": "music.163.com",
+				"path": "api/song/lyric",
+				"query": {
+					"id": trackId, // trackInfo.NeteaseMusic.id
+					"lv": 0,
+					"yv": 0,
+					"tv": 0,
+				}
+			};
+			log(`🚧 lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
+			Request.url = URI.stringify(lyricUrl);
+			*/
 			Request.headers.Referer = "https://music.163.com";
 			Request.headers.Cookie = "os=ios; __remember_me=true; NMTID=xxx";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
+			log(`🚧 Result: ${JSON.stringify(Result)}`, "");
 			Lyrics.lyric = Result?.lrc?.lyric;
 			Lyrics.tlyric = Result?.ytlrc?.lyric ?? Result?.tlyric?.lyric;
 			Lyrics.klyric = Result?.yrc?.lyric ?? Result?.klyric?.lyric;
@@ -498,9 +617,23 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			];
 			const lyricUrl = new URL(`https://${HostPool[Math.floor(Math.random() * HostPool.length)]}/lyric/new`);
 			lyricUrl.searchParams.set("id", trackId); // trackInfo.NeteaseMusic.id
+			log(`🚧 lyricUrl: ${lyricUrl.toJSON()}`, "");
 			Request.url = lyricUrl.toString();
+			/*
+			const lyricUrl = {
+				"scheme": "https",
+				"host": HostPool[Math.floor(Math.random() * HostPool.length)],
+				"path": "lyric/new",
+				"query": {
+					"id": trackId // trackInfo.NeteaseMusic.id
+				}
+			};
+			log(`🚧 lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
+			Request.url = URI.stringify(lyricUrl);
+			*/
 			Request.headers.Referer = "https://music.163.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
+			log(`🚧 Result: ${JSON.stringify(Result)}`, "");
 			Lyrics.lyric = Result?.lrc?.lyric;
 			Lyrics.tlyric = Result?.ytlrc?.lyric ?? Result?.tlyric?.lyric;
 			Lyrics.klyric = Result?.yrc?.lyric ?? Result?.klyric?.lyric;
@@ -515,7 +648,23 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			lyricUrl.searchParams.set("format", "json");
 			lyricUrl.searchParams.set("nobase64", "1");
 			lyricUrl.searchParams.set("songmid", trackId); // trackInfo.QQMusic.mid
+			log(`🚧 lyricUrl: ${lyricUrl.toJSON()}`, "");
 			Request.url = lyricUrl.toString();
+			/*
+			const lyricUrl = {
+				"scheme": "https",
+				"host": "c.y.qq.com",
+				"path": "lyric/fcgi-bin/fcg_query_lyric_new.fcg",
+				"query": {
+					"g_tk": "5381",
+					"format": "json",
+					"nobase64": "1",
+					"songmid": trackId // trackInfo.QQMusic.mid
+				}
+			};
+			log(`🚧 lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
+			Request.url = URI.stringify(lyricUrl);
+			*/
 			Request.headers.Referer = "https://lyric.music.qq.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
 			Lyrics.lyric = Result?.lyric;
@@ -527,6 +676,7 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 		};
 	};
 	log(`✅ Search Lyric`, "");
+	log(`🚧 Search Lyric`, `Lyrics: ${JSON.stringify(Lyrics)}`, "");
 	return Lyrics;
 };
 

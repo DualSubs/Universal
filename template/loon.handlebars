@@ -10,6 +10,9 @@
 #!version = {{@package 'version'}}
 #!system_version = {{ @package 'systemVersion'}}
 
+[Argument]
+{{{arguments}}}
+
 [Script]
 http-response ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8 requires-body=1, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js, tag=DualSubs.TV.M3U8.Master.response, argument={{{scriptParams}}}
 http-response ^https?:\/\/vod-(.+)-amt\.tv\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)_subtitles(_V\d)?\.m3u8\?(.*)subtype= requires-body=1, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js, tag=DualSubs.TV.M3U8.Subtitles.response, argument={{{scriptParams}}}

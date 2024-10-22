@@ -18,6 +18,10 @@ export default defineConfig({
 			//additionalAliases: ['console'],
 		}),
 		new rspack.BannerPlugin({
+			banner: `console.log('Date: ${new Date().toLocaleString('zh-CN', {timeZone: 'PRC'})}');`,
+			raw: true,
+		}),
+		new rspack.BannerPlugin({
 			banner: `console.log('Version: ${pkg.version}');`,
 			raw: true,
 		}),
@@ -26,11 +30,11 @@ export default defineConfig({
 			raw: true,
 		}),
 		new rspack.BannerPlugin({
-			banner: "console.log('🍿️ DualSubs: 🔣 Universal β');",
+			banner: `console.log('${pkg.displayName} β');`,
 			raw: true,
 		}),
 		new rspack.BannerPlugin({
-			banner: "https://DualSubs.github.io",
+			banner: pkg.homepage,
 		}),
 	],
 	performance: false,

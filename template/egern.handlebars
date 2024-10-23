@@ -82,22 +82,22 @@ scriptings:
     body_required: true
 - http_response:
     name: 'DualSubs.Disney+.M3U8.Master.response'
-    match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(cbcs|ctr)-all-(.+)\.m3u8
+    match: ^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(cbcs|ctr)-all-(.+)\.m3u8
     script_url: https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
     body_required: true
 - http_response:
     name: 'DualSubs.Disney+.M3U8.Subtitles.response'
-    match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)((composite|subtitles)_(.+)|subtitles)\.m3u8\?(.*)subtype=
+    match: ^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)((composite|subtitles)_(.+)|subtitles)\.m3u8\?(.*)subtype=
     script_url: https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
     body_required: true
 - http_response:
     name: 'DualSubs.Disney+.Composite.Subtitles.response'
-    match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=(Official|External)
+    match: ^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=(Official|External)
     script_url: https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Composite.Subtitles.response.bundle.js
     body_required: true
 - http_response:
     name: 'DualSubs.Disney+.Translate.Subtitles.response'
-    match: ^https?:\/\/(.+)\.media\.(dssott|starott)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=Translate
+    match: ^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.+)\.vtt\?(.*)subtype=Translate
     script_url: https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Translate.response.bundle.js
     body_required: true
 - http_response:
@@ -648,6 +648,7 @@ mitm:
   - vod-*.tv.apple.com
   - '*.media.dssott.com'
   - '*.media.starott.com'
+  - '*.prod.dssedge.com'
   - atv-ps.amazon.com
   - atv-ps-fe.primevideo.com
   - '*.hls.pv-cdn.net'

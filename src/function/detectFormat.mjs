@@ -7,7 +7,7 @@ import { URL, log } from "../utils/utils.mjs";
  * @param {String} body - response body
  * @return {String} format - format
  */
-export default function detectFormat(url = new URL(), body, format = undefined) {
+export default function detectFormat(url, body, format = undefined) {
 	log(`☑️ detectFormat, format: ${url.format || url.searchParams.get("fmt") || url.searchParams.get("format")}`, "");
 	switch (url.format || url.searchParams.get("fmt") || url.searchParams.get("format")) {
 		case "txt":

@@ -1,13 +1,13 @@
 import { log } from "../utils/utils.mjs";
 
 export default function detectPlatform(url) {
-	log(`☑️ Detect Platform`, "");
+	log("☑️ Detect Platform", "");
 	/***************** Platform *****************/
-	let Platform = /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
+	const Platform = /\.(netflix\.com|nflxvideo\.net)/i.test(url) ? "Netflix"
 		: /(\.youtube|youtubei\.googleapis)\.com/i.test(url) ? "YouTube"
 			: /\.spotify(cdn)?\.com/i.test(url) ? "Spotify"
 				: /\.apple\.com/i.test(url) ? "Apple"
-					: /\.(dssott|starott)\.com/i.test(url) ? "Disney+"
+					: /\.(dssott|starott|dssedge)\.com/i.test(url) ? "Disney+"
 						: /primevideo\.com|(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url) ? "PrimeVideo"
 							: /prd\.media\.h264\.io/i.test(url) ? "Max"
 								: /\.(api\.hbo|hbomaxcdn)\.com/i.test(url) ? "HBOMax"

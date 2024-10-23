@@ -8,7 +8,7 @@ import { $platform, log } from "../utils/utils.mjs";
  * @return {Promise<*>}
  */
 export default async function fetch(request = {}, format = "application/json") {
-	log(`☑️ Fetch Ruled Reqeust`, "");
+	log("☑️ Fetch Ruled Reqeust", "");
 	if ($platform === "Quantumult X") {
 		switch (format) {
 			case undefined: // 视为无body
@@ -25,15 +25,15 @@ export default async function fetch(request = {}, format = "application/json") {
 			case "application/grpc+proto":
 			case "applecation/octet-stream":
 				// 返回二进制数据
-				delete request.body;
+				request.body = undefined;
 				if (ArrayBuffer.isView(request.bodyBytes)) request.bodyBytes = request.bodyBytes.buffer.slice(request.bodyBytes.byteOffset, request.bodyBytes.byteLength + request.bodyBytes.byteOffset);
 				break;
 		};
 	};
-	let response = (request?.body ?? request?.bodyBytes)
+	const response = (request?.body ?? request?.bodyBytes)
 		? await $.http.post(request)
 		: await $.http.get(request);
         log(`🚧 Fetch Ruled Reqeust, response:${JSON.stringify(response)}`, "");
-        log(`✅ Fetch Ruled Reqeust`, "");
+        log("✅ Fetch Ruled Reqeust", "");
 	return response;
 };

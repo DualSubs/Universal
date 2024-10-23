@@ -17,7 +17,7 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 	const NAME1 = playlist1?.OPTION?.NAME.trim(), NAME2 = playlist2?.OPTION?.NAME.trim();
 	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE.trim(), LANGUAGE2 = playlist2?.OPTION?.LANGUAGE.trim();
 	// 复制此语言选项
-	let newOption = JSON.parse(JSON.stringify(playlist1));
+	const newOption = JSON.parse(JSON.stringify(playlist1));
 	// 修改名称
 	switch (type) {
 		case "Official":

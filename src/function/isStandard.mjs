@@ -11,7 +11,7 @@ import { log } from "../utils/utils.mjs";
  * @return {Promise<*>}
  */
 export default function isStandard(url = new URL(), headers = {}, platform = "Universal") {
-	log(`☑️ is Standard?`, "");
+	log("☑️ is Standard?", "");
     // 判断设备类型
 	const UA = headers["user-agent"] ?? headers["User-Agent"];
 	log(`🚧 is Standard?, UA: ${UA}`, "");

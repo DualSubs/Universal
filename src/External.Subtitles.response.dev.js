@@ -38,14 +38,14 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 			// 处理类型
 			switch (Type) {
 				case "Official":
-					log(`⚠ 官方字幕`, "");
+					log("⚠ 官方字幕", "");
 					break;
 				case "Translate":
 				default:
-					log(`⚠ 翻译字幕`, "");
+					log("⚠ 翻译字幕", "");
 					break;
 				case "External":
-					log(`⚠ 外挂字幕`, "");
+					log("⚠ 外挂字幕", "");
 					switch (Settings.SubVendor) {
 						case "URL":
 							request = {

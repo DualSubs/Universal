@@ -1,0 +1,72 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+    "files": {
+        "ignore": [
+            "**/*.bundle.js"
+        ],
+        "ignoreUnknown": false
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "tab",
+        "indentWidth": 2,
+        "lineEnding": "lf",
+        "lineWidth": 240
+    },
+    "javascript": {
+        "formatter": {
+            "arrowParentheses": "asNeeded",
+            "bracketSameLine": true,
+            "quoteStyle": "double"
+        }
+    },
+    "json": {
+        "parser": {
+            "allowComments": true,
+            "allowTrailingCommas": true
+        }
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "complexity": {
+                "noForEach": "off",
+                "noStaticOnlyClass": "off",
+                "noUselessSwitchCase": "off",
+                "useArrowFunction": "info",
+                "useFlatMap": "off",
+                "useLiteralKeys": "info"
+            },
+            "correctness": {
+                "noInnerDeclarations": "info",
+                "noSelfAssign": "off",
+                "noSwitchDeclarations": "info"
+            },
+            "recommended": true,
+            "style": {
+                "noNegationElse": "off",
+                "noParameterAssign": "off",
+                "noUselessElse": "off",
+                "noVar": "info",
+                "useDefaultParameterLast": "info",
+                "useForOf": "error",
+                "useNodejsImportProtocol": "error",
+                "useNumberNamespace": "error",
+                "useSingleVarDeclarator": "off"
+            },
+            "suspicious": {
+                "noAssignInExpressions": "info",
+                "noFallthroughSwitchClause": "info",
+                "useDefaultSwitchClauseLast": "off"
+            }
+        }
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "vcs": {
+        "clientKind": "git",
+        "enabled": true,
+        "useIgnoreFile": true
+    }
+}

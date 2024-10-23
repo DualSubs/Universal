@@ -65,12 +65,12 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					const breakLine = (body?.tt) ? "<br />" : (body?.timedtext) ? "&#x000A;" : "&#x000A;";
 					if (body?.timedtext?.head?.wp?.[1]?.["@rc"]) body.timedtext.head.wp[1]["@rc"] = "1";
 					let paragraph = body?.tt?.body?.div?.p ?? body?.timedtext?.body?.p;
-					let fullText = [];
+					const fullText = [];
 					paragraph = paragraph.map(para => {
 						if (para?.s) {
 							if (Array.isArray(para.s)) para["#"] = para.s.map(seg => seg["#"]).join(" ");
 							else para["#"] = para.s?.["#"] ?? "";
-							delete para.s;
+							para.s = undefined;
 						};
 						const span = para?.span ?? para;
 						if (Array.isArray(span)) sentences = span?.map(span => span?.["#"] ?? "\u200b").join(breakLine);
@@ -99,12 +99,12 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = XML.stringify(body);
 					break;
-				};
+				}
 				case "text/vtt":
 				case "application/vtt": {
 					body = VTT.parse($response.body);
 					//log(`🚧 body: ${JSON.stringify(body)}`, "");
-					let fullText = body?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
+					const fullText = body?.body.map(item => (item?.text ?? "\u200b")?.replace(/<\/?[^<>]+>/g, ""));
 					const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 					body.body = body.body.map((item, i) => {
 						item.text = combineText(item?.text ?? "\u200b", translation?.[i], Settings?.ShowOnly, Settings?.Position);
@@ -113,7 +113,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = VTT.stringify(body);
 					break;
-				};
+				}
 				case "text/json":
 				case "application/json": {
 					body = JSON.parse($response.body ?? "{}");
@@ -121,11 +121,11 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					switch (PLATFORM) {
 						case "YouTube": {
 							if (body?.events) {
-								let fullText = [];
+								const fullText = [];
 								body.events = body.events.map(event => {
 									if (event?.segs?.[0]?.utf8) event.segs = [{ "utf8": event.segs.map(seg => seg.utf8).join("") }];
 									fullText.push(event?.segs?.[0]?.utf8 ?? "\u200b");
-									delete event.wWinId;
+									event.wWinId = undefined;
 									return event;
 								});
 								const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
@@ -150,12 +150,12 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 								}));
 							};
 							break;
-						};
+						}
 						case "Spotify": {
 							Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
 								: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
 									: "AUTO";
-							let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
+							const fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 							const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 							log(`🚧 $request.headers["app-platform"]: ${$request?.headers?.["app-platform"]}`, "");
 							switch ($request?.headers?.["app-platform"] ?? $request?.headers?.["App-Platform"]) {
@@ -171,20 +171,20 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									});
 									*/
 									body.lyrics.lines = body.lyrics.lines.map((line, i) => {
-										let line1 = {
+										const line1 = {
 											"startTimeMs": line.startTimeMs.toString(),
 											"words": line?.words ?? "",
 											"syllables": line?.syllables ?? [],
 											"endTimeMs": "0"
 										};
-										let line2 = {
+										const line2 = {
 											"startTimeMs": line.startTimeMs.toString(),
 											"words": translation?.[i] ?? "",
 											"syllables": [],
 											"endTimeMs": "0"
 										};
 										return [line1, line2];
-									}).flat(Infinity);
+									}).flat(Number.POSITIVE_INFINITY);
 									//break; 不中断，继续处理
 								case "iOS":
 									if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];
@@ -195,12 +195,12 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									break;
 							};
 							break;
-						};
+						}
 					};
 					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
-				};
+				}
 				case "application/protobuf":
 				case "application/x-protobuf":
 				case "application/vnd.google.protobuf":
@@ -490,14 +490,14 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 											//uf.no; // 22
 											//uf.wireType; // WireType.Varint
 											// use the binary reader to decode the raw data:
-											let reader = new BinaryReader(uf.data);
-											let addedNumber = reader.int32(); // 7777
+											const reader = new BinaryReader(uf.data);
+											const addedNumber = reader.int32(); // 7777
 											log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
 										});
 									};
 									Languages[0] = "AUTO";
 									if (body?.contents?.n6F153515154?.n7F172660663?.n8F1?.n9F168777401?.n10F5?.n11F465160965?.n12F4?.n13F1) {
-										let fullText = body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map(line => line?.f1 ?? "\u200b");
+										const fullText = body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map(line => line?.f1 ?? "\u200b");
 										const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 										body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1 = body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map((line, i) => {
 											if (line?.f1) line.f1 = combineText(line.f1, translation?.[i], Settings?.ShowOnly, Settings?.Position);
@@ -524,7 +524,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
 									rawBody = Browse.toBinary(body);
 									break;
-								};
+								}
 								case "Spotify": {
 									/******************  initialization start  *******************/
 									var SyncType;
@@ -635,7 +635,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									Languages[0] = (body?.lyrics?.language === "z1") ? "ZH-HANT"
 										: (body?.lyrics?.language) ? body?.lyrics?.language.toUpperCase()
 											: "AUTO";
-									let fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
+									const fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 									const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 									/*
 									body.lyrics.alternatives = [{
@@ -651,7 +651,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									log(`🚧 body: ${JSON.stringify(body)}`, "");
 									rawBody = ColorLyricsResponse.toBinary(body);
 									break;
-								};
+								}
 							};
 							break;
 						case "application/grpc":
@@ -712,15 +712,15 @@ async function Translator(vendor = "Google", method = "Part", text = [], [source
 	switch (method) {
 		default:
 		case "Part": // Part 逐段翻译
-			let parts = chunk(text, length);
-			Translation = await Promise.all(parts.map(async part => await retry(() => new Translate({ Source: source, Target: target, API: API })[vendor](part), times, interval, exponential))).then(part => part.flat(Infinity));
+			const parts = chunk(text, length);
+			Translation = await Promise.all(parts.map(async part => await retry(() => new Translate({ Source: source, Target: target, API: API })[vendor](part), times, interval, exponential))).then(part => part.flat(Number.POSITIVE_INFINITY));
 			break;
 		case "Row": // Row 逐行翻译
 			Translation = await Promise.all(text.map(async row => await retry(() => new Translate({ Source: source, Target: target, API: API })[vendor](row), times, interval, exponential)));
 			break;
 	};
 	//log(`✅ Translator, Translation: ${JSON.stringify(Translation)}`, "");
-	log(`✅ Translator`, "");
+	log("✅ Translator", "");
 	return Translation;
 };
 
@@ -763,7 +763,7 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  * @return {Array<*>} target
  */
 function chunk(source, length) {
-	log(`⚠ Chunk Array`, "");
+	log("⚠ Chunk Array", "");
     var index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
 	//log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
@@ -790,6 +790,6 @@ async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) 
 		if (retriesLeft) {
 			await new Promise(r => setTimeout(r, interval));
 			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
-		} else throw new Error(`❌ retry, 最大重试次数`);
+		} else throw new Error("❌ retry, 最大重试次数");
 	}
 };

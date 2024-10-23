@@ -57,7 +57,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					switch (detectPlaylist(body)) {
 						case "Multivariant Playlist":
 							// 读取已存数据
-							let playlistCache = Caches.Playlists.Master.get($request.url) || {};
+							const playlistCache = Caches.Playlists.Master.get($request.url) || {};
 							// 获取特定语言的字幕
 							playlistCache[Languages[0]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]]);
 							playlistCache[Languages[1]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]]);
@@ -74,7 +74,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 							// 处理类型
 							switch (Type) {
 								case "Official":
-									log(`⚠ 官方字幕`, "");
+									log("⚠ 官方字幕", "");
 									// 获取字幕播放列表m3u8缓存（map）
 									const { subtitlesPlaylist, subtitlesPlaylistIndex } = getPlaylistCache($request.url, Caches.Playlists.Master, Languages[0]) ?? getPlaylistCache($request.url, Caches.Playlists.Master, Languages[1]);
 									// 写入字幕文件地址vtt缓存（map）
@@ -87,10 +87,10 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									break;
 								case "Translate":
 								default:
-									log(`⚠ 翻译字幕`, "");
+									log("⚠ 翻译字幕", "");
 									break;
 								case "External":
-									log(`⚠ 外挂字幕`, "");
+									log("⚠ 外挂字幕", "");
 									break;
 							};
 							// WebVTT.m3u8加参数
@@ -135,7 +135,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					body = JSON.parse($response.body ?? "{}");
 					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					// 读取已存数据
-					let playlistCache = Caches.Playlists.Master.get($request.url) || {};
+					const playlistCache = Caches.Playlists.Master.get($request.url) || {};
 					// 判断平台
 					switch (PLATFORM) {
 						case "PrimeVideo":
@@ -190,12 +190,12 @@ function getPlaylistCache(url, cache, language) {
 	cache?.forEach((Value, Key) => {
 		//log(`🚧 getPlaylistCache, Key: ${Key}, Value: ${JSON.stringify(Value)}`, "");
 		if (Array.isArray(Value?.[language])) {
-			let Array = Value?.[language];
-			//log(`🚧 getPlaylistCache`, `Array: ${JSON.stringify(Array)}`, "");
-			if (Array?.some((Object, Index) => {
-				if (url.includes(Object?.URI ?? Object?.OPTION?.URI ?? null)) {
-					subtitlesPlaylistIndex = Index;
-					log(`🚧 getPlaylistCache`, `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
+			const array = Value?.[language];
+			//log(`🚧 getPlaylistCache`, `array: ${JSON.stringify(array)}`, "");
+			if (array?.some((object, index) => {
+				if (url.includes(object?.URI ?? object?.OPTION?.URI ?? null)) {
+					subtitlesPlaylistIndex = index;
+					log("🚧 getPlaylistCache", `subtitlesPlaylistIndex: ${subtitlesPlaylistIndex}`, "");
 					return true;
 				} else return false;
 			})) {
@@ -205,7 +205,7 @@ function getPlaylistCache(url, cache, language) {
 			};
 		};
 	});
-	log(`✅ getPlaylistCache`, `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
+	log("✅ getPlaylistCache", `masterPlaylistURL: ${JSON.stringify(masterPlaylistURL)}`, "");
 	return { masterPlaylistURL, subtitlesPlaylist, subtitlesPlaylistIndex };
 };
 
@@ -234,7 +234,7 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
 			// 写入字幕文件地址vtt/ttml缓存到map
 			if (subtitlesURLarray.length !== 0) cache = cache.set(val.URL, subtitlesURLarray);
 			//log(`✅ setSubtitlesCache`, `subtitlesURLarray: ${JSON.stringify(cache.get(val?.URL))}`, "");
-			log(`✅ setSubtitlesCache`, `val?.URL: ${val?.URL}`, "");
+			log("✅ setSubtitlesCache", `val?.URL: ${val?.URL}`, "");
 		};
 	}));
 	return cache;
@@ -249,10 +249,10 @@ async function setSubtitlesCache(cache, playlist, language, index = 0, platform 
  * @return {Promise<*>}
  */
 async function getSubtitles(url, headers, platform) {
-	log(`☑️ Get Subtitle *.vtt *.ttml URLs`, "");
+	log("☑️ Get Subtitle *.vtt *.ttml URLs", "");
 	let subtitles = await fetch(url, { headers: headers }).then((response, error) => {
 		//log(`🚧 Get Subtitle *.vtt *.ttml URLs`, `response: ${JSON.stringify(response)}`, "");
-		let subtitlePlayList = M3U8.parse(response.body);
+		const subtitlePlayList = M3U8.parse(response.body);
 		return subtitlePlayList
 			.filter(({ URI }) => (/^.+\.((web)?vtt|ttml2?|xml|smi)(\?.+)?$/.test(URI)))
 			.filter(({ URI }) => !URI.includes("empty"))

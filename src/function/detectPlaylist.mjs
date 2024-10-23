@@ -7,7 +7,7 @@ import { log } from "../utils/utils.mjs";
  * @return {String} type - type
  */
 export default function detectPlaylist(m3u8 = {}) {
-	log(`☑️ detectPlaylist`, "");
+	log("☑️ detectPlaylist", "");
 	let type = undefined;
 	m3u8.forEach(item => {
 		switch (item.TAG) {

@@ -1,4 +1,4 @@
-import { log } from "../utils/utils.mjs";
+import { log } from "@nsnanocat/util";
 import setOption from "../function/setOption.mjs";
 import aPath from "../function/aPath.mjs";
 

@@ -1,4 +1,4 @@
-import { URL, log } from "../utils/utils.mjs";
+import { log } from "@nsnanocat/util";
 
 /**
  * detect Format

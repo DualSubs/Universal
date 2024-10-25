@@ -11,7 +11,7 @@
         "indentStyle": "tab",
         "indentWidth": 2,
         "lineEnding": "lf",
-        "lineWidth": 240
+        "lineWidth": 320
     },
     "javascript": {
         "formatter": {
@@ -40,7 +40,11 @@
             "correctness": {
                 "noInnerDeclarations": "info",
                 "noSelfAssign": "off",
-                "noSwitchDeclarations": "info"
+                "noSwitchDeclarations": "info",
+                "noUnsafeOptionalChaining": "info"
+            },
+            "performance": {
+                "noDelete": "info"
             },
             "recommended": true,
             "style": {
@@ -56,7 +60,9 @@
             },
             "suspicious": {
                 "noAssignInExpressions": "info",
+                "noDoubleEquals": "info",
                 "noFallthroughSwitchClause": "info",
+                "noGlobalIsNan": "off",
                 "useDefaultSwitchClauseLast": "off"
             }
         }

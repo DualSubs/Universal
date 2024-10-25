@@ -1,4 +1,4 @@
-import { log } from "../utils/utils.mjs";
+import { log } from "@nsnanocat/util";
 
 export default function detectPlatform(url) {
 	log("☑️ Detect Platform", "");

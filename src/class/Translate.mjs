@@ -1,4 +1,4 @@
-import { fetch, log } from "../utils/utils.mjs";
+import { fetch, log } from "@nsnanocat/util";
 import MD5 from 'crypto-js/md5.js';
 
 export default class Translate {

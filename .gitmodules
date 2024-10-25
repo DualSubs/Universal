@@ -10,6 +10,3 @@
 [submodule "src/LRC"]
 	path = src/LRC
 	url = https://github.com/DualSubs/LRC.git
-[submodule "src/utils"]
-	path = src/utils
-	url = https://github.com/NanoCat-Me/utils.git

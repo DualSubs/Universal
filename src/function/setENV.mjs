@@ -1,5 +1,4 @@
-import getStorage from '../utils/getStorage.mjs'
-import { _, log } from "../utils/utils.mjs";
+import { _, getStorage, log } from '@nsnanocat/util'
 
 /**
  * Set Environment Variables

@@ -1,4 +1,4 @@
-import { $platform, URL, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
+import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
 import LRC from "./LRC/LRC.mjs";
 import database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -92,7 +92,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.google.protobuf":
 				case "application/grpc":
 				case "application/grpc+proto":
-				case "application/octet-stream":
+				case "application/octet-stream": {
 					let rawBody = ($platform === "Quantumult X") ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
 					switch (FORMAT) {
 						case "application/protobuf":
@@ -103,7 +103,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									/******************  initialization start  *******************/
 									/******************  initialization finish  *******************/
 									break;
-								};
+								}
 								case "Spotify": {
 									/******************  initialization start  *******************/
 									var SyncType;
@@ -227,7 +227,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									$response.status = ($platform === "Quantumult X") ? "HTTP/1.1 200 OK" : 200;
 									rawBody = ColorLyricsResponse.toBinary(body);
 									break;
-								};
+								}
 							};
 							break;
 						case "application/grpc":
@@ -238,6 +238,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					//log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
 					$response.body = rawBody;
 					break;
+				}
 			};
 			// 缓存查询信息
 			if (trackInfo?.NeteaseMusic?.id ?? trackInfo?.QQMusic?.mid) {
@@ -258,7 +259,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 
 /***************** Function *****************/
 async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $response.body, platform) {
-	log(`☑️ Injection Lyric`, `vendor: ${vendor}, trackInfo: ${JSON.stringify(trackInfo)}`, "");
+	log("☑️ Injection Lyric", `vendor: ${vendor}, trackInfo: ${JSON.stringify(trackInfo)}`, "");
 	const UAPool = [
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
@@ -379,12 +380,12 @@ async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $r
 		case "YouTube":
 			break;
 	};
-	log(`✅ Injection Lyric`, "");
+	log("✅ Injection Lyric", "");
 	return body;
 };
 
 async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
-	log(`☑️ Search Track`, `vendor: ${vendor}, keyword: ${keyword}`, "");
+	log("☑️ Search Track", `vendor: ${vendor}, keyword: ${keyword}`, "");
 	const Request = {
 		"headers": {
 			"Accept": "application/json",
@@ -408,7 +409,7 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 			trackInfo.album = Result?.result?.songs?.[0]?.ar?.name;
 			trackInfo.artist = Result?.result?.songs?.[0]?.al?.name;
 			break;
-		};
+		}
 		case "NeteaseMusicNodeJS": {
 			const HostPool = [
 				"api.music.areschang.top",
@@ -431,7 +432,7 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 			trackInfo.album = Result?.result?.songs?.[0]?.ar?.name;
 			trackInfo.artist = Result?.result?.songs?.[0]?.al?.name;
 			break;
-		};
+		}
 		case "QQMusic":
 		default: {
 			const searchUrl = new URL("https://c.y.qq.com/cgi-bin/musicu.fcg");
@@ -455,14 +456,14 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []){
 			trackInfo.album = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.album?.name;
 			trackInfo.artist = Result?.["music.search.SearchCgiService"]?.data?.body?.song?.list?.[0]?.singer?.[0]?.name;
 			break;
-		};
+		}
 	};
-	log(`✅ Search Track`, `trackInfo: ${JSON.stringify(trackInfo)}`, "");
+	log("✅ Search Track", `trackInfo: ${JSON.stringify(trackInfo)}`, "");
 	return trackInfo;
 };
 
 async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool = []){
-	log(`☑️ Search Lyric`, `vendor: ${vendor}, trackId: ${trackId}`, "");
+	log("☑️ Search Lyric", `vendor: ${vendor}, trackId: ${trackId}`, "");
 	const Request = {
 		"headers": {
 			"Accept": "application/json",
@@ -487,7 +488,7 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			Lyrics.lyricUser = Result?.lyricUser?.nickname;
 			Lyrics.transUser = Result?.transUser?.nickname;
 			break;
-		};
+		}
 		case "NeteaseMusicNodeJS": {
 			const HostPool = [
 				"api.music.areschang.top",
@@ -507,7 +508,7 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			Lyrics.lyricUser = Result?.lyricUser?.nickname;
 			Lyrics.transUser = Result?.transUser?.nickname;
 			break;
-		};
+		}
 		case "QQMusic":
 		default: {
 			const lyricUrl = new URL("https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg");
@@ -524,9 +525,9 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			Lyrics.lyricUser = undefined;
 			Lyrics.transUser = undefined;
 			break;
-		};
+		}
 	};
-	log(`✅ Search Lyric`, "");
+	log("✅ Search Lyric", "");
 	return Lyrics;
 };
 
@@ -569,8 +570,8 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  * @return {Array<*>} target
  */
 function chunk(source, length) {
-	log(`⚠ Chunk Array`, "");
-    var index = 0, target = [];
+	log("⚠ Chunk Array", "");
+    let index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
 	//log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;
@@ -596,7 +597,7 @@ async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) 
 		if (retriesLeft) {
 			await new Promise(r => setTimeout(r, interval));
 			return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
-		} else throw new Error(`❌ retry, 最大重试次数`);
+		} else throw new Error("❌ retry, 最大重试次数");
 	}
 };
 

@@ -1,0 +1,51 @@
+name: Deploy
+on:
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      - dev
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  dev:
+    uses: ./.github/workflows/dev.yml
+    secrets: inherit
+  deploy:
+    needs: dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@master
+        with:
+          name: artifact
+      - name: Deploy Composite.Subtitles.response
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/Composite.Subtitles.response.bundle.js
+      - name: Deploy External.Lyrics.response
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/External.Lyrics.response.bundle.js
+      - name: Deploy Manifest.response
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/Manifest.response.bundle.js
+      - name: Deploy Translate.response
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/Translate.response.bundle.js

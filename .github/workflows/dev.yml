@@ -1,4 +1,4 @@
-name: Build
+name: Dev
 on:
   workflow_call:
   workflow_dispatch:
@@ -15,7 +15,8 @@ jobs:
         uses: actions/checkout@main
         with:
           submodules: recursive
-          #token: ${{ secrets.SUBMODULE_TOKEN }}
+          token: ${{ secrets.SUBMODULE_TOKEN }}
+          ref: dev
       - name: Set up Node.js
         uses: actions/setup-node@main
         with:
@@ -25,17 +26,8 @@ jobs:
         run: npm install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-      - name: Update local package.json version from release tag
-        if: github.ref_type == 'tag'
-        uses: BellCubeDev/update-package-version-by-release-tag@v2
-        with:
-          version: ${{ github.ref_name }}
-          keep-v: "false" # If set to "true", will not remove any 'v' prefix from the version number.
-          ignore-semver-check: "false" # If set to "true", will not check if the version number is a valid semver version.
-      - name: Build scripts
-        run: npm run build
-      - name: Generate modules
-        run: npm run build:args
+      - name: Build
+        run: npm run build:dev
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:

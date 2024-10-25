@@ -1,5 +1,5 @@
 
-import { log } from "../utils/utils.mjs";
+import { log } from "@nsnanocat/util";
 
 /**
  * is Standard?

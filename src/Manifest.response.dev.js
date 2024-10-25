@@ -1,4 +1,4 @@
-import { $platform, URL, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
+import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
 import M3U8 from "./EXTM3U/EXTM3U.mjs";
 import AttrList from "./class/AttrList.mjs";
 import database from "./database/index.mjs";
@@ -55,7 +55,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					//log(`🚧 M3U8.parse($response.body): ${JSON.stringify(body)}`, "");
 					// 获取播放列表类型
 					switch (detectPlaylist(body)) {
-						case "Multivariant Playlist":
+						case "Multivariant Playlist": {
 							// 读取已存数据
 							const playlistCache = Caches.Playlists.Master.get($request.url) || {};
 							// 获取特定语言的字幕
@@ -70,6 +70,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 							// 写入持久化储存
 							Storage.setItem(`@DualSubs.${"Composite"}.Caches.Playlists.Master`, Caches.Playlists.Master);
 							break;
+						}
 						case "Media Playlist":
 							// 处理类型
 							switch (Type) {
@@ -131,7 +132,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					//$response.body = VTT.stringify(body);
 					break;
 				case "text/json":
-				case "application/json":
+				case "application/json": {
 					body = JSON.parse($response.body ?? "{}");
 					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					// 读取已存数据
@@ -157,6 +158,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					//log(`🚧 body: ${JSON.stringify(body)}`, "");
 					$response.body = JSON.stringify(body);
 					break;
+				}
 				case "application/protobuf":
 				case "application/x-protobuf":
 				case "application/vnd.google.protobuf":

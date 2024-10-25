@@ -1,4 +1,4 @@
-import { $platform, URL, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
+import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 import database from "./database/index.mjs";
@@ -13,7 +13,10 @@ import Composite from "./class/Composite.mjs";
 const url = new URL($request.url);
 log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
+const METHOD = $request.method,
+	HOST = url.hostname,
+	PATH = url.pathname,
+	PATHs = url.pathname.split("/").filter(Boolean);
 log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
@@ -265,7 +268,7 @@ function getSubtitlesCache(url, cache, languages) {
 			const array = Value;
 			if (
 				array?.some((string, index) => {
-					if (url.includes(String || null)) {
+					if (url.includes(string || null)) {
 						subtitlesIndex = index;
 						log("🚧 getSubtitlesCache", `subtitlesIndex: ${subtitlesIndex}`, "");
 						return true;

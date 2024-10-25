@@ -1,4 +1,4 @@
-import { $platform, URL, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
+import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 import database from "./database/index.mjs";
@@ -206,7 +206,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.google.protobuf":
 				case "application/grpc":
 				case "application/grpc+proto":
-				case "application/octet-stream":
+				case "application/octet-stream": {
 					//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
 					let rawBody = ($platform === "Quantumult X") ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
 					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
@@ -661,6 +661,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					// 写入二进制数据
 					$response.body = rawBody;
 					break;
+				}
 			};
 			break;
 		case false:
@@ -711,10 +712,11 @@ async function Translator(vendor = "Google", method = "Part", text = [], [source
 	let Translation = [];
 	switch (method) {
 		default:
-		case "Part": // Part 逐段翻译
+		case "Part": { // Part 逐段翻译
 			const parts = chunk(text, length);
 			Translation = await Promise.all(parts.map(async part => await retry(() => new Translate({ Source: source, Target: target, API: API })[vendor](part), times, interval, exponential))).then(part => part.flat(Number.POSITIVE_INFINITY));
 			break;
+		}
 		case "Row": // Row 逐行翻译
 			Translation = await Promise.all(text.map(async row => await retry(() => new Translate({ Source: source, Target: target, API: API })[vendor](row), times, interval, exponential)));
 			break;
@@ -764,7 +766,7 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  */
 function chunk(source, length) {
 	log("⚠ Chunk Array", "");
-    var index = 0, target = [];
+    let index = 0, target = [];
     while(index < source.length) target.push(source.slice(index, index += length));
 	//log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
 	return target;

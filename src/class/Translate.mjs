@@ -4,7 +4,7 @@ import MD5 from 'crypto-js/md5.js';
 export default class Translate {
 	constructor(options = {}) {
 		this.Name = "Translate";
-		this.Version = "1.0.4";
+		this.Version = "1.0.5";
 		log(`\n🟧 ${this.Name} v${this.Version}\n`);
 		this.Source = "AUTO";
 		this.Target = "ZH";
@@ -13,8 +13,8 @@ export default class Translate {
 	}
 
 	#LanguagesCode = {
-		Google: { AUTO: "auto", AF: "af", AM: "am", AR: "ar", AS: "as", AY: "ay", AZ: "az", BG: "bg", BE: "be", BM: "bm", BN: "bn", BHO: "bho", CS: "cs", DA: "da", DE: "de", EL: "el", EU: "eu", EN: "en", "EN-GB": "en", "EN-US": "en", "EN-US SDH": "en", ES: "es", "ES-419": "es", "ES-ES": "es", ET: "et", FI: "fi", FR: "fr", "FR-CA": "fr", HU: "hu", IS: "is", IT: "it", JA: "ja", KO: "ko", LT: "lt", LV: "lv", NL: "nl", NO: "no", PL: "pl", PT: "pt", "PT-PT": "pt", "PT-BR": "pt", PA: "pa", RO: "ro", RU: "ru", SK: "sk", SL: "sl", SQ: "sq", ST: "st", SV: "sv", TH: "th", TR: "tr", UK: "uk", UR: "ur", VI: "vi", ZH: "zh", "ZH-HANS": "zh-CN", "ZH-HK": "zh-TW", "ZH-HANT": "zh-TW", },
-		Microsoft: { AUTO: "", AF: "af", AM: "am", AR: "ar", AS: "as", AY: "ay", AZ: "az", BG: "bg", BE: "be", BM: "bm", BN: "bn", BHO: "bho", CS: "cs", DA: "da", DE: "de", EL: "el", EU: "eu", EN: "en", "EN-GB": "en", "EN-US": "en", "EN-US SDH": "en", ES: "es", "ES-419": "es", "ES-ES": "es", ET: "et", FI: "fi", FR: "fr", "FR-CA": "fr-ca", HU: "hu", IS: "is", IT: "it", JA: "ja", KO: "ko", LT: "lt", LV: "lv", NL: "nl", NO: "no", PL: "pl", PT: "pt", "PT-PT": "pt-pt", "PT-BR": "pt", PA: "pa", RO: "ro", RU: "ru", SK: "sk", SL: "sl", SQ: "sq", ST: "st", SV: "sv", TH: "th", TR: "tr", UK: "uk", UR: "ur", VI: "vi", ZH: "zh-Hans", "ZH-HANS": "zh-Hans", "ZH-HK": "yue", "ZH-HANT": "zh-Hant", },
+		Google: { AUTO: "auto", AF: "af", AM: "am", AR: "ar", AS: "as", AY: "ay", AZ: "az", BG: "bg", BE: "be", BM: "bm", BN: "bn", BHO: "bho", CS: "cs", DA: "da", DE: "de", EL: "el", EU: "eu", EN: "en", "EN-GB": "en", "EN-US": "en", "EN-US SDH": "en", ES: "es", "ES-419": "es", "ES-ES": "es", ET: "et", FI: "fi", FR: "fr", "FR-CA": "fr", HU: "hu", IS: "is", IT: "it", JA: "ja", KM: "km", KO: "ko", LT: "lt", LV: "lv", NL: "nl", NO: "no", PL: "pl", PT: "pt", "PT-PT": "pt", "PT-BR": "pt", PA: "pa", RO: "ro", RU: "ru", SK: "sk", SL: "sl", SQ: "sq", ST: "st", SV: "sv", TH: "th", TR: "tr", UK: "uk", UR: "ur", VI: "vi", ZH: "zh", "ZH-HANS": "zh-CN", "ZH-HK": "zh-TW", "ZH-HANT": "zh-TW", },
+		Microsoft: { AUTO: "", AF: "af", AM: "am", AR: "ar", AS: "as", AY: "ay", AZ: "az", BG: "bg", BE: "be", BM: "bm", BN: "bn", BHO: "bho", CS: "cs", DA: "da", DE: "de", EL: "el", EU: "eu", EN: "en", "EN-GB": "en", "EN-US": "en", "EN-US SDH": "en", ES: "es", "ES-419": "es", "ES-ES": "es", ET: "et", FI: "fi", FR: "fr", "FR-CA": "fr-ca", HU: "hu", IS: "is", IT: "it", JA: "ja", KM: "km", KO: "ko", LT: "lt", LV: "lv", NL: "nl", NO: "no", PL: "pl", PT: "pt", "PT-PT": "pt-pt", "PT-BR": "pt", PA: "pa", RO: "ro", RU: "ru", SK: "sk", SL: "sl", SQ: "sq", ST: "st", SV: "sv", TH: "th", TR: "tr", UK: "uk", UR: "ur", VI: "vi", ZH: "zh-Hans", "ZH-HANS": "zh-Hans", "ZH-HK": "yue", "ZH-HANT": "zh-Hant", },
 		DeepL: { AUTO: "", BG: "BG", CS: "CS", DA: "DA", DE: "de", EL: "el", EN: "EN", ES: "ES", ET: "ET", FI: "FI", FR: "FR", HU: "HU", IT: "IT", JA: "JA", KO: "ko", LT: "LT", LV: "LV", NL: "NL", PL: "PL", PT: "PT", RO: "RO", RU: "RU", SK: "SK", SL: "SL", SV: "SV", TR: "TR", ZH: "ZH", },
 		Baidu: { AUTO: "auto", AR: "ara", CS: "cs", DA: "dan", DE: "de", EL: "el", EN: "en", ES: "spa", ET: "est", FI: "fin", FR: "fra", HU: "hu", IT: "it", JA: "jp", KO: "kor", NL: "nl", PL: "pl", PT: "pt", RO: "RO", RU: "rom", SL: "slo", SV: "swe", TH: "th", VI: "vie", ZH: "zh", "ZH-HANS": "zh", "ZH-HK": "cht", "ZH-HANT": "cht", },
 	};
@@ -82,10 +82,10 @@ export default class Translate {
 			},
 		];
 		const request = BaseRequest[Math.floor(Math.random() * (BaseRequest.length - 2))]; // 随机Request, 排除最后两项
-		request.url = request.url + `&sl=${source}&tl=${target}&q=${encodeURIComponent(text.join("\r"))}`;
+		request.url = `${request.url}&sl=${source}&tl=${target}&q=${encodeURIComponent(text.join("\r"))}`;
 		return await fetch(request)
 			.then(response => {
-				let body = JSON.parse(response.body);
+				const body = JSON.parse(response.body);
 				if (Array.isArray(body)) {
 					if (Array.isArray(body?.[0])) {
 						if (body.length === 1) {
@@ -149,7 +149,7 @@ export default class Translate {
 		};
 		return await fetch(request)
 			.then(response => {
-				let body = JSON.parse(response.body);
+				const body = JSON.parse(response.body);
 				return body?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, vendor: ${"GoogleCloud"}`);
 			})
 			.catch(error => Promise.reject(error));
@@ -197,7 +197,7 @@ export default class Translate {
 		request.body = JSON.stringify(text);
 		return await fetch(request)
 			.then(response => {
-				let body = JSON.parse(response.body);
+				const body = JSON.parse(response.body);
 				return body?.map(item => item?.translations?.[0]?.text ?? `翻译失败, vendor: ${"Microsoft"}`);
 			})
 			.catch(error => Promise.reject(error));
@@ -225,7 +225,7 @@ export default class Translate {
 			"Content-Type": "application/json",
 			"Authorization": `DeepL-Auth-Key ${api?.Token ?? api?.Auth}`
 		};
-		let body = {
+		const body = {
 			"text": text,
 			//"source_lang": source,
 			"target_lang": target,
@@ -235,7 +235,7 @@ export default class Translate {
 		request.body = JSON.stringify(body);
 		return await fetch(request)
 			.then(response => {
-				let body = JSON.parse(response.body);
+				const body = JSON.parse(response.body);
 				return body?.translations?.map(item => item?.text ?? `翻译失败, vendor: ${"DeepL"}`);
 			})
 			.catch(error => Promise.reject(error));
@@ -257,7 +257,7 @@ export default class Translate {
 		request.body = `q=${encodeURIComponent(text.join("\n"))}&from=${source}&to=${target}&appid=${api.id}&salt=${salt}&sign=${MD5(api.id + text + salt + api.key)}`;
 		return await fetch(request)
 			.then(response => {
-				let body = JSON.parse(response.body);
+				const body = JSON.parse(response.body);
 				return body?.trans_result?.map(item => item?.dst ?? `翻译失败, vendor: ${"BaiduFanyi"}`);
 			})
 			.catch(error => Promise.reject(log(error)));
@@ -288,7 +288,7 @@ export default class Translate {
 		};
 		return await fetch(request)
 			.then(response => {
-				let body = JSON.parse(response.body);
+				const body = JSON.parse(response.body);
 				return body?.data ?? `翻译失败, vendor: ${"DeepL"}`;
 			})
 			.catch(error => Promise.reject(error));

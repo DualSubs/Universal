@@ -1,7 +1,4 @@
-### 🛠️ Bug Fixes
-  * 修复 `$argument` 和 `$persistentStore` 载入顺序颠倒的问题
-    * 正确顺序为先读取 `$argument` 再读取 `$persistentStore (BoxJs)`
-    * 即，有相同键名时，`$persistentStore (BoxJs)` 的值会覆盖 `$argument` 的值
-
-### 🔄 Other Changes
-  * util 由 `submodule` 更改为 `package`
+### 🆕 New Features
+  * `翻译器`允许通过`参数面板`传入任意`语言代码`
+    * 传入的`语言代码`如不受`翻译API`支持，则可能导致翻译失败，请先查阅各`翻译API`的`支持语言列表`进行确认
+    * 例如：当使用`微软翻译`时，在`参数面板`的`Language[1]`填入`lzh`，可以将翻译语言设置为`中文（文言文）`

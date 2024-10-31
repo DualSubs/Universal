@@ -3,26 +3,26 @@ import { defineConfig } from "@iringo/arguments-builder";
 export default defineConfig({
 	output: {
 		surge: {
-			path: "./dist/Universal.sgmodule",
+			path: "./dist/DualSubs.Universal.sgmodule",
 		},
 		loon: {
-			path: "./dist/Universal.plugin",
+			path: "./dist/DualSubs.Universal.plugin",
 		},
 		customItems: [
 			{
-				path: "./dist/Universal.stoverride",
+				path: "./dist/DualSubs.Universal.stoverride",
 				template: "./template/stash.handlebars",
 			},
 			{
-				path: "./dist/Universal.yaml",
+				path: "./dist/DualSubs.Universal.yaml",
 				template: "./template/egern.handlebars",
 			},
 			{
-				path: "./dist/Universal.snippet",
+				path: "./dist/DualSubs.Universal.snippet",
 				template: "./template/quantumultx.handlebars",
 			},
 			{
-				path: "./dist/Universal.srmodule",
+				path: "./dist/DualSubs.Universal.srmodule",
 				template: "./template/shadowrocket.handlebars",
 			},
 		],

@@ -1,4 +1,4 @@
-import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
+import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 import database from "./database/index.mjs";
@@ -7,7 +7,7 @@ import detectFormat from "./function/detectFormat.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 import Translate from "./class/Translate.mjs";
-import { TextEncoder , TextDecoder } from "text-encoding";
+import { BrowseResponse } from "./protobuf/google/protos/youtube/api/innertube/BrowseResponse.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime";
 /***************** Processing *****************/
 // 解构URL
@@ -214,270 +214,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 						case "application/vnd.google.protobuf":
 							switch (PLATFORM) {
 								case "YouTube": {
-									/******************  initialization start  *******************/
-									class Browse$Type extends MessageType {
-										constructor() {
-											super("Browse", [
-												{ no: 1, name: "context", kind: "message", jsonName: "responseContext", T: () => Context },
-												{ no: 9, name: "contents", kind: "message", T: () => Contents },
-												{ no: 10, name: "continuationContents", kind: "message", T: () => Contents },
-												{ no: 777, name: "frameworkUpdates", kind: "message", T: () => FrameworkUpdates }
-											]);
-										}
-									}
-									const Browse = new Browse$Type();
-									class Context$Type extends MessageType {
-										constructor() {
-											super("Context", [
-												{ no: 6, name: "serviceTrackingParams", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => ServiceTrackingParams }
-											]);
-										}
-									}
-									const Context = new Context$Type();
-									class Contents$Type extends MessageType {
-										constructor() {
-											super("Contents", [
-												{ no: 49399797, name: "sectionListRenderer", kind: "message", T: () => SectionListRenderer },
-												{ no: 50195462, name: "n4F50195462", kind: "message", T: () => n4F50195462 },
-												{ no: 58173949, name: "singleColumnBrowseResultsRenderer", kind: "message", T: () => SingleColumnBrowseResultsRenderer },
-												{ no: 90823135, name: "musicSideAlignedItemRenderer", kind: "message", T: () => MusicSideAlignedItemRenderer },
-												{ no: 91303872, name: "gridRenderer", kind: "message", T: () => GridRenderer },
-												{ no: 153515154, name: "n6F153515154", kind: "message", T: () => n6F153515154 },
-												{ no: 221496734, name: "musicDescriptionShelfRenderer", kind: "message", T: () => MusicDescriptionShelfRenderer }
-											]);
-										}
-									}
-									const Contents = new Contents$Type();
-									class ServiceTrackingParams$Type extends MessageType {
-										constructor() {
-											super("ServiceTrackingParams", [
-												{ no: 2, name: "params", kind: "map", K: 9 /*ScalarType.STRING*/, V: { kind: "scalar", T: 9 /*ScalarType.STRING*/ } }
-											]);
-										}
-									}
-									const ServiceTrackingParams = new ServiceTrackingParams$Type();
-									class SingleColumnBrowseResultsRenderer$Type extends MessageType {
-										constructor() {
-											super("SingleColumnBrowseResultsRenderer", [
-												{ no: 1, name: "tabs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Tabs }
-											]);
-										}
-									}
-									const SingleColumnBrowseResultsRenderer = new SingleColumnBrowseResultsRenderer$Type();
-									class MusicSideAlignedItemRenderer$Type extends MessageType {
-										constructor() {
-											super("MusicSideAlignedItemRenderer", [
-												{ no: 1, name: "startItems", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Contents }
-											]);
-										}
-									}
-									const MusicSideAlignedItemRenderer = new MusicSideAlignedItemRenderer$Type();
-									class GridRenderer$Type extends MessageType {
-										constructor() {
-											super("GridRenderer", [
-												{ no: 1, name: "items", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Contents }
-											]);
-										}
-									}
-									const GridRenderer = new GridRenderer$Type();
-									class Tabs$Type extends MessageType {
-										constructor() {
-											super("Tabs", [
-												{ no: 58174010, name: "tabRenderer", kind: "message", T: () => TabRenderer }
-											]);
-										}
-									}
-									const Tabs = new Tabs$Type();
-									class TabRenderer$Type extends MessageType {
-										constructor() {
-											super("TabRenderer", [
-												{ no: 2, name: "title", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ },
-												{ no: 3, name: "selected", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-												{ no: 4, name: "content", kind: "message", T: () => Contents },
-												{ no: 11, name: "tabIdentifier", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
-											]);
-										}
-									}
-									const TabRenderer = new TabRenderer$Type();
-									class SectionListRenderer$Type extends MessageType {
-										constructor() {
-											super("SectionListRenderer", [
-												{ no: 1, name: "contents", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Contents },
-												{ no: 6, name: "header", kind: "message", T: () => Contents }
-											]);
-										}
-									}
-									const SectionListRenderer = new SectionListRenderer$Type();
-									class n4F50195462$Type extends MessageType {
-										constructor() {
-											super("n4F50195462", [
-												{ no: 1, name: "n5F1", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Contents }
-											]);
-										}
-									}
-									const n4F50195462 = new n4F50195462$Type();
-									class MusicDescriptionShelfRenderer$Type extends MessageType {
-										constructor() {
-											super("MusicDescriptionShelfRenderer", [
-												{ no: 3, name: "description", kind: "message", T: () => Description },
-												{ no: 10, name: "footer", kind: "message", T: () => Footer }
-											]);
-										}
-									}
-									const MusicDescriptionShelfRenderer = new MusicDescriptionShelfRenderer$Type();
-									class Description$Type extends MessageType {
-										constructor() {
-											super("Description", [
-												{ no: 1, name: "runs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Runs }
-											]);
-										}
-									}
-									const Description = new Description$Type();
-									class n6F153515154$Type extends MessageType {
-										constructor() {
-											super("n6F153515154", [
-												{ no: 172660663, name: "n7F172660663", kind: "message", T: () => n7F172660663 }
-											]);
-										}
-									}
-									const n6F153515154 = new n6F153515154$Type();
-									class n7F172660663$Type extends MessageType {
-										constructor() {
-											super("n7F172660663", [
-												{ no: 1, name: "n8F1", kind: "message", T: () => n8F1 }
-											]);
-										}
-									}
-									const n7F172660663 = new n7F172660663$Type();
-									class Footer$Type extends MessageType {
-										constructor() {
-											super("Footer", [
-												{ no: 1, name: "runs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Runs }
-											]);
-										}
-									}
-									const Footer = new Footer$Type();
-									class n8F1$Type extends MessageType {
-										constructor() {
-											super("n8F1", [
-												{ no: 168777401, name: "n9F168777401", kind: "message", T: () => n9F168777401 }
-											]);
-										}
-									}
-									const n8F1 = new n8F1$Type();
-									class n9F168777401$Type extends MessageType {
-										constructor() {
-											super("n9F168777401", [
-												{ no: 5, name: "n10F5", kind: "message", T: () => n10F5 }
-											]);
-										}
-									}
-									const n9F168777401 = new n9F168777401$Type();
-									class n10F5$Type extends MessageType {
-										constructor() {
-											super("n10F5", [
-												{ no: 465160965, name: "n11F465160965", kind: "message", T: () => n11F465160965 }
-											]);
-										}
-									}
-									const n10F5 = new n10F5$Type();
-									class n11F465160965$Type extends MessageType {
-										constructor() {
-											super("n11F465160965", [
-												{ no: 4, name: "n12F4", kind: "message", T: () => n12F4 }
-											]);
-										}
-									}
-									const n11F465160965 = new n11F465160965$Type();
-									class n12F4$Type extends MessageType {
-										constructor() {
-											super("n12F4", [
-												{ no: 1, name: "n13F1", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => n13F1 },
-												{ no: 2, name: "originText", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
-											]);
-										}
-									}
-									const n12F4 = new n12F4$Type();
-									class n13F1$Type extends MessageType {
-										constructor() {
-											super("n13F1", [
-												{ no: 1, name: "f1", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
-											]);
-										}
-									}
-									const n13F1 = new n13F1$Type();
-									class n11F172035250$Type extends MessageType {
-										constructor() {
-											super("n11F172035250", [
-												{ no: 1, name: "type", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
-											]);
-										}
-									}
-									const n11F172035250 = new n11F172035250$Type();
-									class Runs$Type extends MessageType {
-										constructor() {
-											super("Runs", [
-												{ no: 1, name: "text", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
-											]);
-										}
-									}
-									const Runs = new Runs$Type();
-									class FrameworkUpdates$Type extends MessageType {
-										constructor() {
-											super("FrameworkUpdates", [
-												{ no: 1, name: "entityBatchUpdate", kind: "message", T: () => EntityBatchUpdate }
-											]);
-										}
-									}
-									const FrameworkUpdates = new FrameworkUpdates$Type();
-									class EntityBatchUpdate$Type extends MessageType {
-										constructor() {
-											super("EntityBatchUpdate", [
-												{ no: 1, name: "mutations", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Mutations }
-											]);
-										}
-									}
-									const EntityBatchUpdate = new EntityBatchUpdate$Type();
-									class Mutations$Type extends MessageType {
-										constructor() {
-											super("Mutations", [
-												{ no: 1, name: "entityKey", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-												{ no: 3, name: "payload", kind: "message", T: () => Payload }
-											]);
-										}
-									}
-									const Mutations = new Mutations$Type();
-									class Payload$Type extends MessageType {
-										constructor() {
-											super("Payload", [
-												{ no: 144, name: "musicForm", kind: "message", T: () => MusicForm },
-												{ no: 145, name: "musicFormBooleanChoice", kind: "message", T: () => MusicFormBooleanChoice }
-											]);
-										}
-									}
-									const Payload = new Payload$Type();
-									class MusicForm$Type extends MessageType {
-										constructor() {
-											super("MusicForm", [
-												{ no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-												{ no: 2, name: "booleanChoiceEntityKeys", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ }
-											]);
-										}
-									}
-									const MusicForm = new MusicForm$Type();
-									class MusicFormBooleanChoice$Type extends MessageType {
-										constructor() {
-											super("musicFormBooleanChoice", [
-												{ no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-												{ no: 2, name: "booleanChoiceEntityKey", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-												{ no: 3, name: "selected", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-												{ no: 4, name: "opaqueToken", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
-											]);
-										}
-									}
-									const MusicFormBooleanChoice = new MusicFormBooleanChoice$Type();
-									/******************  initialization finish  *******************/
-									body = Browse.fromBinary(rawBody);
+									body = BrowseResponse.fromBinary(rawBody);
 									//log(`🚧 body: ${JSON.stringify(body)}`, "");
 									log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
 									log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
@@ -494,15 +231,15 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										});
 									};
 									Languages[0] = "AUTO";
-									if (body?.contents?.n6F153515154?.n7F172660663?.n8F1?.n9F168777401?.n10F5?.n11F465160965?.n12F4?.n13F1) {
-										const fullText = body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map(line => line?.f1 ?? "\u200b");
+									if (body?.contents?.elementRenderer?.n7F172660663?.n8F1?.n9F168777401?.n10F5?.n11F465160965?.n12F4?.n13F1) {
+										const fullText = body.contents.elementRenderer.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map(line => line?.f1 ?? "\u200b");
 										const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
-										body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1 = body.contents.n6F153515154.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map((line, i) => {
+										body.contents.elementRenderer.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1 = body.contents.elementRenderer.n7F172660663.n8F1.n9F168777401.n10F5.n11F465160965.n12F4.n13F1.map((line, i) => {
 											if (line?.f1) line.f1 = combineText(line.f1, translation?.[i], Settings?.ShowOnly, Settings?.Position);
 											return line;
 										});
-									} else if (body?.contents?.sectionListRenderer?.contents) {
-										let musicDescriptions = body.contents.sectionListRenderer.contents;
+									} else if (body?.contents?.renderer?.sectionListRenderer?.contents) {
+										let musicDescriptions = body.contents.renderer.sectionListRenderer.contents;
 										musicDescriptions = await Promise.all(musicDescriptions.map(async musicDescription => {
 											if (musicDescription?.musicDescriptionShelfRenderer?.description?.runs) {
 												let lyrics = musicDescription.musicDescriptionShelfRenderer.description.runs;
@@ -520,7 +257,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 									//log(`🚧 body: ${JSON.stringify(body)}`, "");
 									log(`🚧 contents: ${JSON.stringify(body?.contents)}`, "");
 									log(`🚧 continuationContents: ${JSON.stringify(body?.continuationContents)}`, "");
-									rawBody = Browse.toBinary(body);
+									rawBody = BrowseResponse.toBinary(body);
 									break;
 								}
 								case "Spotify": {

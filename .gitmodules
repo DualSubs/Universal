@@ -10,3 +10,6 @@
 [submodule "src/LRC"]
 	path = src/LRC
 	url = https://github.com/DualSubs/LRC.git
+[submodule "src/protobuf"]
+	path = src/protobuf
+	url = https://github.com/DualSubs/protobuf.git

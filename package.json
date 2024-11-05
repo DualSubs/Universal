@@ -38,7 +38,7 @@
 		"iOS >= 15"
 	],
 	"devDependencies": {
-		"@iringo/arguments-builder": "^1.7.8",
+		"@iringo/arguments-builder": "^1.8.1",
 		"@nsnanocat/util": "^1.3.2",
 		"@protobuf-ts/plugin": "^2.9.4",
 		"@protobuf-ts/runtime": "^2.9.4",

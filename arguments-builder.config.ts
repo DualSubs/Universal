@@ -4,6 +4,10 @@ export default defineConfig({
 	output: {
 		surge: {
 			path: "./dist/DualSubs.Universal.sgmodule",
+			transformEgern: {
+				enable: true,
+				path: "./dist/BiliBili.Global.yaml",
+			},
 		},
 		loon: {
 			path: "./dist/DualSubs.Universal.plugin",
@@ -12,10 +16,6 @@ export default defineConfig({
 			{
 				path: "./dist/DualSubs.Universal.stoverride",
 				template: "./template/stash.handlebars",
-			},
-			{
-				path: "./dist/DualSubs.Universal.yaml",
-				template: "./template/egern.handlebars",
 			},
 			{
 				path: "./dist/DualSubs.Universal.snippet",

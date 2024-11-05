@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@main
         with:
           submodules: recursive
-          #token: ${{ secrets.SUBMODULE_TOKEN }}
+          token: ${{ secrets.SUBMODULE_TOKEN }}
       - name: Set up Node.js
         uses: actions/setup-node@main
         with:

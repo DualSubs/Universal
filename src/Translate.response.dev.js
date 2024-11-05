@@ -74,12 +74,12 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				const sentences = Array.isArray(span) ? span?.map(span => span?.["#"] ?? "\u200b").join(breakLine) : span?.["#"];
 				fullText.push(sentences ?? "\u200b");
 				/*
-						const spans = para?.span ?? para?.s ?? para;
-						if (Array.isArray(span)) spans["#"] = spans?.map(span => span?.["#"] ?? "").join(" ");
-						else spans["#"] = spans?.["#"] ?? "";
-						if (para?.s) para = spans;
-						if (spans?.["#"]) fullText.push(spans["#"]);
-						*/
+				const spans = para?.span ?? para?.s ?? para;
+				if (Array.isArray(span)) spans["#"] = spans?.map(span => span?.["#"] ?? "").join(" ");
+				else spans["#"] = spans?.["#"] ?? "";
+				if (para?.s) para = spans;
+				if (spans?.["#"]) fullText.push(spans["#"]);
+				*/
 				return para;
 			});
 			const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
@@ -276,28 +276,28 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 							body = ColorLyricsResponse.fromBinary(rawBody);
 							log(`🚧 body: ${JSON.stringify(body)}`, "");
 							/*
-									let UF = UnknownFieldHandler.list(body);
-									//log(`🚧 UF: ${JSON.stringify(UF)}`, "");
-									if (UF) {
-										UF = UF.map(uf => {
-											//uf.no; // 22
-											//uf.wireType; // WireType.Varint
-											// use the binary reader to decode the raw data:
-											let reader = new BinaryReader(uf.data);
-											let addedNumber = reader.int32(); // 7777
-											log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
-										});
-									};
-									*/
+							let UF = UnknownFieldHandler.list(body);
+							//log(`🚧 UF: ${JSON.stringify(UF)}`, "");
+							if (UF) {
+								UF = UF.map(uf => {
+									//uf.no; // 22
+									//uf.wireType; // WireType.Varint
+									// use the binary reader to decode the raw data:
+									let reader = new BinaryReader(uf.data);
+									let addedNumber = reader.int32(); // 7777
+									log(`🚧 no: ${uf.no}, wireType: ${uf.wireType}, reader: ${reader}, addedNumber: ${addedNumber}`, "");
+								});
+							};
+							*/
 							Languages[0] = body?.lyrics?.language === "z1" ? "ZH-HANT" : body?.lyrics?.language ? body?.lyrics?.language.toUpperCase() : "AUTO";
 							const fullText = body.lyrics.lines.map(line => line?.words ?? "\u200b");
 							const translation = await Translator(Settings.Vendor, Settings.Method, fullText, Languages, Settings?.[Settings?.Vendor], Settings?.Times, Settings?.Interval, Settings?.Exponential);
 							/*
-									body.lyrics.alternatives = [{
-										"language": Languages[1].toLowerCase(),
-										"lines": translation
-									}];
-									*/
+							body.lyrics.alternatives = [{
+								"language": Languages[1].toLowerCase(),
+								"lines": translation
+							}];
+							*/
 							if (!body?.lyrics?.alternatives) body.lyrics.alternatives = [];
 							body.lyrics.alternatives.unshift({
 								language: Languages[1].toLowerCase(),

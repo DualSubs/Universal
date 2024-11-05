@@ -32,7 +32,7 @@ export default defineConfig({
 		},
 		boxjsSettings: {
 			path: "./template/boxjs.settings.json",
-			scope: "@DualSubs.YouTube.Settings",
+			scope: "@DualSubs.Universal.Settings",
 		},
 	},
 	args: [

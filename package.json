@@ -1,6 +1,6 @@
 {
 	"name": "@dualsubs/universal",
-	"version": "1.6.0",
+	"version": "1.6.2",
 	"organizationName": "🍿️ DualSubs",
 	"displayName": "🍿️ DualSubs: 🔣 Universal",
 	"description": "流媒体平台字幕增强及双语模块\n如需恢复TV完整支持\n请配合“ iRingo: 📺 TV”使用",
@@ -38,7 +38,7 @@
 		"iOS >= 15"
 	],
 	"devDependencies": {
-		"@iringo/arguments-builder": "^1.8.1",
+		"@iringo/arguments-builder": "^1.8.2",
 		"@nsnanocat/util": "^1.3.2",
 		"@protobuf-ts/plugin": "^2.9.4",
 		"@protobuf-ts/runtime": "^2.9.4",

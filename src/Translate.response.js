@@ -63,7 +63,8 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				if (para?.s) {
 					if (Array.isArray(para.s)) para["#"] = para.s.map(seg => seg["#"]).join(" ");
 					else para["#"] = para.s?.["#"] ?? "";
-					para.s = undefined;
+					// biome-ignore lint/performance/noDelete: <explanation>
+					delete para.s;
 				}
 				const span = para?.span ?? para;
 				const sentences = Array.isArray(span) ? span?.map(span => span?.["#"] ?? "\u200b").join(breakLine) : span?.["#"];

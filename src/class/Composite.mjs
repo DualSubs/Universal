@@ -104,6 +104,7 @@ export default class Composite {
 					if (para?.s) {
 						if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join("");
 						else para["#"] = para.s?.["#"] ?? "";
+						// biome-ignore lint/performance/noDelete: <explanation>
 						delete para.s;
 					};
 					return para;
@@ -112,6 +113,7 @@ export default class Composite {
 					if (para?.s) {
 						if (Array.isArray(para?.s)) para["#"] = para?.s.map(seg => seg["#"]).join("");
 						else para["#"] = para.s?.["#"] ?? "";
+						// biome-ignore lint/performance/noDelete: <explanation>
 						delete para.s;
 					};
 					return para;

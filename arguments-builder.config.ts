@@ -6,7 +6,7 @@ export default defineConfig({
 			path: "./dist/DualSubs.Universal.sgmodule",
 			transformEgern: {
 				enable: true,
-				path: "./dist/BiliBili.Global.yaml",
+				path: "./dist/DualSubs.Universal.yaml",
 			},
 		},
 		loon: {
@@ -32,7 +32,7 @@ export default defineConfig({
 		},
 		boxjsSettings: {
 			path: "./template/boxjs.settings.json",
-			scope: "@DualSubs.YouTube.Settings",
+			scope: "@DualSubs.Universal.Settings",
 		},
 	},
 	args: [

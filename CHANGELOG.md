@@ -5,3 +5,6 @@
   * 升级了 `@nsnanocat/util`
     * `$platform` 改为 `$app`
     * 使用了全新的 `URL` 和 `URLSearchParams` polyfill
+
+### 🔄 Other Changes
+  * 重构了 `detectPlatform`

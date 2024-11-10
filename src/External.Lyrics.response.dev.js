@@ -1,4 +1,5 @@
 import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { URL } from "@nsnanocat/url";
 import LRC from "./LRC/LRC.mjs";
 import database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";

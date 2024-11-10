@@ -4,6 +4,7 @@
 ### 🔣 Dependencies
   * 升级了 `@nsnanocat/util`
     * `$platform` 改为 `$app`
+  * 增加了 `@nsnanocat/url`
     * 使用了全新的 `URL` 和 `URLSearchParams` polyfill
 
 ### 🔄 Other Changes

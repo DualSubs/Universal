@@ -1,4 +1,5 @@
-import { $app, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
+import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { URL } from "@nsnanocat/url";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 import database from "./database/index.mjs";
@@ -11,8 +12,11 @@ import Composite from "./function/Composite.mjs";
 const url = new URL($request.url);
 log(`⚠ url: ${url.toJSON()}`, "");
 // 获取连接参数
-const METHOD = $request.method, HOST = url.hostname, PATH = url.pathname, PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}` , "");
+const METHOD = $request.method,
+	HOST = url.hostname,
+	PATH = url.pathname,
+	PATHs = url.pathname.split("/").filter(Boolean);
+log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}`, "");
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
@@ -25,13 +29,14 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
 	 */
-	const { Settings, Caches, Configs } = setENV("DualSubs", [(["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM)) ? PLATFORM : "Universal", "External", "API"], database);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM) ? PLATFORM : "Universal", "External", "API"], database);
 	log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
-			const Type = url.searchParams?.get("subtype") ?? Settings.Type, Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
+			const Type = url.searchParams?.get("subtype") ?? Settings.Type,
+				Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
 			log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
 			// 创建字幕请求队列
 			let body = {};
@@ -49,18 +54,18 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					switch (Settings.SubVendor) {
 						case "URL":
 							request = {
-								"url": Settings.URL,
-								"headers": {
-									"Accept": "*/*",
-									"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1"
-								}
+								url: Settings.URL,
+								headers: {
+									Accept: "*/*",
+									"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1",
+								},
 							};
 							break;
-					};
+					}
 					break;
-			};
+			}
 			// 创建字幕Object
-			let externalSubtitle = await fetch(request).then(response => response.body);;
+			let externalSubtitle = await fetch(request).then(response => response.body);
 			// 格式判断
 			switch (FORMAT) {
 				case undefined: // 视为无body
@@ -124,11 +129,11 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					//log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
 					//$response.body = rawBody;
 					break;
-			};
+			}
 			break;
 		case false:
 			break;
-	};
+	}
 })()
-	.catch((e) => logError(e))
-	.finally(() => done($response))
+	.catch(e => logError(e))
+	.finally(() => done($response));

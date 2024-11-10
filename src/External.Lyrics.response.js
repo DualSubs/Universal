@@ -288,7 +288,7 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 			searchUrl.searchParams.set("type", "1");
 			searchUrl.searchParams.set("limit", "1");
 			searchUrl.searchParams.set("offset", "0");
-			searchUrl.searchParams.set("s", encodeURIComponent(keyword));
+			searchUrl.searchParams.set("s", keyword);
 			Request.url = searchUrl.toString();
 			Request.headers.Referer = "https://music.163.com";
 			Request.headers.Cookie = "os=ios; __remember_me=true; NMTID=xxx";
@@ -312,7 +312,7 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 			searchUrl.searchParams.set("type", "1");
 			searchUrl.searchParams.set("limit", "1");
 			searchUrl.searchParams.set("offset", "0");
-			searchUrl.searchParams.set("keywords", encodeURIComponent(keyword));
+			searchUrl.searchParams.set("keywords", keyword);
 			Request.url = searchUrl.toString();
 			Request.headers.Referer = "https://music.163.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));

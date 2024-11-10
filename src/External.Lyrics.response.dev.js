@@ -318,24 +318,9 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 			searchUrl.searchParams.set("type", "1");
 			searchUrl.searchParams.set("limit", "1");
 			searchUrl.searchParams.set("offset", "0");
-			searchUrl.searchParams.set("s", encodeURIComponent(keyword));
+			searchUrl.searchParams.set("s", keyword);
 			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
-			/*
-			const searchUrl = {
-				"scheme": "https",
-				"host": "music.163.com",
-				"path": "api/cloudsearch/pc",
-				"query": {
-					"type": 1,
-					"limit": 1,
-					"offset": 0,
-					"s": encodeURIComponent(keyword),
-				}
-			};
-			log(`🚧 searchUrl: ${JSON.stringify(searchUrl)}`, "");
-			Request.url = URI.stringify(searchUrl);
-			*/
 			Request.headers.Referer = "https://music.163.com";
 			Request.headers.Cookie = "os=ios; __remember_me=true; NMTID=xxx";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
@@ -358,25 +343,9 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 			searchUrl.searchParams.set("type", "1");
 			searchUrl.searchParams.set("limit", "1");
 			searchUrl.searchParams.set("offset", "0");
-			searchUrl.searchParams.set("keywords", encodeURIComponent(keyword));
+			searchUrl.searchParams.set("keywords", keyword);
 			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
-			/*
-			const searchUrl = {
-				"scheme": "https",
-				"host": HostPool[Math.floor(Math.random() * HostPool.length)],
-				//"path": "search",
-				"path": "cloudsearch",
-				"query": {
-					"type": 1,
-					"limit": 1,
-					"offset": 0,
-					"keywords": encodeURIComponent(keyword),
-				}
-			};
-			log(`🚧 searchUrl: ${JSON.stringify(searchUrl)}`, "");
-			Request.url = URI.stringify(searchUrl);
-			*/
 			Request.headers.Referer = "https://music.163.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
 			trackInfo.id = Result?.result?.songs?.[0]?.id;
@@ -390,15 +359,6 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 			const searchUrl = new URL("https://c.y.qq.com/cgi-bin/musicu.fcg");
 			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
-			/*
-			const searchUrl = {
-				"scheme": "https",
-				"host": "u.y.qq.com",
-				"path": "cgi-bin/musicu.fcg"
-			};
-			log(`🚧 searchUrl: ${JSON.stringify(searchUrl)}`, "");
-			Request.url = URI.stringify(searchUrl);
-			*/
 			Request.headers.Referer = "https://c.y.qq.com";
 			Request.body = JSON.stringify({
 				"music.search.SearchCgiService": {
@@ -424,7 +384,7 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 			searchUrl.searchParams.set("format", "json");
 			searchUrl.searchParams.set("p", "1");
 			searchUrl.searchParams.set("n", "1");
-			searchUrl.searchParams.set("w", encodeURIComponent(keyword));
+			searchUrl.searchParams.set("w", keyword);
 			searchUrl.searchParams.set("remoteplace", "txt.yqq.song");
 			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
@@ -486,21 +446,6 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			lyricUrl.searchParams.set("tv", "0");
 			log(`🚧 lyricUrl: ${lyricUrl.toJSON()}`, "");
 			Request.url = lyricUrl.toString();
-			/*
-			const lyricUrl = {
-				"scheme": "https",
-				"host": "music.163.com",
-				"path": "api/song/lyric",
-				"query": {
-					"id": trackId, // trackInfo.NeteaseMusic.id
-					"lv": 0,
-					"yv": 0,
-					"tv": 0,
-				}
-			};
-			log(`🚧 lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
-			Request.url = URI.stringify(lyricUrl);
-			*/
 			Request.headers.Referer = "https://music.163.com";
 			Request.headers.Cookie = "os=ios; __remember_me=true; NMTID=xxx";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
@@ -524,18 +469,6 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			lyricUrl.searchParams.set("id", trackId); // trackInfo.NeteaseMusic.id
 			log(`🚧 lyricUrl: ${lyricUrl.toJSON()}`, "");
 			Request.url = lyricUrl.toString();
-			/*
-			const lyricUrl = {
-				"scheme": "https",
-				"host": HostPool[Math.floor(Math.random() * HostPool.length)],
-				"path": "lyric/new",
-				"query": {
-					"id": trackId // trackInfo.NeteaseMusic.id
-				}
-			};
-			log(`🚧 lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
-			Request.url = URI.stringify(lyricUrl);
-			*/
 			Request.headers.Referer = "https://music.163.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
 			log(`🚧 Result: ${JSON.stringify(Result)}`, "");
@@ -555,21 +488,6 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			lyricUrl.searchParams.set("songmid", trackId); // trackInfo.QQMusic.mid
 			log(`🚧 lyricUrl: ${lyricUrl.toJSON()}`, "");
 			Request.url = lyricUrl.toString();
-			/*
-			const lyricUrl = {
-				"scheme": "https",
-				"host": "c.y.qq.com",
-				"path": "lyric/fcgi-bin/fcg_query_lyric_new.fcg",
-				"query": {
-					"g_tk": "5381",
-					"format": "json",
-					"nobase64": "1",
-					"songmid": trackId // trackInfo.QQMusic.mid
-				}
-			};
-			log(`🚧 lyricUrl: ${JSON.stringify(lyricUrl)}`, "");
-			Request.url = URI.stringify(lyricUrl);
-			*/
 			Request.headers.Referer = "https://lyric.music.qq.com";
 			const Result = await fetch(Request).then(response => JSON.parse(response.body));
 			Lyrics.lyric = Result?.lyric;

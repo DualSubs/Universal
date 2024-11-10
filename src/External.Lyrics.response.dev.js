@@ -1,4 +1,4 @@
-import { $platform, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
 import LRC from "./LRC/LRC.mjs";
 import database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -78,7 +78,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "Spotify":
 					body = await injectionLyric(Settings.LrcVendor, trackInfo, body, PLATFORM);
 					if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;
-					$response.status = $platform === "Quantumult X" ? "HTTP/1.1 200 OK" : 200;
+					$response.status = $app === "Quantumult X" ? "HTTP/1.1 200 OK" : 200;
 					break;
 			}
 			//log(`🚧 body: ${JSON.stringify(body)}`, "");
@@ -91,7 +91,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/grpc+proto":
 		case "application/octet-stream": {
 			//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
-			let rawBody = $platform === "Quantumult X" ? new Uint8Array($response.bodyBytes ?? []) : ($response.body ?? new Uint8Array());
+			let rawBody = $app === "Quantumult X" ? new Uint8Array($response.bodyBytes ?? []) : ($response.body ?? new Uint8Array());
 			//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
 			switch (FORMAT) {
 				case "application/protobuf":
@@ -133,7 +133,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 							}
 							body.lyrics.fullscreenAction = 0;
 							if (!$response?.headers?.["Content-Type"] && $response?.headers?.["content-type"]) $response.headers["Content-Type"] = FORMAT;
-							$response.status = $platform === "Quantumult X" ? "HTTP/1.1 200 OK" : 200;
+							$response.status = $app === "Quantumult X" ? "HTTP/1.1 200 OK" : 200;
 							log(`🚧 body: ${JSON.stringify(body)}`, "");
 							rawBody = ColorLyricsResponse.toBinary(body);
 							break;

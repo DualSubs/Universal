@@ -1,4 +1,4 @@
-import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { $app, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 import database from "./database/index.mjs";
@@ -186,7 +186,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/grpc":
 		case "application/grpc+proto":
 		case "application/octet-stream": {
-			let rawBody = $platform === "Quantumult X" ? new Uint8Array($response.bodyBytes ?? []) : ($response.body ?? new Uint8Array());
+			let rawBody = $app === "Quantumult X" ? new Uint8Array($response.bodyBytes ?? []) : ($response.body ?? new Uint8Array());
 			switch (FORMAT) {
 				case "application/protobuf":
 				case "application/x-protobuf":

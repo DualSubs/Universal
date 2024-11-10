@@ -1,3 +1,7 @@
-### 🔄 Other Changes
-  * 兼容 `audio/x-mpegurl` 格式的 `m3u8`
-  * 重构 `Manifest.response` 脚本
+### 🛠️ Bug Fixes
+  * 修复 `External.Lyrics.response` 发送请求时错误将字符串 `encodeURIComponent` 两次的问题
+
+### 🔣 Dependencies
+  * 升级了 `@nsnanocat/util`
+    * `$platform` 改为 `$app`
+    * 使用了全新的 `URL` 和 `URLSearchParams` polyfill

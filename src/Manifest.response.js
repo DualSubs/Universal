@@ -1,4 +1,4 @@
-import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { $app, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
 import M3U8 from "./EXTM3U/EXTM3U.mjs";
 import AttrList from "./class/AttrList.mjs";
 import database from "./database/index.mjs";

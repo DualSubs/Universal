@@ -1,4 +1,4 @@
-import { $platform, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
+import { $app, URL, Lodash as _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "@nsnanocat/util";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
 import database from "./database/index.mjs";

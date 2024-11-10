@@ -18,7 +18,7 @@ export default defineConfig({
 			//additionalAliases: ['console'],
 		}),
 		new rspack.BannerPlugin({
-			banner: `console.log('Date: ${new Date().toLocaleString('zh-CN', {timeZone: 'PRC'})}');`,
+			banner: `console.log('Date: ${new Date().toLocaleString("zh-CN", { timeZone: "PRC" })}');`,
 			raw: true,
 		}),
 		new rspack.BannerPlugin({
@@ -37,5 +37,6 @@ export default defineConfig({
 			banner: pkg.homepage,
 		}),
 	],
+	devtool: false,
 	performance: false,
 });

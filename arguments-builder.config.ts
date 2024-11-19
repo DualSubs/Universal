@@ -37,14 +37,6 @@ export default defineConfig({
 	},
 	args: [
 		{
-			key: "Switch",
-			name: "总功能开关",
-			defaultValue: true,
-			type: "boolean",
-			description: "是否启用此APP修改",
-			exclude: ["surge", "loon"],
-		},
-		{
 			key: "Types",
 			name: "[字幕] 启用类型",
 			defaultValue: ["Official", "Translate"],
@@ -190,6 +182,23 @@ export default defineConfig({
 				{
 					key: "KM",
 					label: "ភាសាខ្មែរ - 高棉语",
+				},
+			],
+		},
+		{
+			key: "Position",
+			name: "[字幕] 主语言（源语言）字幕位置",
+			defaultValue: "Reverse",
+			type: "string",
+			description: "主语言（源语言）字幕的显示位置。",
+			options: [
+				{
+					key: "Forward",
+					label: "上面（第一行）",
+				},
+				{
+					key: "Reverse",
+					label: "下面（第二行）",
 				},
 			],
 		},

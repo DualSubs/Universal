@@ -23,7 +23,7 @@ export default function detectPlatform(url) {
 		case /primevideo\.com|(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url):
 			Platform = "PrimeVideo";
 			break;
-		case /prd\.media\.h264\.io/i.test(url):
+		case /pro?d\.media\.(h264\.io|max\.com)/i.test(url):
 			Platform = "Max";
 			break;
 		case /\.(api\.hbo|hbomaxcdn)\.com/i.test(url):

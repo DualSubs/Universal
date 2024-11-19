@@ -49,6 +49,8 @@ http:
     - "d25xi40x97liuc.cloudfront.net"
     - "d27xxe7juh1us6.cloudfront.net"
     - "dmqdd6hw24ucf.cloudfront.net"
+    - "*.prod.media.max.com"
+    - "*.prd.media.max.com"
     - "*.prod.media.h264.io"
     - "*.prd.media.h264.io"
     - "manifests.api.hbo.com"
@@ -221,19 +223,19 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/r\/hls\.m3u8
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/r\/hls\.m3u8
       name: 🍿️ DualSubs.M3U8.Master.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/r\/hlsMedia\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/r\/hlsMedia\.m3u8\?(.*)subtype=
       name: 🍿️ DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/(.+)\.vtt\?(.*)subtype=(Official|External)
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\.vtt\?(.*)subtype=(Official|External)
       name: 🍿️ DualSubs.Composite.Subtitles.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.h264\.io\/(.+)\.vtt
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\.vtt
       name: 🍿️ DualSubs.Translate.response
       type: response
       require-body: true

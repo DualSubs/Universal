@@ -1,5 +1,4 @@
 import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
-import { URL } from "@nsnanocat/url";
 import LRC from "./LRC/LRC.mjs";
 import database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -316,9 +315,9 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 	switch (vendor) {
 		case "NeteaseMusic": {
 			const searchUrl = new URL("https://music.163.com/api/cloudsearch/pc");
-			searchUrl.searchParams.set("type", "1");
-			searchUrl.searchParams.set("limit", "1");
-			searchUrl.searchParams.set("offset", "0");
+			searchUrl.searchParams.set("type", 1);
+			searchUrl.searchParams.set("limit", 1);
+			searchUrl.searchParams.set("offset", 0);
 			searchUrl.searchParams.set("s", keyword);
 			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
@@ -341,9 +340,9 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 			];
 			// 搜索歌曲
 			const searchUrl = new URL(`https://${HostPool[Math.floor(Math.random() * HostPool.length)]}/cloudsearch`);
-			searchUrl.searchParams.set("type", "1");
-			searchUrl.searchParams.set("limit", "1");
-			searchUrl.searchParams.set("offset", "0");
+			searchUrl.searchParams.set("type", 1);
+			searchUrl.searchParams.set("limit", 1);
+			searchUrl.searchParams.set("offset", 0);
 			searchUrl.searchParams.set("keywords", keyword);
 			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
 			Request.url = searchUrl.toString();
@@ -383,8 +382,8 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 		case "QQMusicOld": {
 			const searchUrl = new URL("https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp");
 			searchUrl.searchParams.set("format", "json");
-			searchUrl.searchParams.set("p", "1");
-			searchUrl.searchParams.set("n", "1");
+			searchUrl.searchParams.set("p", 1);
+			searchUrl.searchParams.set("n", 1);
 			searchUrl.searchParams.set("w", keyword);
 			searchUrl.searchParams.set("remoteplace", "txt.yqq.song");
 			log(`🚧 searchUrl: ${searchUrl.toJSON()}`, "");
@@ -442,9 +441,9 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 		case "NeteaseMusic": {
 			const lyricUrl = new URL("https://music.163.com/api/song/lyric");
 			lyricUrl.searchParams.set("id", trackId); // trackInfo.NeteaseMusic.id
-			lyricUrl.searchParams.set("lv", "0");
-			lyricUrl.searchParams.set("tv", "0");
-			lyricUrl.searchParams.set("tv", "0");
+			lyricUrl.searchParams.set("lv", -1);
+			lyricUrl.searchParams.set("yv", -1);
+			lyricUrl.searchParams.set("tv", -1);
 			log(`🚧 lyricUrl: ${lyricUrl.toJSON()}`, "");
 			Request.url = lyricUrl.toString();
 			Request.headers.Referer = "https://music.163.com";
@@ -483,9 +482,9 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 		case "QQMusic":
 		default: {
 			const lyricUrl = new URL("https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg");
-			lyricUrl.searchParams.set("g_tk", "5381");
+			lyricUrl.searchParams.set("g_tk", 5381);
 			lyricUrl.searchParams.set("format", "json");
-			lyricUrl.searchParams.set("nobase64", "1");
+			lyricUrl.searchParams.set("nobase64", 1);
 			lyricUrl.searchParams.set("songmid", trackId); // trackInfo.QQMusic.mid
 			log(`🚧 lyricUrl: ${lyricUrl.toJSON()}`, "");
 			Request.url = lyricUrl.toString();
@@ -499,8 +498,8 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			break;
 		}
 	}
-	log("✅ Search Lyric", "");
 	log("🚧 Search Lyric", `Lyrics: ${JSON.stringify(Lyrics)}`, "");
+	log("✅ Search Lyric", "");
 	return Lyrics;
 }
 

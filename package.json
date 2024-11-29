@@ -1,6 +1,5 @@
 {
 	"name": "@dualsubs/universal",
-	"version": "1.6.7",
 	"organizationName": "🍿️ DualSubs",
 	"displayName": "🍿️ DualSubs: 🔣 Universal",
 	"description": "流媒体平台字幕增强及双语模块\n如需恢复TV完整支持\n请配合“ iRingo: 📺 TV”使用",
@@ -46,8 +45,8 @@
 		"node-polyfill-webpack-plugin": "^4.0.0"
 	},
 	"dependencies": {
-		"@nsnanocat/url": "^1.2.0",
-		"@nsnanocat/util": "^1.4.8",
+		"@nsnanocat/url": "^1.2.3",
+		"@nsnanocat/util": "^1.6.3",
 		"crypto-js": "^4.2.0",
 		"text-encoding": "^0.7.0"
 	}

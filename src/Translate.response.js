@@ -1,4 +1,4 @@
-import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { $app, Console, done, fetch, Lodash as _, notification, Storage, wait } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
@@ -10,21 +10,22 @@ import setCache from "./function/setCache.mjs";
 import Translate from "./class/Translate.mjs";
 import { BrowseResponse } from "./protobuf/google/protos/youtube/api/innertube/BrowseResponse.js";
 import { ColorLyricsResponse } from "./protobuf/spotify/lyrics/Lyrics.js";
+Console.debug = () => {};
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-log(`⚠ url: ${url.toJSON()}`, "");
+Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
 const PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ PATHs: ${PATHs}`, "");
+Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(url, $response?.body, FORMAT);
-log(`⚠ FORMAT: ${FORMAT}`, "");
+Console.info(`FORMAT: ${FORMAT}`);
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	log(`⚠ PLATFORM: ${PLATFORM}`, "");
+	Console.info(`PLATFORM: ${PLATFORM}`);
 	/**
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
@@ -33,7 +34,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 	// 获取字幕类型与语言
 	const Type = url.searchParams?.get("subtype") ?? Settings.Type,
 		Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-	log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
+	Console.info(`Type: ${Type}`, `Languages: ${Languages}`);
 	// 创建空数据
 	let body = {};
 	// 格式判断
@@ -253,7 +254,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		}
 	}
 })()
-	.catch(e => logError(e))
+	.catch(e => Console.error(e))
 	.finally(() => done($response));
 
 /***************** Function *****************/
@@ -274,7 +275,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
  * @return {Promise<*>}
  */
 async function Translator(vendor = "Google", method = "Part", text = [], [source = "AUTO", target = "ZH"], API = {}, times = 3, interval = 100, exponential = true) {
-	log(`☑️ Translator, vendor: ${vendor}, method: ${method}, [source, target]: ${[source, target]}`, "");
+	Console.log("☑️ Translator", `vendor: ${vendor}`, `method: ${method}`, `[source, target]: ${[source, target]}`);
 	// 翻译长度设置
 	let length = 127;
 	switch (vendor) {
@@ -307,8 +308,8 @@ async function Translator(vendor = "Google", method = "Part", text = [], [source
 			Translation = await Promise.all(text.map(async row => await retry(() => new Translate({ Source: source, Target: target, API: API })[vendor](row), times, interval, exponential)));
 			break;
 	}
-	//log(`✅ Translator, Translation: ${JSON.stringify(Translation)}`, "");
-	log("✅ Translator", "");
+	//Console.debug(`Translation: ${JSON.stringify(Translation)}`);
+	Console.log("✅ Translator");
 	return Translation;
 }
 
@@ -351,11 +352,11 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  * @return {Array<*>} target
  */
 function chunk(source, length) {
-	log("⚠ Chunk Array", "");
+	Console.log("☑️ Chunk Array");
 	let index = 0,
 		target = [];
 	while (index < source.length) target.push(source.slice(index, (index += length)));
-	//log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	//Console.log("✅ Chunk Array", `target: ${JSON.stringify(target)}`);
 	return target;
 }
 
@@ -371,7 +372,7 @@ function chunk(source, length) {
  * @return {Promise<*>}
  */
 async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) {
-	log(`☑️ retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	Console.log("☑️ retry", `剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
 	try {
 		const val = await fn();
 		return val;

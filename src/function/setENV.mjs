@@ -1,4 +1,4 @@
-import { Lodash as _, getStorage, log } from '@nsnanocat/util'
+import { Console, getStorage, Lodash as _ } from "@nsnanocat/util";
 
 /**
  * Set Environment Variables
@@ -9,13 +9,13 @@ import { Lodash as _, getStorage, log } from '@nsnanocat/util'
  * @return {Object} { Settings, Caches, Configs }
  */
 export default function setENV(name, platforms, database) {
-	log("☑️ Set Environment Variables", "");
+	Console.log("☑️ Set Environment Variables");
 	const { Settings, Caches, Configs } = getStorage(name, platforms, database);
 	/***************** Settings *****************/
 	if (!Array.isArray(Settings?.Types)) Settings.Types = (Settings.Types) ? [Settings.Types] : []; // 只有一个选项时，无逗号分隔
-	log(`✅ Set Environment Variables, Settings: ${typeof Settings}, Settings内容: ${JSON.stringify(Settings)}`, "");
+	Console.debug(`typeof Settings: ${typeof Settings}`, `Settings: ${JSON.stringify(Settings)}`);
 	/***************** Caches *****************/
-	//log(`✅ Set Environment Variables, Caches: ${typeof Caches}, Caches内容: ${JSON.stringify(Caches)}`, "");
+	//Console.debug(`typeof Caches: ${typeof Caches}`, `Caches: ${JSON.stringify(Caches)}`);
 	if (typeof Caches?.Playlists !== "object" || Array.isArray(Caches?.Playlists)) Caches.Playlists = {}; // 创建Playlists缓存
 	Caches.Playlists.Master = new Map(JSON.parse(Caches?.Playlists?.Master || "[]")); // Strings转Array转Map
 	Caches.Playlists.Subtitle = new Map(JSON.parse(Caches?.Playlists?.Subtitle || "[]")); // Strings转Array转Map
@@ -23,5 +23,6 @@ export default function setENV(name, platforms, database) {
 	if (typeof Caches?.Metadatas !== "object" || Array.isArray(Caches?.Metadatas)) Caches.Metadatas = {}; // 创建Playlists缓存
 	if (typeof Caches?.Metadatas?.Tracks !== "object") Caches.Metadatas.Tracks = new Map(JSON.parse(Caches?.Metadatas?.Tracks || "[]")); // Strings转Array转Map
 	/***************** Configs *****************/
+	Console.log("✅ Set Environment Variables");
 	return { Settings, Caches, Configs };
 };

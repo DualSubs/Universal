@@ -1,4 +1,4 @@
-import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { $app, Console, done, fetch, Lodash as _, notification, Storage, wait } from "@nsnanocat/util";
 import LRC from "./LRC/LRC.mjs";
 import database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -6,20 +6,21 @@ import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 import { BrowseResponse } from "./protobuf/google/protos/youtube/api/innertube/BrowseResponse.js";
 import { ColorLyricsResponse } from "./protobuf/spotify/lyrics/Lyrics.js";
+Console.debug = () => {};
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-log(`⚠ url: ${url.toJSON()}`, "");
+Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
 const PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ PATHs: ${PATHs}`, "");
+Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"] ?? $request.headers?.Accept ?? $request.headers?.accept)?.split(";")?.[0];
-log(`⚠ FORMAT: ${FORMAT}`, "");
+Console.info(`FORMAT: ${FORMAT}`);
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	log(`⚠ PLATFORM: ${PLATFORM}`, "");
+	Console.info(`PLATFORM: ${PLATFORM}`);
 	/**
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
@@ -28,12 +29,12 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 	// 获取字幕类型与语言
 	const Type = url.searchParams?.get("subtype") ?? Settings.Type,
 		Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-	log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
+	Console.info(`Type: ${Type}`, `Languages: ${Languages}`);
 	// 查询缓存
 	const trackId = PATHs?.[3];
-	log(`🚧 trackId: ${trackId}`, "");
+	Console.debug(`trackId: ${trackId}`);
 	const trackInfo = Caches.Metadatas.Tracks.get(trackId);
-	log(`🚧 trackInfo: ${JSON.stringify(trackInfo)}`, "");
+	Console.debug(`trackInfo: ${JSON.stringify(trackInfo)}`);
 	// 创建空数据
 	let body = {};
 	// 格式判断
@@ -49,7 +50,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/vnd.apple.mpegurl":
 		case "audio/mpegurl":
 			//body = M3U8.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`);
 			//$response.body = M3U8.stringify(body);
 			break;
 		case "text/xml":
@@ -59,19 +60,19 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/plist":
 		case "application/x-plist":
 			//body = XML.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`);
 			//$response.body = XML.stringify(body);
 			break;
 		case "text/vtt":
 		case "application/vtt":
 			//body = VTT.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`);
 			//$response.body = VTT.stringify(body);
 			break;
 		case "text/json":
 		case "application/json":
 			body = JSON.parse($response.body ?? "{}");
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`);
 			switch (PLATFORM) {
 				case "YouTube":
 					break;
@@ -81,7 +82,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					$response.status = $app === "Quantumult X" ? "HTTP/1.1 200 OK" : 200;
 					break;
 			}
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`);
 			$response.body = JSON.stringify(body);
 			break;
 		case "application/protobuf":
@@ -126,7 +127,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					break;
 			}
 			// 写入二进制数据
-			//log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
+			//Console.debug(`rawBody: ${JSON.stringify(rawBody)}`);
 			$response.body = rawBody;
 			break;
 		}
@@ -135,18 +136,18 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 	if (trackInfo?.NeteaseMusic?.id ?? trackInfo?.QQMusic?.mid) {
 		Caches.Metadatas.Tracks.set(trackInfo.id, trackInfo);
 		// 格式化缓存
-		log(`🚧 Caches.Metadatas.Tracks: ${JSON.stringify([...Caches.Metadatas.Tracks.entries()])}`, "");
+		Console.debug(`Caches.Metadatas.Tracks: ${JSON.stringify([...Caches.Metadatas.Tracks.entries()])}`);
 		Caches.Metadatas.Tracks = setCache(Caches.Metadatas.Tracks, Settings.CacheSize);
 		// 写入持久化储存
 		Storage.setItem(`@DualSubs.${PLATFORM}.Caches.Metadatas.Tracks`, Caches.Metadatas.Tracks);
 	}
 })()
-	.catch(e => logError(e))
+	.catch(e => Console.error(e))
 	.finally(() => done($response));
 
 /***************** Function *****************/
 async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $response.body, platform) {
-	log("☑️ Injection Lyric", `vendor: ${vendor}, trackInfo: ${JSON.stringify(trackInfo)}`, "");
+	Console.log("☑️ Injection Lyric", `vendor: ${vendor}`, `trackInfo: ${JSON.stringify(trackInfo)}`);
 	const UAPool = [
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36", // 13.5%
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", // 6.6%
@@ -269,12 +270,12 @@ async function injectionLyric(vendor = "NeteaseMusic", trackInfo = {}, body = $r
 		case "YouTube":
 			break;
 	}
-	log("✅ Injection Lyric", "");
+	Console.log("✅ Injection Lyric");
 	return body;
 }
 
 async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
-	log("☑️ Search Track", `vendor: ${vendor}, keyword: ${keyword}`, "");
+	Console.log("☑️ Search Track", `vendor: ${vendor}`, `keyword: ${keyword}`);
 	const Request = {
 		headers: {
 			Accept: "application/json",
@@ -347,12 +348,12 @@ async function searchTrack(vendor = "NeteaseMusic", keyword = "", UAPool = []) {
 			break;
 		}
 	}
-	log("✅ Search Track", `trackInfo: ${JSON.stringify(trackInfo)}`, "");
+	Console.log("✅ Search Track", `trackInfo: ${JSON.stringify(trackInfo)}`);
 	return trackInfo;
 }
 
 async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool = []) {
-	log("☑️ Search Lyric", `vendor: ${vendor}, trackId: ${trackId}`, "");
+	Console.log("☑️ Search Lyric", `vendor: ${vendor}`, `trackId: ${trackId}`);
 	const Request = {
 		headers: {
 			Accept: "application/json",
@@ -416,7 +417,7 @@ async function searchLyric(vendor = "NeteaseMusic", trackId = undefined, UAPool 
 			break;
 		}
 	}
-	log("✅ Search Lyric", "");
+	Console.log("✅ Search Lyric");
 	return Lyrics;
 }
 
@@ -459,11 +460,11 @@ function combineText(originText, transText, ShowOnly = false, position = "Forwar
  * @return {Array<*>} target
  */
 function chunk(source, length) {
-	log("⚠ Chunk Array", "");
+	Console.log("☑️ Chunk Array");
 	let index = 0,
 		target = [];
 	while (index < source.length) target.push(source.slice(index, (index += length)));
-	//log(`🎉 Chunk Array`, `target: ${JSON.stringify(target)}`, "");
+	//Console.log("✅ Chunk Array", `target: ${JSON.stringify(target)}`);
 	return target;
 }
 
@@ -479,7 +480,7 @@ function chunk(source, length) {
  * @return {Promise<*>}
  */
 async function retry(fn, retriesLeft = 5, interval = 1000, exponential = false) {
-	log(`☑️ retry, 剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
+	Console.log("☑️ retry", `剩余重试次数:${retriesLeft}`, `时间间隔:${interval}ms`);
 	try {
 		const val = await fn();
 		return val;

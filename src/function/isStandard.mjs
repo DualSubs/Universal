@@ -1,5 +1,4 @@
-
-import { log } from "@nsnanocat/util";
+import { Console } from "@nsnanocat/util";
 
 /**
  * is Standard?
@@ -11,10 +10,10 @@ import { log } from "@nsnanocat/util";
  * @return {Promise<*>}
  */
 export default function isStandard(url = new URL(), headers = {}, platform = "Universal") {
-	log("☑️ is Standard?", "");
+	Console.log("☑️ is Standard?");
     // 判断设备类型
 	const UA = headers["user-agent"] ?? headers["User-Agent"];
-	log(`🚧 is Standard?, UA: ${UA}`, "");
+	Console.debug(`UA: ${UA}`);
     let device = UA.includes("Mozilla/5.0") ? "Web"
         : UA.includes("iPhone") ? "iPhone"
             : UA.includes("iPad") ? "iPad"
@@ -74,6 +73,6 @@ export default function isStandard(url = new URL(), headers = {}, platform = "Un
             standard = true;
             break;
     };
-	log(`✅ is Standard?, standard: ${standard}, device: ${device}`, "");
+	Console.log("✅ is Standard?", `standard: ${standard}`, `device: ${device}`);
 	return {standard, device};
 };

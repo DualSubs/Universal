@@ -1,4 +1,4 @@
-import { log } from "@nsnanocat/util";
+import { Console } from "@nsnanocat/util";
 
 /**
  * Set Cache
@@ -8,9 +8,9 @@ import { log } from "@nsnanocat/util";
  * @return {Boolean} isSaved
  */
 export default function setCache(cache, cacheSize = 100) {
-	log(`☑️ Set Cache, cacheSize: ${cacheSize}`, "");
+	Console.log("☑️ Set Cache", `cacheSize: ${cacheSize}`);
 	cache = Array.from(cache || []); // Map转Array
 	cache = cache.slice(-cacheSize); // 限制缓存大小
-	log("✅ Set Cache", "");
+	Console.log("✅ Set Cache");
 	return cache;
 };

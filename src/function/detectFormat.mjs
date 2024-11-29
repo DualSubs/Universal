@@ -1,4 +1,4 @@
-import { log } from "@nsnanocat/util";
+import { Console } from "@nsnanocat/util";
 
 /**
  * detect Format
@@ -8,7 +8,7 @@ import { log } from "@nsnanocat/util";
  * @return {String} format - format
  */
 export default function detectFormat(url, body, format = undefined) {
-	log(`☑️ detectFormat, format: ${url.format || url.searchParams.get("fmt") || url.searchParams.get("format")}`, "");
+	Console.log("☑️ detectFormat", `format: ${url.format || url.searchParams.get("fmt") || url.searchParams.get("format")}`);
 	switch (url.format || url.searchParams.get("fmt") || url.searchParams.get("format")) {
 		case "txt":
 			format = "text/plain";
@@ -37,8 +37,8 @@ export default function detectFormat(url, body, format = undefined) {
 			break;
 		case undefined:
 			const HEADER = body?.substring?.(0, 6).trim?.();
-			//log(`🚧 detectFormat, HEADER: ${HEADER}`, "");
-			//log(`🚧 detectFormat, HEADER?.substring?.(0, 1): ${HEADER?.substring?.(0, 1)}`, "");
+			//Console.debug(`HEADER: ${HEADER}`);
+			//Console.debug(`HEADER?.substring?.(0, 1): ${HEADER?.substring?.(0, 1)}`);
 			switch (HEADER) {
 				case "<?xml":
 					format = "text/xml";
@@ -74,6 +74,6 @@ export default function detectFormat(url, body, format = undefined) {
 			};
 			break;
 	};
-	log(`✅ detectFormat, format: ${format}`, "");
+	Console.log("✅ detectFormat", `format: ${format}`);
 	return format;
 };

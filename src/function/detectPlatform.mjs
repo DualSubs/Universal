@@ -1,7 +1,7 @@
-import { log } from "@nsnanocat/util";
+import { Console } from "@nsnanocat/util";
 
 export default function detectPlatform(url) {
-	log("☑️ Detect Platform", "");
+	Console.log("☑️ Detect Platform");
 	/***************** Platform *****************/
 	let Platform = "Universal";
 	switch (true) {
@@ -63,6 +63,6 @@ export default function detectPlatform(url) {
 			Platform = "MUBI";
 			break;
 	}
-    log(`✅ Detect Platform, Platform: ${Platform}`, "");
+    Console.log("✅ Detect Platform", `Platform: ${Platform}`);
 	return Platform;
 };

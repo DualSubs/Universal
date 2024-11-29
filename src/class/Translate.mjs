@@ -1,11 +1,11 @@
-import { fetch, log } from "@nsnanocat/util";
+import { Console, fetch } from "@nsnanocat/util";
 import MD5 from 'crypto-js/md5.js';
 
 export default class Translate {
 	constructor(options = {}) {
 		this.Name = "Translate";
 		this.Version = "1.0.6";
-		log(`\n🟧 ${this.Name} v${this.Version}\n`);
+		Console.log(`🟧 ${this.Name} v${this.Version}`);
 		this.Source = "AUTO";
 		this.Target = "ZH";
 		this.API = {};
@@ -260,7 +260,7 @@ export default class Translate {
 				const body = JSON.parse(response.body);
 				return body?.trans_result?.map(item => item?.dst ?? `翻译失败, vendor: ${"BaiduFanyi"}`);
 			})
-			.catch(error => Promise.reject(log(error)));
+			.catch(error => Promise.reject(Console.error(error)));
 	};
 
 	async YoudaoAI(text = [], source = this.Source, target = this.Target, api = this.API) {

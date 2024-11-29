@@ -1,4 +1,4 @@
-import { log } from "@nsnanocat/util";
+import { Console } from "@nsnanocat/util";
 
 /**
  * detect Format
@@ -7,7 +7,7 @@ import { log } from "@nsnanocat/util";
  * @return {String} type - type
  */
 export default function detectPlaylist(m3u8 = {}) {
-	log("☑️ detectPlaylist", "");
+	Console.log("☑️ detectPlaylist");
 	let type = undefined;
 	m3u8.forEach(item => {
 		switch (item.TAG) {
@@ -24,6 +24,6 @@ export default function detectPlaylist(m3u8 = {}) {
 				break;
 		};
 	});
-	log(`✅ detectPlaylist, type: ${type}`, "");
+	Console.log("✅ detectPlaylist", `type: ${type}`);
 	return type;
 };

@@ -1,4 +1,4 @@
-import { $app, Lodash as _, Storage, fetch, notification, log, logError, wait, done } from "@nsnanocat/util";
+import { $app, Console, done, fetch, Lodash as _, notification, Storage, wait } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
@@ -10,47 +10,47 @@ import Composite from "./function/Composite.mjs";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-log(`⚠ url: ${url.toJSON()}`, "");
+Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
 const METHOD = $request.method,
 	HOST = url.hostname,
 	PATH = url.pathname,
 	PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}`, "");
+Console.info(`METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}`);
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);
-log(`⚠ FORMAT: ${FORMAT}`, "");
+Console.info(`FORMAT: ${FORMAT}`);
 (async () => {
 	// 获取平台
 	const PLATFORM = detectPlatform($request.url);
-	log(`⚠ PLATFORM: ${PLATFORM}`, "");
+	Console.info(`PLATFORM: ${PLATFORM}`);
 	/**
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
 	 */
 	const { Settings, Caches, Configs } = setENV("DualSubs", [["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM) ? PLATFORM : "Universal", "External", "API"], database);
-	log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");
+	Console.info(`Settings.Switch: ${Settings?.Switch}`);
 	switch (Settings.Switch) {
 		case true:
 		default:
 			// 获取字幕类型与语言
 			const Type = url.searchParams?.get("subtype") ?? Settings.Type,
 				Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
-			log(`⚠ Type: ${Type}, Languages: ${Languages}`, "");
+			Console.info(`Type: ${Type}`, `Languages: ${Languages}`);
 			// 创建字幕请求队列
 			let body = {};
 			// 处理类型
 			switch (Type) {
 				case "Official":
-					log("⚠ 官方字幕", "");
+					Console.info("官方字幕");
 					break;
 				case "Translate":
 				default:
-					log("⚠ 翻译字幕", "");
+					Console.info("翻译字幕");
 					break;
 				case "External":
-					log("⚠ 外挂字幕", "");
+					Console.info("外挂字幕");
 					switch (Settings.SubVendor) {
 						case "URL":
 							request = {
@@ -79,7 +79,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($response.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					//$response.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -89,31 +89,31 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist":
 					body = XML.parse($response.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					externalSubtitle = XML.parse(externalSubtitle);
-					//log(`🚧 externalSubtitle: ${JSON.stringify(externalSubtitle)}`, "");
+					//Console.debug(`externalSubtitle: ${JSON.stringify(externalSubtitle)}`);
 					body = Composite(body, externalSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					$response.body = XML.stringify(body);
 					break;
 				case "text/vtt":
 				case "application/vtt":
 					body = VTT.parse($response.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					externalSubtitle = VTT.parse(externalSubtitle);
-					//log(`🚧 externalSubtitle: ${JSON.stringify(externalSubtitle)}`, "");
+					//Console.debug(`externalSubtitle: ${JSON.stringify(externalSubtitle)}`);
 					body = Composite(body, externalSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					$response.body = VTT.stringify(body);
 					break;
 				case "text/json":
 				case "application/json":
 					body = JSON.parse($response.body ?? "{}");
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					externalSubtitle = JSON.parse(externalSubtitle);
-					//log(`🚧 externalSubtitle: ${JSON.stringify(externalSubtitle)}`, "");
+					//Console.debug(`externalSubtitle: ${JSON.stringify(externalSubtitle)}`);
 					body = Composite(body, externalSubtitle, FORMAT, URL.query?.kind, Settings.Offset, Settings.Tolerance, Settings.Position);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					$response.body = JSON.stringify(body);
 					break;
 				case "application/protobuf":
@@ -122,11 +122,11 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/grpc":
 				case "application/grpc+proto":
 				case "application/octet-stream":
-					//log(`🚧 $response.body: ${JSON.stringify($response.body)}`, "");
+					//Console.debug(`$response.body: ${JSON.stringify($response.body)}`);
 					//let rawBody = ($app === "Quantumult X") ? new Uint8Array($response.bodyBytes ?? []) : $response.body ?? new Uint8Array();
-					//log(`🚧 isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`, "");
+					//Console.debug(`isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`);
 					// 写入二进制数据
-					//log(`🚧 rawBody: ${JSON.stringify(rawBody)}`, "");
+					//Console.debug(`rawBody: ${JSON.stringify(rawBody)}`);
 					//$response.body = rawBody;
 					break;
 			}
@@ -135,5 +135,5 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 			break;
 	}
 })()
-	.catch(e => logError(e))
+	.catch(e => Console.error(e))
 	.finally(() => done($response));

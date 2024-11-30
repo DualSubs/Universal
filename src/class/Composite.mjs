@@ -79,8 +79,8 @@ export default class Composite {
 					};
 				};
 		};
-		//Console.info(`✅ Composite JSON Subtitles, DualSub内容: ${JSON.stringify(DualSub)}`);
-		Console.info("✅ Composite JSON Subtitles");
+		//Console.debug(`DualSub: ${JSON.stringify(DualSub)}`);
+		Console.log("✅ Composite JSON Subtitles");
 		return DualSub;
 	};
 
@@ -147,8 +147,8 @@ export default class Composite {
 				};
 				break;
 		};
-		//Console.debug(`DualSub内容: ${JSON.stringify(DualSub)}`);
-		Console.info("✅ Composite timedText Subtitles");
+		//Console.debug(`DualSub: ${JSON.stringify(DualSub)}`);
+		Console.log("✅ Composite timedText Subtitles");
 		return DualSub;
 	};
 
@@ -187,8 +187,8 @@ export default class Composite {
 				else { index1++; index2++ };
 			};
 		};
-		//Console.debug(`DualSub内容: ${JSON.stringify(DualSub)}`);
-		Console.info("✅ Composite webVTT Subtitles");
+		//Console.debug(`DualSub: ${JSON.stringify(DualSub)}`);
+		Console.log("✅ Composite webVTT Subtitles");
 		return DualSub;
 	};
 
@@ -230,8 +230,8 @@ export default class Composite {
 				else { index1++; index2++ };
 			};
 		};
-		//Console.info(`✅ Composite Spotify Lyrics, Lyric: ${JSON.stringify(Lyric)}`);
-		Console.info(`✅ Composite Spotify Lyrics`);
+		//Console.debug(`Lyric: ${JSON.stringify(Lyric)}`);
+		Console.log("✅ Composite Spotify Lyrics");
 		return Lyric;
 	};
 };

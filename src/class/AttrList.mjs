@@ -68,7 +68,8 @@ export default class AttrList {
                 break;
             };
         };
-        Console.info(`✅ Get Attribute List, matchList: ${JSON.stringify(matchList)}`);
+        //Console.debug(`matchList: ${JSON.stringify(matchList)}`);
+        Console.log("✅ Get Attribute List");
         return matchList;
     };
 
@@ -188,8 +189,8 @@ export default class AttrList {
                 break;
             };
         };
-        //Console.info(`✅ Set Attribute List, file: ${JSON.stringify(file)}`);
-        Console.info(`✅ Set Attribute List`);
+        //Console.debug(`file: ${JSON.stringify(file)}`);
+        Console.log("✅ Set Attribute List");
         return file;
     };
 }

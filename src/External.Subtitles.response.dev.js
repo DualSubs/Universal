@@ -12,11 +12,8 @@ import Composite from "./function/Composite.mjs";
 const url = new URL($request.url);
 Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
-const METHOD = $request.method,
-	HOST = url.hostname,
-	PATH = url.pathname,
-	PATHs = url.pathname.split("/").filter(Boolean);
-Console.info(`METHOD: ${METHOD}, HOST: ${HOST}, PATH: ${PATH}`);
+const PATHs = url.pathname.split("/").filter(Boolean);
+Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 let FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
 if (FORMAT === "application/octet-stream" || FORMAT === "text/plain") FORMAT = detectFormat(URL, $response?.body, FORMAT);

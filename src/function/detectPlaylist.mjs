@@ -22,8 +22,8 @@ export default function detectPlaylist(m3u8 = {}) {
 				break;
 			default:
 				break;
-		};
+		}
 	});
 	Console.log("✅ detectPlaylist", `type: ${type}`);
 	return type;
-};
+}

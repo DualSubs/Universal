@@ -18,27 +18,30 @@ export default function constructSubtitlesQueue(request, fileName, VTTs1 = [], V
 	Console.debug(`Index1: ${Index1}`);
 	switch (VTTs2.length) {
 		case 0: // 长度为0，无须计算
-		Console.info("长度为 0");
+			Console.info("长度为 0");
 			break;
-		case 1: { // 长度为1，无须计算
+		case 1: {
+			// 长度为1，无须计算
 			log("长度为 1");
 			const request2 = {
-				"url": VTTs2[0],
-				"headers": request.headers
+				url: VTTs2[0],
+				headers: request.headers,
 			};
 			requests.push(request2);
 			break;
 		}
-		case VTTs1.length: { // 长度相等，一一对应，无须计算
+		case VTTs1.length: {
+			// 长度相等，一一对应，无须计算
 			Console.info("长度相等");
 			const request2 = {
-				"url": VTTs2[Index1],
-				"headers": request.headers
+				url: VTTs2[Index1],
+				headers: request.headers,
 			};
 			requests.push(request2);
 			break;
 		}
-		default: { // 长度不等，需要计算
+		default: {
+			// 长度不等，需要计算
 			Console.info("长度不等，需要计算");
 			// 计算当前字幕在原字幕队列中的百分比
 			const Position1 = (Index1 + 1) / VTTs1.length; // 从 0 开始计数，所以要加 1
@@ -54,13 +57,13 @@ export default function constructSubtitlesQueue(request, fileName, VTTs1 = [], V
 			const BeginIndex = Math.min(Index1, Index2);
 			const EndIndex = Math.max(Index1, Index2);
 			Console.debug(`diffLength: ${diffLength}`, `BeginIndex: ${BeginIndex}`, `EndIndex: ${EndIndex}`);
-			const nearlyVTTs = VTTs2.slice(Math.max(0, BeginIndex - diffLength), Math.max(EndIndex, EndIndex + diffLength) + 1) // slice 不取 EndIndex 本身
+			const nearlyVTTs = VTTs2.slice(Math.max(0, BeginIndex - diffLength), Math.max(EndIndex, EndIndex + diffLength) + 1); // slice 不取 EndIndex 本身
 			//const nearlyVTTs = VTTs2.slice(BeginIndex, EndIndex + 1); // slice 不取 EndIndex 本身
 			Console.debug(`nearlyVTTs: ${JSON.stringify(nearlyVTTs)}`);
 			nearlyVTTs.forEach(url => {
 				const request2 = {
-					"url": url,
-					"headers": request.headers
+					url: url,
+					headers: request.headers,
 				};
 				requests.push(request2);
 			});
@@ -75,8 +78,8 @@ export default function constructSubtitlesQueue(request, fileName, VTTs1 = [], V
 			*/
 			break;
 		}
-	};
+	}
 	//Console.debug(`requests: ${JSON.stringify(requests)}`);
 	Console.log("✅ Construct Subtitles Queue");
 	return requests;
-};
+}

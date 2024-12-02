@@ -13,4 +13,4 @@ export default function setCache(cache, cacheSize = 100) {
 	cache = cache.slice(-cacheSize); // 限制缓存大小
 	Console.log("✅ Set Cache");
 	return cache;
-};
+}

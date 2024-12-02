@@ -66,14 +66,14 @@ export default function detectFormat(url, body, format = undefined) {
 						default:
 							format = format;
 							break;
-					};
+					}
 					break;
 				case undefined:
 					format = undefined;
 					break;
-			};
+			}
 			break;
-	};
+	}
 	Console.log("✅ detectFormat", `format: ${format}`);
 	return format;
-};
+}

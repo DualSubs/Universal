@@ -63,6 +63,6 @@ export default function detectPlatform(url) {
 			Platform = "MUBI";
 			break;
 	}
-    Console.log("✅ Detect Platform", `Platform: ${Platform}`);
+	Console.log("✅ Detect Platform", `Platform: ${Platform}`);
 	return Platform;
-};
+}

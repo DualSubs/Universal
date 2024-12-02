@@ -14,8 +14,10 @@ import { Console } from "@nsnanocat/util";
  */
 export default function setOption(playlist1 = {}, playlist2 = {}, type = "", platform = "", standard = true, device = "iPhone") {
 	Console.log("☑️ Set DualSubs Subtitle Option", `type: ${type}`);
-	const NAME1 = playlist1?.OPTION?.NAME.trim(), NAME2 = playlist2?.OPTION?.NAME.trim();
-	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE.trim(), LANGUAGE2 = playlist2?.OPTION?.LANGUAGE.trim();
+	const NAME1 = playlist1?.OPTION?.NAME.trim(),
+		NAME2 = playlist2?.OPTION?.NAME.trim();
+	const LANGUAGE1 = playlist1?.OPTION?.LANGUAGE.trim(),
+		LANGUAGE2 = playlist2?.OPTION?.LANGUAGE.trim();
 	// 复制此语言选项
 	const newOption = JSON.parse(JSON.stringify(playlist1));
 	// 修改名称
@@ -29,7 +31,7 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 		case "External":
 			newOption.OPTION.NAME = `外挂字幕 (${NAME1})`;
 			break;
-	};
+	}
 	// 修改语言代码
 	switch (platform) {
 		case "Apple": // AVKit 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 不按LANGUAGE区分语言
@@ -43,12 +45,12 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 					//newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
 					newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
 					break;
-			};
+			}
 			break;
 		case "Disney+": // AppleCoreMedia 语言列表名称显示为NAME字符串 自动映射NAME为本地语言NAME 按LANGUAGE区分语言
 		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
 		case "Hulu": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 空格分割
-		case "Nebula":  // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
+		case "Nebula": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
 		case "PlutoTV": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
 			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
 			break;
@@ -65,21 +67,21 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
 			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
-        case "MUBI":
-            newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
-            if (!standard) newOption.OPTION.NAME = NAME1;
-            break;
+		case "MUBI":
+			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
+			if (!standard) newOption.OPTION.NAME = NAME1;
+			break;
 		default:
 			newOption.OPTION.LANGUAGE = LANGUAGE1;
 			break;
-	};
+	}
 	// 增加/修改类型参数
 	//const separator = (newOption?.OPTION?.CHARACTERISTICS) ? "," : "";
 	//newOption.OPTION.CHARACTERISTICS += `${separator ?? ""}DualSubs.${type}`;
 	// 增加副语言
 	newOption.OPTION["ASSOC-LANGUAGE"] = LANGUAGE2;
 	// 修改链接
-	const symbol = (newOption.OPTION.URI.includes("?")) ? "&" : "?";
+	const symbol = newOption.OPTION.URI.includes("?") ? "&" : "?";
 	newOption.OPTION.URI += `${symbol}subtype=${type}`;
 	//if (!standard) newOption.OPTION.URI += `&lang=${LANGUAGE1}`;
 	// 自动选择
@@ -88,4 +90,4 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 	if (!standard) newOption.OPTION.DEFAULT = "YES";
 	Console.log("✅ Set DualSubs Subtitle Option", `newOption: ${JSON.stringify(newOption)}`);
 	return newOption;
-};
+}

@@ -1,5 +1,5 @@
 import { Console, fetch } from "@nsnanocat/util";
-import MD5 from 'crypto-js/md5.js';
+import MD5 from "crypto-js/md5.js";
 
 export default class Translate {
 	constructor(options = {}) {
@@ -13,10 +13,159 @@ export default class Translate {
 	}
 
 	#LanguagesCode = {
-		Google: { AUTO: "auto", AF: "af", AM: "am", AR: "ar", AS: "as", AY: "ay", AZ: "az", BG: "bg", BE: "be", BM: "bm", BN: "bn", BHO: "bho", CS: "cs", DA: "da", DE: "de", EL: "el", EU: "eu", EN: "en", "EN-GB": "en", "EN-US": "en", "EN-US SDH": "en", ES: "es", "ES-419": "es", "ES-ES": "es", ET: "et", FI: "fi", FR: "fr", "FR-CA": "fr", HU: "hu", IS: "is", IT: "it", JA: "ja", KM: "km", KO: "ko", LT: "lt", LV: "lv", NL: "nl", NO: "no", PL: "pl", PT: "pt", "PT-PT": "pt", "PT-BR": "pt", PA: "pa", RO: "ro", RU: "ru", SK: "sk", SL: "sl", SQ: "sq", ST: "st", SV: "sv", TH: "th", TR: "tr", UK: "uk", UR: "ur", VI: "vi", ZH: "zh", "ZH-HANS": "zh-CN", "ZH-HK": "zh-TW", "ZH-HANT": "zh-TW", },
-		Microsoft: { AUTO: "", AF: "af", AM: "am", AR: "ar", AS: "as", AY: "ay", AZ: "az", BG: "bg", BE: "be", BM: "bm", BN: "bn", BHO: "bho", CS: "cs", DA: "da", DE: "de", EL: "el", EU: "eu", EN: "en", "EN-GB": "en", "EN-US": "en", "EN-US SDH": "en", ES: "es", "ES-419": "es", "ES-ES": "es", ET: "et", FI: "fi", FR: "fr", "FR-CA": "fr-ca", HU: "hu", IS: "is", IT: "it", JA: "ja", KM: "km", KO: "ko", LT: "lt", LV: "lv", NL: "nl", NO: "no", PL: "pl", PT: "pt", "PT-PT": "pt-pt", "PT-BR": "pt", PA: "pa", RO: "ro", RU: "ru", SK: "sk", SL: "sl", SQ: "sq", ST: "st", SV: "sv", TH: "th", TR: "tr", UK: "uk", UR: "ur", VI: "vi", ZH: "zh-Hans", "ZH-HANS": "zh-Hans", "ZH-HK": "yue", "ZH-HANT": "zh-Hant", },
-		DeepL: { AUTO: "", BG: "BG", CS: "CS", DA: "DA", DE: "de", EL: "el", EN: "EN", ES: "ES", ET: "ET", FI: "FI", FR: "FR", HU: "HU", IT: "IT", JA: "JA", KO: "ko", LT: "LT", LV: "LV", NL: "NL", PL: "PL", PT: "PT", RO: "RO", RU: "RU", SK: "SK", SL: "SL", SV: "SV", TR: "TR", ZH: "ZH", },
-		Baidu: { AUTO: "auto", AR: "ara", CS: "cs", DA: "dan", DE: "de", EL: "el", EN: "en", ES: "spa", ET: "est", FI: "fin", FR: "fra", HU: "hu", IT: "it", JA: "jp", KO: "kor", NL: "nl", PL: "pl", PT: "pt", RO: "RO", RU: "rom", SL: "slo", SV: "swe", TH: "th", VI: "vie", ZH: "zh", "ZH-HANS": "zh", "ZH-HK": "cht", "ZH-HANT": "cht", },
+		Google: {
+			AUTO: "auto",
+			AF: "af",
+			AM: "am",
+			AR: "ar",
+			AS: "as",
+			AY: "ay",
+			AZ: "az",
+			BG: "bg",
+			BE: "be",
+			BM: "bm",
+			BN: "bn",
+			BHO: "bho",
+			CS: "cs",
+			DA: "da",
+			DE: "de",
+			EL: "el",
+			EU: "eu",
+			EN: "en",
+			"EN-GB": "en",
+			"EN-US": "en",
+			"EN-US SDH": "en",
+			ES: "es",
+			"ES-419": "es",
+			"ES-ES": "es",
+			ET: "et",
+			FI: "fi",
+			FR: "fr",
+			"FR-CA": "fr",
+			HU: "hu",
+			IS: "is",
+			IT: "it",
+			JA: "ja",
+			KM: "km",
+			KO: "ko",
+			LT: "lt",
+			LV: "lv",
+			NL: "nl",
+			NO: "no",
+			PL: "pl",
+			PT: "pt",
+			"PT-PT": "pt",
+			"PT-BR": "pt",
+			PA: "pa",
+			RO: "ro",
+			RU: "ru",
+			SK: "sk",
+			SL: "sl",
+			SQ: "sq",
+			ST: "st",
+			SV: "sv",
+			TH: "th",
+			TR: "tr",
+			UK: "uk",
+			UR: "ur",
+			VI: "vi",
+			ZH: "zh",
+			"ZH-HANS": "zh-CN",
+			"ZH-HK": "zh-TW",
+			"ZH-HANT": "zh-TW",
+		},
+		Microsoft: {
+			AUTO: "",
+			AF: "af",
+			AM: "am",
+			AR: "ar",
+			AS: "as",
+			AY: "ay",
+			AZ: "az",
+			BG: "bg",
+			BE: "be",
+			BM: "bm",
+			BN: "bn",
+			BHO: "bho",
+			CS: "cs",
+			DA: "da",
+			DE: "de",
+			EL: "el",
+			EU: "eu",
+			EN: "en",
+			"EN-GB": "en",
+			"EN-US": "en",
+			"EN-US SDH": "en",
+			ES: "es",
+			"ES-419": "es",
+			"ES-ES": "es",
+			ET: "et",
+			FI: "fi",
+			FR: "fr",
+			"FR-CA": "fr-ca",
+			HU: "hu",
+			IS: "is",
+			IT: "it",
+			JA: "ja",
+			KM: "km",
+			KO: "ko",
+			LT: "lt",
+			LV: "lv",
+			NL: "nl",
+			NO: "no",
+			PL: "pl",
+			PT: "pt",
+			"PT-PT": "pt-pt",
+			"PT-BR": "pt",
+			PA: "pa",
+			RO: "ro",
+			RU: "ru",
+			SK: "sk",
+			SL: "sl",
+			SQ: "sq",
+			ST: "st",
+			SV: "sv",
+			TH: "th",
+			TR: "tr",
+			UK: "uk",
+			UR: "ur",
+			VI: "vi",
+			ZH: "zh-Hans",
+			"ZH-HANS": "zh-Hans",
+			"ZH-HK": "yue",
+			"ZH-HANT": "zh-Hant",
+		},
+		DeepL: { AUTO: "", BG: "BG", CS: "CS", DA: "DA", DE: "de", EL: "el", EN: "EN", ES: "ES", ET: "ET", FI: "FI", FR: "FR", HU: "HU", IT: "IT", JA: "JA", KO: "ko", LT: "LT", LV: "LV", NL: "NL", PL: "PL", PT: "PT", RO: "RO", RU: "RU", SK: "SK", SL: "SL", SV: "SV", TR: "TR", ZH: "ZH" },
+		Baidu: {
+			AUTO: "auto",
+			AR: "ara",
+			CS: "cs",
+			DA: "dan",
+			DE: "de",
+			EL: "el",
+			EN: "en",
+			ES: "spa",
+			ET: "est",
+			FI: "fin",
+			FR: "fra",
+			HU: "hu",
+			IT: "it",
+			JA: "jp",
+			KO: "kor",
+			NL: "nl",
+			PL: "pl",
+			PT: "pt",
+			RO: "RO",
+			RU: "rom",
+			SL: "slo",
+			SV: "swe",
+			TH: "th",
+			VI: "vie",
+			ZH: "zh",
+			"ZH-HANS": "zh",
+			"ZH-HK": "cht",
+			"ZH-HANT": "cht",
+		},
 	};
 
 	#UAPool = [
@@ -43,7 +192,7 @@ export default class Translate {
 	};
 
 	async Google(text = [], source = this.Source, target = this.Target) {
-		text = (Array.isArray(text)) ? text : [text];
+		text = Array.isArray(text) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]] ?? source.toLowerCase();
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[target?.split?.(/[-_]/)?.[0]] ?? target.toLowerCase();
 		const BaseRequest = [
@@ -97,10 +246,10 @@ export default class Translate {
 				return text?.join("")?.split(/\r/);
 			})
 			.catch(error => Promise.reject(error));
-	};
+	}
 
 	async GoogleCloud(text = [], source = this.Source, target = this.Target, api = this.API) {
-		text = (Array.isArray(text)) ? text : [text];
+		text = Array.isArray(text) ? text : [text];
 		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]] ?? source.toLowerCase();
 		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[target?.split?.(/[-_]/)?.[0]] ?? target.toLowerCase();
 		const request = {};
@@ -112,13 +261,13 @@ export default class Translate {
 				request.headers = {
 					//"Authorization": `Bearer ${api?.Token ?? api?.Auth}`,
 					"User-Agent": "DualSubs",
-					"Content-Type": "application/json; charset=utf-8"
+					"Content-Type": "application/json; charset=utf-8",
 				};
 				request.body = JSON.stringify({
-					"q": text,
-					"source": source,
-					"target": target,
-					"format": "html",
+					q: text,
+					source: source,
+					target: target,
+					format: "html",
 					//"key": api?.Key
 				});
 				switch (api?.Mode) {
@@ -129,34 +278,34 @@ export default class Translate {
 					default:
 						request.url += `?key=${api?.Key ?? api?.Auth}`;
 						break;
-				};
+				}
 				break;
 			case "v3":
 				request.url = `${BaseURL}/v3/projects/${api?.ID}`;
 				request.headers = {
-					"Authorization": `Bearer ${api?.Token ?? api?.Auth}`,
+					Authorization: `Bearer ${api?.Token ?? api?.Auth}`,
 					"x-goog-user-project": api?.ID,
 					"User-Agent": "DualSubs",
-					"Content-Type": "application/json; charset=utf-8"
+					"Content-Type": "application/json; charset=utf-8",
 				};
 				request.body = JSON.stringify({
-					"sourceLanguageCode": source,
-					"targetLanguageCode": target,
-					"contents": (Array.isArray(text)) ? text : [text],
-					"mimeType": "text/html"
+					sourceLanguageCode: source,
+					targetLanguageCode: target,
+					contents: Array.isArray(text) ? text : [text],
+					mimeType: "text/html",
 				});
 				break;
-		};
+		}
 		return await fetch(request)
 			.then(response => {
 				const body = JSON.parse(response.body);
 				return body?.data?.translations?.map(item => item?.translatedText ?? `翻译失败, vendor: ${"GoogleCloud"}`);
 			})
 			.catch(error => Promise.reject(error));
-	};
+	}
 
 	async Microsoft(text = [], source = this.Source, target = this.Target, api = this.API) {
-		text = (Array.isArray(text)) ? text : [text];
+		text = Array.isArray(text) ? text : [text];
 		source = this.#LanguagesCode.Microsoft[source] ?? this.#LanguagesCode.Microsoft[source?.split?.(/[-_]/)?.[0]] ?? source.toLowerCase();
 		target = this.#LanguagesCode.Microsoft[target] ?? this.#LanguagesCode.Microsoft[target?.split?.(/[-_]/)?.[0]] ?? target.toLowerCase();
 		const request = {};
@@ -172,12 +321,12 @@ export default class Translate {
 			case "AzureUS":
 				BaseURL = "https://api.cognitive.microsofttranslator.us";
 				break;
-		};
-		request.url = `${BaseURL}/translate?api-version=3.0&textType=html&${(source) ? `from=${source}` : ""}&to=${target}`;
+		}
+		request.url = `${BaseURL}/translate?api-version=3.0&textType=html&${source ? `from=${source}` : ""}&to=${target}`;
 		request.headers = {
 			"Content-Type": "application/json; charset=UTF-8",
-			"Accept": "application/json, text/javascript, */*; q=0.01",
-			"Accept-Language": "zh-hans"
+			Accept: "application/json, text/javascript, */*; q=0.01",
+			"Accept-Language": "zh-hans",
 			//"Authorization": `Bearer ${api?.Auth}`,
 			//"Ocp-Apim-Subscription-Key": api?.Auth,
 			//"Ocp-Apim-Subscription-Region": api?.Region, // chinanorth, chinaeast2
@@ -192,8 +341,10 @@ export default class Translate {
 				request.headers["Ocp-Apim-Subscription-Key"] = api?.Key ?? api?.Auth;
 				request.headers["Ocp-Apim-Subscription-Region"] = api?.Region;
 				break;
-		};
-		text = text.map(item => { return { "text": item } });
+		}
+		text = text.map(item => {
+			return { text: item };
+		});
 		request.body = JSON.stringify(text);
 		return await fetch(request)
 			.then(response => {
@@ -201,10 +352,10 @@ export default class Translate {
 				return body?.map(item => item?.translations?.[0]?.text ?? `翻译失败, vendor: ${"Microsoft"}`);
 			})
 			.catch(error => Promise.reject(error));
-	};
+	}
 
 	async DeepL(text = [], source = this.Source, target = this.Target, api = this.API) {
-		text = (Array.isArray(text)) ? text : [text];
+		text = Array.isArray(text) ? text : [text];
 		source = this.#LanguagesCode.DeepL[source] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]] ?? source.toLowerCase();
 		target = this.#LanguagesCode.DeepL[target] ?? this.#LanguagesCode.DeepL[target?.split?.(/[-_]/)?.[0]] ?? target.toLowerCase();
 		const request = {};
@@ -217,19 +368,19 @@ export default class Translate {
 			case "Pro":
 				BaseURL = "https://api.deepl.com";
 				break;
-		};
+		}
 		request.url = `${BaseURL}/v2/translate`;
 		request.headers = {
 			//"Accept": "*/*",
 			"User-Agent": "DualSubs",
 			"Content-Type": "application/json",
-			"Authorization": `DeepL-Auth-Key ${api?.Token ?? api?.Auth}`
+			Authorization: `DeepL-Auth-Key ${api?.Token ?? api?.Auth}`,
 		};
 		const body = {
-			"text": text,
+			text: text,
 			//"source_lang": source,
-			"target_lang": target,
-			"tag_handling": "html"
+			target_lang: target,
+			tag_handling: "html",
 		};
 		if (source) body.source_lang = source;
 		request.body = JSON.stringify(body);
@@ -239,10 +390,10 @@ export default class Translate {
 				return body?.translations?.map(item => item?.text ?? `翻译失败, vendor: ${"DeepL"}`);
 			})
 			.catch(error => Promise.reject(error));
-	};
+	}
 
 	async BaiduFanyi(text = [], source = this.Source, target = this.Target, api = this.API) {
-		text = (Array.isArray(text)) ? text : [text];
+		text = Array.isArray(text) ? text : [text];
 		source = this.#LanguagesCode.Baidu[source] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]] ?? source.toLowerCase();
 		target = this.#LanguagesCode.Baidu[target] ?? this.#LanguagesCode.Baidu[target?.split?.(/[-_]/)?.[0]] ?? target.toLowerCase();
 		const request = {};
@@ -251,9 +402,9 @@ export default class Translate {
 		request.url = `${BaseURL}/api/trans/vip/language`;
 		request.headers = {
 			"User-Agent": "DualSubs",
-			"Content-Type": "application/x-www-form-urlencoded"
+			"Content-Type": "application/x-www-form-urlencoded",
 		};
-		const salt = (new Date).getTime();
+		const salt = new Date().getTime();
 		request.body = `q=${encodeURIComponent(text.join("\n"))}&from=${source}&to=${target}&appid=${api.id}&salt=${salt}&sign=${MD5(api.id + text + salt + api.key)}`;
 		return await fetch(request)
 			.then(response => {
@@ -261,10 +412,10 @@ export default class Translate {
 				return body?.trans_result?.map(item => item?.dst ?? `翻译失败, vendor: ${"BaiduFanyi"}`);
 			})
 			.catch(error => Promise.reject(Console.error(error)));
-	};
+	}
 
 	async YoudaoAI(text = [], source = this.Source, target = this.Target, api = this.API) {
-		text = (Array.isArray(text)) ? text : [text];
+		text = Array.isArray(text) ? text : [text];
 		source = this.#LanguagesCode.Youdao[source] ?? this.#LanguagesCode.Youdao[source?.split?.(/[-_]/)?.[0]];
 		target = this.#LanguagesCode.Youdao[target] ?? this.#LanguagesCode.Youdao[target?.split?.(/[-_]/)?.[0]];
 		const request = {};
@@ -274,17 +425,17 @@ export default class Translate {
 		request.url = `${BaseURL}/api`;
 		request.headers = {
 			"User-Agent": "DualSubs",
-			"Content-Type": "application/json; charset=utf-8"
+			"Content-Type": "application/json; charset=utf-8",
 		};
 		request.body = {
-			"q": text,
-			"from": source,
-			"to": target,
-			"appKey": api?.Key,
-			"salt": (new Date).getTime(),
-			"signType": "v3",
-			"sign": "",
-			"curtime": Math.floor(+new Date() / 1000)
+			q: text,
+			from: source,
+			to: target,
+			appKey: api?.Key,
+			salt: new Date().getTime(),
+			signType: "v3",
+			sign: "",
+			curtime: Math.floor(+new Date() / 1000),
 		};
 		return await fetch(request)
 			.then(response => {
@@ -292,5 +443,5 @@ export default class Translate {
 				return body?.data ?? `翻译失败, vendor: ${"DeepL"}`;
 			})
 			.catch(error => Promise.reject(error));
-	};
+	}
 }

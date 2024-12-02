@@ -221,7 +221,7 @@ export default defineConfig({
 		},
 		{
 			key: "ShowOnly",
-			name: "[翻译器] 只显示翻译后字幕",
+			name: "[翻译器] 只显示翻译字幕",
 			defaultValue: false,
 			type: "boolean",
 			description: "开启后仅显示翻译字幕，不做字幕合并操作。",

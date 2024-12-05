@@ -1,4 +1,4 @@
-import { $app, Console, done, fetch, Lodash as _, notification, Storage, wait } from "@nsnanocat/util";
+import { $app, Console, done, Lodash as _ } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
@@ -11,6 +11,7 @@ import Translate from "./class/Translate.mjs";
 import { BrowseResponse } from "./protobuf/google/protos/youtube/api/innertube/BrowseResponse.js";
 import { ColorLyricsResponse } from "./protobuf/spotify/lyrics/Lyrics.js";
 import { WireType, UnknownFieldHandler, reflectionMergePartial, MESSAGE_TYPE, MessageType, BinaryReader, isJsonObject, typeofJsonValue, jsonWriteOptions } from "@protobuf-ts/runtime";
+Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);

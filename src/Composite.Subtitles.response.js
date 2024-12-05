@@ -1,4 +1,4 @@
-import { $app, Console, done, fetch, Lodash as _, notification, Storage, wait } from "@nsnanocat/util";
+import { Console, done, fetch, Lodash as _ } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
@@ -9,7 +9,6 @@ import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
-Console.debug = () => {};
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);

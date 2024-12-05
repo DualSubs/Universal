@@ -1,4 +1,4 @@
-import { $app, Console, done, fetch, Lodash as _, notification, Storage, wait } from "@nsnanocat/util";
+import { Console, done, fetch, Lodash as _, Storage } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import M3U8 from "./EXTM3U/EXTM3U.mjs";
 import AttrList from "./class/AttrList.mjs";
@@ -9,6 +9,7 @@ import isStandard from "./function/isStandard.mjs";
 import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import aPath from "./function/aPath.mjs";
+Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);

@@ -1,4 +1,4 @@
-import { $app, Console, done, fetch, Lodash as _, notification, Storage, wait } from "@nsnanocat/util";
+import { Console, done, fetch, Lodash as _ } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import XML from "./XML/XML.mjs";
 import VTT from "./WebVTT/WebVTT.mjs";
@@ -9,6 +9,7 @@ import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 import constructSubtitlesQueue from "./function/constructSubtitlesQueue.mjs";
 import Composite from "./class/Composite.mjs";
+Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
@@ -190,11 +191,11 @@ Console.info(`FORMAT: ${FORMAT}`);
 		case "application/grpc+proto":
 		case "application/octet-stream": {
 			//Console.debug(`$response.body: ${JSON.stringify($response.body)}`);
-			let rawBody = $app === "Quantumult X" ? new Uint8Array($response.bodyBytes ?? []) : ($response.body ?? new Uint8Array());
+			//let rawBody = $app === "Quantumult X" ? new Uint8Array($response.bodyBytes ?? []) : ($response.body ?? new Uint8Array());
 			//Console.debug(`isBuffer? ${ArrayBuffer.isView(rawBody)}: ${JSON.stringify(rawBody)}`);
 			// 写入二进制数据
 			//Console.debug(`rawBody: ${JSON.stringify(rawBody)}`);
-			$response.body = rawBody;
+			//$response.body = rawBody;
 			break;
 		}
 	}

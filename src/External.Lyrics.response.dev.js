@@ -1,4 +1,4 @@
-import { $app, Console, done, fetch, Lodash as _, notification, Storage, wait } from "@nsnanocat/util";
+import { $app, Console, done, fetch, Lodash as _, Storage } from "@nsnanocat/util";
 import LRC from "./LRC/LRC.mjs";
 import database from "./database/index.mjs";
 import setENV from "./function/setENV.mjs";
@@ -6,6 +6,7 @@ import detectPlatform from "./function/detectPlatform.mjs";
 import setCache from "./function/setCache.mjs";
 import { BrowseResponse } from "./protobuf/google/protos/youtube/api/innertube/BrowseResponse.js";
 import { ColorLyricsResponse } from "./protobuf/spotify/lyrics/Lyrics.js";
+Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);

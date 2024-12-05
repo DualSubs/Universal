@@ -44,8 +44,8 @@
 		"node-polyfill-webpack-plugin": "^4.0.0"
 	},
 	"dependencies": {
-		"@nsnanocat/url": "^1.2.3",
-		"@nsnanocat/util": "^1.6.4",
+		"@nsnanocat/url": "^1.2.4",
+		"@nsnanocat/util": "^1.7.5",
 		"@protobuf-ts/runtime": "^2.9.4",
 		"crypto-js": "^4.2.0",
 		"text-encoding": "^0.7.0"

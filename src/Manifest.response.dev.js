@@ -2,14 +2,13 @@ import { Console, done, fetch, Lodash as _, Storage } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import M3U8 from "./EXTM3U/EXTM3U.mjs";
 import AttrList from "./class/AttrList.mjs";
-import database from "./database/index.mjs";
+import database from "./function/database.mjs";
 import detectPlatform from "./function/detectPlatform.mjs";
 import setENV from "./function/setENV.mjs";
 import isStandard from "./function/isStandard.mjs";
 import detectPlaylist from "./function/detectPlaylist.mjs";
 import setCache from "./function/setCache.mjs";
 import aPath from "./function/aPath.mjs";
-Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
@@ -29,6 +28,7 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 	 * @type {{Settings: import('./types').Settings}}
 	 */
 	const { Settings, Caches, Configs } = setENV("DualSubs", [["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM) ? PLATFORM : "Universal", "Composite"], database);
+	Console.logLevel = Settings.LogLevel;
 	// 获取字幕类型与语言
 	const Type = url.searchParams?.get("subtype") ?? Settings.Type,
 		Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];

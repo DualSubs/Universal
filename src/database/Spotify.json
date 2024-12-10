@@ -1,6 +1,5 @@
 {
     "Settings": {
-        "Switch": true,
         "Types": ["Translate", "External"],
         "Languages": ["AUTO", "ZH"]
     }

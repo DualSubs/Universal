@@ -45,7 +45,7 @@
 	},
 	"dependencies": {
 		"@nsnanocat/url": "^1.2.4",
-		"@nsnanocat/util": "^1.7.5",
+		"@nsnanocat/util": "^1.7.6",
 		"@protobuf-ts/runtime": "^2.9.4",
 		"crypto-js": "^4.2.0",
 		"text-encoding": "^0.7.0"

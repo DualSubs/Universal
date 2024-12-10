@@ -1,16 +1,6 @@
 {
-    "Default": {
-        "Settings": {
-            "Switch": true,
-            "Type": "Translate",
-            "Types": ["Official", "Translate"],
-            "Languages": ["EN", "ZH"],
-            "CacheSize": 50
-        }
-    },
     "Universal": {
         "Settings": {
-            "Switch": true,
             "Types": ["Official", "Translate"],
             "Languages": ["EN", "ZH"]
         },
@@ -69,7 +59,6 @@
     },
     "YouTube": {
         "Settings": {
-            "Switch": true,
             "Type": "Official",
             "Types": ["Translate", "External"],
             "Languages": ["AUTO", "ZH"],
@@ -1892,7 +1881,6 @@
     },
     "Netflix": {
         "Settings": {
-            "Switch": true,
             "Type": "Translate",
             "Languages": ["AUTO", "ZH"]
         },
@@ -2164,6 +2152,14 @@
                 "PhoneNumber": "",
                 "Password": ""
             }
+        }
+    },
+    "Default": {
+        "Settings": {
+            "Type": "Translate",
+            "Types": ["Official", "Translate"],
+            "Languages": ["EN", "ZH"],
+            "CacheSize": 50
         }
     }
 }

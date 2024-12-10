@@ -209,12 +209,12 @@ export default defineConfig({
 			type: "string",
 			options: [
 				{
-					"key": "Google",
-					"label": "Google Translate"
+					key: "Google",
+					label: "Google Translate",
 				},
 				{
-					"key": "Microsoft",
-					"label": "Microsoft Translator（需填写API）"
+					key: "Microsoft",
+					label: "Microsoft Translator（需填写API）",
 				},
 			],
 			description: "请选择翻译器所使用的服务商API，更多翻译选项请使用BoxJs。",
@@ -224,7 +224,22 @@ export default defineConfig({
 			name: "[翻译器] 只显示翻译字幕",
 			defaultValue: false,
 			type: "boolean",
-			description: "开启后仅显示翻译字幕，不做字幕合并操作。",
+			description: "是否仅显示翻译后字幕，不显示源语言字幕。",
+		},
+		{
+			key: "LogLevel",
+			name: "[调试] 日志等级",
+			type: "string",
+			defaultValue: "WARN",
+			description: "选择脚本日志的输出等级，低于所选等级的日志将全部输出。",
+			options: [
+				{ key: "OFF", label: "关闭" },
+				{ key: "ERROR", label: "❌ 错误" },
+				{ key: "WARN", label: "⚠️ 警告" },
+				{ key: "INFO", label: "ℹ️ 信息" },
+				{ key: "DEBUG", label: "🅱️ 调试" },
+				{ key: "ALL", label: "全部" },
+			],
 		},
 	],
 });

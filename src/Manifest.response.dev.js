@@ -29,6 +29,8 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 	 */
 	const { Settings, Caches, Configs } = setENV("DualSubs", [["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM) ? PLATFORM : "Universal", "Composite"], database);
 	Console.logLevel = Settings.LogLevel;
+	// 创建属性列表
+	const attrList = new AttrList(FORMAT, PLATFORM);
 	// 获取字幕类型与语言
 	const Type = url.searchParams?.get("subtype") ?? Settings.Type,
 		Languages = [url.searchParams?.get("lang")?.toUpperCase?.() ?? Settings.Languages[0], (url.searchParams?.get("tlang") ?? Caches?.tlang)?.toUpperCase?.() ?? Settings.Languages[1]];
@@ -59,10 +61,10 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 					// 读取已存数据
 					const playlistCache = Caches.Playlists.Master.get($request.url) || {};
 					// 获取特定语言的字幕
-					playlistCache[Languages[0]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]]);
-					playlistCache[Languages[1]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]]);
+					playlistCache[Languages[0]] = attrList.get($request.url, body, "SUBTITLES", Configs.Languages[Languages[0]]);
+					playlistCache[Languages[1]] = attrList.get($request.url, body, "SUBTITLES", Configs.Languages[Languages[1]]);
 					// 写入选项
-					body = new AttrList(FORMAT, PLATFORM).set(body, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
+					body = attrList.set(body, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
 					// 写入数据
 					Caches.Playlists.Master.set($request.url, playlistCache);
 					// 格式化缓存
@@ -144,10 +146,10 @@ Console.info(`PLATFORM: ${PLATFORM}`);
 				case "PrimeVideo":
 					if (body?.subtitleUrls) {
 						// 获取特定语言的字幕
-						playlistCache[Languages[0]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "subtitleUrls", Configs.Languages[Languages[0]]);
-						playlistCache[Languages[1]] = new AttrList(FORMAT, PLATFORM).get($request.url, body, "subtitleUrls", Configs.Languages[Languages[1]]);
+						playlistCache[Languages[0]] = attrList.get($request.url, body, "subtitleUrls", Configs.Languages[Languages[0]]);
+						playlistCache[Languages[1]] = attrList.get($request.url, body, "subtitleUrls", Configs.Languages[Languages[1]]);
 						//Console.debug(`playlistCache[Languages[0]]: ${JSON.stringify(playlistCache[Languages[0]])}`);
-						body.subtitleUrls = new AttrList(FORMAT, PLATFORM).set(body.subtitleUrls, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
+						body.subtitleUrls = attrList.set(body.subtitleUrls, playlistCache, Settings.Types, Languages, STANDARD, DEVICE);
 					}
 					break;
 			}

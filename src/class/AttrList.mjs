@@ -5,7 +5,7 @@ import aPath from "../function/aPath.mjs";
 export default class AttrList {
 	constructor(format = "application/x-mpegURL", platform = "Universal") {
 		this.Name = "AttrList";
-		this.Version = "1.0.6";
+		this.Version = "1.0.7";
 		this.format = format;
 		this.platform = platform;
 		//Object.assign(this, options)
@@ -30,13 +30,13 @@ export default class AttrList {
 			case "application/x-mpegurl":
 			case "application/vnd.apple.mpegurl":
 			case "audio/mpegurl": {
-				let attrList = file
+				const attrList = file
 					.filter(item => item?.TAG === "#EXT-X-MEDIA") // 过滤标签
 					.filter(item => item?.OPTION?.TYPE === type) // 过滤类型
 					.filter(item => item?.OPTION?.FORCED !== "YES"); // 过滤强制内容
 				//Console.debug(`attrList: ${JSON.stringify(attrList)}`);
 				//查询是否有符合语言的内容
-				for (let langcode of langCodes) {
+				for (const langcode of langCodes) {
 					Console.debug(`for (let ${langcode} of langcodes)`);
 					matchList = attrList.filter(item => item?.OPTION?.LANGUAGE?.toLowerCase() === langcode?.toLowerCase());
 					if (matchList.length !== 0) break;
@@ -51,9 +51,9 @@ export default class AttrList {
 			case "application/json": {
 				switch (this.platform) {
 					case "PrimeVideo": {
-						let attrList = file?.[type] ?? [];
+						const attrList = file?.[type] ?? [];
 						//查询是否有符合语言的内容
-						for (let langcode of langCodes) {
+						for (const langcode of langCodes) {
 							Console.debug(`for (let ${langcode} of langcodes)`);
 							matchList = attrList.filter(item => item?.languageCode?.toLowerCase() === langcode?.toLowerCase());
 							if (matchList.length !== 0) break;
@@ -84,8 +84,9 @@ export default class AttrList {
 	 * @return {Object} m3u8
 	 */
 	set(file = [], playlists = {}, types = [], languages = [], standard = true, device = "iPhone") {
-		//types = (standard == true) ? types : ["Translate"];
-		types = standard == true ? types : [types.at(-1)];
+		//types = standard === true ? types : ["Translate"];
+		//types = standard === true ? types : [types.at(-1)];
+		types = standard === true ? types : types.reverse(); // 反转数组，先找翻译字幕，后找官方字幕
 		const playlists1 = playlists?.[languages?.[0]];
 		const playlists2 = playlists?.[languages?.[1]];
 		//if (playlists1?.length !== 0) Console.debug(`有主字幕语言（源语言）字幕`);
@@ -109,12 +110,12 @@ export default class AttrList {
 								playlists2?.forEach(playlist2 => {
 									//const index2 = file.findIndex(item => item?.OPTION?.URI === playlist2.OPTION.URI); // 副语言（源语言）字幕位置
 									if (playlist1?.OPTION?.["GROUP-ID"] === playlist2?.OPTION?.["GROUP-ID"]) {
-										switch (
-											this.platform // 兼容性修正
-										) {
+										// 兼容性修正
+										switch (this.platform) {
 											case "Apple":
-												if (playlist1?.OPTION.CHARACTERISTICS == playlist2?.OPTION.CHARACTERISTICS) {
-													// 只生成属性相同
+											case "Max":
+												// 只生成属性相同
+												if (playlist1?.OPTION.CHARACTERISTICS === playlist2?.OPTION.CHARACTERISTICS) {
 													option = setOption(playlist1, playlist2, type, this.platform, standard, device);
 													// option.OPTION.URI += `&lang=${languages[0]}`;
 												}
@@ -128,7 +129,7 @@ export default class AttrList {
 								});
 								break;
 							case "Translate":
-							case "External":
+							case "External": {
 								const playlist2 = {
 									OPTION: {
 										TYPE: "SUBTITLES",
@@ -141,8 +142,13 @@ export default class AttrList {
 								option = setOption(playlist1, playlist2, type, this.platform, standard, device);
 								option.OPTION.URI += `&lang=${playlist1?.OPTION?.LANGUAGE?.toUpperCase()}`;
 								break;
+							}
 						}
-						if (option) file.splice(index1 + (standard ? 1 : 0), 0, option);
+						if (option) {
+							if (standard) file.splice(index1 + 1, 0, option);
+							else file.splice(index1, 1, option);
+							//file.splice(index1 + (standard ? 1 : 0), 0, option);
+						}
 					});
 				});
 				break;
@@ -172,7 +178,7 @@ export default class AttrList {
 										});
 										break;
 									case "Translate":
-									case "External":
+									case "External": {
 										option = JSON.parse(JSON.stringify(playlist1));
 										option.displayName = `${type} (${playlist1.displayName}/${languages[1]})`;
 										option.languageCode = `${playlist1.languageCode}/${languages[1].toLowerCase()}_${type}`;
@@ -182,6 +188,7 @@ export default class AttrList {
 										option.url += `&lang=${playlist1.languageCode.toUpperCase()}`;
 										//Console.debug(`option: ${JSON.stringify(option)}`);
 										break;
+									}
 								}
 								if (option) file.splice(index1 + (standard ? 1 : 0), 0, option);
 							});

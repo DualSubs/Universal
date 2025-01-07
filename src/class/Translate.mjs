@@ -4,7 +4,7 @@ import MD5 from "crypto-js/md5.js";
 export default class Translate {
 	constructor(options = {}) {
 		this.Name = "Translate";
-		this.Version = "1.0.6";
+		this.Version = "1.1.0";
 		Console.log(`🟧 ${this.Name} v${this.Version}`);
 		this.Source = "AUTO";
 		this.Target = "ZH";
@@ -440,7 +440,39 @@ export default class Translate {
 		return await fetch(request)
 			.then(response => {
 				const body = JSON.parse(response.body);
-				return body?.data ?? `翻译失败, vendor: ${"DeepL"}`;
+				return body?.data ?? `翻译失败, vendor: ${"YoudaoAI"}`;
+			})
+			.catch(error => Promise.reject(error));
+	}
+
+	async AI(text = [], source = this.Source, target = this.Target, api = this.API) {
+		text = Array.isArray(text) ? text : [text];
+		source = this.#LanguagesCode.Google[source] ?? this.#LanguagesCode.Google[source?.split?.(/[-_]/)?.[0]];
+		target = this.#LanguagesCode.Google[target] ?? this.#LanguagesCode.Google[target?.split?.(/[-_]/)?.[0]];
+		const request = {};
+		request.url = `${api.BaseURL}/v1/chat/completions`;
+		request.headers = {
+			"User-Agent": "DualSubs",
+			"Content-Type": "application/json; charset=utf-8",
+		};
+		request.body = {
+			model: api.Model,
+			stream: false, // 可选stream或一次返回
+			messages: [
+				{
+					role: "system",
+					content: api.Prompt,
+				},
+				{
+					role: "user",
+					content: text.join("\n"),
+				},
+			],
+		};
+		return await fetch(request)
+			.then(response => {
+				const body = JSON.parse(response.body);
+				return body?.choices?.[0]?.message?.content?.split("\n") ?? `翻译失败, vendor: ${"AI"}`;
 			})
 			.catch(error => Promise.reject(error));
 	}

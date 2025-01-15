@@ -977,6 +977,10 @@ async function Translate(text = [], method = "Part", vendor = "Google", source =
 		case "DeepLX":
 			length = 20;
 			break;
+		case "AI":
+			// 尽量减小翻译长度，降低延迟
+			length = 25;
+			break;
 	};
 	let Translation = [];
 	switch (method) {

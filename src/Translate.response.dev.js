@@ -362,6 +362,9 @@ async function Translator(vendor = "Google", method = "Part", text = [], [source
 		case "DeepLX":
 			length = 20;
 			break;
+		case "AI":
+			length = 25;
+			break;
 	}
 	let Translation = [];
 	switch (method) {

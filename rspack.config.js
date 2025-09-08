@@ -11,7 +11,11 @@ export default defineConfig({
 		"Translate.response": "./src/Translate.response.js",
 	},
 	output: {
+		chunkFormat: false,
 		filename: "[name].bundle.js",
+		library: {
+			type: "module",
+		},
 	},
 	plugins: [
 		new NodePolyfillPlugin({

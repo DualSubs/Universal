@@ -11,7 +11,11 @@ export default defineConfig({
 		"Translate.response": "./src/Translate.response.dev.js",
 	},
 	output: {
+		chunkFormat: false,
 		filename: "[name].bundle.js",
+		library: {
+			type: "module",
+		},
 	},
 	optimization: {
 		minimize: false,

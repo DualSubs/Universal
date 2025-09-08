@@ -113,6 +113,8 @@ export default defineConfig({
 					key: "KM",
 					label: "ភាសាខ្មែរ - 高棉语",
 				},
+				{ key: "AR", label: "العربية - 阿拉伯语" },
+				{ key: "ID", label: "Bahasa Indonesia - 印度尼西亚语" },
 			],
 		},
 		{
@@ -183,6 +185,8 @@ export default defineConfig({
 					key: "KM",
 					label: "ភាសាខ្មែរ - 高棉语",
 				},
+				{ key: "AR", label: "العربية - 阿拉伯语" },
+				{ key: "ID", label: "Bahasa Indonesia - 印度尼西亚语" },
 			],
 		},
 		{

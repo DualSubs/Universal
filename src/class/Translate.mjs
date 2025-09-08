@@ -4,7 +4,7 @@ import MD5 from "crypto-js/md5.js";
 export default class Translate {
 	constructor(options = {}) {
 		this.Name = "Translate";
-		this.Version = "1.0.6";
+		this.Version = "1.0.7";
 		Console.log(`🟧 ${this.Name} v${this.Version}`);
 		this.Source = "AUTO";
 		this.Target = "ZH";
@@ -43,6 +43,7 @@ export default class Translate {
 			FR: "fr",
 			"FR-CA": "fr",
 			HU: "hu",
+			ID: "id",
 			IS: "is",
 			IT: "it",
 			JA: "ja",
@@ -104,6 +105,7 @@ export default class Translate {
 			FR: "fr",
 			"FR-CA": "fr-ca",
 			HU: "hu",
+			ID: "id",
 			IS: "is",
 			IT: "it",
 			JA: "ja",
@@ -135,7 +137,7 @@ export default class Translate {
 			"ZH-HK": "yue",
 			"ZH-HANT": "zh-Hant",
 		},
-		DeepL: { AUTO: "", BG: "BG", CS: "CS", DA: "DA", DE: "de", EL: "el", EN: "EN", ES: "ES", ET: "ET", FI: "FI", FR: "FR", HU: "HU", IT: "IT", JA: "JA", KO: "ko", LT: "LT", LV: "LV", NL: "NL", PL: "PL", PT: "PT", RO: "RO", RU: "RU", SK: "SK", SL: "SL", SV: "SV", TR: "TR", ZH: "ZH" },
+		DeepL: { AUTO: "", BG: "BG", CS: "CS", DA: "DA", DE: "de", EL: "el", EN: "EN", ES: "ES", ET: "ET", FI: "FI", FR: "FR", HU: "HU", ID: "ID", IT: "IT", JA: "JA", KO: "ko", LT: "LT", LV: "LV", NL: "NL", PL: "PL", PT: "PT", RO: "RO", RU: "RU", SK: "SK", SL: "SL", SV: "SV", TR: "TR", ZH: "ZH" },
 		Baidu: {
 			AUTO: "auto",
 			AR: "ara",

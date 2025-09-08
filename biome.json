@@ -1,78 +1,74 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-    "files": {
-        "ignore": [
-            "**/*.bundle.js"
-        ],
-        "ignoreUnknown": false
-    },
-    "formatter": {
-        "enabled": true,
-        "indentStyle": "tab",
-        "indentWidth": 2,
-        "lineEnding": "lf",
-        "lineWidth": 320
-    },
-    "javascript": {
-        "formatter": {
-            "arrowParentheses": "asNeeded",
-            "bracketSameLine": true,
-            "quoteStyle": "double"
-        }
-    },
-    "json": {
-        "parser": {
-            "allowComments": true,
-            "allowTrailingCommas": true
-        }
-    },
-    "linter": {
-        "enabled": true,
-        "rules": {
-            "complexity": {
-                "noForEach": "off",
-                "noStaticOnlyClass": "off",
-                "noUselessSwitchCase": "off",
-                "useArrowFunction": "info",
-                "useFlatMap": "off",
-                "useLiteralKeys": "info"
-            },
-            "correctness": {
-                "noInnerDeclarations": "info",
-                "noSelfAssign": "off",
-                "noSwitchDeclarations": "info",
-                "noUnsafeOptionalChaining": "info"
-            },
-            "performance": {
-                "noDelete": "info"
-            },
-            "recommended": true,
-            "style": {
-                "noNegationElse": "off",
-                "noParameterAssign": "off",
-                "noUselessElse": "off",
-                "noVar": "info",
-                "useDefaultParameterLast": "info",
-                "useForOf": "error",
-                "useNodejsImportProtocol": "error",
-                "useNumberNamespace": "error",
-                "useSingleVarDeclarator": "off"
-            },
-            "suspicious": {
-                "noAssignInExpressions": "info",
-                "noDoubleEquals": "info",
-                "noFallthroughSwitchClause": "info",
-                "noGlobalIsNan": "off",
-                "useDefaultSwitchClauseLast": "off"
-            }
-        }
-    },
-    "organizeImports": {
-        "enabled": true
-    },
-    "vcs": {
-        "clientKind": "git",
-        "enabled": true,
-        "useIgnoreFile": true
-    }
+	"$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+	"files": {
+		"includes": ["**", "!**/*.bundle.js"],
+		"ignoreUnknown": false
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineEnding": "lf",
+		"lineWidth": 320
+	},
+	"javascript": {
+		"formatter": {
+			"arrowParentheses": "asNeeded",
+			"bracketSameLine": true,
+			"quoteStyle": "double"
+		}
+	},
+	"json": {
+		"parser": {
+			"allowComments": true,
+			"allowTrailingCommas": true
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"complexity": {
+				"noForEach": "off",
+				"noStaticOnlyClass": "off",
+				"noUselessSwitchCase": "off",
+				"useArrowFunction": "info",
+				"useFlatMap": "off",
+				"useLiteralKeys": "info"
+			},
+			"correctness": {
+				"noInnerDeclarations": "info",
+				"noSelfAssign": "off",
+				"noSwitchDeclarations": "info",
+				"noUnsafeOptionalChaining": "info"
+			},
+			"performance": {
+				"noDelete": "info"
+			},
+			"recommended": true,
+			"style": {
+				"noNegationElse": "off",
+				"noParameterAssign": "off",
+				"noUselessElse": "off",
+				"useDefaultParameterLast": "info",
+				"useForOf": "error",
+				"useNodejsImportProtocol": "error",
+				"useNumberNamespace": "error",
+				"useSingleVarDeclarator": "off"
+			},
+			"suspicious": {
+				"noAssignInExpressions": "info",
+				"noDoubleEquals": "info",
+				"noFallthroughSwitchClause": "info",
+				"noGlobalIsNan": "off",
+				"useDefaultSwitchClauseLast": "off",
+				"noVar": "info"
+			}
+		}
+	},
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"vcs": {
+		"clientKind": "git",
+		"enabled": true,
+		"useIgnoreFile": true
+	}
 }

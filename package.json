@@ -31,22 +31,23 @@
 		"build": "rspack build",
 		"build:dev": "rspack build -c rspack.dev.config.js --mode=development",
 		"build:args": "arguments-builder build",
-		"dts": "arguments-builder dts"
+		"dts": "arguments-builder dts",
+		"submodule": "git submodule update --remote"
 	},
 	"browserslist": [
 		"iOS >= 15"
 	],
 	"devDependencies": {
 		"@iringo/arguments-builder": "^1.8.5",
-		"@protobuf-ts/plugin": "^2.9.4",
-		"@rspack/cli": "^1.0.11",
-		"@rspack/core": "^1.0.11",
-		"node-polyfill-webpack-plugin": "^4.0.0"
+		"@protobuf-ts/plugin": "^2.11.1",
+		"@rspack/cli": "^1.5.2",
+		"@rspack/core": "^1.5.2",
+		"node-polyfill-webpack-plugin": "^4.1.0"
 	},
 	"dependencies": {
 		"@nsnanocat/url": "^1.2.4",
-		"@nsnanocat/util": "^1.8.7",
-		"@protobuf-ts/runtime": "^2.9.4",
+		"@nsnanocat/util": "^1.8.10",
+		"@protobuf-ts/runtime": "^2.11.1",
 		"crypto-js": "^4.2.0",
 		"text-encoding": "^0.7.0"
 	}

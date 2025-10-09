@@ -64,7 +64,20 @@ export default function isStandard(url = new URL(), headers = {}, platform = "Un
 			break;
 		case "AppleTV":
 		default:
-			standard = true;
+			switch (platform) {
+				case "Max":
+				case "HBOMax":
+					standard = false;
+					break;
+				case "Viki":
+				case "PeacockTV":
+				case "FuboTV":
+				case "TED":
+				case "MUBI":
+				default:
+					standard = true;
+					break;
+			}
 			break;
 	}
 	Console.log("✅ is Standard?", `standard: ${standard}`, `device: ${device}`);

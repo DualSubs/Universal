@@ -40,12 +40,12 @@
 	"devDependencies": {
 		"@iringo/arguments-builder": "^1.8.5",
 		"@protobuf-ts/plugin": "^2.11.1",
-		"@rspack/cli": "^1.5.2",
-		"@rspack/core": "^1.5.2",
+		"@rspack/cli": "^1.5.8",
+		"@rspack/core": "^1.5.8",
 		"node-polyfill-webpack-plugin": "^4.1.0"
 	},
 	"dependencies": {
-		"@nsnanocat/url": "^1.2.4",
+		"@nsnanocat/url": "^1.2.5",
 		"@nsnanocat/util": "^1.8.10",
 		"@protobuf-ts/runtime": "^2.11.1",
 		"crypto-js": "^4.2.0",

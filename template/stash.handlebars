@@ -222,11 +222,11 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(r|[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/hls\.m3u8
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\/hls\.m3u8
       name: 🍿️ DualSubs.M3U8.Master.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(r|[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/hlsMedia\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\/hlsMedia\.m3u8\?(.*)subtype=
       name: 🍿️ DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true

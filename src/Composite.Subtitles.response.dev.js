@@ -63,26 +63,6 @@ Console.info(`FORMAT: ${FORMAT}`);
 				}
 				case "YouTube":
 					Console.info("YouTube");
-					switch ($response.statusCode ?? $response.status) {
-						case 200:
-							break;
-						// biome-ignore lint/suspicious/noFallthroughSwitchClause: intentional fallthrough to handle error cases
-						case 404:
-							Console.error("请求的字幕不存在，可能是该视频未提供字幕");
-						// biome-ignore lint/suspicious/noFallthroughSwitchClause: intentional fallthrough to handle error cases
-						case 429:
-							Console.error("请求过于频繁，已被 YouTube 限制访问");
-						default: {
-							Console.error(`请求失败，状态码：${$response.statusCode ?? $response.status}`);
-							url.searchParams.delete("subtype"); // 删除 subtype 参数，避免影响后续请求
-							$request.url = url.toString();
-							await fetch($request).then(response => {
-								$response.status = response.status;
-								$response.header = response.header;
-								$response.body = response.body;
-							});
-						}
-					}
 					switch (url.searchParams.get("tlang")) {
 						case undefined:
 							Console.info("未选择翻译语言，跳过");

@@ -226,7 +226,7 @@ http:
       name: 🍿️ DualSubs.M3U8.Master.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\/hlsMedia\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\/(hlsMedia|.+)\.m3u8\?(.*)subtype=
       name: 🍿️ DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true
@@ -243,7 +243,7 @@ http:
       name: 🍿️ DualSubs.M3U8.Master.response
       type: response
       require-body: true
-    - match: ^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/hlsMedia\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/(hlsMedia|.+)\.m3u8\?(.*)subtype=
       name: 🍿️ DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true

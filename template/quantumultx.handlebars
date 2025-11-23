@@ -68,7 +68,7 @@
 # 🍿️ DualSubs.Max.M3U8.Master.response
 ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\/hls\.m3u8 url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
 # 🍿️ DualSubs.Max.M3U8.Subtitles.response
-^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\/hlsMedia\.m3u8\?(.*)subtype= url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
+^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\/(hlsMedia|.+)\.m3u8\?(.*)subtype= url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
 # 🍿️ DualSubs.Max.Composite.Subtitles.response
 ^https?:\/\/(cf|akm|gcp|fly|.+)\.pro?d\.media\.(h264\.io|max\.com)\/(.+)\.vtt\?(.*)subtype=(Official|External) url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Composite.Subtitles.response.bundle.js
 # 🍿️ DualSubs.Max.Translate.Subtitles.response
@@ -77,7 +77,7 @@
 # 🍿️ DualSubs.HBOMax.M3U8.Master.response
 ^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/hls\.m3u8 url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
 # 🍿️ DualSubs.HBOMax.M3U8.Subtitles.response
-^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/hlsMedia\.m3u8\?(.*)subtype= url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
+^https?:\/\/manifests(\.v2)?\.api\.hbo\.com\/(hlsMedia|.+)\.m3u8\?(.*)subtype= url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
 # 🍿️ DualSubs.HBOMax.Composite.Subtitles.response
 ^https?:\/\/(.+)\.hbomaxcdn\.com\/videos\/(.+)\.vtt\?(.*)subtype=(Official|External) url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Composite.Subtitles.response.bundle.js
 # 🍿️ DualSubs.HBOMax.Translate.Subtitles.response

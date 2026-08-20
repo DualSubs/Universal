@@ -1,6 +1,6 @@
 import { $app, Console, done, Lodash as _ } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
-import XML from "./XML/XML.mjs";
+import XML from "@nsnanocat/xml";
 import VTT from "./WebVTT/WebVTT.mjs";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";

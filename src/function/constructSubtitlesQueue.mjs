@@ -22,7 +22,7 @@ export default function constructSubtitlesQueue(request, fileName, VTTs1 = [], V
 			break;
 		case 1: {
 			// 长度为1，无须计算
-			log("长度为 1");
+			Console.info("长度为 1");
 			const request2 = {
 				url: VTTs2[0],
 				headers: request.headers,

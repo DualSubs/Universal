@@ -16,8 +16,8 @@ version: "{{@package 'version'}}"
 
 http:
   force-http-engine:
-    - "*.hls.pv-cdn.net"
-    - "*.hls.row.aiv-cdn.net"
+    - "*.pv-cdn.net"
+    - "*.aiv-cdn.net"
     - "*avodhlss3ww-a.akamaihd.net"
     - "s3.amazonaws.com"
     - "cf-timedtext.aux.pv-cdn.net"
@@ -38,8 +38,8 @@ http:
     - "*.prod.dssedge.com"
     - "atv-ps.amazon.com"
     - "atv-ps-fe.primevideo.com"
-    - "*.hls.pv-cdn.net"
-    - "*.hls.row.aiv-cdn.net"
+    - "*.pv-cdn.net"
+    - "*.aiv-cdn.net"
     - "*avodhlss3ww-a.akamaihd.net"
     - "s3.amazonaws.com"
     - "cf-timedtext.aux.pv-cdn.net"
@@ -152,7 +152,7 @@ http:
       type: response
       require-body: true
 
-    - match: ^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(?:una-)?(cbcs|ctr)-all-(.+)\.m3u8
+    - match: ^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(una-)?(cbcs|ctr)-all-(.+)\.m3u8
       name: 🍿️ DualSubs.M3U8.Master.response
       type: response
       require-body: true
@@ -173,15 +173,15 @@ http:
       name: 🍿️ DualSubs.PrimeVideo.JSON.GetPlaybackResources.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)(\.(hls)\.(pv-cdn|row\.aiv-cdn)|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8
+    - match: ^https?:\/\/(.+)(\.(hls|vod-hls\.main\.amazon)(\.row)?\.(pv-cdn|aiv-cdn)\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8
       name: 🍿️ DualSubs.M3U8.Master.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)(\.(hls|dash)\.(pv-cdn|row\.aiv-cdn)|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})_subtitles\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(.+)(\.(hls|dash|vod-hls\.main\.amazon)(\.row)?\.(pv-cdn|aiv-cdn)\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})_subtitles\.m3u8\?(.*)subtype=
       name: 🍿️ DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)(\.(hls|dash)\.(pv-cdn|row\.aiv-cdn)|avodhlss3ww-a\.akamaihd)\.net\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(.+)(\.(hls|dash|vod-hls\.main\.amazon)(\.row)?\.(pv-cdn|aiv-cdn)\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=
       name: 🍿️ DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true

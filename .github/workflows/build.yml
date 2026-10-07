@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@main
         with:
-          node-version: 'latest'
+          node-version: '24'
           cache: 'npm'
       # https://github.com/puppeteer/puppeteer/issues/13595#issuecomment-2640309385
       - name: Disable AppArmor

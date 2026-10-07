@@ -38,7 +38,7 @@
 ^https?:\/\/(hls|hls-svod)\.itunes\.apple\.com\/itunes-assets\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(.+)\.webvtt\?(.*)subtype=Translate url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Translate.response.bundle.js
 
 # 🍿️ DualSubs.Disney+.M3U8.Master.response
-^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(cbcs|ctr)-all-(.+)\.m3u8 url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
+^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/(?:una-)?(cbcs|ctr)-all-(.+)\.m3u8 url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
 # 🍿️ DualSubs.Disney+.M3U8.Subtitles.response
 ^https?:\/\/(.+)\.(media|prod)\.(dssott|starott|dssedge)\.com\/(.+\/)?ps01\/disney\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\/r\/(.*)((composite|subtitles)_(.+)|subtitles)\.m3u8\?(.*)subtype= url script-response-body https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/Manifest.response.bundle.js
 # 🍿️ DualSubs.Disney+.Composite.Subtitles.response

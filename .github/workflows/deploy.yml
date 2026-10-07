@@ -49,3 +49,45 @@ jobs:
           gist_id: 92cd6fbcde657fb43c67ed7f2430a994
           gist_description: "🍿️ DualSubs: 🎦 Universal β"
           file_path: dist/Translate.response.bundle.js
+      - name: Deploy Surge Module
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/DualSubs.Universal.dev.sgmodule
+      - name: Deploy Loon Plugin
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/DualSubs.Universal.dev.plugin
+      - name: Deploy Stash Override
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/DualSubs.Universal.dev.stoverride
+      - name: Deploy Quantumult X Snippet
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/DualSubs.Universal.dev.snippet
+      - name: Deploy Shadowrocket Module
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/DualSubs.Universal.dev.srmodule
+      - name: Deploy Egern Configuration
+        uses: exuanbo/actions-deploy-gist@main
+        with:
+          token: ${{ secrets.GIST_TOKEN }}
+          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
+          gist_description: "🍿️ DualSubs: 🎦 Universal β"
+          file_path: dist/DualSubs.Universal.dev.yaml

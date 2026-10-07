@@ -64,4 +64,10 @@ export interface Settings {
      * @defaultValue "Forward"
      */
     Position?: 'Forward' | 'Reverse';
+    /**
+     * 插件配置中的配置来源优先级。
+     *
+     * @defaultValue "Argument"
+     */
+    Storage?: 'Argument' | 'PersistentStore' | 'database';
 }

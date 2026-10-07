@@ -21,10 +21,19 @@ jobs:
         with:
           node-version: 'latest'
           cache: 'npm'
+      # https://github.com/puppeteer/puppeteer/issues/13595#issuecomment-2640309385
+      - name: Disable AppArmor
+        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
       - name: Install dependencies
         run: npm install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+      - name: Install Puppeteer Chrome
+        run: |
+          node node_modules/puppeteer/install.mjs
+          node --input-type=module -e 'import puppeteer from "puppeteer"; console.log(puppeteer.executablePath())'
+        env:
+          PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer
       - name: Update local package.json version from release tag
         if: github.ref_type == 'tag'
         uses: BellCubeDev/update-package-version-by-release-tag@v2
@@ -36,6 +45,10 @@ jobs:
         run: npm run build
       - name: Generate modules
         run: npm run build:args
+        env:
+          PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer
+      - name: Verify Egern module
+        run: test -s dist/DualSubs.Universal.yaml
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:

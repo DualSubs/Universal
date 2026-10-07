@@ -19,15 +19,16 @@ test("the project URL parser preserves signed paths and extracts Disney+ filenam
 	}
 });
 
-for (const platform of ["surge", "loon", "stash", "shadowrocket", "quantumultx"]) {
+for (const platform of ["surge", "loon", "stash", "shadowrocket", "quantumultx"].flatMap(platform => [platform, `${platform}.dev`])) {
 	const lines = readFileSync(new globalThis.URL(`../template/${platform}.handlebars`, import.meta.url), "utf8").split("\n");
 	const master = new RegExp(lines.find(line => line.includes("(cbcs|ctr)-all-")).match(/\^https\?:\S+/)[0].replace(/,$/, ""));
 	const subtitles = new RegExp(lines.find(line => line.includes("((composite|subtitles)_")).match(/\^https\?:\S+/)[0].replace(/,$/, ""));
 
-	test(`${platform} routes una-prefixed and existing Disney+ master filenames`, () => {
-		for (const name of [masterName, `cbcs-all-${id}.m3u8`, `ctr-all-${id}.m3u8`]) {
+	test(`${platform} routes optional una-prefixed and existing Disney+ master filenames`, () => {
+		for (const name of [masterName, `una-ctr-all-${id}.m3u8`, `cbcs-all-${id}.m3u8`, `ctr-all-${id}.m3u8`]) {
 			assert.equal(master.test(base + name + "?a=3&r=720&v=2&hash=REDACTED"), true, name);
 		}
+		assert.equal(master.test(base + `other-cbcs-all-${id}.m3u8`), false);
 	});
 
 	test(`${platform} keeps ordinary media separate from explicitly selected subtitles`, () => {

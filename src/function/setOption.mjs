@@ -23,13 +23,13 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 	// 修改名称
 	switch (type) {
 		case "Official":
-			newOption.OPTION.NAME = `官方字幕 (${NAME1}/${NAME2})`;
+			newOption.OPTION.NAME = `${NAME1}/${NAME2} [官方字幕]`;
 			break;
 		case "Translate":
-			newOption.OPTION.NAME = `翻译字幕 (${NAME1}/${NAME2})`;
+			newOption.OPTION.NAME = `${NAME1}/${NAME2} [翻译字幕]`;
 			break;
 		case "External":
-			newOption.OPTION.NAME = `外挂字幕 (${NAME1})`;
+			newOption.OPTION.NAME = `${NAME1} [外挂字幕]`;
 			break;
 	}
 	// 修改语言代码
@@ -43,7 +43,7 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 					break;
 				default:
 					//newOption.OPTION.LANGUAGE = `${NAME1}/${NAME2} [${type}]`;
-					newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
+					newOption.OPTION.LANGUAGE = `dualsubs-${type.toLowerCase()}`;
 					break;
 			}
 			break;
@@ -51,7 +51,7 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 		case "Hulu": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME 空格分割
 		case "Nebula": // AppleCoreMedia 语言列表名称显示为LANGUAGE字符串 自动映射LANGUAGE为本地语言NAME
 		case "PlutoTV": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
-			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
+			newOption.OPTION.LANGUAGE = `dualsubs-${type.toLowerCase()}`;
 			break;
 		case "PrimeVideo": // AppleCoreMedia 语言列表名称显示为NAME字符串 按LANGUAGE区分语言
 			newOption.OPTION.LANGUAGE = `dualsubs-${type.toLowerCase()}`;
@@ -66,15 +66,15 @@ export default function setOption(playlist1 = {}, playlist2 = {}, type = "", pla
 		case "Paramount+":
 		case "Discovery+Ph":
 			//newOption.OPTION.NAME = `${NAME1} / ${NAME2} [${type}]`;
-			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
+			newOption.OPTION.LANGUAGE = `dualsubs-${type.toLowerCase()}`;
 			//newOption.OPTION["ASSOC-LANGUAGE"] = `${LANGUAGE2} [${type}]`;
 			break;
 		case "MUBI":
-			newOption.OPTION.LANGUAGE = `${type} (${LANGUAGE1}/${LANGUAGE2})`;
+			newOption.OPTION.LANGUAGE = `dualsubs-${type.toLowerCase()}`;
 			if (!standard) newOption.OPTION.NAME = NAME1;
 			break;
 		default:
-			newOption.OPTION.LANGUAGE = LANGUAGE1;
+			newOption.OPTION.LANGUAGE = `dualsubs-${type.toLowerCase()}`;
 			break;
 	}
 	// 增加/修改类型参数

@@ -28,7 +28,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 	 * 设置
 	 * @type {{Settings: import('./types').Settings}}
 	 */
-	const { Settings, Caches, Configs } = setENV("DualSubs", [["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM) ? PLATFORM : "Universal", "Composite", "API"], database);
+	const { Settings, Caches, Configs } = setENV("DualSubs", [["YouTube", "Netflix", "BiliBili", "Spotify"].includes(PLATFORM) ? PLATFORM : "Universal", "External", "Composite", "API"], database);
 	Console.logLevel = Settings.LogLevel;
 	// 获取字幕类型与语言
 	const Type = url.searchParams?.get("subtype") ?? Settings.Type,

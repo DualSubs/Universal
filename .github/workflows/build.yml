@@ -49,6 +49,12 @@ jobs:
           PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer
       - name: Verify Egern module
         run: test -s dist/DualSubs.Universal.yaml
+      - name: Verify local settings
+        run: |
+          npm test
+          rm dist/DualSubs.*.dev.* dist/config*.dev.bundle.js
+        env:
+          PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:

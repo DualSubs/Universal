@@ -15,6 +15,9 @@ date: "{{now "yyyy-MM-dd HH:mm:ss"}}"
 version: "dev"
 
 http:
+  url-rewrite:
+    - ^https:\/\/dualsubs\.github\.io\/settings\/[a-zA-Z0-9_-]+\/?(?:\?[^#]*)?$ https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.html transparent
+    - ^https:\/\/dualsubs\.github\.io\/settings\/assets\/index\.mjs(?:\?[^#]*)?$ https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.mjs transparent
   force-http-engine:
     - "*.pv-cdn.net"
     - "*.aiv-cdn.net"
@@ -30,6 +33,7 @@ http:
     - "vod-*.live.cf.md.bbci.co.uk"
     - "vod-*-live.akamaized.net"
   mitm:
+    - "dualsubs.github.io"
     - "hls.itunes.apple.com"
     - "hls-svod.itunes.apple.com"
     - "vod-*.tv.apple.com"
@@ -97,6 +101,47 @@ http:
     - "*.plutotv.net"
     - "*.mubicdn.net"
   script:
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/(?:get|set|delete)(?:\?.*)?$
+      name: PreferencePanes.API
+      type: request
+      require-body: true
+      max-size: 65536
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/Universal(?:\?.*)?$
+      name: 📺 DualSubs.Universal.Config
+      type: request
+      require-body: false
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/YouTube(?:\?.*)?$
+      name: 📺 DualSubs.YouTube.Config
+      type: request
+      require-body: false
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/Netflix(?:\?.*)?$
+      name: 📺 DualSubs.Netflix.Config
+      type: request
+      require-body: false
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/Spotify(?:\?.*)?$
+      name: 📺 DualSubs.Spotify.Config
+      type: request
+      require-body: false
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/Composite(?:\?.*)?$
+      name: 📺 DualSubs.Composite.Config
+      type: request
+      require-body: false
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/Translate(?:\?.*)?$
+      name: 📺 DualSubs.Translate.Config
+      type: request
+      require-body: false
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/External(?:\?.*)?$
+      name: 📺 DualSubs.External.Config
+      type: request
+      require-body: false
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/API_Translate(?:\?.*)?$
+      name: 📺 DualSubs.API.Translate.Config
+      type: request
+      require-body: false
+    - match: ^https:\/\/dualsubs\.github\.io\/api\/API_External(?:\?.*)?$
+      name: 📺 DualSubs.API.External.Config
+      type: request
+      require-body: false
     - match: ^https?:\/\/(play|play-edge|hls)\.itunes\.apple\.com\/WebObjects\/(MZPlay|MZPlayLocal)\.woa\/hls\/playlist\.m3u8
       name: 🍿️ DualSubs.M3U8.Master.response
       type: response
@@ -625,6 +670,36 @@ http:
       require-body: true
 
 script-providers:
+  PreferencePanes.API:
+    url: https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/api.js
+    interval: 86400
+  📺 DualSubs.Universal.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.dev.bundle.js
+    interval: 86400
+  📺 DualSubs.YouTube.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.YouTube.dev.bundle.js
+    interval: 86400
+  📺 DualSubs.Netflix.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.Netflix.dev.bundle.js
+    interval: 86400
+  📺 DualSubs.Spotify.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.Spotify.dev.bundle.js
+    interval: 86400
+  📺 DualSubs.Composite.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.Composite.dev.bundle.js
+    interval: 86400
+  📺 DualSubs.Translate.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.Translate.dev.bundle.js
+    interval: 86400
+  📺 DualSubs.External.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.External.dev.bundle.js
+    interval: 86400
+  📺 DualSubs.API.Translate.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.API_Translate.dev.bundle.js
+    interval: 86400
+  📺 DualSubs.API.External.Config:
+    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.API_External.dev.bundle.js
+    interval: 86400
   🍿️ DualSubs.M3U8.Master.response:
     url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/Manifest.response.bundle.js
     interval: 86400

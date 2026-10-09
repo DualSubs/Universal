@@ -91,3 +91,15 @@ jobs:
           gist_id: 92cd6fbcde657fb43c67ed7f2430a994
           gist_description: "🍿️ DualSubs: 🎦 Universal β"
           file_path: dist/DualSubs.Universal.dev.yaml
+      - name: Deploy settings configurations
+        env:
+          GH_TOKEN: ${{ secrets.GIST_TOKEN }}
+        run: |
+          node --input-type=module <<'JS'
+          import { readFile, writeFile } from "node:fs/promises";
+          const panels = ["Universal", "YouTube", "Netflix", "Spotify", "Composite", "Translate", "External", "API.Translate", "API.External"];
+          const names = panels.flatMap(panel => [`DualSubs.${panel}.dev.PreferencePanes.json`, `config${panel === "Universal" ? "" : `.${panel.replaceAll(".", "_")}`}.dev.bundle.js`]);
+          const files = Object.fromEntries(await Promise.all(names.map(async name => [name, { content: await readFile(`dist/${name}`, "utf8") }])));
+          await writeFile("gist-update.json", JSON.stringify({ files }));
+          JS
+          gh api --method PATCH gists/92cd6fbcde657fb43c67ed7f2430a994 --input gist-update.json --silent

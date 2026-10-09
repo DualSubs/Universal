@@ -1,0 +1,1184 @@
+{
+	"id": "DualSubs.beta.sub",
+	"name": "🍿️ DualSubs β",
+	"author": "@DualSubs",
+	"description": "双语及增强字幕生成工具",
+	"icon": "https://avatars.githubusercontent.com/u/100578089?&v=4",
+	"repo": "https://github.com/DualSubs",
+	"apps": [
+		{
+			"id": "DualSubs.Universal.beta",
+			"name": "🍿️ DualSubs: 🔣 Universal β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io/guide/universal.htm\">🍿 DualSubs: 🔣 Universal</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Universal.Settings",
+				"@DualSubs.Universal.Caches"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Universal.Settings.Types",
+					"name": "[字幕] 启用类型",
+					"val": [
+						"Official",
+						"Translate"
+					],
+					"type": "checkboxes",
+					"desc": "请选择要添加的字幕选项，如果为标准播放器，则会在字幕选项中新增勾选字幕选项",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方字幕（合成器）"
+						},
+						{
+							"key": "Translate",
+							"label": "翻译字幕（翻译器）"
+						},
+						{
+							"key": "External",
+							"label": "外挂字幕（合成器）"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Universal.Settings.Languages[0]",
+					"name": "[字幕] 主语言（源语言）",
+					"type": "selects",
+					"val": "AUTO",
+					"items": [
+						{
+							"key": "AUTO",
+							"label": "自动 - Automatic"
+						},
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "English - 英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "Español - 西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "Español - 西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日本語 - 日语"
+						},
+						{
+							"key": "KO",
+							"label": "한국어 - 韩语"
+						},
+						{
+							"key": "DE",
+							"label": "Deutsch - 德语"
+						},
+						{
+							"key": "FR",
+							"label": "Français - 法语"
+						},
+						{
+							"key": "TR",
+							"label": "Türkçe - 土耳其语"
+						},
+						{
+							"key": "KM",
+							"label": "ភាសាខ្មែរ - 高棉语"
+						}
+					],
+					"desc": "当“主语言”字幕存在时，将生成“主语言/副语言（翻译）”与“主语言（外挂）”的字幕或字幕选项。"
+				},
+				{
+					"id": "@DualSubs.Universal.Settings.Languages[1]",
+					"name": "[字幕] 副语言（目标语言）",
+					"type": "selects",
+					"val": "ZH",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "English - 英语（自动）"
+						},
+						{
+							"key": "EN-US",
+							"label": "英语（美国）"
+						},
+						{
+							"key": "EN-US SDH",
+							"label": "英语（美国）[CC]"
+						},
+						{
+							"key": "ES",
+							"label": "Español - 西班牙语（自动）"
+						},
+						{
+							"key": "ES-ES",
+							"label": "Español - 西班牙语"
+						},
+						{
+							"key": "ES-ES SDH",
+							"label": "西班牙语[CC]"
+						},
+						{
+							"key": "ES-419",
+							"label": "西班牙语（拉丁美洲）"
+						},
+						{
+							"key": "ES-419 SDH",
+							"label": "西班牙语（拉丁美洲）[CC]"
+						},
+						{
+							"key": "JA",
+							"label": "日本語 - 日语"
+						},
+						{
+							"key": "KO",
+							"label": "한국어 - 韩语"
+						},
+						{
+							"key": "DE",
+							"label": "Deutsch - 德语"
+						},
+						{
+							"key": "FR",
+							"label": "Français - 法语"
+						},
+						{
+							"key": "TR",
+							"label": "Türkçe - 土耳其语"
+						},
+						{
+							"key": "KM",
+							"label": "ភាសាខ្មែរ - 高棉语"
+						}
+					],
+					"desc": "当“副语言”字幕存在时，将生成“副语言/主语言（官方）”的字幕或字幕选项。"
+				},
+				{
+					"id": "@DualSubs.Universal.Settings.LogLevel",
+					"name": "[调试] 日志等级",
+					"type": "selects",
+					"val": "WARN",
+					"items": [
+						{
+							"key": "OFF",
+							"label": "关闭"
+						},
+						{
+							"key": "ERROR",
+							"label": "❌ 错误"
+						},
+						{
+							"key": "WARN",
+							"label": "⚠️ 警告"
+						},
+						{
+							"key": "INFO",
+							"label": "ℹ️ 信息"
+						},
+						{
+							"key": "DEBUG",
+							"label": "🅱️ 调试"
+						},
+						{
+							"key": "ALL",
+							"label": "全部"
+						}
+					],
+					"desc": "选择脚本日志的输出等级，低于所选等级的日志将全部输出。"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/Universal/tree/dev",
+			"icons": [
+				"https://github.com/DualSubs/Universal/raw/dev/src/assets/icon.png",
+				"https://github.com/DualSubs/Universal/raw/dev/src/assets/icon.png"
+			]
+		},
+		{
+			"id": "DualSubs.YouTube.beta",
+			"name": "🍿️ DualSubs: ▶️ YouTube (Music) β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io/guide/youtube.htm\">🍿️ DualSubs: ▶ YouTube</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.YouTube.Settings",
+				"@DualSubs.YouTube.Caches"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.YouTube.Settings.Type",
+					"name": "[字幕] 启用类型",
+					"type": "selects",
+					"val": "Official",
+					"items": [
+						{
+							"key": "Official",
+							"label": "官方字幕（合成器）"
+						},
+						{
+							"key": "Translate",
+							"label": "翻译字幕（翻译器）"
+						}
+					],
+					"desc": "请选择要使用的字幕，双语字幕将使用您选择类型呈现。"
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.Types",
+					"name": "[歌词] 启用类型",
+					"type": "checkboxes",
+					"val": [
+						"Translate",
+						"External"
+					],
+					"items": [
+						{
+							"key": "Translate",
+							"label": "翻译歌词（翻译器）"
+						},
+						{
+							"key": "External",
+							"label": "外部歌词（外部源）"
+						}
+					],
+					"desc": "请选择要添加的歌词选项，如果为多选，则会自动决定提供的歌词类型。"
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.AutoCC",
+					"name": "[字幕] 自动显示",
+					"type": "boolean",
+					"val": true,
+					"desc": "是否总是自动开启字幕显示。"
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.ShowOnly",
+					"name": "[翻译器] 只显示“自动翻译”字幕",
+					"type": "boolean",
+					"val": false,
+					"desc": "是否仅显示“自动翻译”字幕，不显示源语言字幕。"
+				},
+				{
+					"id": "@DualSubs.YouTube.Settings.LogLevel",
+					"name": "[调试] 日志等级",
+					"type": "selects",
+					"val": "WARN",
+					"items": [
+						{
+							"key": "OFF",
+							"label": "关闭"
+						},
+						{
+							"key": "ERROR",
+							"label": "❌ 错误"
+						},
+						{
+							"key": "WARN",
+							"label": "⚠️ 警告"
+						},
+						{
+							"key": "INFO",
+							"label": "ℹ️ 信息"
+						},
+						{
+							"key": "DEBUG",
+							"label": "🅱️ 调试"
+						},
+						{
+							"key": "ALL",
+							"label": "全部"
+						}
+					],
+					"desc": "选择脚本日志的输出等级，低于所选等级的日志将全部输出。"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/YouTube/tree/dev",
+			"icons": [
+				"https://github.com/DualSubs/YouTube/raw/dev/src/assets/icon.png",
+				"https://github.com/DualSubs/YouTube/raw/dev/src/assets/icon.png"
+			]
+		},
+		{
+			"id": "DualSubs.Netflix.beta",
+			"name": "🍿️ DualSubs: 🇳 Netflix β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io/guide/netflix.htm\">🍿 DualSubs: 🇳 Netflix</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Netflix.Settings",
+				"@DualSubs.Netflix.Caches"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Netflix.Settings.Type",
+					"name": "[字幕] 启用类型",
+					"type": "selects",
+					"val": "Translate",
+					"items": [
+						{
+							"key": "Translate",
+							"label": "翻译字幕（翻译器）"
+						}
+					],
+					"desc": "请选择要使用的字幕，双语字幕将使用您选择类型呈现。"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.Languages[0]",
+					"name": "[字幕] 主语言（源语言）",
+					"type": "selects",
+					"val": "AUTO",
+					"items": [
+						{
+							"key": "AUTO",
+							"label": "自动 - Automatic"
+						},
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "English - 英语（自动）"
+						},
+						{
+							"key": "ES",
+							"label": "Español - 西班牙语（自动）"
+						},
+						{
+							"key": "JA",
+							"label": "日本語 - 日语"
+						},
+						{
+							"key": "KO",
+							"label": "한국어 - 韩语"
+						},
+						{
+							"key": "DE",
+							"label": "Deutsch - 德语"
+						},
+						{
+							"key": "FR",
+							"label": "Français - 法语"
+						},
+						{
+							"key": "TR",
+							"label": "Türkçe - 土耳其语"
+						},
+						{
+							"key": "KM",
+							"label": "ភាសាខ្មែរ - 高棉语"
+						}
+					],
+					"desc": "当“主语言”字幕存在时，将生成“主语言/副语言（翻译）”与“主语言（外挂）”的字幕或字幕选项。仅当源语言识别不准确时更改此选项。"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.Languages[1]",
+					"name": "[字幕] 副语言（目标语言）",
+					"type": "selects",
+					"val": "ZH",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "English - 英语（自动）"
+						},
+						{
+							"key": "ES",
+							"label": "Español - 西班牙语（自动）"
+						},
+						{
+							"key": "JA",
+							"label": "日本語 - 日语"
+						},
+						{
+							"key": "KO",
+							"label": "한국어 - 韩语"
+						},
+						{
+							"key": "DE",
+							"label": "Deutsch - 德语"
+						},
+						{
+							"key": "FR",
+							"label": "Français - 法语"
+						},
+						{
+							"key": "TR",
+							"label": "Türkçe - 土耳其语"
+						},
+						{
+							"key": "KM",
+							"label": "ភាសាខ្មែរ - 高棉语"
+						}
+					],
+					"desc": "当“副语言”字幕存在时，将生成“副语言/主语言（官方）”的字幕或字幕选项。"
+				},
+				{
+					"id": "@DualSubs.Netflix.Settings.LogLevel",
+					"name": "[调试] 日志等级",
+					"type": "selects",
+					"val": "WARN",
+					"items": [
+						{
+							"key": "OFF",
+							"label": "关闭"
+						},
+						{
+							"key": "ERROR",
+							"label": "❌ 错误"
+						},
+						{
+							"key": "WARN",
+							"label": "⚠️ 警告"
+						},
+						{
+							"key": "INFO",
+							"label": "ℹ️ 信息"
+						},
+						{
+							"key": "DEBUG",
+							"label": "🅱️ 调试"
+						},
+						{
+							"key": "ALL",
+							"label": "全部"
+						}
+					],
+					"desc": "选择脚本日志的输出等级，低于所选等级的日志将全部输出。"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/Netflix/tree/dev",
+			"icons": [
+				"https://github.com/DualSubs/Netflix/raw/dev/src/assets/icon.png",
+				"https://github.com/DualSubs/Netflix/raw/dev/src/assets/icon.png"
+			]
+		},
+		{
+			"id": "DualSubs.Spotify.beta",
+			"name": "🍿️ DualSubs: 🎵 Spotify β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io/guide/spotify\">🍿 DualSubs: 🎵 Spotify</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Spotify.Settings",
+				"@DualSubs.Spotify.Caches.Metadatas.Tracks"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Spotify.Settings.Types",
+					"name": "[歌词] 启用类型（多选）",
+					"type": "checkboxes",
+					"val": [
+						"Translate",
+						"External"
+					],
+					"items": [
+						{
+							"key": "Translate",
+							"label": "翻译歌词（翻译器）"
+						},
+						{
+							"key": "External",
+							"label": "外部歌词（外部源）"
+						}
+					],
+					"desc": "请选择要添加的歌词选项，如果为多选，则会自动决定提供的歌词类型。"
+				},
+				{
+					"id": "@DualSubs.Spotify.Settings.Languages[0]",
+					"name": "[翻译器] 主语言（源语言）",
+					"type": "selects",
+					"val": "AUTO",
+					"items": [
+						{
+							"key": "AUTO",
+							"label": "自动 - Automatic"
+						},
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "English - 英语（自动）"
+						},
+						{
+							"key": "ES",
+							"label": "Español - 西班牙语（自动）"
+						},
+						{
+							"key": "JA",
+							"label": "日本語 - 日语"
+						},
+						{
+							"key": "KO",
+							"label": "한국어 - 韩语"
+						},
+						{
+							"key": "DE",
+							"label": "Deutsch - 德语"
+						},
+						{
+							"key": "FR",
+							"label": "Français - 法语"
+						},
+						{
+							"key": "TR",
+							"label": "Türkçe - 土耳其语"
+						},
+						{
+							"key": "KM",
+							"label": "ភាសាខ្មែរ - 高棉语"
+						}
+					],
+					"desc": "仅当源语言识别不准确时更改此选项。"
+				},
+				{
+					"id": "@DualSubs.Spotify.Settings.Languages[1]",
+					"name": "[翻译器] 副语言（目标语言）",
+					"val": "ZH",
+					"type": "selects",
+					"items": [
+						{
+							"key": "ZH",
+							"label": "中文（自动）"
+						},
+						{
+							"key": "ZH-HANS",
+							"label": "中文（简体）"
+						},
+						{
+							"key": "ZH-HK",
+							"label": "中文（香港）"
+						},
+						{
+							"key": "ZH-HANT",
+							"label": "中文（繁体）"
+						},
+						{
+							"key": "EN",
+							"label": "English - 英语（自动）"
+						},
+						{
+							"key": "ES",
+							"label": "Español - 西班牙语（自动）"
+						},
+						{
+							"key": "JA",
+							"label": "日本語 - 日语"
+						},
+						{
+							"key": "KO",
+							"label": "한국어 - 韩语"
+						},
+						{
+							"key": "DE",
+							"label": "Deutsch - 德语"
+						},
+						{
+							"key": "FR",
+							"label": "Français - 法语"
+						},
+						{
+							"key": "TR",
+							"label": "Türkçe - 土耳其语"
+						},
+						{
+							"key": "KM",
+							"label": "ភាសាខ្មែរ - 高棉语"
+						}
+					],
+					"desc": "请指定翻译歌词的目标语言。"
+				},
+				{
+					"id": "@DualSubs.Spotify.Settings.LogLevel",
+					"name": "[调试] 日志等级",
+					"type": "selects",
+					"val": "WARN",
+					"items": [
+						{
+							"key": "OFF",
+							"label": "关闭"
+						},
+						{
+							"key": "ERROR",
+							"label": "❌ 错误"
+						},
+						{
+							"key": "WARN",
+							"label": "⚠️ 警告"
+						},
+						{
+							"key": "INFO",
+							"label": "ℹ️ 信息"
+						},
+						{
+							"key": "DEBUG",
+							"label": "🅱️ 调试"
+						},
+						{
+							"key": "ALL",
+							"label": "全部"
+						}
+					],
+					"desc": "选择脚本日志的输出等级，低于所选等级的日志将全部输出。"
+				}
+			],
+			"author": "@DualSubs",
+			"repo": "https://github.com/DualSubs/Spotify/tree/dev",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Spotify.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png"
+			]
+		},
+		{
+			"id": "DualSubs.Composite.beta",
+			"name": "🍿️ DualSubs: 合成器（官方&外挂字幕）β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Composite.Settings",
+				"@DualSubs.Composite.Caches.Playlists.Master",
+				"@DualSubs.Composite.Caches.Playlists.Subtitle",
+				"@DualSubs.Composite.Caches.Subtitles"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Composite.Settings.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 20,
+					"type": "number",
+					"placeholder": "20",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量, 建议设置此数值不小于播放设备数，最大可用值为50"
+				},
+				{
+					"id": "@DualSubs.Composite.Settings.Position",
+					"name": "主语言（源语言）字幕位置",
+					"val": "Reverse",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "上面（第一行）"
+						},
+						{
+							"key": "Reverse",
+							"label": "下面（第二行）"
+						}
+					],
+					"desc": "主语言（源语言）字幕的显示位置"
+				},
+				{
+					"id": "@DualSubs.Composite.Settings.Offset",
+					"name": "[合成器] 时间偏移量",
+					"val": 0,
+					"type": "number",
+					"placeholder": "0",
+					"desc": "单位：毫秒(ms)，正负整数，不懂就别动"
+				},
+				{
+					"id": "@DualSubs.Composite.Settings.Tolerance",
+					"name": "[合成器] 时间戳公差",
+					"val": 1000,
+					"type": "number",
+					"placeholder": "1000",
+					"desc": "单位：毫秒(ms)，正整数，字幕时间戳匹配时容许的误差范围，不懂就别动"
+				}
+			],
+			"author": "@DualSubs",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/DomesticMedia.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/DomesticMedia.png"
+			]
+		},
+		{
+			"id": "DualSubs.Translate.beta",
+			"name": "🍿️ DualSubs: 翻译器（翻译字幕&歌词） β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.Translate.Settings",
+				"@DualSubs.Translate.Caches.Subtitles"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.Translate.Settings.Vendor",
+					"name": "服务商API",
+					"val": "Google",
+					"type": "selects",
+					"desc": "请选择字幕翻译功能所使用的翻译API",
+					"items": [
+						{
+							"key": "Baidu",
+							"label": "百度翻译"
+						},
+						{
+							"key": "BaiduFanyi",
+							"label": "百度 翻译开放平台（需填写API）"
+						},
+						{
+							"key": "Youdao",
+							"label": "有道翻译"
+						},
+						{
+							"key": "YoudaoAI",
+							"label": "有道智云 AI开放平台（需填写API）"
+						},
+						{
+							"key": "Google",
+							"label": "Google Translate"
+						},
+						{
+							"key": "GoogleCloud",
+							"label": "Google Cloud Translate（需填写API）"
+						},
+						{
+							"key": "Bing",
+							"label": "Microsoft Bing"
+						},
+						{
+							"key": "Microsoft",
+							"label": "Microsoft Translator（需填写API）"
+						},
+						{
+							"key": "DeepL",
+							"label": "DeepL API（需填写API）"
+						},
+						{
+							"key": "DeepLX",
+							"label": "DeepL X（需填写API）"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.Translate.Settings.ShowOnly",
+					"name": "只显示翻译字幕",
+					"type": "boolean",
+					"val": false,
+					"desc": "是否仅显示翻译后字幕，不显示源语言字幕。"
+				},
+				{
+					"id": "@DualSubs.Translate.Settings.Position",
+					"name": "主语言（源语言）字幕位置",
+					"val": "Forward",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Forward",
+							"label": "上面（第一行）"
+						},
+						{
+							"key": "Reverse",
+							"label": "下面（第二行）"
+						}
+					],
+					"desc": "主语言（源语言）字幕的显示位置"
+				},
+				{
+					"id": "@DualSubs.Translate.Settings.Method",
+					"name": "[翻译器] 翻译方式",
+					"val": "Part",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Part",
+							"label": "逐段翻译（每50~128句文本合并发送一次翻译请求，对请求次数或频率限制型API友好）"
+						},
+						{
+							"key": "Row",
+							"label": "逐句翻译（每句文本都发送一次翻译请求，不限量API可选，但会导致翻译缺乏上下文语境）"
+						}
+					],
+					"desc": "翻译器工作方式，不懂就别动"
+				},
+				{
+					"id": "@DualSubs.Translate.Settings.Times",
+					"name": "[翻译器] 重试次数",
+					"val": "3",
+					"type": "number",
+					"placeholder": "3",
+					"desc": "单位：次，正整数"
+				},
+				{
+					"id": "@DualSubs.Translate.Settings.Interval",
+					"name": "[翻译器] 重试间隔时长",
+					"val": "500",
+					"type": "number",
+					"placeholder": "500",
+					"desc": "单位：毫秒(ms)，正整数"
+				},
+				{
+					"id": "@DualSubs.Translate.Settings.Exponential",
+					"name": "[翻译器] 重试间隔时长递增",
+					"val": true,
+					"type": "boolean",
+					"desc": "例如，第一次重试间隔时长1000ms，第二次重试间隔时长2000ms，第三次重试间隔时长4000ms，以此类推"
+				},
+				{
+					"id": "@DualSubs.Translate.Settings.CacheSize",
+					"name": "[翻译器] 翻译结果缓存数量",
+					"val": 10,
+					"type": "number",
+					"placeholder": "10",
+					"desc": "缓存最后若干个翻译字幕内容，避免频繁请求翻译浪费API用量"
+				}
+			],
+			"author": "@DualSubs",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/ForeignMedia.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ForeignMedia.png"
+			]
+		},
+		{
+			"id": "DualSubs.External.beta",
+			"name": "🍿️ DualSubs: 外部源（外部歌词） β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.External.Settings",
+				"@DualSubs.External.Caches.TrackInfo"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.External.Settings.SubVendor",
+					"name": "[外部字幕] 服务商API",
+					"val": "URL",
+					"type": "selects",
+					"desc": "请选择外部字幕功能所使用的服务商API",
+					"items": [
+						{
+							"key": "URL",
+							"label": "URL - 网页地址"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.External.Settings.LrcVendor",
+					"name": "[歌词] 服务商API",
+					"val": "NeteaseMusic",
+					"type": "selects",
+					"desc": "请选择外部字幕功能所使用的服务商API",
+					"items": [
+						{
+							"key": "NeteaseMusic",
+							"label": "网易云音乐（官方）"
+						},
+						{
+							"key": "QQMusic",
+							"label": "QQ音乐（官方）"
+						},
+						{
+							"key": "NeteaseMusicNodeJS",
+							"label": "网易云音乐 NodeJS API"
+						}
+					]
+				},
+				{
+					"id": "@DualSubs.External.Settings.CacheSize",
+					"name": "播放记录缓存数量",
+					"val": 50,
+					"type": "number",
+					"placeholder": "50",
+					"desc": "此选项决定同网关、同平台、同时处理和播放的数量, 建议设置此数值不小于播放设备数"
+				}
+			],
+			"author": "@DualSubs",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Media.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Media.png"
+			]
+		},
+		{
+			"id": "DualSubs.API.Translate.beta",
+			"name": "🍿️ DualSubs: API（翻译器）β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.API.Settings"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.API.Settings.GoogleCloud.Version",
+					"name": "[Google Cloud] Translation API 版本",
+					"val": "v2",
+					"type": "selects",
+					"items": [
+						{
+							"key": "v2",
+							"label": "V2版"
+						},
+						{
+							"key": "v3",
+							"label": "V3版"
+						}
+					],
+					"desc": "选择版本"
+				},
+				{
+					"id": "@DualSubs.API.Settings.GoogleCloud.Mode",
+					"name": "[Google Cloud] Translation API 认证方式",
+					"val": "Key",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Key",
+							"label": "密钥"
+						},
+						{
+							"key": "Token",
+							"label": "令牌（暂不支持，别选）"
+						}
+					],
+					"desc": "认证方式二选一"
+				},
+				{
+					"id": "@DualSubs.API.Settings.GoogleCloud.Auth",
+					"name": "[Google Cloud] Translation API 认证内容",
+					"val": "",
+					"type": "text",
+					"placeholder": "AIzaSyD6NNneoaqSTL2mE3_S1DNPvzrxwcFLIAY",
+					"desc": "请填写令牌(Token)或密钥(Key)，未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.API.Settings.Microsoft.Version",
+					"name": "[Microsoft Translator] API 版本",
+					"val": "Azure",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Azure",
+							"label": "国际版"
+						},
+						{
+							"key": "AzureCN",
+							"label": "中国世纪互联版"
+						},
+						{
+							"key": "AzureUS",
+							"label": "美国政府版"
+						}
+					],
+					"desc": "选择版本"
+				},
+				{
+					"id": "@DualSubs.API.Settings.Microsoft.Mode",
+					"name": "[Microsoft Translator] 认证方式",
+					"val": "Token",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Token",
+							"label": "令牌 (Edge Translator)"
+						},
+						{
+							"key": "Key",
+							"label": "密钥 (Microsoft Azure)"
+						}
+					],
+					"desc": "认证方式二选一"
+				},
+				{
+					"id": "@DualSubs.API.Settings.Microsoft.Region",
+					"name": "[Microsoft Translator] Azure 区域代码 (Key/密钥模式必须)",
+					"val": "global",
+					"type": "text",
+					"placeholder": "global",
+					"desc": "如果开通Microsoft Azure Translator时没有选择全球global，则需要填写开通的地区代码，如chinanorth, chinaeast2等"
+				},
+				{
+					"id": "@DualSubs.API.Settings.Microsoft.Auth",
+					"name": "[Microsoft Translator] 认证内容",
+					"val": "",
+					"type": "text",
+					"placeholder": "c3639587ac214f2e917862c80a2b821b",
+					"desc": "请填写令牌(Token)或密钥(Key)，未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.API.Settings.DeepL.Version",
+					"name": "[DeepL] API 版本",
+					"val": "Free",
+					"type": "selects",
+					"items": [
+						{
+							"key": "Free",
+							"label": "Free"
+						},
+						{
+							"key": "Pro",
+							"label": "Pro"
+						}
+					],
+					"desc": "选择版本"
+				},
+				{
+					"id": "@DualSubs.API.Settings.DeepL.Auth",
+					"name": "[DeepL] API 认证内容",
+					"val": "",
+					"type": "text",
+					"placeholder": "df4385c2-33de-e423-4134-ca1f7b3ea8b7",
+					"desc": "请填写令牌(Token)或密钥(Key)，未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.API.Settings.DeepLX.Endpoint",
+					"name": "[DeepL X] API 终结点",
+					"val": "",
+					"type": "text",
+					"placeholder": "http://localhost:1188/translate",
+					"desc": "未提供时不会启用此类型字幕"
+				},
+				{
+					"id": "@DualSubs.API.Settings.DeepLX.Auth",
+					"name": "[DeepL X] API 认证内容",
+					"val": "",
+					"type": "text",
+					"placeholder": "1234567",
+					"desc": "请填写令牌(Token)或密钥(Key)，没有设置密钥时，请留空"
+				}
+			],
+			"author": "@DualSubs",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Unlock.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Unlock.png"
+			]
+		},
+		{
+			"id": "DualSubs.API.External.beta",
+			"name": "🍿️ DualSubs: API（外部源）β",
+			"descs_html": [
+				"请参照<a href=\"https://DualSubs.github.io\">DualSubs</a>的使用说明进行配置",
+				"填写完成后别忘点击此页面底端右下角的\"保存\"。"
+			],
+			"keys": [
+				"@DualSubs.API.Settings"
+			],
+			"settings": [
+				{
+					"id": "@DualSubs.API.Settings.NeteaseMusic.PhoneNumber",
+					"name": "[网易云音乐] 手机号码",
+					"val": "",
+					"type": "text",
+					"placeholder": "12312341234",
+					"desc": "请填写您的网易云音乐账号手机号，未提供时不会启用功能"
+				},
+				{
+					"id": "@DualSubs.API.Settings.NeteaseMusic.Password",
+					"name": "[网易云音乐] 密码",
+					"val": "",
+					"type": "text",
+					"placeholder": "12345678",
+					"desc": "请填写您的网易云音乐账号密码，未提供时不会启用此功能"
+				}
+			],
+			"author": "@DualSubs",
+			"icons": [
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Unlock.png",
+				"https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Unlock.png"
+			]
+		}
+	]
+}

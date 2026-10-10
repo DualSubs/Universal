@@ -14,8 +14,6 @@
 {{{arguments}}}
 
 [Rewrite]
-response if ${url} ~= /^https:\/\/dualsubs\.github\.io\/settings\/[a-zA-Z0-9_-]+\/?(?:\?[^#]*)?$/i then response.body.mock_file("html", "https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.html", 200) | response.header.add("Cache-Control", "no-store")
-response if ${url} ~= /^https:\/\/dualsubs\.github\.io\/settings\/assets\/index\.mjs(?:\?[^#]*)?$/i then response.body.mock_file("javascript", "https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.mjs", 200) | response.header.add("Cache-Control", "no-store")
 response if ${url} ~= /^https:\/\/dualsubs\.github\.io\/api\/Universal(?:\?.*)?$/i then response.body.mock_file("json", "https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/DualSubs.Universal.dev.PreferencePanes.json", 200) | response.header.add(["X-PreferencePanes-Version", "Cache-Control"], ["{{version}}", "no-store"])
 response if ${url} ~= /^https:\/\/dualsubs\.github\.io\/api\/Composite(?:\?.*)?$/i then response.body.mock_file("json", "https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/DualSubs.Composite.dev.PreferencePanes.json", 200) | response.header.add(["X-PreferencePanes-Version", "Cache-Control"], ["{{version}}", "no-store"])
 response if ${url} ~= /^https:\/\/dualsubs\.github\.io\/api\/Translate(?:\?.*)?$/i then response.body.mock_file("json", "https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/DualSubs.Translate.dev.PreferencePanes.json", 200) | response.header.add(["X-PreferencePanes-Version", "Cache-Control"], ["{{version}}", "no-store"])

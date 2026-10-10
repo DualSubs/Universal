@@ -9,8 +9,6 @@
 #!version = {{version}}
 
 #[rewrite_local]
-^https:\/\/dualsubs\.github\.io\/settings\/[a-zA-Z0-9_-]+\/?(?:\?[^#]*)?$ url echo-response text/html echo-response https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.html
-^https:\/\/dualsubs\.github\.io\/settings\/assets\/index\.mjs(?:\?[^#]*)?$ url echo-response text/javascript echo-response https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.mjs
 ^https:\/\/dualsubs\.github\.io\/api\/(?:get|set|delete)(?:\?.*)?$ url script-echo-response https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/api.js
 ^https:\/\/dualsubs\.github\.io\/api\/Universal(?:\?.*)?$ url echo-response application/json\r\nX-PreferencePanes-Version: {{version}} echo-response https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/DualSubs.Universal.dev.PreferencePanes.json
 ^https:\/\/dualsubs\.github\.io\/api\/Composite(?:\?.*)?$ url echo-response application/json\r\nX-PreferencePanes-Version: {{version}} echo-response https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/DualSubs.Composite.dev.PreferencePanes.json

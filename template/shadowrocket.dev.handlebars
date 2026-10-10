@@ -11,10 +11,6 @@
 [General]
 force-http-engine-hosts = %APPEND% *.pv-cdn.net, *.aiv-cdn.net, *avodhlss3ww-a.akamaihd.net, s3.amazonaws.com, cf-timedtext.aux.pv-cdn.net, d1v5ir2lpwr8os.cloudfront.net, d22qjgkvxw22r6.cloudfront.net, d25xi40x97liuc.cloudfront.net, d27xxe7juh1us6.cloudfront.net, dmqdd6hw24ucf.cloudfront.net, assets.huluim.com, vod-*.live.cf.md.bbci.co.uk, vod-*-live.akamaized.net
 
-[Map Local]
-^https:\/\/dualsubs\.github\.io\/settings\/[a-zA-Z0-9_-]+\/?(?:\?[^#]*)?$ data-type=file data="https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.html" status-code=200 header="Content-Type:text/html|Cache-Control:no-store"
-^https:\/\/dualsubs\.github\.io\/settings\/assets\/index\.mjs(?:\?[^#]*)?$ data-type=file data="https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.mjs" status-code=200 header="Content-Type:text/javascript|Cache-Control:no-store"
-
 [Script]
 PreferencePanes.API = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/(?:get|set|delete)(?:\?.*)?$, requires-body=1, max-size=65536, script-path=https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/api.js
 📺 DualSubs.Universal.Config = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/Universal(?:\?.*)?$, script-path=https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.dev.bundle.js

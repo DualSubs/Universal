@@ -109,7 +109,7 @@ test("external subtitle runtime reads the saved source and API URL with composit
 	assert.match(result.body, /Original\nExternal/);
 });
 
-test("every platform routes common assets and storage actions separately from module configuration", async () => {
+test("every platform intercepts storage and configuration while leaving online pages untouched", async () => {
 	for (const platform of ["surge", "loon", "quantumultx", "shadowrocket", "stash"])
 		for (const channel of ["", ".dev"]) {
 			const template = await readFile(`template/${platform}${channel}.handlebars`, "utf8");
@@ -125,8 +125,6 @@ test("every platform routes common assets and storage actions separately from mo
 					return { line, regex: new RegExp(source) };
 				});
 			for (const [path, artifact] of [
-				["/settings/Universal", "index.html"],
-				["/settings/assets/index.mjs", "index.mjs"],
 				["/api/set", "api.js"],
 				["/api/get", "api.js"],
 				["/api/delete", "api.js"],
@@ -146,7 +144,7 @@ test("every platform routes common assets and storage actions separately from mo
 				if (platform !== "stash") assert.ok(matches[0].line.includes(artifact));
 				else assert.ok(template.includes(artifact));
 			}
-			for (const path of ["/api/YouTube", "/api/Netflix", "/api/Spotify", "/settings/", "/settings/index.html", "/settings/home.json", "/settings/theme.css", "/settings/bridge.mjs", "/settings/assets/Universal.png", "/settings/assets/host.mjs", "/api/Universal/set", "/api/set/", "/settings/assets/host.mjs/evil", "/settings/Universal/evil"])
+			for (const path of ["/api/YouTube", "/api/Netflix", "/api/Spotify", "/settings/", "/settings/Universal", "/settings/Universal/", "/settings/API", "/settings/assets/index.mjs", "/settings/index.html", "/settings/home.json", "/settings/theme.css", "/settings/bridge.mjs", "/settings/assets/Universal.png", "/settings/assets/host.mjs", "/api/Universal/set", "/api/set/", "/settings/assets/host.mjs/evil", "/settings/Universal/evil"])
 				assert.equal(
 					patterns.some(({ regex }) => regex.test(`https://dualsubs.github.io${path}`)),
 					false,

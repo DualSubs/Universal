@@ -15,9 +15,6 @@ date: "{{now "yyyy-MM-dd HH:mm:ss"}}"
 version: "{{@package 'version'}}"
 
 http:
-  url-rewrite:
-    - ^https:\/\/dualsubs\.github\.io\/settings\/[a-zA-Z0-9_-]+\/?(?:\?[^#]*)?$ https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.html transparent
-    - ^https:\/\/dualsubs\.github\.io\/settings\/assets\/index\.mjs(?:\?[^#]*)?$ https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/index.mjs transparent
   force-http-engine:
     - "*.pv-cdn.net"
     - "*.aiv-cdn.net"

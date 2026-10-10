@@ -1,19 +1,25 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import vm from "node:vm";
+import { ArgumentsBuilder } from "@nsnanocat/arguments-builder";
+import { panels, devPanels } from "../arguments-builder.PreferencePanes.config.ts";
+
+const suffix = process.env.SETTINGS_CHANNEL === "dev" ? ".dev" : "";
 
 test("every BoxJS panel is delivered intact on both proxy transports and keeps HEAD bodyless", async () => {
-	for (const suffix of ["", ".dev"]) {
+	{
 		const { apps } = JSON.parse(await readFile(`template/boxjs.panels${suffix}.json`, "utf8"));
 		for (const expected of apps) {
 			const id = expected.id.replace(/\.beta$/, "");
 			const panel = id.slice("DualSubs.".length).replaceAll(".", "_");
 			const app = JSON.parse(await readFile(`dist/${id}${suffix}.PreferencePanes.json`, "utf8"));
-			assert.deepEqual(app.settings.slice(0, expected.settings.length), expected.settings);
+			const definition = (suffix ? devPanels : panels).find(panel => panel.id === id);
+			assert.deepEqual(app.settings, JSON.parse(JSON.stringify(new ArgumentsBuilder({ args: definition.args }).buildBoxJsSettings(definition.scope))));
 			const source = await readFile(`dist/config${panel === "Universal" ? "" : `.${panel}`}${suffix}.bundle.js`, "utf8");
 			for (const method of ["GET", "HEAD"])
 				for (const quantumult of [false, true]) {
@@ -73,7 +79,7 @@ test("subtitle runtime uses complete persisted language arrays without changing 
 });
 
 test("external subtitle runtime reads the saved source and API URL with compositor preferences", { timeout: 10000 }, async () => {
-	const source = await readFile("dist/Composite.Subtitles.response.bundle.js", "utf8");
+	const source = await readFile(`dist/Composite.Subtitles.response${suffix}.bundle.js`, "utf8");
 	const settings = {
 		Universal: { Settings: { Languages: ["EN", "ZH"] } },
 		External: { Settings: { SubVendor: "URL" } },
@@ -151,7 +157,7 @@ test("every platform routes common assets and storage actions separately from mo
 		}
 });
 
-test("development deployment includes every panel configuration and response script referenced by templates", async () => {
+test("development deployment updates scripts, panels and subscriptions in one payload", { skip: suffix !== ".dev" }, async () => {
 	const workflow = await readFile(".github/workflows/deploy.yml", "utf8");
 	const script = workflow.match(/node --input-type=module <<'JS'\n([\s\S]+?)\n\s+JS/)[1];
 	const directory = await mkdtemp(path.join(tmpdir(), "dualsubs-settings-deploy-"));
@@ -169,8 +175,41 @@ test("development deployment includes every panel configuration and response scr
 				assert.equal(files[name]?.content, await readFile(`dist/${name}`, "utf8"), name);
 			}
 		}
-		assert.deepEqual(Object.keys(files).sort(), expected.sort());
+		for (const name of Object.keys(files)) assert.equal(files[name].content, await readFile(`dist/${name}`, "utf8"));
+		for (const name of expected) assert.ok(files[name]);
+		for (const name of ["Composite.Subtitles.response", "External.Lyrics.response", "Manifest.response", "Translate.response"]) assert.ok(files[`${name}.dev.bundle.js`]);
+		assert.ok(files["DualSubs.Universal.dev.yaml"]);
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}
+});
+
+
+test("the bundled translator signs and translates subtitles without Node crypto or require", { timeout: 10000 }, async () => {
+	const source = await readFile(`dist/Translate.response${suffix}.bundle.js`, "utf8");
+	const settings = {
+		Universal: { Settings: { Languages: ["EN", "ZH"] } },
+		Translate: { Settings: { Vendor: "BaiduFanyi", Method: "Part", ShowOnly: true } },
+		API: { Settings: { BaiduFanyi: { id: "test-id", key: "test-key" } } },
+	};
+	const requests = [];
+	const result = await new Promise(resolve => vm.runInNewContext(source, {
+		console,
+		$environment: { "surge-version": "test" },
+		$script: { startTime: Date.now() / 1000 },
+		$argument: { LogLevel: "OFF" },
+		$persistentStore: { read: key => key === "DualSubs" ? JSON.stringify(settings) : null },
+		$request: { url: "https://example.test/subtitle.vtt?subtype=Translate", headers: {} },
+		$response: { status: 200, headers: { "Content-Type": "text/vtt" }, body: "WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello\n\n" },
+		$httpClient: { post: (request, callback) => {
+			requests.push(request);
+			callback(null, { status: 200, headers: {} }, '{"trans_result":[{"dst":"你好"}]}');
+		} },
+		$done: resolve,
+	}));
+	assert.equal(requests.length, 1);
+	const params = new URLSearchParams(requests[0].body);
+	assert.equal(params.get("sign"), createHash("md5").update(`test-idHello${params.get("salt")}test-key`).digest("hex"));
+	assert.match(result.body, /你好/);
+	assert.doesNotMatch(result.body, /Hello/);
 });

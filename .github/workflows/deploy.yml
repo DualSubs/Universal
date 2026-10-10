@@ -1,5 +1,6 @@
 name: Deploy
 on:
+  workflow_dispatch:
   push:
     # Sequence of patterns matched against refs/heads
     branches:
@@ -18,88 +19,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v8
         with:
           name: artifact
-      - name: Deploy Composite.Subtitles.response
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/Composite.Subtitles.response.bundle.js
-      - name: Deploy External.Lyrics.response
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/External.Lyrics.response.bundle.js
-      - name: Deploy Manifest.response
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/Manifest.response.bundle.js
-      - name: Deploy Translate.response
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/Translate.response.bundle.js
-      - name: Deploy Surge Module
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/DualSubs.Universal.dev.sgmodule
-      - name: Deploy Loon Plugin
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/DualSubs.Universal.dev.plugin
-      - name: Deploy Stash Override
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/DualSubs.Universal.dev.stoverride
-      - name: Deploy Quantumult X Snippet
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/DualSubs.Universal.dev.snippet
-      - name: Deploy Shadowrocket Module
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/DualSubs.Universal.dev.srmodule
-      - name: Deploy Egern Configuration
-        uses: exuanbo/actions-deploy-gist@main
-        with:
-          token: ${{ secrets.GIST_TOKEN }}
-          gist_id: 92cd6fbcde657fb43c67ed7f2430a994
-          gist_description: "🍿️ DualSubs: 🎦 Universal β"
-          file_path: dist/DualSubs.Universal.dev.yaml
-      - name: Deploy settings configurations
+      - name: Publish scripts, configuration and subscriptions together
         env:
           GH_TOKEN: ${{ secrets.GIST_TOKEN }}
         run: |
           node --input-type=module <<'JS'
           import { readFile, writeFile } from "node:fs/promises";
-          const panels = ["Universal", "Composite", "Translate", "External", "API.Translate", "API.External"];
-          const names = panels.flatMap(panel => [`DualSubs.${panel}.dev.PreferencePanes.json`, `config${panel === "Universal" ? "" : `.${panel.replaceAll(".", "_")}`}.dev.bundle.js`]);
+          const names = ["Composite.Subtitles.response.dev.bundle.js", "External.Lyrics.response.dev.bundle.js", "Manifest.response.dev.bundle.js", "Translate.response.dev.bundle.js", "DualSubs.Universal.dev.sgmodule", "DualSubs.Universal.dev.plugin", "DualSubs.Universal.dev.stoverride", "DualSubs.Universal.dev.snippet", "DualSubs.Universal.dev.srmodule", "DualSubs.Universal.dev.yaml", "DualSubs.Universal.dev.boxjs.json", "DualSubs.Universal.dev.PreferencePanes.json", "config.dev.bundle.js", "DualSubs.Composite.dev.PreferencePanes.json", "config.Composite.dev.bundle.js", "DualSubs.Translate.dev.PreferencePanes.json", "config.Translate.dev.bundle.js", "DualSubs.External.dev.PreferencePanes.json", "config.External.dev.bundle.js", "DualSubs.API.Translate.dev.PreferencePanes.json", "config.API_Translate.dev.bundle.js", "DualSubs.API.External.dev.PreferencePanes.json", "config.API_External.dev.bundle.js"];
           const files = Object.fromEntries(await Promise.all(names.map(async name => [name, { content: await readFile(`dist/${name}`, "utf8") }])));
-          await writeFile("gist-update.json", JSON.stringify({ files }));
+          await writeFile("gist-update.json", JSON.stringify({ description: "🍿️ DualSubs: 🔣 Universal β", files }));
           JS
           gh api --method PATCH gists/92cd6fbcde657fb43c67ed7f2430a994 --input gist-update.json --silent

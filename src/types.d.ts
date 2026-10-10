@@ -1,16 +1,8 @@
 export interface Settings {
     /**
-     * 总功能开关
+     * [字幕] 启用类型
      *
-     * 是否启用此APP修改
-     *
-     * @defaultValue true
-     */
-    Switch?: boolean;
-    /**
-     * [字幕]启用类型
-     *
-     * 请选择要使用的字幕，双语字幕将使用您选择类型呈现。
+     * 请选择要添加的字幕选项，如果为标准播放器，则会在字幕选项中新增勾选字幕选项。
      *
      * @remarks
      *
@@ -18,40 +10,66 @@ export interface Settings {
      * - `'Official'` - 官方字幕（合成器）
      * - `'Translate'` - 翻译字幕（翻译器）
      *
-     * @defaultValue "Official"
+     * @defaultValue ["Official","Translate"]
      */
-    Type?: 'Official' | 'Translate';
+    Types?: ('Official' | 'Translate')[];
     /**
-     * [歌词]启用类型
+     * [字幕] 主语言（源语言）
      *
-     * 请选择要添加的歌词选项，如果为多选，则会自动决定提供的歌词类型。
+     * 当“主语言”字幕存在时，将生成“主语言/副语言（翻译）”与“主语言（外挂）”的字幕或字幕选项。
      *
      * @remarks
      *
      * Possible values:
-     * - `'Translate'` - 翻译歌词（翻译器）
+     * - `'AUTO'` - 自动 - Automatic
+     * - `'ZH'` - 中文（自动）
+     * - `'ZH-HANS'` - 中文（简体）
+     * - `'ZH-HK'` - 中文（香港）
+     * - `'ZH-HANT'` - 中文（繁体）
+     * - `'EN'` - English - 英语（自动）
+     * - `'ES'` - Español - 西班牙语（自动）
+     * - `'JA'` - 日本語 - 日语
+     * - `'KO'` - 한국어 - 韩语
+     * - `'DE'` - Deutsch - 德语
+     * - `'FR'` - Français - 法语
+     * - `'TR'` - Türkçe - 土耳其语
+     * - `'KM'` - ភាសាខ្មែរ - 高棉语
+     * - `'AR'` - العربية - 阿拉伯语
+     * - `'ID'` - Bahasa Indonesia - 印度尼西亚语
      *
-     * @defaultValue ["Translate"]
+     * @defaultValue "AUTO"
      */
-    Types?: ('Translate')[];
     /**
-     * [字幕]自动显示
+     * [字幕] 副语言（目标语言）
      *
-     * 是否总是自动开启字幕显示。
+     * 当“副语言”字幕存在时，将生成“副语言/主语言（官方）”的字幕或字幕选项。
      *
-     * @defaultValue true
+     * @remarks
+     *
+     * Possible values:
+     * - `'ZH'` - 中文（自动）
+     * - `'ZH-HANS'` - 中文（简体）
+     * - `'ZH-HK'` - 中文（香港）
+     * - `'ZH-HANT'` - 中文（繁体）
+     * - `'EN'` - English - 英语（自动）
+     * - `'EN-US'` - 英语（美国）
+     * - `'ES'` - Español - 西班牙语（自动）
+     * - `'ES-ES'` - Español - 西班牙语
+     * - `'ES-419'` - 西班牙语（拉丁美洲）
+     * - `'JA'` - 日本語 - 日语
+     * - `'KO'` - 한국어 - 韩语
+     * - `'DE'` - Deutsch - 德语
+     * - `'FR'` - Français - 法语
+     * - `'TR'` - Türkçe - 土耳其语
+     * - `'KM'` - ភាសាខ្មែរ - 高棉语
+     * - `'AR'` - العربية - 阿拉伯语
+     * - `'ID'` - Bahasa Indonesia - 印度尼西亚语
+     *
+     * @defaultValue "ZH"
      */
-    AutoCC?: boolean;
+    Languages?: ('AUTO' | 'ZH' | 'ZH-HANS' | 'ZH-HK' | 'ZH-HANT' | 'EN' | 'ES' | 'JA' | 'KO' | 'DE' | 'FR' | 'TR' | 'KM' | 'AR' | 'ID' | 'ZH' | 'ZH-HANS' | 'ZH-HK' | 'ZH-HANT' | 'EN' | 'EN-US' | 'ES' | 'ES-ES' | 'ES-419' | 'JA' | 'KO' | 'DE' | 'FR' | 'TR' | 'KM' | 'AR' | 'ID')[];
     /**
-     * [字幕]只显示“自动翻译”字幕
-     *
-     * 是否仅显示“自动翻译”后的字幕，不显示源语言字幕。
-     *
-     * @defaultValue false
-     */
-    ShowOnly?: boolean;
-    /**
-     * [字幕]主语言（源语言）字幕位置
+     * [字幕] 主语言（源语言）字幕位置
      *
      * 主语言（源语言）字幕的显示位置。
      *
@@ -61,13 +79,62 @@ export interface Settings {
      * - `'Forward'` - 上面（第一行）
      * - `'Reverse'` - 下面（第二行）
      *
-     * @defaultValue "Forward"
+     * @defaultValue "Reverse"
      */
     Position?: 'Forward' | 'Reverse';
     /**
-     * 插件配置中的配置来源优先级。
+     * [翻译器] 服务商API
+     *
+     * 请选择翻译器所使用的服务商API，更多翻译选项请使用BoxJs。
+     *
+     * @remarks
+     *
+     * Possible values:
+     * - `'Google'` - Google Translate
+     * - `'Microsoft'` - Microsoft Translator（需填写API）
+     *
+     * @defaultValue "Google"
+     */
+    Vendor?: 'Google' | 'Microsoft';
+    /**
+     * [翻译器] 只显示翻译字幕
+     *
+     * 是否仅显示翻译后字幕，不显示源语言字幕。
+     *
+     * @defaultValue false
+     */
+    ShowOnly?: boolean;
+    /**
+     * [储存] 配置类型
+     *
+     * 默认优先使用插件配置，其次使用 BoxJs 配置，最后使用脚本默认配置。
+     *
+     * @remarks
+     *
+     * Possible values:
+     * - `'Argument'` - 插件配置优先
+     * - `'PersistentStore'` - BoxJs 配置优先
+     * - `'database'` - 仅使用默认配置
      *
      * @defaultValue "Argument"
      */
     Storage?: 'Argument' | 'PersistentStore' | 'database';
+    /**
+     * [调试] 日志等级
+     *
+     * 选择脚本日志的输出等级，低于所选等级的日志将全部输出。
+     *
+     * @remarks
+     *
+     * Possible values:
+     * - `'OFF'` - 🔴 关闭
+     * - `'ERROR'` - ❌ 错误
+     * - `'WARN'` - ⚠️ 警告
+     * - `'INFO'` - ℹ️ 信息
+     * - `'DEBUG'` - 🅱️ 调试
+     * - `'ALL'` - 全部
+     *
+     * @defaultValue "WARN"
+     */
+    LogLevel?: 'OFF' | 'ERROR' | 'WARN' | 'INFO' | 'DEBUG' | 'ALL';
 }

@@ -27,28 +27,31 @@
 		"example": "example"
 	},
 	"scripts": {
-		"dev": "BUILD_VERSION=dev.$(git rev-parse --short HEAD) sh -c 'npm run build:dev && npm run build:dev-args'",
-		"serve": "webpack serve",
-		"build": "rspack build",
-		"build:dev": "rspack build -c rspack.dev.config.js --mode=development",
-		"build:dev-args": "arguments-builder build -c arguments-builder.dev.config.ts && node scripts/prepare-preference-panes.mjs --dev",
-		"build:release-args": "arguments-builder build -c arguments-builder.release.config.ts",
+		"dev": "BUILD_VERSION=dev.$(git rev-parse --short HEAD) sh -c 'npm run clean && npm run build:dev-args && npm run build:dev'",
+		"build": "npm run clean && npm run build:args && npm run build:scripts",
+		"build:dev": "rollup -c rollup.dev.config.mjs",
+		"build:dev-args": "arguments-builder build -c arguments-builder.dev.config.ts && test -s dist/DualSubs.Universal.dev.yaml && node scripts/prepare-preference-panes.mjs --dev",
+		"build:release-args": "arguments-builder build -c arguments-builder.release.config.ts && test -s dist/DualSubs.Universal.yaml",
 		"build:full-args": "arguments-builder boxjs -c arguments-builder.full.config.ts && node scripts/prepare-preference-panes.mjs",
 		"build:args": "npm run build:release-args && npm run build:full-args",
 		"dts": "arguments-builder dts -c arguments-builder.full.config.ts",
 		"submodule": "git submodule update --remote",
 		"test": "node --test tests/*.test.mjs",
-		"pretest": "npm run build && node scripts/prepare-preference-panes.mjs && node scripts/prepare-preference-panes.mjs --dev"
+		"clean": "node --input-type=module -e 'import { rm } from \"node:fs/promises\"; await rm(\"dist\", { recursive: true, force: true });'",
+		"build:scripts": "rollup -c",
+		"check:args": "tsc --noEmit --skipLibCheck --module nodenext --moduleResolution nodenext --target es2022 --allowImportingTsExtensions arguments-builder.*.config.ts"
 	},
 	"browserslist": [
 		"iOS >= 15"
 	],
 	"devDependencies": {
-		"@iringo/arguments-builder": "^1.8.5",
+		"@nsnanocat/arguments-builder": "^1.8.6",
 		"@protobuf-ts/plugin": "^2.11.1",
-		"@rspack/cli": "^1.5.8",
-		"@rspack/core": "^1.5.8",
-		"node-polyfill-webpack-plugin": "^4.1.0"
+		"rollup": "4.63.1",
+		"@rollup/plugin-node-resolve": "16.0.3",
+		"@rollup/plugin-terser": "1.0.0",
+		"typescript": "^5.9.3",
+		"@rollup/plugin-commonjs": "29.0.3"
 	},
 	"dependencies": {
 		"@nsnanocat/url": "^1.2.6",
@@ -57,5 +60,10 @@
 		"@protobuf-ts/runtime": "^2.11.1",
 		"crypto-js": "^4.2.0",
 		"text-encoding": "^0.7.0"
+	},
+	"overrides": {
+		"@nsnanocat/surge2egern": {
+			"puppeteer": "25.7.0"
+		}
 	}
 }

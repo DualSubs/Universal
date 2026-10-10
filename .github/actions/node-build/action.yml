@@ -1,0 +1,63 @@
+name: Node Build
+description: Shared Node.js setup and build steps
+
+inputs:
+  package-token:
+    description: Token used for npm install
+    required: true
+  node-version:
+    description: Node.js version
+    default: latest
+    required: false
+  install-command:
+    description: Command used to install dependencies
+    default: npm install
+    required: false
+  build-command:
+    description: Optional build command
+    default: ""
+    required: false
+  extra-command:
+    description: Optional command executed after the build command
+    default: ""
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+    # 允许 Puppeteer 在 Ubuntu runner 中启动 Chrome 沙箱。
+    # Allow Puppeteer to launch the Chrome sandbox on Ubuntu runners.
+    # https://github.com/puppeteer/puppeteer/issues/13595#issuecomment-2640309385
+    # https://github.com/puppeteer/puppeteer/blob/cdfbde6247fbe286c31a91ac62ffed6f2f801ee4/.github/workflows/ci.yml#L140
+    - name: Disable AppArmor
+      run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+      shell: bash
+    - name: Install Dependencies
+      run: ${{ inputs.install-command }}
+      shell: bash
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.package-token }}
+    - name: Install Puppeteer Chrome
+      run: |
+        node node_modules/puppeteer/install.mjs
+        node --input-type=module -e 'import puppeteer from "puppeteer"; console.log(puppeteer.executablePath())'
+      shell: bash
+      env:
+        PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer
+    - name: Run Build Command
+      if: ${{ inputs.build-command != '' }}
+      run: ${{ inputs.build-command }}
+      shell: bash
+      env:
+        PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer
+    - name: Run Extra Command
+      if: ${{ inputs.extra-command != '' }}
+      run: ${{ inputs.extra-command }}
+      shell: bash
+      env:
+        PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer

@@ -11,38 +11,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@main
+      - name: Checkout Repository
+        uses: actions/checkout@v7
         with:
           submodules: recursive
           token: ${{ secrets.SUBMODULE_TOKEN }}
           ref: dev
-      - name: Set up Node.js
-        uses: actions/setup-node@main
+      - name: Run Build Pipeline
+        uses: ./.github/actions/node-build
         with:
-          node-version: '24'
-          cache: 'npm'
-      # https://github.com/puppeteer/puppeteer/issues/13595#issuecomment-2640309385
-      - name: Disable AppArmor
-        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
-      - name: Install dependencies
-        run: npm install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-      - name: Install Puppeteer Chrome
-        run: |
-          node node_modules/puppeteer/install.mjs
-          node --input-type=module -e 'import puppeteer from "puppeteer"; console.log(puppeteer.executablePath())'
-        env:
-          PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer
-      - name: Build
-        run: npm run dev
-        env:
-          PUPPETEER_CACHE_DIR: ${{ runner.temp }}/puppeteer
-      - name: Verify Egern module
-        run: test -s dist/DualSubs.Universal.dev.yaml
-      - name: Upload artifact
-        uses: actions/upload-artifact@master
+          package-token: ${{ secrets.PACKAGE_TOKEN }}
+          node-version: "24"
+          build-command: npm run dev
+          extra-command: npm run check:args && SETTINGS_CHANNEL=dev npm test && test -s dist/DualSubs.Universal.dev.yaml
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v7
         with:
           name: artifact
           path: |

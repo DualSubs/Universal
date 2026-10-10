@@ -1,7 +1,4 @@
-import { defineConfig } from "@iringo/arguments-builder";
-import { logLevel, output, storage, subtitles, translate } from "./arguments-builder.full.config";
+import { defineConfig } from "@nsnanocat/arguments-builder";
+import { moduleArgs, output } from "./arguments-builder.full.config.ts";
 
-export default defineConfig({
-	output,
-	args: [...subtitles, ...translate, ...storage, ...logLevel],
-});
+export default defineConfig({ output, args: moduleArgs });

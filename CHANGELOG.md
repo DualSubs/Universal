@@ -9,5 +9,6 @@
   * 修复配置中的空数组无法清空默认选项的问题。
 
 ### 🔄 Other Changes
+  * 开发版模块显示实际构建版本，便于区分更新前后的配置与脚本。
   * 适配 Disney+ 新增的 `una-` 前缀主播放清单。
   * 适配 Prime Video 的 `vod-hls.main.amazon` 域名，同步更新字幕清单规则及 MITM 域名列表。

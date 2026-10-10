@@ -4,7 +4,7 @@
 
 设置入口为 `https://dualsubs.github.io/settings/`，须将插件参数 `Storage` 设为 `PersistentStore`。
 
-`template/boxjs.panels.json` 与 `template/boxjs.panels.dev.json` 分别保存 [BoxJS 正式](https://github.com/DualSubs/BoxJs/blob/main/DualSubs.BoxJs.json)和[开发](https://github.com/DualSubs/BoxJs/blob/main/DualSubs.BoxJs.beta.json)面板定义。构建逐面板生成原始 JSON 和配置响应脚本，模板逐文件映射；表单、导航与存储 API 由同版 PreferencePanes 提供。
+`template/boxjs.panels.json` 与 `template/boxjs.panels.dev.json` 分别保存 [BoxJS 正式](https://github.com/DualSubs/BoxJs/blob/main/DualSubs.BoxJs.json)和[开发](https://github.com/DualSubs/BoxJs/blob/main/DualSubs.BoxJs.beta.json)面板名称、说明等内容元数据；字段统一由 `arguments-builder.full.config.ts` 定义，`arguments-builder.PreferencePanes.config.ts` 选择。构建使用 `ArgumentsBuilder.buildBoxJsSettings(scope)` 逐面板生成 JSON，Rollup 生成配置响应脚本，模板逐文件映射；表单、导航与存储 API 由同版 PreferencePanes 提供。
 
 首页 JSON 和真实图标由 `DualSubs.github.io/settings` 维护，站点原样部署 PreferencePanes `v1.3.0` 的 `home.html`；各平台模板使用同版模块页面、入口脚本和固定存储 API。DualSubs 不提供额外 CSS 或 Bridge，使用内置默认功能。开发部署同时上传各面板 JSON 与配置响应脚本到 Gist。
 
@@ -13,3 +13,13 @@
 开发设置包含外挂字幕选项；其来源在 External 面板选择，字幕文件地址在外部源 API 面板填写。合成脚本读取 External 设置后再合并 Composite，保持已有合成器配置优先级。
 
 在网站仓库运行 `pnpm settings:preview` 可预览开发设置；`SETTINGS_CHANNEL=formal` 切换正式设置。
+
+## 构建
+
+`arguments-builder.full.config.ts` 是字段定义来源；`release`、`dev` 和 `PreferencePanes` 配置分别选择模块参数和网页字段，保留原有渠道差异。`npm run check:args` 检查参数类型，`npm run dts` 调用公共库的业务类型生成器。
+
+使用 Node 24，安装依赖后运行 `node node_modules/puppeteer/install.mjs` 安装转换 Egern 所需的 Chrome。`npm run build` 和 `npm run dev` 均先清空 `dist`，生成模块及当前渠道的设置，再用 Rollup 生成独立脚本。开发脚本使用 `.dev.bundle.js`；转换失败或缺少 Egern 文件时构建停止。正式构建后运行 `npm test`，开发构建后运行 `SETTINGS_CHANNEL=dev npm test`，测试不会生成另一渠道产物。
+
+CI 的 build／dev 共用 `.github/actions/node-build/action.yml`。开发部署通过一次 Gist PATCH 更新全部脚本、配置及订阅；正式发布由版本 tag 触发，发布说明读取 `CHANGELOG.md`。
+
+公共库已支持 `Languages[0]` 等索引字段，生成合法的 `Languages` 数组类型；配置生成或 Egern 转换失败会返回非零退出码。

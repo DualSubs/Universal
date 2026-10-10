@@ -140,7 +140,7 @@ test("every platform routes common assets and storage actions separately from mo
 				if (platform !== "stash") assert.ok(matches[0].line.includes(artifact));
 				else assert.ok(template.includes(artifact));
 			}
-			for (const path of ["/settings/", "/settings/index.html", "/settings/home.json", "/settings/theme.css", "/settings/bridge.mjs", "/settings/assets/Universal.png", "/settings/assets/host.mjs", "/api/Universal/set", "/api/set/", "/settings/assets/host.mjs/evil", "/settings/Universal/evil"])
+			for (const path of ["/api/YouTube", "/api/Netflix", "/api/Spotify", "/settings/", "/settings/index.html", "/settings/home.json", "/settings/theme.css", "/settings/bridge.mjs", "/settings/assets/Universal.png", "/settings/assets/host.mjs", "/api/Universal/set", "/api/set/", "/settings/assets/host.mjs/evil", "/settings/Universal/evil"])
 				assert.equal(
 					patterns.some(({ regex }) => regex.test(`https://dualsubs.github.io${path}`)),
 					false,

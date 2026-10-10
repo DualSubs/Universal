@@ -18,9 +18,6 @@ force-http-engine-hosts = %APPEND% *.pv-cdn.net, *.aiv-cdn.net, *avodhlss3ww-a.a
 [Script]
 PreferencePanes.API = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/(?:get|set|delete)(?:\?.*)?$, requires-body=1, max-size=65536, script-path=https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/api.js
 📺 DualSubs.Universal.Config = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/Universal(?:\?.*)?$, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/config.bundle.js
-📺 DualSubs.YouTube.Config = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/YouTube(?:\?.*)?$, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/config.YouTube.bundle.js
-📺 DualSubs.Netflix.Config = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/Netflix(?:\?.*)?$, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/config.Netflix.bundle.js
-📺 DualSubs.Spotify.Config = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/Spotify(?:\?.*)?$, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/config.Spotify.bundle.js
 📺 DualSubs.Composite.Config = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/Composite(?:\?.*)?$, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/config.Composite.bundle.js
 📺 DualSubs.Translate.Config = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/Translate(?:\?.*)?$, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/config.Translate.bundle.js
 📺 DualSubs.External.Config = type=http-request, pattern=^https:\/\/dualsubs\.github\.io\/api\/External(?:\?.*)?$, script-path=https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/config.External.bundle.js

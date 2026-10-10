@@ -110,18 +110,6 @@ http:
       name: 📺 DualSubs.Universal.Config
       type: request
       require-body: false
-    - match: ^https:\/\/dualsubs\.github\.io\/api\/YouTube(?:\?.*)?$
-      name: 📺 DualSubs.YouTube.Config
-      type: request
-      require-body: false
-    - match: ^https:\/\/dualsubs\.github\.io\/api\/Netflix(?:\?.*)?$
-      name: 📺 DualSubs.Netflix.Config
-      type: request
-      require-body: false
-    - match: ^https:\/\/dualsubs\.github\.io\/api\/Spotify(?:\?.*)?$
-      name: 📺 DualSubs.Spotify.Config
-      type: request
-      require-body: false
     - match: ^https:\/\/dualsubs\.github\.io\/api\/Composite(?:\?.*)?$
       name: 📺 DualSubs.Composite.Config
       type: request
@@ -675,15 +663,6 @@ script-providers:
     interval: 86400
   📺 DualSubs.Universal.Config:
     url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.dev.bundle.js
-    interval: 86400
-  📺 DualSubs.YouTube.Config:
-    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.YouTube.dev.bundle.js
-    interval: 86400
-  📺 DualSubs.Netflix.Config:
-    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.Netflix.dev.bundle.js
-    interval: 86400
-  📺 DualSubs.Spotify.Config:
-    url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.Spotify.dev.bundle.js
     interval: 86400
   📺 DualSubs.Composite.Config:
     url: https://gist.githubusercontent.com/VirgilClyne/92cd6fbcde657fb43c67ed7f2430a994/raw/config.Composite.dev.bundle.js

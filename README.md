@@ -8,7 +8,7 @@
 
 首页 JSON 和真实图标由 `DualSubs.github.io/settings` 维护，站点原样部署 PreferencePanes `v1.3.0` 的 `home.html`；各平台模板使用同版模块页面、入口脚本和固定存储 API。DualSubs 不提供额外 CSS 或 Bridge，使用内置默认功能。开发部署同时上传各面板 JSON 与配置响应脚本到 Gist。
 
-主页提供 Universal、YouTube、Netflix、Spotify、Composite、Translate、External、翻译器 API 和外部源 API 独立入口。外部源 API 是开发配置中的面板；正式配置中该入口不可用。所有设置保留 BoxJS 原存储路径。两个 API 面板共享 `@DualSubs.API.Settings`，重置仅删除各自的配置子树。
+主页提供 Universal、YouTube、Netflix、Spotify、Composite、Translate、External、翻译器 API 和外部源 API 独立入口。Universal 只提供自身及共享字幕、API 配置；YouTube、Netflix、Spotify 的配置 JSON 与 `/api/<模块名>` Mock 由各自仓库的模块模板和构建维护，安装对应模块后入口才可用。外部源 API 是开发配置中的面板；正式配置中该入口不可用。所有设置保留 BoxJS 原存储路径。两个 API 面板共享 `@DualSubs.API.Settings`，重置仅删除各自的配置子树。
 
 开发设置包含外挂字幕选项；其来源在 External 面板选择，字幕文件地址在外部源 API 面板填写。合成脚本读取 External 设置后再合并 Composite，保持已有合成器配置优先级。
 

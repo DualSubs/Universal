@@ -1,4 +1,5 @@
 ### 🆕 New Features
+  * 新增本地网页设置首页与共享字幕、API 面板；YouTube、Netflix、Spotify 配置由各自插件提供。
   * 插件配置新增配置来源优先级选项，默认优先使用插件配置，也可选择 BoxJs 配置优先或仅使用默认配置。
 
 ### 🛠️ Bug Fixes

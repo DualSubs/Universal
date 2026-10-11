@@ -9,7 +9,7 @@
 #!version = {{@package 'version'}}
 
 #[rewrite_local]
-^https:\/\/dualsubs\.github\.io\/api\/(?:get|set|delete)(?:\?.*)?$ url script-echo-response https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.0/api.js
+^https:\/\/dualsubs\.github\.io\/api\/(?:get|set|delete)(?:\?.*)?$ url script-echo-response https://github.com/NSNanoCat/PreferencePanes/releases/download/v1.3.1/api.js
 ^https:\/\/dualsubs\.github\.io\/api\/Universal(?:\?.*)?$ url echo-response application/json\r\nX-PreferencePanes-Version: {{version}} echo-response https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/DualSubs.Universal.PreferencePanes.json
 ^https:\/\/dualsubs\.github\.io\/api\/Composite(?:\?.*)?$ url echo-response application/json\r\nX-PreferencePanes-Version: {{version}} echo-response https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/DualSubs.Composite.PreferencePanes.json
 ^https:\/\/dualsubs\.github\.io\/api\/Translate(?:\?.*)?$ url echo-response application/json\r\nX-PreferencePanes-Version: {{version}} echo-response https://github.com/DualSubs/Universal/releases/download/v{{@package 'version'}}/DualSubs.Translate.PreferencePanes.json

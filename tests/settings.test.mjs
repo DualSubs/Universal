@@ -132,7 +132,7 @@ test("every platform intercepts storage and configuration while leaving online p
 				const matches = patterns.filter(({ regex }) => regex.test(`https://dualsubs.github.io${path}?v=1`));
 				assert.equal(matches.length, 1, `${platform}${channel}: ${path}`);
 				if (platform === "stash" && path.startsWith("/api/")) assert.match(matches[0].line, /get\|set\|delete/);
-				else assert.ok(matches[0].line.includes(`/download/v1.3.0/${artifact}`), `${platform}${channel}: ${artifact}`);
+				else assert.ok(matches[0].line.includes(`/download/v1.3.1/${artifact}`), `${platform}${channel}: ${artifact}`);
 			}
 			const { apps } = JSON.parse(await readFile(`template/boxjs.panels${channel}.json`, "utf8"));
 			for (const app of apps) {

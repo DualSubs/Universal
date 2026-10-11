@@ -46,7 +46,7 @@ test("every BoxJS panel is delivered intact on both proxy transports and keeps H
 	}
 });
 
-test("subtitle runtime uses complete persisted language arrays without changing configuration precedence", async () => {
+test("subtitle runtime defaults to persisted settings and retains explicit argument precedence", async () => {
 	const storage = new Map([["DualSubs", JSON.stringify({ Universal: { Settings: { Languages: ["EN", "JA"], Position: "Forward", Vendor: "Microsoft", ShowOnly: true } } })]]);
 	globalThis.$environment = { "surge-version": "test" };
 	globalThis.$persistentStore = {
@@ -63,7 +63,7 @@ test("subtitle runtime uses complete persisted language arrays without changing 
 			["Universal", "Composite"],
 			["Universal", "Translate", "API"],
 		]) {
-			globalThis.$argument = { Storage: "PersistentStore", Languages: ["AUTO", "ZH"], Position: "Reverse", LogLevel: "OFF" };
+			globalThis.$argument = { Languages: ["AUTO", "ZH"], Position: "Reverse", LogLevel: "OFF" };
 			const { Settings } = setENV("DualSubs", modules, database);
 			assert.deepEqual(Settings.Languages, ["EN", "JA"]);
 			assert.equal(Settings.Position, "Forward");

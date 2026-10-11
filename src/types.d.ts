@@ -107,16 +107,16 @@ export interface Settings {
     /**
      * [储存] 配置类型
      *
-     * 默认优先使用插件配置，其次使用 BoxJs 配置，最后使用脚本默认配置。
+     * 默认优先使用设置面板或 BoxJS 保存的配置，其次使用插件配置，最后使用脚本默认配置。
      *
      * @remarks
      *
      * Possible values:
      * - `'Argument'` - 插件配置优先
-     * - `'PersistentStore'` - BoxJs 配置优先
+     * - `'PersistentStore'` - 持久化存储优先
      * - `'database'` - 仅使用默认配置
      *
-     * @defaultValue "Argument"
+     * @defaultValue "PersistentStore"
      */
     Storage?: 'Argument' | 'PersistentStore' | 'database';
     /**

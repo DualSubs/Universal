@@ -2,7 +2,7 @@
 
 ## 本地设置
 
-设置入口为 `https://dualsubs.github.io/settings/`，须将插件参数 `Storage` 设为 `PersistentStore`。
+设置入口为 `https://dualsubs.github.io/settings/`，插件参数 `Storage` 默认使用 `PersistentStore`，优先读取面板或 BoxJS 保存的配置；已安装模块若保留了旧的 `Argument` 值，需手动切换。
 
 `template/boxjs.panels.json` 与 `template/boxjs.panels.dev.json` 分别保存 [BoxJS 正式](https://github.com/DualSubs/BoxJs/blob/main/DualSubs.BoxJs.json)和[开发](https://github.com/DualSubs/BoxJs/blob/main/DualSubs.BoxJs.beta.json)面板名称、说明等内容元数据；字段统一由 `arguments-builder.full.config.ts` 定义，`arguments-builder.PreferencePanes.config.ts` 选择。构建使用 `ArgumentsBuilder.buildBoxJsSettings(scope)` 逐面板生成 JSON，Rollup 生成配置响应脚本，模板逐文件映射；表单、导航与存储 API 由同版 PreferencePanes 提供。
 

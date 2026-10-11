@@ -10,7 +10,7 @@ const persisted = {
 };
 
 for (const [name, argument, languages, types] of [
-	["defaults to plugin settings even if BoxJs contains a Storage value", "Languages=EN,ZH&Types=Translate", ["EN", "ZH"], ["Translate"]],
+	["defaults to persisted settings even if BoxJs contains a Storage value", "Languages=EN,ZH&Types=Translate", ["ES", "JA"], []],
 	["keeps persisted settings available when no plugin arguments are provided", undefined, ["ES", "JA"], []],
 	["PersistentStore gives BoxJs priority and lets an empty array clear defaults", { Storage: "PersistentStore", Languages: ["EN", "ZH"], Types: "Translate" }, ["ES", "JA"], []],
 	["Argument gives plugin settings priority", 'Storage="Argument"&Languages[0]="EN"&Languages[1]="ZH"&Types="Translate"', ["EN", "ZH"], ["Translate"]],

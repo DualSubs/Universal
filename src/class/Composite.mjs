@@ -150,7 +150,7 @@ export default class Composite {
 						const text1 = Sub1.timedtext.body.p[index1]?.["#"] ?? "",
 							text2 = Sub2.timedtext.body.p[index2]?.["#"] ?? "";
 						//Console.debug(`text1: ${text1}, text2: ${text2}`);
-						DualSub.timedtext.body.p[index0]["#"] = (Position === "Reverse" ? `${text2}&#x000A;${text1}` : `${text1}&#x000A;${text2}`).trim();
+						DualSub.timedtext.body.p[index0]["#"] = (Position === "Reverse" ? `${text2}\n${text1}` : `${text1}\n${text2}`).trim();
 						//Console.debug(`DualSub.timedtext.body.p[index0]["#"]: ${DualSub.timedtext.body.p[index0]["#"]}`);
 						//DualSub.timedtext.body.p[index0]["@t"] = (Position === "Reverse") ? timeStamp2 : timeStamp1;
 						//DualSub.timedtext.body.p[index0].index = (Position === "Reverse") ? index2 : index1;

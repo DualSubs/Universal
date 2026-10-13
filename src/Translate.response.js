@@ -57,7 +57,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 		case "application/plist":
 		case "application/x-plist": {
 			body = XML.parse($response.body);
-			const breakLine = body?.tt ? "<br />" : body?.timedtext ? "&#x000A;" : "&#x000A;";
+			const breakLine = body?.tt ? "<br />" : body?.timedtext ? "\n" : "\n";
 			if (body?.timedtext?.head?.wp?.[1]?.["@rc"]) body.timedtext.head.wp[1]["@rc"] = "1";
 			let paragraph = body?.tt?.body?.div?.p ?? body?.timedtext?.body?.p;
 			const fullText = [];

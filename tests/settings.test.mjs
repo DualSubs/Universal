@@ -144,7 +144,7 @@ test("every platform intercepts storage and configuration while leaving online p
 				if (platform !== "stash") assert.ok(matches[0].line.includes(artifact));
 				else assert.ok(template.includes(artifact));
 			}
-			for (const path of ["/api/YouTube", "/api/Netflix", "/api/Spotify", "/settings/", "/settings/Universal", "/settings/Universal/", "/settings/API", "/settings/assets/index.mjs", "/settings/index.html", "/settings/home.json", "/settings/theme.css", "/settings/bridge.mjs", "/settings/assets/Universal.png", "/settings/assets/host.mjs", "/api/Universal/set", "/api/set/", "/settings/assets/host.mjs/evil", "/settings/Universal/evil"])
+			for (const path of ["/api/YouTube", "/api/Netflix", "/api/Spotify", "/preferences/", "/preferences/Universal", "/preferences/Universal/", "/preferences/API", "/preferences/assets/index.mjs", "/preferences/index.html", "/preferences/home.json", "/preferences/theme.css", "/preferences/bridge.mjs", "/preferences/assets/Universal.png", "/preferences/assets/host.mjs", "/api/Universal/set", "/api/set/", "/preferences/assets/host.mjs/evil", "/preferences/Universal/evil"])
 				assert.equal(
 					patterns.some(({ regex }) => regex.test(`https://dualsubs.github.io${path}`)),
 					false,

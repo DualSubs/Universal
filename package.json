@@ -4,7 +4,7 @@
 	"displayName": "🍿️ DualSubs: 🔣 Universal",
 	"description": "流媒体平台字幕增强及双语模块\n如需恢复TV完整支持\n请配合“ iRingo: 📺 TV”使用",
 	"homepage": "https://DualSubs.github.io/guide/universal",
-	"openUrl": "https://dualsubs.github.io/settings/",
+	"openUrl": "https://dualsubs.github.io/preferences/",
 	"icon": "https://github.com/DualSubs/Universal/raw/main/src/assets/icon_rounded.png",
 	"keywords": [],
 	"contributors": [

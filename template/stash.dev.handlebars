@@ -203,15 +203,15 @@ http:
       name: 🍿️ DualSubs.PrimeVideo.JSON.GetPlaybackResources.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)(\.(hls|vod-hls\.main\.amazon)(\.row)?\.(pv-cdn|aiv-cdn)\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8
+    - match: ^https?:\/\/(.+)(hls(\.main\.amazon)?(\.row)?\.(pv|aiv)-cdn\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})\.m3u8
       name: 🍿️ DualSubs.M3U8.Master.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)(\.(hls|dash|vod-hls\.main\.amazon)(\.row)?\.(pv-cdn|aiv-cdn)\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})_subtitles\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(.+)((hls|dash)(\.main\.amazon)?(\.row)?\.(pv|aiv)-cdn\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/([0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})_subtitles\.m3u8\?(.*)subtype=
       name: 🍿️ DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true
-    - match: ^https?:\/\/(.+)(\.(hls|dash|vod-hls\.main\.amazon)(\.row)?\.(pv-cdn|aiv-cdn)\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=
+    - match: ^https?:\/\/(.+)((hls|dash)(\.main\.amazon)?(\.row)?\.(pv|aiv)-cdn\.net|avodhlss3ww-a\.akamaihd\.net)\/(.+)\/aiv-prod-timedtext\/(.+)\.m3u8\?(.*)subtype=
       name: 🍿️ DualSubs.M3U8.Subtitles.response
       type: response
       require-body: true

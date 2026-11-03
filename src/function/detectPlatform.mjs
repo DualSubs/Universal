@@ -26,6 +26,9 @@ export default function detectPlatform(url) {
 		case /pro?d\.media\.(h264\.io|max\.com)/i.test(url):
 			Platform = "Max";
 			break;
+		case /\.e\.hbo\//i.test(url):
+			Platform = "Max";
+			break;
 		case /\.(api\.hbo|hbomaxcdn)\.com/i.test(url):
 			Platform = "HBOMax";
 			break;

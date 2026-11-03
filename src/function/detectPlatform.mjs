@@ -20,22 +20,28 @@ export default function detectPlatform(url) {
 		case /\.(dssott|starott|dssedge)\.com/i.test(url):
 			Platform = "Disney+";
 			break;
-		case /primevideo\.com|(\.(pv-cdn|aiv-cdn|akamaihd|cloudfront)\.net)|s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url):
+		case /primevideo\.com/i.test(url):
+		case /\.(pv-cdn|aiv-cdn)\.net/i.test(url):
+		case /-a\.akamaihd\.net/i.test(url):
+		case /s3\.amazonaws\.com\/aiv-prod-timedtext\//i.test(url):
+		case /cf-timedtext\.aux\.pv-cdn\.net/i.test(url):
+		case /(d1v5ir2lpwr8os|d22qjgkvxw22r6|d25xi40x97liuc|d27xxe7juh1us6|dmqdd6hw24ucf)\.cloudfront\.net/i.test(url):
 			Platform = "PrimeVideo";
 			break;
 		case /pro?d\.media\.(h264\.io|max\.com)/i.test(url):
-			Platform = "Max";
-			break;
 		case /\.e\.hbo\//i.test(url):
 			Platform = "Max";
 			break;
-		case /\.(api\.hbo|hbomaxcdn)\.com/i.test(url):
+		case /\.api\.hbo\.com/i.test(url):
+		case /\.hbomaxcdn\.com/i.test(url):
 			Platform = "HBOMax";
 			break;
 		case /\.hulu(stream|im)?\.com/i.test(url):
 			Platform = "Hulu";
 			break;
-		case /\.(pplus\.paramount\.tech|cbs(aavideo|cbsivideo)?\.com)/i.test(url):
+		case /\.pplus\.paramount\.tech/i.test(url):
+		case /cbsi\.live\.ott\.irdeto\.com/i.test(url):
+		case /\.cbs(aavideo|ivideo)?\.com/i.test(url):
 			Platform = "Paramount+";
 			break;
 		case /\.uplynk\.com/i.test(url):
